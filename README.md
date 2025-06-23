@@ -3,8 +3,21 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ## Development
 
 ### Install dependencies
+
 ```bash
 yarn install
+```
+
+### Lint & Format
+
+- Jalankan lint: `yarn lint`
+- Format otomatis: aktif di VSCode (formatOnSave) dan Prettier
+- Konfigurasi lint: Airbnb + Prettier + Tailwind + TypeScript
+- Pesan error/warning bisa muncul dalam bahasa Indonesia jika diatur di VSCode
+
+### TypeScript Strict Mode
+
+- Strict mode dan noImplicitAny sudah aktif di `tsconfig.json` untuk memastikan type safety maksimal
 
 ## Getting Started
 
