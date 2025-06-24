@@ -16,7 +16,7 @@ export function Hero() {
 
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
                 Belajar Skill{' '}
-                <span className="bg-gradient-to-r from-primary via-secondary to-accent-mint bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-primary via-secondary to-accent-mint bg-accent-mint bg-clip-text text-transparent">
                   Digital
                 </span>{' '}
                 Bersama Expert
@@ -34,7 +34,10 @@ export function Hero() {
                 size="lg"
                 className="neu-button bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 text-lg"
               > */}
-              <Button size="lg" className="neu-button bg-[#94BDFF]  hover:bg-blue-700 text-white px-8 py-4 text-lg">
+              <Button
+                size="lg"
+                className="neu-button bg-secondary-300 hover:bg-secondary-400 text-white px-8 py-4 text-lg"
+              >
                 Mulai Belajar Gratis
               </Button>
 
