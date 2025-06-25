@@ -8,16 +8,16 @@ Seperti yang dijelaskan dalam dokumen arsitektur utama, Maguru menggunakan pende
 
 Konsep kuncinya meliputi:
 
--   **Events:** Representasi dari sesuatu yang telah terjadi dalam sistem (misalnya, `UserCreated`, `ModulePublished`, `CommentAdded`). Events bersifat *immutable facts*.
--   **Event Emitters/Publishers:** Komponen atau layanan yang memancarkan event ketika suatu aksi atau perubahan status penting terjadi.
--   **Event Listeners/Subscribers:** Komponen atau layanan yang mendengarkan event tertentu dan bereaksi terhadapnya tanpa kopling langsung ke emitter.
--   **Event Bus/Broker:** Mekanisme perantara yang merutekan event dari emitter ke listener. Dalam konteks monolit, ini bisa berupa in-memory event bus atau sistem yang lebih canggih seperti message queue eksternal jika diperlukan di masa depan. Pada frontend, React Context atau state management library juga dapat digunakan untuk mendistribusikan UI-specific events atau state changes.
+- **Events:** Representasi dari sesuatu yang telah terjadi dalam sistem (misalnya, `UserCreated`, `ModulePublished`, `CommentAdded`). Events bersifat _immutable facts_.
+- **Event Emitters/Publishers:** Komponen atau layanan yang memancarkan event ketika suatu aksi atau perubahan status penting terjadi.
+- **Event Listeners/Subscribers:** Komponen atau layanan yang mendengarkan event tertentu dan bereaksi terhadapnya tanpa kopling langsung ke emitter.
+- **Event Bus/Broker:** Mekanisme perantara yang merutekan event dari emitter ke listener. Dalam konteks monolit, ini bisa berupa in-memory event bus atau sistem yang lebih canggih seperti message queue eksternal jika diperlukan di masa depan. Pada frontend, React Context atau state management library juga dapat digunakan untuk mendistribusikan UI-specific events atau state changes.
 
 ## Penerapan dalam Maguru
 
--   **Decoupling:** Fitur atau layanan dapat bereaksi terhadap perubahan di fitur lain tanpa memanggil service atau API-nya secara langsung. Contoh: Ketika sebuah `ModulePublished` (event dari fitur `manage-module`), fitur `notification-service` dapat mendengarkan event tersebut dan mengirim notifikasi tanpa fitur `manage-module` perlu tahu tentang `notification-service`.
--   **Scalability & Responsiveness:** Tugas yang memakan waktu dapat ditangani asinkron oleh listener, membebaskan thread request/response.
--   **Flexibility:** Mudah menambahkan listener baru yang bereaksi terhadap event yang sudah ada tanpa memodifikasi emitter.
+- **Decoupling:** Fitur atau layanan dapat bereaksi terhadap perubahan di fitur lain tanpa memanggil service atau API-nya secara langsung. Contoh: Ketika sebuah `ModulePublished` (event dari fitur `manage-module`), fitur `notification-service` dapat mendengarkan event tersebut dan mengirim notifikasi tanpa fitur `manage-module` perlu tahu tentang `notification-service`.
+- **Scalability & Responsiveness:** Tugas yang memakan waktu dapat ditangani asinkron oleh listener, membebaskan thread request/response.
+- **Flexibility:** Mudah menambahkan listener baru yang bereaksi terhadap event yang sudah ada tanpa memodifikasi emitter.
 
 ## Implementasi Teknis
 
@@ -51,11 +51,11 @@ emitter.on('module:published', (data) => {
 
 Berikut adalah beberapa contoh event yang mungkin digunakan dalam Maguru:
 
--   `auth:user-created`: Dipancarkan ketika user baru berhasil dibuat.
--   `module:published`: Dipancarkan ketika modul pembelajaran dipublikasikan.
--   `module:updated`: Dipancarkan ketika modul diperbarui.
--   `page:created`: Dipancarkan ketika halaman baru dibuat dalam modul.
--   `comment:added`: Dipancarkan ketika komentar baru ditambahkan.
+- `auth:user-created`: Dipancarkan ketika user baru berhasil dibuat.
+- `module:published`: Dipancarkan ketika modul pembelajaran dipublikasikan.
+- `module:updated`: Dipancarkan ketika modul diperbarui.
+- `page:created`: Dipancarkan ketika halaman baru dibuat dalam modul.
+- `comment:added`: Dipancarkan ketika komentar baru ditambahkan.
 
 ### Contoh Penerapan pada Modul `manage-module`
 
@@ -63,14 +63,14 @@ Berikut adalah contoh bagaimana Event-Driven diterapkan pada modul `manage-modul
 
 **Event yang Dipancarkan:**
 
--   `folder:created`: Dipancarkan ketika folder baru dibuat. Payload: `{ folderId: string, moduleId: string }`
--   `page:created`: Dipancarkan ketika halaman baru dibuat. Payload: `{ pageId: string, folderId: string, moduleId: string }`
--   `page:published`: Dipancarkan ketika halaman dipublikasikan. Payload: `{ pageId: string, moduleId: string }`
--   `page:updated`: Dipancarkan ketika konten halaman diperbarui. Payload: `{ pageId: string, moduleId: string }`
+- `folder:created`: Dipancarkan ketika folder baru dibuat. Payload: `{ folderId: string, moduleId: string }`
+- `page:created`: Dipancarkan ketika halaman baru dibuat. Payload: `{ pageId: string, folderId: string, moduleId: string }`
+- `page:published`: Dipancarkan ketika halaman dipublikasikan. Payload: `{ pageId: string, moduleId: string }`
+- `page:updated`: Dipancarkan ketika konten halaman diperbarui. Payload: `{ pageId: string, moduleId: string }`
 
 **Event yang Didengarkan:**
 
--   (Saat ini belum ada contoh konkret. Di masa depan, `manage-module` mungkin mendengarkan event `user:deleted` untuk membersihkan data terkait jika ada pemilik modul/halaman).
+- (Saat ini belum ada contoh konkret. Di masa depan, `manage-module` mungkin mendengarkan event `user:deleted` untuk membersihkan data terkait jika ada pemilik modul/halaman).
 
 ## Masa Depan: Message Queue
 

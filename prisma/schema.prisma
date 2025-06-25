@@ -8,79 +8,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model module_pages {
-  id                    String           @id
-  module_id             String
-  order                 Int
-  type                  String
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime
-  version               Int              @default(1)
-  title                 String
-  content               Json
-  authorId              String?
-  draftData             Json?
-  draftSavedAt          DateTime?
-  hasUnpublishedChanges Boolean          @default(false)
-  isDraft               Boolean          @default(false)
-  lastEditBy            String?
-  status                ModulePageStatus @default(DRAFT)
-  modules               modules          @relation(fields: [module_id], references: [id], onDelete: Cascade)
-
-  @@unique([module_id, order])
-  @@index([authorId])
-  @@index([module_id, order])
-  @@index([module_id, type])
-}
-
-model modules {
-  id           String         @id
-  title        String
-  description  String?
-  status       ModuleStatus   @default(DRAFT)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime
-  createdBy    String
-  updatedBy    String
-  module_pages module_pages[]
-
-  @@index([status])
-  @@index([title])
-}
-
-model users {
-  id          String     @id
-  clerkUserId String     @unique
-  email       String     @unique
-  name        String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime
-  role        UserRole   @default(mahasiswa)
-  status      UserStatus @default(active)
-
-  @@index([createdAt])
-  @@index([role, status])
-}
-
-enum ModulePageStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
-enum ModuleStatus {
-  DRAFT
-  ACTIVE
-  ARCHIVED
-}
-
-enum UserRole {
-  mahasiswa
-  admin
-}
-
-enum UserStatus {
-  active
-  inactive
-  pending
+model User {
+  id    String @id @default(cuid())
+  name  String
+  email String @unique
 }

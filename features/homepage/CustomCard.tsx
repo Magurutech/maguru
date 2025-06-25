@@ -1,5 +1,5 @@
 // components/CustomCard.tsx
-import { FC, ReactNode } from "react";
+import { FC, ReactNode } from 'react';
 
 interface CustomCardProps {
   title: string;
@@ -8,12 +8,7 @@ interface CustomCardProps {
   actionLabel?: string;
 }
 
-const CustomCard: FC<CustomCardProps> = ({
-  title,
-  children,
-  onAction,
-  actionLabel = "Action",
-}) => (
+const CustomCard: FC<CustomCardProps> = ({ title, children, onAction, actionLabel = 'Action' }) => (
   <div className="container mx-auto px-4 py-8">
     <div
       className={`
@@ -28,12 +23,8 @@ const CustomCard: FC<CustomCardProps> = ({
         transition-maguru
       `}
     >
-      <h2 className="font-serif text-2xl mb-4 dark:text-white">
-        {title}
-      </h2>
-      <div className="font-sans text-base mb-6">
-        {children}
-      </div>
+      <h2 className="font-serif text-2xl mb-4 dark:text-white">{title}</h2>
+      <div className="font-sans text-base mb-6">{children}</div>
       {onAction && (
         <button
           onClick={onAction}

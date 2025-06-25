@@ -41,5 +41,21 @@
   "eslint.validate": ["javascript", "typescript", "typescriptreact", "javascriptreact"],
   "eslint.format.enable": true,
   "eslint.alwaysShowStatus": true,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "cSpell.enabled": true,
+  "cSpell.language": "en,id",
+  "cSpell.ignoreWords": [
+    "maguru",
+    "tsx",
+    "prisma",
+    "postgresql",
+    "cuid",
+    "radix",
+    "clsx",
+    "tailwindcss",
+    "autoprefixer",
+    "postcss"
+  ],
+  "prettier.proseWrap": "preserve",
+  "prettier.requireConfig": true
 }
