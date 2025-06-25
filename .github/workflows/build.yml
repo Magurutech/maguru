@@ -1,0 +1,62 @@
+name: Build Pipeline
+
+# Mendefinisikan event yang akan memicu workflow ini
+on:
+  push:
+    branches: [develop, main, 'feature/*']
+  pull_request:
+    branches: [develop, main]
+
+# Set environment variables global
+env:
+  NEXT_TELEMETRY_DISABLED: 1
+  NODE_ENV: test
+
+# Definisikan jobs yang akan dijalankan
+jobs:
+  # Job untuk build aplikasi
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build application
+        id: build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: yarn build
+
+      - name: Create build summary
+        run: |
+          echo "### Build Results 🏗️" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "📂 Artifact name: build-output" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .next/
+          retention-days: 5
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: .next/logs/
+          retention-days: 5

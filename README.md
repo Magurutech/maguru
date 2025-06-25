@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+![CI/CD Pipeline](https://github.com/Magurutech/maguru/workflows/CI/CD%20Pipeline/badge.svg)
+
 ## Development
 
 ### Install dependencies
@@ -18,6 +20,17 @@ yarn install
 ### TypeScript Strict Mode
 
 - Strict mode dan noImplicitAny sudah aktif di `tsconfig.json` untuk memastikan type safety maksimal
+
+### CI/CD Pipeline
+
+Project ini menggunakan GitHub Actions untuk Continuous Integration dan Continuous Deployment:
+
+- **Lint**: Memeriksa kode menggunakan ESLint
+- **Test**: Menjalankan unit test dengan Jest dan React Testing Library
+- **Build**: Membangun aplikasi untuk memastikan tidak ada error
+- **Deploy**: Deploy otomatis ke staging environment (Vercel) saat push ke branch `develop` atau `main`
+
+Workflow berjalan setiap kali ada push atau pull request ke branch `develop` atau `main`, dan juga berjalan setiap malam (00:00 UTC) untuk memastikan dependency tetap kompatibel.
 
 ## Getting Started
 
