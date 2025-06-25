@@ -12,8 +12,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:layout": "jest components/layout/navbar.test.tsx components/layout/footer.test.tsx --verbose",
-    "test:homepage": "jest features/homepage/*.test.tsx --verbose"
+    "test:unit": "jest components/layout/navbar.test.tsx components/layout/footer.test.tsx --verbose",
+    "test:integration": "jest features/homepage/*.test.tsx --verbose",
+    "test:e2e": "jest features/homepage/*.test.tsx --verbose"
   },
   "dependencies": {
     "@prisma/client": "^6.10.1",
