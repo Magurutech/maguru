@@ -108,13 +108,17 @@ export function Navbar() {
             </a>
             <div className="flex flex-col space-y-2 pt-4">
               <Link href="/sign-in">
-                <Button variant="ghost" className="justify-start" onClick={handleNavClick}>
+                <Button
+                  variant="ghost"
+                  className="justify-start cursor-pointer"
+                  onClick={handleNavClick}
+                >
                   Masuk
                 </Button>
               </Link>
               <Link href="/sign-up">
                 <Button
-                  className="neu-button bg-gradient-to-r from-primary to-secondary text-white"
+                  className="neu-button bg-gradient-to-r from-primary to-secondary text-white cursor-pointer"
                   onClick={handleNavClick}
                 >
                   Daftar Gratis

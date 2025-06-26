@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:unit": "jest features/homepage/component/navbar.test.tsx app/sign-up/page.test.tsx --verbose",
+    "test:custom": "jest features/homepage/component/navbar.test.tsx app/sign-in/page.test.tsx app/sign-up/page.test.tsx app/dashboard/page.test.tsx --verbose",
+    "test:unit": "jest features/homepage/component/navbar.test.tsx app/sign-in/page.test.tsx app/sign-up/page.test.tsx app/dashboard/page.test.tsx --verbose",
     "test:integration": "jest features/homepage/*.test.tsx --verbose",
     "test:e2e": "jest features/homepage/*.test.tsx --verbose"
   },
