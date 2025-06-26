@@ -1,19 +1,24 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
 # 📐 Arsitektur Proyek Maguru
 
 ## Daftar Isi
 
-- [Pendahuluan](#pendahuluan)
-- [High Level Architecture](#high-level-architecture)
-- [Struktur Folder & Mapping Layer](#struktur-folder--mapping-layer)
-- [Modular Boundaries & Feature-First](#modular-boundaries--feature-first)
-- [Layered Architecture (3-Tier)](#layered-architecture-3-tier)
-- [Event-Driven Hybrid](#event-driven-hybrid)
-- [Komponen Arsitektur Detil](#komponen-arsitektur-detil)
-- [Alur Data End-to-End](#alur-data-end-to-end)
-- [Konvensi Penamaan](#konvensi-penamaan)
-- [Patterns dan Best Practices](#patterns-dan-best-practices)
-- [Tech Stack dan Dependencies](#tech-stack-dan-dependencies)
-- [Best Practice & Onboarding](#best-practice--onboarding)
+- [Pendahuluan](mdc:#pendahuluan)
+- [High Level Architecture](mdc:#high-level-architecture)
+- [Struktur Folder & Mapping Layer](mdc:#struktur-folder--mapping-layer)
+- [Modular Boundaries & Feature-First](mdc:#modular-boundaries--feature-first)
+- [Layered Architecture (3-Tier)](mdc:#layered-architecture-3-tier)
+- [Event-Driven Hybrid](mdc:#event-driven-hybrid)
+- [Komponen Arsitektur Detil](mdc:#komponen-arsitektur-detil)
+- [Alur Data End-to-End](mdc:#alur-data-end-to-end)
+- [Konvensi Penamaan](mdc:#konvensi-penamaan)
+- [Patterns dan Best Practices](mdc:#patterns-dan-best-practices)
+- [Tech Stack dan Dependencies](mdc:#tech-stack-dan-dependencies)
+- [Best Practice & Onboarding](mdc:#best-practice--onboarding)
 
 ---
 

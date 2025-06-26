@@ -1,12 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
 # GitHub Actions Workflows - Maguru
 
 ## Daftar Isi
 
-1. [Pendahuluan](#pendahuluan)
-2. [Struktur Workflows](#struktur-workflows)
-3. [Rules dan Best Practices](#rules-dan-best-practices)
-4. [Setup Secret dan Environment](#setup-secret-dan-environment)
-5. [Troubleshooting](#troubleshooting)
+1. [Pendahuluan](mdc:#pendahuluan)
+2. [Struktur Workflows](mdc:#struktur-workflows)
+3. [Rules dan Best Practices](mdc:#rules-dan-best-practices)
+4. [Setup Secret dan Environment](mdc:#setup-secret-dan-environment)
+5. [Troubleshooting](mdc:#troubleshooting)
 
 ## Pendahuluan
 
