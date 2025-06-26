@@ -1,0 +1,74 @@
+{
+  "numTotalTests": 5,
+  "numPassedTests": 4,
+  "numFailedTests": 1,
+  "numPendingTests": 0,
+  "startTime": "2025-06-26T08:58:51.478Z",
+  "endTime": "2025-06-26T08:58:56.012Z",
+  "testResults": [
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\app\\sign-up\\page.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Halaman SignUp"
+          ],
+          "fullName": "Halaman SignUp menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "status": "failed",
+          "title": "menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "failureMessages": [
+            "TypeError: useParams is not a function\n    at usePathnameWithoutCatchAll (D:\\2-Maguru\\maguru\\node_modules\\@clerk\\nextjs\\src\\client-boundary\\hooks\\usePathnameWithoutCatchAll.tsx:41:40)\n    at useEnforceCorrectRoutingProps (D:\\2-Maguru\\maguru\\node_modules\\@clerk\\nextjs\\src\\client-boundary\\hooks\\useEnforceRoutingProps.tsx:12:16)\n    at SignUp (D:\\2-Maguru\\maguru\\node_modules\\@clerk\\nextjs\\src\\client-boundary\\uiComponents.tsx:56:26)\n    at Object.react-stack-bottom-frame (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:23863:20)\n    at renderWithHooks (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:5529:22)\n    at updateFunctionComponent (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8897:19)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10522:18)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\app\\sign-up\\page.test.tsx:10:33)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\testWorker.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\testWorker.js:340:7)\n    at Object.worker (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\testWorker.js:494:12)"
+          ],
+          "duration": 49
+        }
+      ],
+      "failureMessage": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mHalaman SignUp › menampilkan wrapper glass panel dan komponen SignUp Clerk\u001b[39m\u001b[22m\n\n    TypeError: useParams is not a function\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m  8 |\u001b[39m describe(\u001b[32m'Halaman SignUp'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m  9 |\u001b[39m   it(\u001b[32m'menampilkan wrapper glass panel dan komponen SignUp Clerk'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 10 |\u001b[39m     \u001b[36mconst\u001b[39m { container } \u001b[33m=\u001b[39m render(\u001b[33m<\u001b[39m\u001b[33mSignUpPage\u001b[39m \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m)\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m    |\u001b[39m                                 \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 11 |\u001b[39m     \u001b[90m// Cek wrapper utama\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 12 |\u001b[39m     expect(screen\u001b[33m.\u001b[39mgetByRole(\u001b[32m'main'\u001b[39m))\u001b[33m.\u001b[39mtoBeInTheDocument()\u001b[33m;\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 13 |\u001b[39m     \u001b[90m// Cek ada elemen dengan class glass-panel (wrapper UI Maguru)\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat usePathnameWithoutCatchAll (\u001b[22m\u001b[2mnode_modules/@clerk/nextjs/src/client-boundary/hooks/usePathnameWithoutCatchAll.tsx\u001b[2m:41:40)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat useEnforceCorrectRoutingProps (\u001b[22m\u001b[2mnode_modules/@clerk/nextjs/src/client-boundary/hooks/useEnforceRoutingProps.tsx\u001b[2m:12:16)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat SignUp (\u001b[22m\u001b[2mnode_modules/@clerk/nextjs/src/client-boundary/uiComponents.tsx\u001b[2m:56:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.react-stack-bottom-frame (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:23863:20)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderWithHooks (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:5529:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat updateFunctionComponent (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8897:19)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10522:18)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mapp/sign-up/page.test.tsx\u001b[39m\u001b[0m\u001b[2m:10:33)\u001b[22m\u001b[2m\u001b[22m\n"
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\navbar.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "fullName": "Navbar Component renders logo and brand name",
+          "status": "passed",
+          "title": "renders logo and brand name",
+          "failureMessages": [],
+          "duration": 54
+        },
+        {
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "fullName": "Navbar Component renders desktop menu items",
+          "status": "passed",
+          "title": "renders desktop menu items",
+          "failureMessages": [],
+          "duration": 10
+        },
+        {
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "fullName": "Navbar Component renders desktop CTA buttons as links",
+          "status": "passed",
+          "title": "renders desktop CTA buttons as links",
+          "failureMessages": [],
+          "duration": 9
+        },
+        {
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "fullName": "Navbar Component toggles mobile menu and links close menu on click",
+          "status": "passed",
+          "title": "toggles mobile menu and links close menu on click",
+          "failureMessages": [],
+          "duration": 91
+        }
+      ],
+      "failureMessage": null
+    }
+  ]
+}

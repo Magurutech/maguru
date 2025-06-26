@@ -25,31 +25,28 @@ describe('Navbar Component', () => {
     expect(screen.getByText('Pricing')).toBeInTheDocument();
   });
 
-  test('renders desktop CTA buttons', () => {
+  test('renders desktop CTA buttons as links', () => {
     render(<Navbar />);
-
-    // Check for CTA buttons
-    expect(screen.getByText('Masuk')).toBeInTheDocument();
-    expect(screen.getByText('Daftar Gratis')).toBeInTheDocument();
+    const masuk = screen.getAllByText('Masuk')[0];
+    const daftar = screen.getAllByText('Daftar Gratis')[0];
+    expect(masuk.closest('a')).toHaveAttribute('href', '/sign-in');
+    expect(daftar.closest('a')).toHaveAttribute('href', '/sign-up');
   });
 
-  test('toggles mobile menu when menu button is clicked', () => {
+  test('toggles mobile menu and links close menu on click', () => {
     render(<Navbar />);
-
-    // Mobile menu should be hidden initially
-    expect(screen.queryByText('Courses')).toBeInTheDocument();
-
-    // Find and click the menu button (the one with Menu icon)
     const menuButton = screen.getByRole('button', { name: /toggle menu/i });
     fireEvent.click(menuButton);
-
-    // Mobile menu should be visible now with the same menu items
-    expect(screen.getAllByText('Courses')[0]).toBeVisible();
-    expect(screen.getAllByText('Features')[0]).toBeVisible();
-    expect(screen.getAllByText('Testimonials')[0]).toBeVisible();
-    expect(screen.getAllByText('Pricing')[0]).toBeVisible();
-
-    // Click again to close
-    fireEvent.click(menuButton);
+    // Mobile menu should be visible
+    expect(screen.getAllByText('Courses')[1]).toBeVisible();
+    // Cek link Masuk dan Daftar Gratis di mobile
+    const masukMobile = screen.getAllByText('Masuk')[1];
+    const daftarMobile = screen.getAllByText('Daftar Gratis')[1];
+    expect(masukMobile.closest('a')).toHaveAttribute('href', '/sign-in');
+    expect(daftarMobile.closest('a')).toHaveAttribute('href', '/sign-up');
+    // Klik link harus menutup menu (simulate click)
+    fireEvent.click(masukMobile);
+    // Menu harus tertutup (tidak ada lagi menu mobile)
+    expect(screen.queryByText('Courses', { selector: 'a.block' })).not.toBeInTheDocument();
   });
 });

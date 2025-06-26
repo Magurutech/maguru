@@ -1,4 +1,6 @@
 import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
+import React from 'react';
+
 
 export function Footer() {
   return (
