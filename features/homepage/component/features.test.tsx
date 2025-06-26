@@ -1,21 +1,21 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { Features } from './Features';
+import React from 'react'
+import { render, screen } from '@testing-library/react'
+import '@testing-library/jest-dom'
+import { Features } from './features'
 
 describe('Features Component', () => {
   test('renders section title and description', () => {
-    render(<Features />);
+    render(<Features />)
 
-    expect(screen.getByText('Kenapa Pilih')).toBeInTheDocument();
-    expect(screen.getByText('Maguru?')).toBeInTheDocument();
+    expect(screen.getByText('Kenapa Pilih')).toBeInTheDocument()
+    expect(screen.getByText('Maguru?')).toBeInTheDocument()
     expect(
       screen.getByText(/Platform pembelajaran online terlengkap dengan fitur-fitur canggih/i),
-    ).toBeInTheDocument();
-  });
+    ).toBeInTheDocument()
+  })
 
   test('renders all feature cards with correct titles', () => {
-    render(<Features />);
+    render(<Features />)
 
     // Check feature titles
     const featureTitles = [
@@ -25,51 +25,51 @@ describe('Features Component', () => {
       'Project-Based Learning',
       'Community Learning',
       'Lifetime Access',
-    ];
+    ]
 
     featureTitles.forEach((title) => {
-      expect(screen.getByText(title)).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText(title)).toBeInTheDocument()
+    })
+  })
 
   test('renders feature descriptions correctly', () => {
-    render(<Features />);
+    render(<Features />)
 
     // Check some feature descriptions
     expect(
       screen.getByText(
         'Kurikulum terstruktur yang dirancang khusus untuk mengoptimalkan proses pembelajaran Anda.',
       ),
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(
       screen.getByText(
         'Dapatkan sertifikat yang diakui industri setelah menyelesaikan course dengan nilai memuaskan.',
       ),
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(
       screen.getByText(
         'Akses langsung ke mentor expert untuk konsultasi dan bantuan kapan saja Anda butuhkan.',
       ),
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(
       screen.getByText(
         'Belajar sambil praktik dengan project nyata yang bisa langsung ditambahkan ke portfolio.',
       ),
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(
       screen.getByText(
         'Bergabung dengan komunitas learner aktif untuk sharing knowledge dan networking.',
       ),
-    ).toBeInTheDocument();
+    ).toBeInTheDocument()
 
     expect(
       screen.getByText(
         'Akses selamanya ke semua materi course yang sudah Anda beli, termasuk update terbaru.',
       ),
-    ).toBeInTheDocument();
-  });
-});
+    ).toBeInTheDocument()
+  })
+})

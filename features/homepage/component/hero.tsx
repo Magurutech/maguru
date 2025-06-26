@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Play, Star, Users, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button'
+import { Play, Star, Users, BookOpen } from 'lucide-react'
 
 export function Hero() {
   return (
@@ -30,13 +30,9 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* <Button
-                size="lg"
-                className="neu-button bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 text-lg"
-              > */}
               <Button
                 size="lg"
-                className="neu-button bg-secondary-300 hover:bg-secondary-400 text-white px-8 py-4 text-lg"
+                className="neu-button bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 text-lg"
               >
                 Mulai Belajar Gratis
               </Button>
@@ -122,5 +118,5 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,23 +1,23 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Menu, X, BookOpen } from 'lucide-react';
-import { useUser } from '@clerk/nextjs';
-import { SignOutButton, UserButton } from '@clerk/nextjs';
+import { useState } from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Menu, X, BookOpen } from 'lucide-react'
+import { useUser } from '@clerk/nextjs'
+import { SignOutButton, UserButton } from '@clerk/nextjs'
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isSignedIn } = useUser();
+  const [isOpen, setIsOpen] = useState(false)
+  const { isSignedIn } = useUser()
 
   // Handler untuk close menu mobile setelah klik link
-  const handleNavClick = () => setIsOpen(false);
+  const handleNavClick = () => setIsOpen(false)
 
   // Handler untuk sign out dengan close mobile menu
   const handleSignOut = () => {
-    setIsOpen(false);
-  };
+    setIsOpen(false)
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 glass-panel">
@@ -173,5 +173,5 @@ export function Navbar() {
         )}
       </div>
     </nav>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { Zap, Shield, Headphones, Trophy, Users, BookOpen } from 'lucide-react';
+import { Zap, Shield, Headphones, Trophy, Users, BookOpen } from 'lucide-react'
 
 export function Features() {
   const features = [
@@ -44,7 +44,7 @@ export function Features() {
         'Akses selamanya ke semua materi course yang sudah Anda beli, termasuk update terbaru.',
       color: 'from-secondary to-accent-mint',
     },
-  ];
+  ]
 
   return (
     <section id="features" className="py-20 px-4">
@@ -90,5 +90,5 @@ export function Features() {
         </div>
       </div>
     </section>
-  );
+  )
 }

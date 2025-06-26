@@ -1,5 +1,5 @@
-import { Star, Quote } from 'lucide-react';
-import Image from 'next/image';
+import { Star, Quote } from 'lucide-react'
+import Image from 'next/image'
 
 export function Testimonials() {
   const testimonials = [
@@ -27,7 +27,7 @@ export function Testimonials() {
       rating: 5,
       avatar: '/placeholder.svg?height=60&width=60',
     },
-  ];
+  ]
 
   return (
     <section id="testimonials" className="py-20 px-4">
@@ -90,5 +90,5 @@ export function Testimonials() {
         </div>
       </div>
     </section>
-  );
+  )
 }

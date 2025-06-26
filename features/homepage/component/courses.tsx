@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Star, Clock, Users, Play } from 'lucide-react';
-import Image from 'next/image';
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Star, Clock, Users, Play } from 'lucide-react'
+import Image from 'next/image'
 
 export function Courses() {
   const courses = [
@@ -41,7 +41,7 @@ export function Courses() {
       image: '/placeholder.svg?height=200&width=300',
       tags: ['SEO', 'Social Media', 'Analytics'],
     },
-  ];
+  ]
 
   return (
     <section id="courses" className="py-20 px-4 bg-gradient-to-b from-transparent to-primary/50">
@@ -152,5 +152,5 @@ export function Courses() {
         </div>
       </div>
     </section>
-  );
+  )
 }

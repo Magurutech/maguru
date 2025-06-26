@@ -1,4 +1,4 @@
-import { TrendingUp, Users, Award, Clock } from 'lucide-react';
+import { TrendingUp, Users, Award, Clock } from 'lucide-react'
 
 export function Stats() {
   const stats = [
@@ -26,7 +26,7 @@ export function Stats() {
       label: 'Learning Support',
       color: 'text-accent-orange',
     },
-  ];
+  ]
 
   return (
     <section className="py-16 px-4">
@@ -54,5 +54,5 @@ export function Stats() {
         </div>
       </div>
     </section>
-  );
+  )
 }

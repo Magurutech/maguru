@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button'
+import { ArrowRight, Sparkles } from 'lucide-react'
 
 export function CTA() {
   return (
@@ -70,5 +70,5 @@ export function CTA() {
         </div>
       </div>
     </section>
-  );
+  )
 }

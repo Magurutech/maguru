@@ -1,11 +1,11 @@
 // components/CustomCard.tsx
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react'
 
 interface CustomCardProps {
-  title: string;
-  children: ReactNode;
-  onAction?: () => void;
-  actionLabel?: string;
+  title: string
+  children: ReactNode
+  onAction?: () => void
+  actionLabel?: string
 }
 
 const CustomCard: FC<CustomCardProps> = ({ title, children, onAction, actionLabel = 'Action' }) => (
@@ -43,6 +43,6 @@ const CustomCard: FC<CustomCardProps> = ({ title, children, onAction, actionLabe
       )}
     </div>
   </div>
-);
+)
 
-export default CustomCard;
+export default CustomCard

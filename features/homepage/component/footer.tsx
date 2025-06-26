@@ -1,6 +1,5 @@
-import { BookOpen, Mail, Phone, MapPin } from 'lucide-react';
-import React from 'react';
-
+import { BookOpen, Mail, Phone, MapPin } from 'lucide-react'
+import React from 'react'
 
 export function Footer() {
   return (
@@ -152,5 +151,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }
