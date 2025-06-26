@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useUser, UserButton } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
 import { BookOpen, Home, Settings, User } from 'lucide-react';
+import { Navbar } from '@/features/homepage/component/Navbar';
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -24,6 +25,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-secondary/5 to-accent-mint/5 relative overflow-hidden">
+      {/* Navbar */}
+      <Navbar />
+
       {/* Background patterns */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl"></div>
@@ -70,11 +74,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Main content */}
-      <div className="md:ml-64 p-6">
+      <div className="md:ml-64 p-6 pt-20">
         {/* Header */}
         <header className="glass-panel p-4 rounded-lg shadow-glass flex items-center justify-between mb-6">
           <h1 className="text-xl font-bold">Dashboard</h1>
-          <UserButton afterSignOutUrl="/" />
+          <div className="text-sm text-gray-600">
+            Selamat datang, {user?.firstName || 'Pengguna'}!
+          </div>
         </header>
 
         {/* Content */}

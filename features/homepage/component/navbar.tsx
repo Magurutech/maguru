@@ -4,12 +4,20 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Menu, X, BookOpen } from 'lucide-react';
+import { useUser } from '@clerk/nextjs';
+import { SignOutButton, UserButton } from '@clerk/nextjs';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isSignedIn } = useUser();
 
   // Handler untuk close menu mobile setelah klik link
   const handleNavClick = () => setIsOpen(false);
+
+  // Handler untuk sign out dengan close mobile menu
+  const handleSignOut = () => {
+    setIsOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 w-full z-50 glass-panel">
@@ -55,14 +63,28 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/sign-in">
-              <Button variant="ghost">Masuk</Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button className="neu-button bg-gradient-to-r from-primary to-secondary text-white px-6">
-                Daftar Gratis
-              </Button>
-            </Link>
+            {!isSignedIn ? (
+              <>
+                <Link href="/sign-in">
+                  <Button variant="ghost">Masuk</Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button className="neu-button bg-gradient-to-r from-primary to-secondary text-white px-6">
+                    Daftar Gratis
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <SignOutButton
+                  signOutOptions={{ redirectUrl: '/' }}
+                  data-testid="desktop-sign-out-button"
+                >
+                  <Button variant="ghost">Keluar</Button>
+                </SignOutButton>
+                <UserButton afterSignOutUrl="/" data-testid="desktop-user-button" />
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -107,23 +129,45 @@ export function Navbar() {
               Pricing
             </a>
             <div className="flex flex-col space-y-2 pt-4">
-              <Link href="/sign-in">
-                <Button
-                  variant="ghost"
-                  className="justify-start cursor-pointer"
-                  onClick={handleNavClick}
-                >
-                  Masuk
-                </Button>
-              </Link>
-              <Link href="/sign-up">
-                <Button
-                  className="neu-button bg-gradient-to-r from-primary to-secondary text-white cursor-pointer"
-                  onClick={handleNavClick}
-                >
-                  Daftar Gratis
-                </Button>
-              </Link>
+              {!isSignedIn ? (
+                <>
+                  <Link href="/sign-in">
+                    <Button
+                      variant="ghost"
+                      className="justify-start cursor-pointer"
+                      onClick={handleNavClick}
+                    >
+                      Masuk
+                    </Button>
+                  </Link>
+                  <Link href="/sign-up">
+                    <Button
+                      className="neu-button bg-gradient-to-r from-primary to-secondary text-white cursor-pointer"
+                      onClick={handleNavClick}
+                    >
+                      Daftar Gratis
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <SignOutButton
+                    signOutOptions={{ redirectUrl: '/' }}
+                    data-testid="mobile-sign-out-button"
+                  >
+                    <Button
+                      variant="ghost"
+                      className="justify-start cursor-pointer"
+                      onClick={handleSignOut}
+                    >
+                      Keluar
+                    </Button>
+                  </SignOutButton>
+                  <div className="pt-2">
+                    <UserButton afterSignOutUrl="/" data-testid="mobile-user-button" />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
