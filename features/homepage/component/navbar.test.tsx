@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Navbar } from './navbar';
+import { Navbar } from './Navbar';
 
 describe('Navbar Component', () => {
   test('renders logo and brand name', () => {

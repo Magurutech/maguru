@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Courses } from './courses';
+import { Courses } from './Courses';
 
 describe('Courses Component', () => {
   test('renders section title and description', () => {

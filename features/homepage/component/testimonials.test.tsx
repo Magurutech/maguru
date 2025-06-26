@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { Testimonials } from './testimonials';
+import { Testimonials } from './Testimonials';
 
 describe('Testimonials Component', () => {
   test('renders section title and description', () => {
