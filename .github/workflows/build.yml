@@ -3,21 +3,66 @@ name: Build Pipeline
 # Mendefinisikan event yang akan memicu workflow ini
 on:
   push:
-    branches: [develop, main, 'feature/*', 'TSK-14-clerk-setup']
+    branches: [develop, main, 'feature/*']
   pull_request:
-    branches: [develop, main, 'TSK-14-clerk-setup']
+    branches: [develop, main]
 
 # Set environment variables global
 env:
   NEXT_TELEMETRY_DISABLED: 1
-  NODE_ENV: test
+  NODE_ENV: production
+  CI: true
 
 # Definisikan jobs yang akan dijalankan
 jobs:
+  # Job untuk validasi environment sebelum build
+  env-validation:
+    name: Environment Validation
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Validate environment variables for build
+        env:
+          # Required environment variables for build
+          NODE_ENV: production
+          APP_ENV: prod
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://localhost:3000' }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        run: |
+          echo "Validating build environment variables..."
+          node -e "
+            const { validateEnvSafe, logEnvironmentInfo } = require('./lib/env-validation.ts');
+            const result = validateEnvSafe();
+            if (!result.success) {
+              console.error('❌ Build environment validation failed:');
+              console.error(result.error);
+              process.exit(1);
+            }
+            console.log('✅ Build environment validation passed');
+            logEnvironmentInfo();
+          "
+
   # Job untuk build aplikasi
   build:
-    name: Build
+    name: Build Application
     runs-on: ubuntu-latest
+    needs: env-validation
     environment: development
 
     steps:
@@ -44,29 +89,59 @@ jobs:
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 
-          # Role Management Configuration (dengan fallback defaults)
-          NEXT_PUBLIC_ROLE_CACHE_TTL: '300000'
-          NEXT_PUBLIC_ENABLE_ROLE_CACHE: 'true'
-          NEXT_PUBLIC_ENABLE_ROLE_SYNC: 'true'
-        run: yarn build
+          # App Configuration
+          NODE_ENV: production
+          APP_ENV: prod
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://localhost:3000' }}
+        run: |
+          echo "Building application..."
+          yarn build
+
+          # Get build statistics
+          BUILD_SIZE=$(du -sh .next/ | cut -f1)
+          echo "build_size=$BUILD_SIZE" >> $GITHUB_OUTPUT
+
+          # Check if build output exists
+          if [ -d ".next" ]; then
+            echo "build_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "build_success=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Analyze bundle size
+        id: bundle-analysis
+        run: |
+          # Basic bundle analysis without additional tools
+          echo "### Bundle Analysis 📦" >> $GITHUB_STEP_SUMMARY
+          echo "Build size: ${{ steps.build.outputs.build_size }}" >> $GITHUB_STEP_SUMMARY
+
+          # List largest files in build
+          echo "#### Largest build files:" >> $GITHUB_STEP_SUMMARY
+          find .next -name "*.js" -type f -exec du -h {} + | sort -hr | head -10 >> $GITHUB_STEP_SUMMARY
 
       - name: Create build summary
         run: |
           echo "### Build Results 🏗️" >> $GITHUB_STEP_SUMMARY
           echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
-          echo "📂 Artifact name: build-output" >> $GITHUB_STEP_SUMMARY
+          echo "📂 Build size: ${{ steps.build.outputs.build_size }}" >> $GITHUB_STEP_SUMMARY
+          echo "📄 Artifact: build-output" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: .next/
-          retention-days: 5
+          retention-days: 7
 
       - name: Upload build logs on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: build-logs
-          path: .next/logs/
-          retention-days: 5
+          path: |
+            .next/trace
+            npm-debug.log*
+            yarn-debug.log*
+            yarn-error.log*
+          retention-days: 3

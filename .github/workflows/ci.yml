@@ -3,9 +3,9 @@ name: CI Pipeline
 # Mendefinisikan event yang akan memicu workflow ini
 on:
   push:
-    branches: [develop, main, 'feature/*', 'TSK-14-clerk-setup']
+    branches: [develop, main, 'feature/*']
   pull_request:
-    branches: [develop, main, 'TSK-14-clerk-setup']
+    branches: [develop, main]
   schedule:
     - cron: '0 0 * * *' # Menjalankan workflow setiap hari pada tengah malam
 
@@ -13,13 +13,59 @@ on:
 env:
   NEXT_TELEMETRY_DISABLED: 1
   NODE_ENV: test
+  CI: true
 
 # Definisikan jobs yang akan dijalankan
 jobs:
+  # Job untuk validasi environment
+  env-validation:
+    name: Environment Validation
+    runs-on: ubuntu-latest
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Validate environment variables
+        env:
+          # Required environment variables for validation
+          NODE_ENV: test
+          APP_ENV: dev
+          NEXT_PUBLIC_APP_URL: https://localhost:3000
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          CLERK_TEST_MODE: true
+        run: |
+          echo "Validating environment variables..."
+          node -e "
+            const { validateEnvSafe, logEnvironmentInfo } = require('./lib/env-validation.ts');
+            const result = validateEnvSafe();
+            if (!result.success) {
+              console.error('❌ Environment validation failed:');
+              console.error(result.error);
+              process.exit(1);
+            }
+            console.log('✅ Environment validation passed');
+            logEnvironmentInfo();
+          "
+
   # Job untuk menjalankan lint
   lint:
     name: ESLint
     runs-on: ubuntu-latest
+    needs: env-validation
     environment: development
 
     steps:
@@ -48,11 +94,11 @@ jobs:
             eslint_report.json
           retention-days: 5
 
-  # Job untuk menjalankan test
-  test:
-    name: Jest Tests
+  # Job untuk menjalankan unit tests
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [env-validation, lint]
     environment: development
 
     steps:
@@ -68,7 +114,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run Jest tests with coverage
+      - name: Run unit tests with coverage
         id: test
         env:
           # Database Configuration untuk testing
@@ -78,29 +124,118 @@ jobs:
           # Clerk Authentication untuk integration tests
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_TEST_MODE: true
 
-          # Role Management Configuration untuk testing
-          NEXT_PUBLIC_ROLE_CACHE_TTL: '300000'
-          NEXT_PUBLIC_ENABLE_ROLE_CACHE: 'true'
-          NEXT_PUBLIC_ENABLE_ROLE_SYNC: 'true'
+          # App Configuration
+          NODE_ENV: test
+          APP_ENV: dev
+          NEXT_PUBLIC_APP_URL: https://localhost:3000
         run: |
-          yarn test:coverage
-          # Parse test results and write to GITHUB_OUTPUT
-          echo "test_passed=48" >> $GITHUB_OUTPUT
-          echo "test_failed=0" >> $GITHUB_OUTPUT
-          echo "test_total=48" >> $GITHUB_OUTPUT
+          yarn test:unit --ci --coverage --watchAll=false --passWithNoTests
+
+          # Parse test results dynamically
+          if [ -f "test-results/test-report.json" ]; then
+            TEST_PASSED=$(jq '.numPassedTests' test-results/test-report.json)
+            TEST_FAILED=$(jq '.numFailedTests' test-results/test-report.json)
+            TEST_TOTAL=$(jq '.numTotalTests' test-results/test-report.json)
+          else
+            TEST_PASSED="N/A"
+            TEST_FAILED="N/A" 
+            TEST_TOTAL="N/A"
+          fi
+
+          echo "test_passed=$TEST_PASSED" >> $GITHUB_OUTPUT
+          echo "test_failed=$TEST_FAILED" >> $GITHUB_OUTPUT
+          echo "test_total=$TEST_TOTAL" >> $GITHUB_OUTPUT
 
       - name: Create test summary
         run: |
-          echo "### Test Results 📊" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Passed: ${{ steps.test.outputs.test_passed || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
-          echo "❌ Failed: ${{ steps.test.outputs.test_failed || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
-          echo "Total: ${{ steps.test.outputs.test_total || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Unit Test Results 📊" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Passed: ${{ steps.test.outputs.test_passed }}" >> $GITHUB_STEP_SUMMARY
+          echo "❌ Failed: ${{ steps.test.outputs.test_failed }}" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Total: ${{ steps.test.outputs.test_total }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload test coverage
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: unit-test-coverage
           path: coverage/
+          retention-days: 5
+
+  # Job untuk menjalankan integration tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [env-validation, lint]
+    environment: development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run integration tests
+        env:
+          # Database Configuration untuk testing
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+          # Clerk Authentication untuk integration tests
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_TEST_MODE: true
+
+          # App Configuration
+          NODE_ENV: test
+          APP_ENV: dev
+          NEXT_PUBLIC_APP_URL: https://localhost:3000
+        run: yarn test:integration --ci --watchAll=false --passWithNoTests
+
+      - name: Upload integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: |
+            coverage/
+            test-results/
+          retention-days: 5
+
+  # Job untuk Security audit
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    needs: env-validation
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run security audit
+        run: yarn audit --level moderate
+
+      - name: Upload audit results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-results
+          path: yarn-audit.log
           retention-days: 5
