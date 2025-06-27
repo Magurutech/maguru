@@ -15,33 +15,33 @@
 
   /* Primary dengan nuansa */
   --color-primary: #A67CFF;
-  --color-primary-50: "#F3EDFF";
-  --color-primary-100: "#E6DBFF";
-  --color-primary-200: "#D4C2FF";
-  --color-primary-300: "#BFA3FF";
-  --color-primary-400: "#A67CFF";
-  --color-primary-500: "#8C4FFF";
-  --color-primary-600: "#7A3FE6";
-  --color-primary-700: "#6832CC";
-  --color-primary-800: "#5626B3";
-  --color-primary-900: "#441D99";
+  --color-primary-50: #F3EDFF;
+  --color-primary-100: #E6DBFF;
+  --color-primary-200: #D4C2FF;
+  --color-primary-300: #BFA3FF;
+  --color-primary-400: #A67CFF;
+  --color-primary-500: #8C4FFF;
+  --color-primary-600: #7A3FE6;
+  --color-primary-700: #6832CC;
+  --color-primary-800: #5626B3;
+  --color-primary-900: #441D99;
 
   /* Secondary dengan nuansa */
   --color-secondary: #4D90FE;
-  --color-secondary-50: "#EBF3FF";
-  --color-secondary-100: "#D6E7FF";
-  --color-secondary-200: "#B8D4FF";
-  --color-secondary-300: "#94BDFF";
-  --color-secondary-400: "#6FA3FF";
-  --color-secondary-500: "#4D90FE";
-  --color-secondary-600: "#2B7AE5";
-  --color-secondary-700: "#1A65CC";
-  --color-secondary-800: "#0F52B3";
-  --color-secondary-900: "#084199";
+  --color-secondary-50: #EBF3FF;
+  --color-secondary-100: #D6E7FF;
+  --color-secondary-200: #B8D4FF;
+  --color-secondary-300: #94BDFF;
+  --color-secondary-400: #6FA3FF;
+  --color-secondary-500: #4D90FE;
+  --color-secondary-600: #2B7AE5;
+  --color-secondary-700: #1A65CC;
+  --color-secondary-800: #0F52B3;
+  --color-secondary-900: #084199;
 
   /* Accent (mint dan orange) */
-  --color-accent-mint: "#2DD897";
-  --color-accent-orange: "#FF9F1C";
+  --color-accent-mint: #2DD897;
+  --color-accent-orange: #FF9F1C;
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
 

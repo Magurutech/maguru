@@ -3,9 +3,9 @@ name: Build Pipeline
 # Mendefinisikan event yang akan memicu workflow ini
 on:
   push:
-    branches: [develop, main, 'feature/*']
+    branches: [develop, main, 'feature/*', 'TSK-14-clerk-setup']
   pull_request:
-    branches: [develop, main]
+    branches: [develop, main, 'TSK-14-clerk-setup']
 
 # Set environment variables global
 env:
@@ -38,6 +38,8 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
         run: yarn build
 
       - name: Create build summary

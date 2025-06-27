@@ -1,12 +1,12 @@
-import { Hero } from '@/features/homepage/hero';
-import { Features } from '@/features/homepage/features';
-import { Courses } from '@/features/homepage/courses';
-import { Stats } from '@/features/homepage/stats';
-import { Testimonials } from '@/features/homepage/testimonials';
-import { CTA } from '@/features/homepage/cta';
-import { Footer } from '@/components/layout/footer';
-import { Navbar } from '@/components/layout/navbar';
-import CustomCard from '@/features/homepage/CustomCard';
+import { Hero } from '@/features/homepage/component/Heros'
+import { Features } from '@/features/homepage/component/Feature'
+import { Courses } from '@/features/homepage/component/Course'
+import { Stats } from '@/features/homepage/component/Stat'
+import { Testimonials } from '@/features/homepage/component/Testimonial'
+import { CTA } from '@/features/homepage/component/Cts'
+import { Footer } from '@/features/homepage/component/Footers'
+import { Navbar } from '@/features/homepage/component/Navbars'
+import CustomCard from '@/features/homepage/component/CustomCard'
 
 export default function HomePage() {
   return (
@@ -23,5 +23,5 @@ export default function HomePage() {
       <CTA />
       <Footer />
     </main>
-  );
+  )
 }

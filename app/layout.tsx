@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
+import { ClerkProvider } from '@clerk/nextjs';
 import '../styles/globals.css';
 
 // Load Google Fonts via next/font/google
@@ -45,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ClerkProvider>{children}</ClerkProvider>
         </ThemeProvider>
       </body>
     </html>
