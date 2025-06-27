@@ -245,31 +245,6 @@ const PROTECTED_ROUTES = {
    - Components: Error detection, redirect logic, user feedback
    - Expected: Graceful error handling dan appropriate redirects
 
-### 3. E2E Testing (BDD)
-
-#### Pendekatan:
-
-- Test real user journeys dengan different roles
-- Test redirect flows dan error scenarios
-- Target: Complete authorization user experience
-
-#### Test Scenarios:
-
-1. **Admin Access Scenario**:
-   - **Given**: User dengan admin role logged in
-   - **When**: User navigates to admin-only route
-   - **Then**: User dapat akses route tanpa restrictions
-
-2. **Unauthorized Access Scenario**:
-   - **Given**: User dengan user role logged in
-   - **When**: User tries to access admin-only route
-   - **Then**: User di-redirect ke unauthorized page dengan appropriate message
-
-3. **No Session Scenario**:
-   - **Given**: User tidak logged in
-   - **When**: User tries to access protected route
-   - **Then**: User di-redirect ke sign-in page dengan return URL preserved
-
 ## Referensi
 
 1. [Clerk Middleware Documentation](https://clerk.com/docs/references/nextjs/clerk-middleware)

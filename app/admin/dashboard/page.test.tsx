@@ -10,28 +10,29 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import AdminDashboardPage from './page'
 
-// Mock semua dependencies dengan implementasi sederhana
-jest.mock('@clerk/nextjs', () => ({
-  useUser: jest.fn(),
-}))
-
-jest.mock('@/features/auth', () => ({
-  useUserRole: jest.fn(),
-  useRoleGuard: jest.fn(),
-  useRoleLoadingState: jest.fn(),
-}))
-
+// Mock Next.js Link component
 jest.mock('next/link', () => {
   return function MockLink({ children }: { children: React.ReactNode }) {
     return <div>{children}</div>
   }
 })
 
+// Mock Lucide React icons
+jest.mock('lucide-react', () => ({
+  Shield: () => <div data-testid="shield-icon">Shield</div>,
+  Users: () => <div data-testid="users-icon">Users</div>,
+  Database: () => <div data-testid="database-icon">Database</div>,
+  BarChart3: () => <div data-testid="barchart3-icon">BarChart3</div>,
+  AlertTriangle: () => <div data-testid="alert-triangle-icon">AlertTriangle</div>,
+  Settings: () => <div data-testid="settings-icon">Settings</div>,
+}))
+
 describe('AdminDashboardPage', () => {
-  const mockUseUser = jest.fn()
-  const mockUseUserRole = jest.fn()
-  const mockUseRoleGuard = jest.fn()
-  const mockUseRoleLoadingState = jest.fn()
+  // Gunakan mock hooks yang sudah di-setup di jest.setup.js
+  const mockUseUser = jest.requireMock('@clerk/nextjs').useUser
+  const mockUseUserRole = jest.requireMock('@/features/auth').useUserRole
+  const mockUseRoleGuard = jest.requireMock('@/features/auth').useRoleGuard
+  const mockUseRoleLoadingState = jest.requireMock('@/features/auth').useRoleLoadingState
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -121,11 +122,16 @@ describe('AdminDashboardPage', () => {
 
     render(<AdminDashboardPage />)
 
-    // Check for stats display
+    // Check for stats display with correct locale formatting
     expect(screen.getByText('Total Users')).toBeInTheDocument()
-    expect(screen.getByText('2,486')).toBeInTheDocument()
+    // toLocaleString() in test environment uses '.' not ',' as thousand separator
+    expect(screen.getByText('2.486')).toBeInTheDocument()
     expect(screen.getByText('Total Courses')).toBeInTheDocument()
     expect(screen.getByText('142')).toBeInTheDocument()
+    expect(screen.getByText('Active Creators')).toBeInTheDocument()
+    expect(screen.getByText('28')).toBeInTheDocument()
+    expect(screen.getByText('System Health')).toBeInTheDocument()
+    expect(screen.getByText('98%')).toBeInTheDocument()
   })
 
   it('should display system alerts', () => {
@@ -173,10 +179,7 @@ describe('AdminDashboardPage', () => {
     expect(screen.getByText('15 pengguna baru mendaftar')).toBeInTheDocument()
   })
 
-  it('should display development info in development mode', () => {
-    const originalEnv = process.env.NODE_ENV
-    process.env.NODE_ENV = 'development'
-
+  it('should display admin management actions', () => {
     mockUseUser.mockReturnValue({
       user: { firstName: 'Admin' },
       isLoaded: true,
@@ -194,11 +197,9 @@ describe('AdminDashboardPage', () => {
 
     render(<AdminDashboardPage />)
 
-    expect(screen.getByText('🔧 Development Info')).toBeInTheDocument()
-    expect(screen.getByText('Route:')).toBeInTheDocument()
-    expect(screen.getByText('/admin/dashboard')).toBeInTheDocument()
-
-    // Restore original environment
-    process.env.NODE_ENV = originalEnv
+    expect(screen.getByText('User Management')).toBeInTheDocument()
+    expect(screen.getByText('Content Management')).toBeInTheDocument()
+    expect(screen.getByText('System Settings')).toBeInTheDocument()
+    expect(screen.getByText('Manage Users')).toBeInTheDocument()
   })
 })

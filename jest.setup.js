@@ -1,6 +1,15 @@
 // Import jest-dom untuk menambahkan custom matchers seperti toBeInTheDocument()
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-require('@testing-library/jest-dom');
+require('@testing-library/jest-dom')
+
+// Setup environment variables untuk testing
+process.env.NODE_ENV = 'test'
+process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
+process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = 'pk_test_testing'
+process.env.CLERK_SECRET_KEY = 'sk_test_testing'
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test'
+process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL = '/sign-in'
+process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL = '/sign-up'
 
 // Mock Next.js router
 jest.mock('next/router', () => ({
@@ -12,16 +21,16 @@ jest.mock('next/router', () => ({
     pathname: '/',
     query: {},
   }),
-}));
+}))
 
 // Mock Next.js Image component
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props) => {
     // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-    return <img {...props} />;
+    return <img {...props} />
   },
-}));
+}))
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -33,15 +42,37 @@ jest.mock('next/navigation', () => ({
       back: jest.fn(),
       pathname: '/',
       query: {},
-    };
+    }
   },
   usePathname() {
-    return '/';
+    return '/'
   },
   useSearchParams() {
-    return new URLSearchParams();
+    return new URLSearchParams()
   },
-}));
+}))
+
+// Mock sessionStorage
+Object.defineProperty(window, 'sessionStorage', {
+  writable: true,
+  value: {
+    getItem: jest.fn(),
+    setItem: jest.fn(),
+    removeItem: jest.fn(),
+    clear: jest.fn(),
+  },
+})
+
+// Mock BroadcastChannel
+global.BroadcastChannel = jest.fn().mockImplementation(() => ({
+  postMessage: jest.fn(),
+  addEventListener: jest.fn(),
+  close: jest.fn(),
+}))
+
+// Mock atob dan btoa untuk JWT
+global.atob = jest.fn()
+global.btoa = jest.fn()
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -56,26 +87,103 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-});
+})
 
 // Mock IntersectionObserver
 class MockIntersectionObserver {
   constructor(callback) {
-    this.callback = callback;
+    this.callback = callback
   }
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
+  observe = jest.fn()
+  unobserve = jest.fn()
+  disconnect = jest.fn()
 }
 
 Object.defineProperty(window, 'IntersectionObserver', {
   writable: true,
   value: MockIntersectionObserver,
-});
+})
+
+// Mock auth hooks dari features/auth
+jest.mock('@/features/auth', () => ({
+  useUserRole: jest.fn(() => ({
+    role: 'user',
+    isLoading: false,
+    error: null,
+    isAdmin: false,
+    isCreator: false,
+    isUser: true,
+  })),
+  useRoleGuard: jest.fn(() => ({
+    canAccessAdmin: () => false,
+    canAccessCreator: () => false,
+    canAccessUser: () => true,
+  })),
+  useRoleLoadingState: jest.fn(() => ({
+    shouldShowLoader: false,
+    isLoading: false,
+  })),
+  useRoleConditional: jest.fn(() => ({
+    showForAdmin: false,
+    showForCreator: false,
+    showForUser: true,
+  })),
+  useRoleErrorHandling: jest.fn(() => ({
+    hasError: false,
+    error: null,
+    retry: jest.fn(),
+  })),
+  useRoleDevelopment: jest.fn(() => ({
+    switchRole: jest.fn(),
+    currentMockRole: null,
+  })),
+  UserRoleProvider: ({ children }) => children,
+}))
+
+// Mock Clerk
+jest.mock('@clerk/nextjs', () => ({
+  useUser: jest.fn(() => ({
+    user: {
+      id: 'user_test123',
+      firstName: 'Test',
+      lastName: 'User',
+      primaryEmailAddress: {
+        emailAddress: 'test@example.com',
+      },
+      createdAt: new Date('2023-01-01'),
+    },
+    isLoaded: true,
+    isSignedIn: true,
+  })),
+  useAuth: jest.fn(() => ({
+    isLoaded: true,
+    isSignedIn: true,
+    signOut: jest.fn(),
+  })),
+  UserButton: () => <div data-testid="user-button">User Button</div>,
+  SignIn: () => <div data-testid="sign-in">Sign In</div>,
+  SignUp: () => <div data-testid="sign-up">Sign Up</div>,
+}))
+
+// Mock Lucide React icons
+jest.mock('lucide-react', () => ({
+  User: () => <div data-testid="user-icon">User Icon</div>,
+  Users: () => <div data-testid="users-icon">Users Icon</div>,
+  Settings: () => <div data-testid="settings-icon">Settings Icon</div>,
+  BarChart3: () => <div data-testid="barchart-icon">BarChart Icon</div>,
+  TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp Icon</div>,
+  DollarSign: () => <div data-testid="dollar-sign-icon">DollarSign Icon</div>,
+  Activity: () => <div data-testid="activity-icon">Activity Icon</div>,
+  Clock: () => <div data-testid="clock-icon">Clock Icon</div>,
+  Calendar: () => <div data-testid="calendar-icon">Calendar Icon</div>,
+  CheckCircle: () => <div data-testid="check-circle-icon">CheckCircle Icon</div>,
+  AlertCircle: () => <div data-testid="alert-circle-icon">AlertCircle Icon</div>,
+  RefreshCw: () => <div data-testid="refresh-icon">Refresh Icon</div>,
+}))
 
 // Suppress console errors during tests
 global.console = {
   ...console,
   error: jest.fn(),
   warn: jest.fn(),
-};
+}

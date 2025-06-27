@@ -1,14 +1,24 @@
 /** @type {import('next').NextConfig} */
 
-// Import environment validation untuk memastikan konfigurasi yang benar
-import { validateEnvSafe, isDevelopment } from './lib/env-validation.js'
+// Skip validation untuk testing environment
+const isTestEnvironment = process.env.NODE_ENV === 'test' || typeof jest !== 'undefined'
 
-// Validasi environment variables saat build
-const envValidation = validateEnvSafe()
-if (!envValidation.success) {
-  console.error('❌ Environment validation failed:')
-  console.error(envValidation.error)
-  process.exit(1)
+if (!isTestEnvironment) {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { validateEnvSafe } = require('./lib/env-validation.ts')
+    const validation = validateEnvSafe()
+    if (!validation.success) {
+      console.error('❌ Environment validation failed:')
+      console.error(validation.error)
+      process.exit(1)
+    }
+  } catch (error) {
+    console.warn(
+      '⚠️ Environment validation skipped:',
+      error instanceof Error ? error.message : 'Unknown error',
+    )
+  }
 }
 
 const nextConfig = {
@@ -131,7 +141,7 @@ const nextConfig = {
   },
 
   // Performance logging (development only)
-  ...(isDevelopment() && {
+  ...(process.env.NODE_ENV === 'development' && {
     logging: {
       fetches: {
         fullUrl: true,

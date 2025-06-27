@@ -225,14 +225,6 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
    - Components: Clerk session events, Context state updates
    - Expected: State sync dengan session changes
 
-### 3. E2E Testing (BDD)
-
-#### Pendekatan:
-
-- Manual testing dengan real Clerk authentication
-- Different user accounts dengan different roles
-- Browser testing untuk JWT handling
-
 #### Test Scenarios:
 
 1. **User Login dan Role Detection**:

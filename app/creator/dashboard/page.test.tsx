@@ -10,17 +10,7 @@ import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import CreatorDashboardPage from './page'
 
-// Mock semua dependencies dengan implementasi sederhana
-jest.mock('@clerk/nextjs', () => ({
-  useUser: jest.fn(),
-}))
-
-jest.mock('@/features/auth', () => ({
-  useUserRole: jest.fn(),
-  useRoleGuard: jest.fn(),
-  useRoleLoadingState: jest.fn(),
-}))
-
+// Mock Next.js Link component
 jest.mock('next/link', () => {
   return function MockLink({ children }: { children: React.ReactNode }) {
     return <div>{children}</div>
@@ -28,10 +18,11 @@ jest.mock('next/link', () => {
 })
 
 describe('CreatorDashboardPage', () => {
-  const mockUseUser = jest.fn()
-  const mockUseUserRole = jest.fn()
-  const mockUseRoleGuard = jest.fn()
-  const mockUseRoleLoadingState = jest.fn()
+  // Gunakan mock hooks yang sudah di-setup di jest.setup.js
+  const mockUseUser = jest.requireMock('@clerk/nextjs').useUser
+  const mockUseUserRole = jest.requireMock('@/features/auth').useUserRole
+  const mockUseRoleGuard = jest.requireMock('@/features/auth').useRoleGuard
+  const mockUseRoleLoadingState = jest.requireMock('@/features/auth').useRoleLoadingState
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -205,10 +196,7 @@ describe('CreatorDashboardPage', () => {
     expect(screen.getByText(/Record introduction video/)).toBeInTheDocument()
   })
 
-  it('should display development info in development mode', () => {
-    const originalEnv = process.env.NODE_ENV
-    process.env.NODE_ENV = 'development'
-
+  it('should display creator workspace tools', () => {
     mockUseUser.mockReturnValue({
       user: { firstName: 'Creator' },
       isLoaded: true,
@@ -226,12 +214,9 @@ describe('CreatorDashboardPage', () => {
 
     render(<CreatorDashboardPage />)
 
-    expect(screen.getByText('🔧 Development Info')).toBeInTheDocument()
-    expect(screen.getByText('Route:')).toBeInTheDocument()
-    expect(screen.getByText('/creator/dashboard')).toBeInTheDocument()
-
-    // Restore original environment
-    process.env.NODE_ENV = originalEnv
+    expect(screen.getByText('Workspace')).toBeInTheDocument()
+    expect(screen.getByText('Analytics')).toBeInTheDocument()
+    expect(screen.getByText('Settings')).toBeInTheDocument()
   })
 
   it('should allow admin to access creator dashboard', () => {
