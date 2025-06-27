@@ -178,6 +178,72 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
 - Automatic role refresh on route change
 - Compatibility dengan Next.js App Router
 
+## Test Plan
+
+### 1. Unit Testing (TDD)
+
+#### Pendekatan:
+
+- Test-driven development untuk semua utility functions
+- Mock Clerk session untuk consistent testing
+- Struktur AAA (Arrange, Act, Assert)
+
+#### Test Cases:
+
+1. **parseJWT Function**:
+   - Test case: Parse valid JWT dengan role claim
+   - Expected: Return correct UserRole
+   - Edge cases: Invalid JWT, missing role claim, malformed token
+
+2. **validateRole Function**:
+   - Test case: Validate berbagai role values
+   - Expected: Return valid UserRole atau null
+   - Edge cases: Invalid strings, null/undefined values, case sensitivity
+
+3. **getUserRole Hook**:
+   - Test case: Ambil role dari valid session
+   - Expected: Return correct role dan update state
+   - Edge cases: No session, invalid token, network errors
+
+### 2. Integration Testing
+
+#### Pendekatan:
+
+- Test integrasi antara Clerk session dan React Context
+- Mock service worker untuk simulate session states
+- React Testing Library untuk test komponen
+
+#### Test Cases:
+
+1. **Context Provider Integration**:
+   - Skenario: Provider mounts dengan valid session
+   - Components: UserRoleProvider, useUserRole hook
+   - Expected: Context state ter-update dengan correct role
+
+2. **Session Change Handling**:
+   - Skenario: User login/logout/role change
+   - Components: Clerk session events, Context state updates
+   - Expected: State sync dengan session changes
+
+### 3. E2E Testing (BDD)
+
+#### Pendekatan:
+
+- Manual testing dengan real Clerk authentication
+- Different user accounts dengan different roles
+- Browser testing untuk JWT handling
+
+#### Test Scenarios:
+
+1. **User Login dan Role Detection**:
+   - **Given**: User dengan role "admin" melakukan login
+   - **When**: Aplikasi load dan context initialize
+   - **Then**: Context state shows role "admin"
+
+2. **Role Change Handling**:
+   - **Given**: User sudah login dengan role "user"
+   - **When**: Admin mengubah role user menjadi "creator"
+   - **Then**: Context state ter-update ke "creator" setelah session refresh
 
 ## Pertanyaan untuk Diklarifikasi
 
