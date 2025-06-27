@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { Stats } from './stats'
+import { Stats } from './Stat'
 
 describe('Stats Component', () => {
   test('renders all statistics values correctly', () => {

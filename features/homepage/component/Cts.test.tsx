@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { CTA } from './cta'
+import { CTA } from './Cts'
 
 describe('CTA Component', () => {
   test('renders headline and sub-headline', () => {

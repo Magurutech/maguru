@@ -3,21 +3,97 @@
   "numPassedTests": 48,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-06-26T23:46:04.857Z",
-  "endTime": "2025-06-26T23:46:15.578Z",
+  "startTime": "2025-06-27T00:03:07.827Z",
+  "endTime": "2025-06-27T00:03:16.430Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\app\\sign-up\\[[...sign-up]]\\page.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Cts.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "Halaman SignUp"
+            "CTA Component"
           ],
-          "fullName": "Halaman SignUp menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "fullName": "CTA Component renders headline and sub-headline",
           "status": "passed",
-          "title": "menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "title": "renders headline and sub-headline",
           "failureMessages": [],
-          "duration": 209
+          "duration": 115
+        },
+        {
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "fullName": "CTA Component renders call-to-action buttons",
+          "status": "passed",
+          "title": "renders call-to-action buttons",
+          "failureMessages": [],
+          "duration": 21
+        },
+        {
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "fullName": "CTA Component renders trust indicators",
+          "status": "passed",
+          "title": "renders trust indicators",
+          "failureMessages": [],
+          "duration": 18
+        },
+        {
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "fullName": "CTA Component renders with glass panel styling",
+          "status": "passed",
+          "title": "renders with glass panel styling",
+          "failureMessages": [],
+          "duration": 24
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Heros.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "fullName": "Hero Component renders headline and main call-to-action",
+          "status": "passed",
+          "title": "renders headline and main call-to-action",
+          "failureMessages": [],
+          "duration": 141
+        },
+        {
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "fullName": "Hero Component renders social proof elements",
+          "status": "passed",
+          "title": "renders social proof elements",
+          "failureMessages": [],
+          "duration": 52
+        },
+        {
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "fullName": "Hero Component renders interactive learning section",
+          "status": "passed",
+          "title": "renders interactive learning section",
+          "failureMessages": [],
+          "duration": 51
+        },
+        {
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "fullName": "Hero Component renders floating information cards",
+          "status": "passed",
+          "title": "renders floating information cards",
+          "failureMessages": [],
+          "duration": 44
         }
       ],
       "failureMessage": null
@@ -33,7 +109,7 @@
           "status": "passed",
           "title": "renders with title and children",
           "failureMessages": [],
-          "duration": 126
+          "duration": 152
         },
         {
           "ancestorTitles": [
@@ -43,7 +119,7 @@
           "status": "passed",
           "title": "does not render action button when no onAction provided",
           "failureMessages": [],
-          "duration": 13
+          "duration": 29
         },
         {
           "ancestorTitles": [
@@ -53,7 +129,7 @@
           "status": "passed",
           "title": "renders action button with default label when onAction provided",
           "failureMessages": [],
-          "duration": 18
+          "duration": 11
         },
         {
           "ancestorTitles": [
@@ -63,7 +139,7 @@
           "status": "passed",
           "title": "renders action button with custom label when provided",
           "failureMessages": [],
-          "duration": 7
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -73,73 +149,7 @@
           "status": "passed",
           "title": "calls onAction when action button is clicked",
           "failureMessages": [],
-          "duration": 28
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Footer.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders brand info",
-          "status": "passed",
-          "title": "renders brand info",
-          "failureMessages": [],
-          "duration": 157
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders contact information",
-          "status": "passed",
-          "title": "renders contact information",
-          "failureMessages": [],
-          "duration": 41
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders course links section",
-          "status": "passed",
-          "title": "renders course links section",
-          "failureMessages": [],
-          "duration": 80
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders company links section",
-          "status": "passed",
-          "title": "renders company links section",
-          "failureMessages": [],
-          "duration": 54
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders support links section",
-          "status": "passed",
-          "title": "renders support links section",
-          "failureMessages": [],
-          "duration": 49
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders copyright and social links",
-          "status": "passed",
-          "title": "renders copyright and social links",
-          "failureMessages": [],
-          "duration": 36
+          "duration": 23
         }
       ],
       "failureMessage": null
@@ -155,13 +165,29 @@
           "status": "passed",
           "title": "menampilkan wrapper glass panel dan komponen SignIn Clerk",
           "failureMessages": [],
-          "duration": 240
+          "duration": 177
         }
       ],
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Courses.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\app\\sign-up\\[[...sign-up]]\\page.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Halaman SignUp"
+          ],
+          "fullName": "Halaman SignUp menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "status": "passed",
+          "title": "menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "failureMessages": [],
+          "duration": 187
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Course.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
@@ -171,7 +197,7 @@
           "status": "passed",
           "title": "renders section title and description",
           "failureMessages": [],
-          "duration": 255
+          "duration": 187
         },
         {
           "ancestorTitles": [
@@ -181,7 +207,7 @@
           "status": "passed",
           "title": "renders course cards with correct information",
           "failureMessages": [],
-          "duration": 177
+          "duration": 115
         },
         {
           "ancestorTitles": [
@@ -191,7 +217,7 @@
           "status": "passed",
           "title": "renders course ratings and statistics",
           "failureMessages": [],
-          "duration": 74
+          "duration": 64
         },
         {
           "ancestorTitles": [
@@ -201,7 +227,7 @@
           "status": "passed",
           "title": "renders course level badges",
           "failureMessages": [],
-          "duration": 53
+          "duration": 54
         },
         {
           "ancestorTitles": [
@@ -211,7 +237,7 @@
           "status": "passed",
           "title": "renders pricing information",
           "failureMessages": [],
-          "duration": 119
+          "duration": 61
         },
         {
           "ancestorTitles": [
@@ -221,49 +247,49 @@
           "status": "passed",
           "title": "renders view all button",
           "failureMessages": [],
-          "duration": 81
+          "duration": 53
         }
       ],
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Features.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Stat.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "Features Component"
+            "Stats Component"
           ],
-          "fullName": "Features Component renders section title and description",
+          "fullName": "Stats Component renders all statistics values correctly",
           "status": "passed",
-          "title": "renders section title and description",
+          "title": "renders all statistics values correctly",
           "failureMessages": [],
-          "duration": 168
+          "duration": 118
         },
         {
           "ancestorTitles": [
-            "Features Component"
+            "Stats Component"
           ],
-          "fullName": "Features Component renders all feature cards with correct titles",
+          "fullName": "Stats Component renders all statistic labels correctly",
           "status": "passed",
-          "title": "renders all feature cards with correct titles",
+          "title": "renders all statistic labels correctly",
           "failureMessages": [],
-          "duration": 60
+          "duration": 27
         },
         {
           "ancestorTitles": [
-            "Features Component"
+            "Stats Component"
           ],
-          "fullName": "Features Component renders feature descriptions correctly",
+          "fullName": "Stats Component renders inside a glass panel",
           "status": "passed",
-          "title": "renders feature descriptions correctly",
+          "title": "renders inside a glass panel",
           "failureMessages": [],
-          "duration": 65
+          "duration": 33
         }
       ],
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Navbar.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Navbars.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
@@ -274,7 +300,7 @@
           "status": "passed",
           "title": "renders logo and brand name",
           "failureMessages": [],
-          "duration": 183
+          "duration": 108
         },
         {
           "ancestorTitles": [
@@ -285,7 +311,7 @@
           "status": "passed",
           "title": "renders desktop menu items",
           "failureMessages": [],
-          "duration": 30
+          "duration": 21
         },
         {
           "ancestorTitles": [
@@ -296,7 +322,7 @@
           "status": "passed",
           "title": "renders desktop CTA buttons as links",
           "failureMessages": [],
-          "duration": 31
+          "duration": 16
         },
         {
           "ancestorTitles": [
@@ -307,7 +333,7 @@
           "status": "passed",
           "title": "toggles mobile menu and links close menu on click",
           "failureMessages": [],
-          "duration": 248
+          "duration": 233
         },
         {
           "ancestorTitles": [
@@ -318,7 +344,7 @@
           "status": "passed",
           "title": "renders sign out button and user button in desktop",
           "failureMessages": [],
-          "duration": 16
+          "duration": 25
         },
         {
           "ancestorTitles": [
@@ -340,7 +366,7 @@
           "status": "passed",
           "title": "closes mobile menu when sign out button is clicked",
           "failureMessages": [],
-          "duration": 48
+          "duration": 74
         },
         {
           "ancestorTitles": [
@@ -357,89 +383,7 @@
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Cta.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders headline and sub-headline",
-          "status": "passed",
-          "title": "renders headline and sub-headline",
-          "failureMessages": [],
-          "duration": 118
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders call-to-action buttons",
-          "status": "passed",
-          "title": "renders call-to-action buttons",
-          "failureMessages": [],
-          "duration": 15
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders trust indicators",
-          "status": "passed",
-          "title": "renders trust indicators",
-          "failureMessages": [],
-          "duration": 27
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders with glass panel styling",
-          "status": "passed",
-          "title": "renders with glass panel styling",
-          "failureMessages": [],
-          "duration": 11
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Stats.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders all statistics values correctly",
-          "status": "passed",
-          "title": "renders all statistics values correctly",
-          "failureMessages": [],
-          "duration": 112
-        },
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders all statistic labels correctly",
-          "status": "passed",
-          "title": "renders all statistic labels correctly",
-          "failureMessages": [],
-          "duration": 20
-        },
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders inside a glass panel",
-          "status": "passed",
-          "title": "renders inside a glass panel",
-          "failureMessages": [],
-          "duration": 17
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Testimonials.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Testimonial.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
@@ -449,7 +393,7 @@
           "status": "passed",
           "title": "renders section title and description",
           "failureMessages": [],
-          "duration": 161
+          "duration": 159
         },
         {
           "ancestorTitles": [
@@ -459,7 +403,7 @@
           "status": "passed",
           "title": "renders all testimonial cards with correct names and roles",
           "failureMessages": [],
-          "duration": 46
+          "duration": 64
         },
         {
           "ancestorTitles": [
@@ -469,7 +413,7 @@
           "status": "passed",
           "title": "renders testimonial quotes correctly",
           "failureMessages": [],
-          "duration": 30
+          "duration": 46
         },
         {
           "ancestorTitles": [
@@ -479,53 +423,109 @@
           "status": "passed",
           "title": "renders 5-star ratings for all testimonials",
           "failureMessages": [],
-          "duration": 13
+          "duration": 43
         }
       ],
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Hero.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Feature.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "Hero Component"
+            "Features Component"
           ],
-          "fullName": "Hero Component renders headline and main call-to-action",
+          "fullName": "Features Component renders section title and description",
           "status": "passed",
-          "title": "renders headline and main call-to-action",
+          "title": "renders section title and description",
           "failureMessages": [],
-          "duration": 132
+          "duration": 125
         },
         {
           "ancestorTitles": [
-            "Hero Component"
+            "Features Component"
           ],
-          "fullName": "Hero Component renders social proof elements",
+          "fullName": "Features Component renders all feature cards with correct titles",
           "status": "passed",
-          "title": "renders social proof elements",
+          "title": "renders all feature cards with correct titles",
           "failureMessages": [],
-          "duration": 25
+          "duration": 70
         },
         {
           "ancestorTitles": [
-            "Hero Component"
+            "Features Component"
           ],
-          "fullName": "Hero Component renders interactive learning section",
+          "fullName": "Features Component renders feature descriptions correctly",
           "status": "passed",
-          "title": "renders interactive learning section",
+          "title": "renders feature descriptions correctly",
           "failureMessages": [],
-          "duration": 27
+          "duration": 55
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Footers.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "fullName": "Footer Component renders brand info",
+          "status": "passed",
+          "title": "renders brand info",
+          "failureMessages": [],
+          "duration": 121
         },
         {
           "ancestorTitles": [
-            "Hero Component"
+            "Footer Component"
           ],
-          "fullName": "Hero Component renders floating information cards",
+          "fullName": "Footer Component renders contact information",
           "status": "passed",
-          "title": "renders floating information cards",
+          "title": "renders contact information",
           "failureMessages": [],
-          "duration": 16
+          "duration": 44
+        },
+        {
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "fullName": "Footer Component renders course links section",
+          "status": "passed",
+          "title": "renders course links section",
+          "failureMessages": [],
+          "duration": 64
+        },
+        {
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "fullName": "Footer Component renders company links section",
+          "status": "passed",
+          "title": "renders company links section",
+          "failureMessages": [],
+          "duration": 44
+        },
+        {
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "fullName": "Footer Component renders support links section",
+          "status": "passed",
+          "title": "renders support links section",
+          "failureMessages": [],
+          "duration": 41
+        },
+        {
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "fullName": "Footer Component renders copyright and social links",
+          "status": "passed",
+          "title": "renders copyright and social links",
+          "failureMessages": [],
+          "duration": 37
         }
       ],
       "failureMessage": null
@@ -541,7 +541,7 @@
           "status": "passed",
           "title": "menampilkan halaman dashboard dengan informasi user",
           "failureMessages": [],
-          "duration": 121
+          "duration": 93
         },
         {
           "ancestorTitles": [
@@ -551,7 +551,7 @@
           "status": "passed",
           "title": "menampilkan loading state ketika user belum loaded",
           "failureMessages": [],
-          "duration": 6
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -561,7 +561,7 @@
           "status": "passed",
           "title": "menampilkan fallback name ketika firstName tidak ada",
           "failureMessages": [],
-          "duration": 11
+          "duration": 7
         }
       ],
       "failureMessage": null

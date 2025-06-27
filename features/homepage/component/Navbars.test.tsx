@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { Navbar } from './navbar'
+import { Navbar } from './Navbars'
 
 // Mock Clerk hooks dan components
 jest.mock('@clerk/nextjs', () => ({

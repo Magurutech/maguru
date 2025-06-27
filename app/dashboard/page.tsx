@@ -4,7 +4,7 @@ import React from 'react'
 import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { BookOpen, Home, Settings, User } from 'lucide-react'
-import { Navbar } from '@/features/homepage/component/navbar'
+import { Navbar } from '@/features/homepage/component/Navbars'
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser()
