@@ -3,13 +3,17 @@
 import React from 'react'
 import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
-import { BookOpen, Home, Settings, User } from 'lucide-react'
+import { BookOpen, Home, Settings, User, Shield, Crown, UserCheck } from 'lucide-react'
 import { Navbar } from '@/features/homepage/component/Navbars'
+import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser()
+  const { role, isAdmin, isCreator, isUser: hasUserRole } = useUserRole()
+  const { canAccessAdmin, canAccessCreator } = useRoleGuard()
+  const { isReady: roleReady, shouldShowLoader: roleLoading } = useRoleLoadingState()
 
-  if (!isLoaded) {
+  if (!isLoaded || roleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-secondary/5 to-accent-mint/5">
         <div className="glass-panel p-8 rounded-lg shadow-glass">
@@ -21,6 +25,26 @@ export default function DashboardPage() {
         </div>
       </div>
     )
+  }
+
+  /**
+   * Get role icon berdasarkan user role
+   */
+  const getRoleIcon = () => {
+    if (isAdmin) return <Shield className="h-5 w-5 text-red-500" />
+    if (isCreator) return <Crown className="h-5 w-5 text-yellow-500" />
+    if (hasUserRole) return <UserCheck className="h-5 w-5 text-green-500" />
+    return <User className="h-5 w-5 text-gray-500" />
+  }
+
+  /**
+   * Get role color untuk badge
+   */
+  const getRoleColor = () => {
+    if (isAdmin) return 'bg-red-100 text-red-800 border-red-300'
+    if (isCreator) return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+    if (hasUserRole) return 'bg-green-100 text-green-800 border-green-300'
+    return 'bg-gray-100 text-gray-800 border-gray-300'
   }
 
   return (
@@ -62,6 +86,22 @@ export default function DashboardPage() {
                   Profil
                 </Button>
               </li>
+              {canAccessCreator() && (
+                <li>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Kelola Konten
+                  </Button>
+                </li>
+              )}
+              {canAccessAdmin() && (
+                <li>
+                  <Button variant="ghost" className="w-full justify-start">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Admin Panel
+                  </Button>
+                </li>
+              )}
               <li>
                 <Button variant="ghost" className="w-full justify-start">
                   <Settings className="mr-2 h-4 w-4" />
@@ -77,7 +117,17 @@ export default function DashboardPage() {
       <div className="md:ml-64 p-6 pt-20">
         {/* Header */}
         <header className="glass-panel p-4 rounded-lg shadow-glass flex items-center justify-between mb-6">
-          <h1 className="text-xl font-bold">Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold">Dashboard</h1>
+            {roleReady && (
+              <div
+                className={`flex items-center gap-2 px-3 py-1 rounded-full border text-sm font-medium ${getRoleColor()}`}
+              >
+                {getRoleIcon()}
+                <span className="capitalize">{role || 'guest'}</span>
+              </div>
+            )}
+          </div>
           <div className="text-sm text-gray-600">
             Selamat datang, {user?.firstName || 'Pengguna'}!
           </div>

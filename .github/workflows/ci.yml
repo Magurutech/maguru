@@ -71,8 +71,18 @@ jobs:
       - name: Run Jest tests with coverage
         id: test
         env:
+          # Database Configuration untuk testing
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+          # Clerk Authentication untuk integration tests
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+          # Role Management Configuration untuk testing
+          NEXT_PUBLIC_ROLE_CACHE_TTL: '300000'
+          NEXT_PUBLIC_ENABLE_ROLE_CACHE: 'true'
+          NEXT_PUBLIC_ENABLE_ROLE_SYNC: 'true'
         run: |
           yarn test:coverage
           # Parse test results and write to GITHUB_OUTPUT

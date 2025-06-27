@@ -36,10 +36,18 @@ jobs:
       - name: Build application
         id: build
         env:
+          # Database Configuration
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+          # Clerk Authentication
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+          # Role Management Configuration (dengan fallback defaults)
+          NEXT_PUBLIC_ROLE_CACHE_TTL: '300000'
+          NEXT_PUBLIC_ENABLE_ROLE_CACHE: 'true'
+          NEXT_PUBLIC_ENABLE_ROLE_SYNC: 'true'
         run: yarn build
 
       - name: Create build summary

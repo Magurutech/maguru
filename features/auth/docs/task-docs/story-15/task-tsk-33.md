@@ -91,7 +91,7 @@ interface UserRoleContextType extends UserRoleState, UserRoleActions {}
 
 #### 1. Role Context Provider
 
-**Lokasi**: `features/user_manage/context/UserRoleContext.tsx`
+**Lokasi**: `features/auth/context/UserRoleContext.tsx`
 
 **Tanggung Jawab**:
 
@@ -101,7 +101,7 @@ interface UserRoleContextType extends UserRoleState, UserRoleActions {}
 
 #### 2. Custom Hook untuk Role Management
 
-**Lokasi**: `features/user_manage/hooks/useUserRole.ts`
+**Lokasi**: `features/auth/hooks/useUserRole.ts`
 
 **Tanggung Jawab**:
 
@@ -112,12 +112,19 @@ interface UserRoleContextType extends UserRoleState, UserRoleActions {}
 
 #### 3. Utility Functions
 
-**Lokasi**: `features/user_manage/utils/roleUtils.ts`
+**Lokasi**: `features/auth/utils/roleUtils.ts`
 
 **Tanggung Jawab**:
 
 - Validate role values
 - Parse JWT tokens safely
+
+#### 4. types auth & othorisation
+
+**Lokasi**: `features/auth/types/roleTypes.ts`
+
+**Tanggung Jawab**:
+
 - Type guards untuk role checking
 
 ### API Integration
@@ -171,84 +178,23 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
 - Automatic role refresh on route change
 - Compatibility dengan Next.js App Router
 
-## Test Plan
-
-### 1. Unit Testing (TDD)
-
-#### Pendekatan:
-
-- Test-driven development untuk semua utility functions
-- Mock Clerk session untuk consistent testing
-- Struktur AAA (Arrange, Act, Assert)
-
-#### Test Cases:
-
-1. **parseJWT Function**:
-   - Test case: Parse valid JWT dengan role claim
-   - Expected: Return correct UserRole
-   - Edge cases: Invalid JWT, missing role claim, malformed token
-
-2. **validateRole Function**:
-   - Test case: Validate berbagai role values
-   - Expected: Return valid UserRole atau null
-   - Edge cases: Invalid strings, null/undefined values, case sensitivity
-
-3. **getUserRole Hook**:
-   - Test case: Ambil role dari valid session
-   - Expected: Return correct role dan update state
-   - Edge cases: No session, invalid token, network errors
-
-### 2. Integration Testing
-
-#### Pendekatan:
-
-- Test integrasi antara Clerk session dan React Context
-- Mock service worker untuk simulate session states
-- React Testing Library untuk test komponen
-
-#### Test Cases:
-
-1. **Context Provider Integration**:
-   - Skenario: Provider mounts dengan valid session
-   - Components: UserRoleProvider, useUserRole hook
-   - Expected: Context state ter-update dengan correct role
-
-2. **Session Change Handling**:
-   - Skenario: User login/logout/role change
-   - Components: Clerk session events, Context state updates
-   - Expected: State sync dengan session changes
-
-### 3. E2E Testing (BDD)
-
-#### Pendekatan:
-
-- Manual testing dengan real Clerk authentication
-- Different user accounts dengan different roles
-- Browser testing untuk JWT handling
-
-#### Test Scenarios:
-
-1. **User Login dan Role Detection**:
-   - **Given**: User dengan role "admin" melakukan login
-   - **When**: Aplikasi load dan context initialize
-   - **Then**: Context state shows role "admin"
-
-2. **Role Change Handling**:
-   - **Given**: User sudah login dengan role "user"
-   - **When**: Admin mengubah role user menjadi "creator"
-   - **Then**: Context state ter-update ke "creator" setelah session refresh
 
 ## Pertanyaan untuk Diklarifikasi
 
 1. **State Persistence**: Apakah role perlu di-persist di localStorage untuk UX yang lebih baik, atau cukup re-fetch setiap session?
+   **jawab**: Menggunakan React Context dengan sessionStorage sebagai backup. Role tidak di-persist di localStorage untuk security reasons, tetapi menggunakan session-based caching untuk menghindari frequent API calls.
 
 2. **Error Boundaries**: Bagaimana strategy untuk handle errors di Context level? Apakah perlu global error boundary khusus untuk role management?
+   **jawab**: Implementasi Error Boundary khusus untuk role management dengan graceful fallback ke role "user", retry mechanisms, dan logging untuk monitoring.
 
 3. **Performance Considerations**: Apakah perlu implement caching atau debouncing untuk role fetching, terutama pada frequent session checks?
+   **jawab**:Implementasi debouncing untuk role fetching, memoization pada Context provider, dan caching dengan TTL (Time To Live) untuk mengurangi unnecessary API calls.
 
 4. **Development Mode**: Bagaimana handle role testing dalam development mode? Apakah perlu mock user selector untuk testing?
+   **jawab**: Mock user selector dengan environment variable untuk testing different roles, plus development-only role switcher component.
 
 5. **Concurrent Sessions**: Bagaimana handle scenario dimana user memiliki multiple tabs dengan different sessions?
+   **jawab**:Event-driven sync menggunakan BroadcastChannel API untuk sync role changes across tabs, dengan conflict resolution strategy.
 
 ---
 
@@ -269,14 +215,6 @@ const UserRoleContext = createContext<UserRoleContextType | undefined>(undefined
 - [ ] Integrasi dengan Clerk session events
 - [ ] Add error handling dan loading states
 - [ ] Implementasi fallback mechanisms
-
-### Testing & Validation
-
-- [ ] Unit tests untuk semua utility functions
-- [ ] Integration tests untuk Context provider
-- [ ] Manual testing dengan different user roles
-- [ ] Performance testing untuk role fetching
-- [ ] Cross-browser compatibility testing
 
 ### Documentation & Handover
 
