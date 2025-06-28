@@ -39,6 +39,11 @@ jobs:
         run: |
           echo "=== Installing dependencies ==="
           yarn install --frozen-lockfile
+
+          # Explicitly install types jika diperlukan
+          echo "=== Installing type definitions ==="
+          yarn add --dev @types/jest@^30.0.0 @types/node@^24.0.7 @testing-library/jest-dom@^6.6.3
+
           echo "✅ Dependencies installed successfully"
 
       - name: Verify critical dependencies

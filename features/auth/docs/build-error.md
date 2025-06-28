@@ -1,80 +1,58 @@
-Run echo "Building application..."
-Building application...
+Run echo "=== Running TypeScript check ==="
+=== Running TypeScript check ===
 yarn run v1.22.22
-$ next build
-⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
-▲ Next.js 15.3.4
+$ tsc --noEmit
+error TS2688: Cannot find type definition file for '@testing-library/jest-dom'.
+The file is in the program because:
+Entry point of type library '@testing-library/jest-dom' specified in compilerOptions
+error TS2688: Cannot find type definition file for 'jest'.
+The file is in the program because:
+Entry point of type library 'jest' specified in compilerOptions
+error TS2688: Cannot find type definition file for 'node'.
+The file is in the program because:
+Entry point of type library 'node' specified in compilerOptions
+error Command failed with exit code 2.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+Error: Process completed with exit code 2.
 
-- Experiments (use with caution):
-  ✓ memoryBasedWorkersCount
+# Debug Typescript on Failure
 
-Creating an optimized production build ...
-Failed to compile.
-
-app/layout.tsx
-An error occurred in `next/font`.
-
-Error: Cannot find module '@tailwindcss/postcss'
-Require stack:
-
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-config.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-build/impl.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/compiled/jest-worker/processChild.js
-  at Module.\_resolveFilename (node:internal/modules/cjs/loader:1212:15)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/server/require-hook.js:55:36
-  at Function.resolve (node:internal/modules/helpers:193:19)
-  at loadPlugin (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:53:32)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:56
-  at Array.map (<anonymous>)
-  at getPostCssPlugins (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:47)
-  at async /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
-
-app/layout.tsx
-An error occurred in `next/font`.
-
-Error: Cannot find module '@tailwindcss/postcss'
-Require stack:
-
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-config.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-build/impl.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/compiled/jest-worker/processChild.js
-  at Module.\_resolveFilename (node:internal/modules/cjs/loader:1212:15)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/server/require-hook.js:55:36
-  at Function.resolve (node:internal/modules/helpers:193:19)
-  at loadPlugin (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:53:32)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:56
-  at Array.map (<anonymous>)
-  at getPostCssPlugins (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:47)
-  at async /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
-
-app/layout.tsx
-An error occurred in `next/font`.
-
-Error: Cannot find module '@tailwindcss/postcss'
-Require stack:
-
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/index.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-config.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack-build/impl.js
-- /home/runner/work/maguru/maguru/node_modules/next/dist/compiled/jest-worker/processChild.js
-  at Module.\_resolveFilename (node:internal/modules/cjs/loader:1212:15)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/server/require-hook.js:55:36
-  at Function.resolve (node:internal/modules/helpers:193:19)
-  at loadPlugin (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:53:32)
-  at /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:56
-  at Array.map (<anonymous>)
-  at getPostCssPlugins (/home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/plugins.js:185:47)
-  at async /home/runner/work/maguru/maguru/node_modules/next/dist/build/webpack/config/blocks/css/index.js:125:36
-
-> Build failed because of webpack errors
-> error Command failed with exit code 1.
-> info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-> Error: Process completed with exit code 1.
+Run echo "=== TypeScript Debug Information ==="
+=== TypeScript Debug Information ===
+Node version: v20.19.2
+warning Filtering by arguments is deprecated. Please use the pattern option instead.
+TypeScript version: yarn list v1.22.22
+Done in 0.34s.
+Types installed:
+yarn list v1.22.22
+Done in 0.34s.
+tsconfig.json:
+{
+"compilerOptions": {
+"target": "ES2017",
+"lib": ["dom", "dom.iterable", "esnext"],
+"allowJs": true,
+"skipLibCheck": true,
+"strict": true,
+"noImplicitAny": true,
+"noEmit": true,
+"esModuleInterop": true,
+"module": "esnext",
+"types": ["node", "jest", "@testing-library/jest-dom"],
+"moduleResolution": "bundler",
+"resolveJsonModule": true,
+"isolatedModules": true,
+"jsx": "preserve",
+"incremental": true,
+"plugins": [
+{
+"name": "next"
+}
+],
+"paths": {
+"@/_": ["./_"]
+}
+},
+"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+"exclude": ["node_modules", "dist", "build", "coverage"]
+}
