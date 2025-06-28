@@ -46,7 +46,7 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
         run: |
           echo "Validating build environment variables..."
-          node -e "
+          npx tsx -e "
             const { validateEnvSafe, logEnvironmentInfo } = require('./lib/env-validation.ts');
             const result = validateEnvSafe();
             if (!result.success) {

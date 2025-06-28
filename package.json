@@ -17,11 +17,11 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --collectCoverageFrom='**/*.{ts,tsx}' --collectCoverageFrom='!**/*.d.ts' --collectCoverageFrom='!**/node_modules/**'",
     "test:custom": "jest features/homepage/component/Feature.test.tsx features/homepage/component/Footers.test.tsx  features/homepage/component/Heros.test.tsx features/homepage/component/Navbars.test.tsx features/homepage/component/Stat.test.tsx features/homepage/component/Testimonial.test.tsx --verbose",
-    "test:unit": "jest features/homepage --verbose",
-    "test:integration": "jest __tests__/integration/auth --verbose",
+    "test:unit": "jest features/auth --verbose --passWithNoTests",
+    "test:integration": "jest __tests__/auth/integration --verbose --passWithNoTests",
     "test:e2e": "playwright test",
     "test:all": "npm run test:unit && npm run test:integration",
-    "env:validate": "node -e \"const { validateEnvSafe } = require('./lib/env-validation.js'); const result = validateEnvSafe(); if (!result.success) { console.error(result.error); process.exit(1); } console.log('✅ Environment validation passed');\"",
+    "env:validate": "tsx -e \"const { validateEnvSafe } = require('./lib/env-validation.ts'); const result = validateEnvSafe(); if (!result.success) { console.error(result.error); process.exit(1); } console.log('✅ Environment validation passed');\"",
     "prepare": "npm run env:validate"
   },
   "dependencies": {

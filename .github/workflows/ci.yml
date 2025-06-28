@@ -49,7 +49,7 @@ jobs:
           CLERK_TEST_MODE: true
         run: |
           echo "Validating environment variables..."
-          node -e "
+          npx tsx -e "
             const { validateEnvSafe, logEnvironmentInfo } = require('./lib/env-validation.ts');
             const result = validateEnvSafe();
             if (!result.success) {
