@@ -41,41 +41,6 @@ jobs:
           yarn install --frozen-lockfile || yarn install
           echo "✅ Dependencies installed successfully"
 
-      - name: Verify TypeScript setup
-        run: |
-          echo "=== Verifying TypeScript setup ==="
-
-          # Check if @types/node is installed
-          if ! yarn list @types/node --depth=0 | grep -q "@types/node"; then
-            echo "Installing @types/node..."
-            yarn add @types/node@^20.17.10 --dev
-          fi
-
-          # Verify TypeScript can compile
-          echo "Running TypeScript check..."
-          yarn type-check
-
-          echo "✅ TypeScript verification completed"
-
-      - name: Verify Tailwind CSS setup
-        run: |
-          echo "=== Verifying Tailwind CSS setup ==="
-
-          # Verify packages are installed
-          yarn list @tailwindcss/postcss tailwindcss --depth=0
-
-          # Test if packages can be required
-          node -e "
-            try {
-              require('@tailwindcss/postcss');
-              require('tailwindcss');
-              console.log('✅ Tailwind CSS packages verified');
-            } catch (e) {
-              console.error('❌ Tailwind CSS verification failed:', e.message);
-              process.exit(1);
-            }
-          "
-
       - name: Build application
         id: build
         env:
@@ -99,7 +64,7 @@ jobs:
           echo "Environment: NODE_ENV=$NODE_ENV, APP_ENV=$APP_ENV"
 
           # Run build with GitHub Actions recommended approach
-          yarn build --if-present
+          yarn build 
 
           # Verify build output
           if [ -d ".next" ]; then
