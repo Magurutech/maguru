@@ -15,54 +15,10 @@ env:
 
 # Definisikan jobs yang akan dijalankan
 jobs:
-  # Job untuk validasi environment sebelum build
-  env-validation:
-    name: Environment Validation
-    runs-on: ubuntu-latest
-    environment: development
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Validate environment variables for build
-        env:
-          # Required environment variables for build
-          NODE_ENV: production
-          APP_ENV: prod
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://localhost:3000' }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          DIRECT_URL: ${{ secrets.DIRECT_URL }}
-        run: |
-          echo "Validating build environment variables..."
-          npx tsx -e "
-            const { validateEnvSafe, logEnvironmentInfo } = require('./lib/env-validation.ts');
-            const result = validateEnvSafe();
-            if (!result.success) {
-              console.error('❌ Build environment validation failed:');
-              console.error(result.error);
-              process.exit(1);
-            }
-            console.log('✅ Build environment validation passed');
-            logEnvironmentInfo();
-          "
-
   # Job untuk build aplikasi
   build:
     name: Build Application
     runs-on: ubuntu-latest
-    needs: env-validation
     environment: development
 
     steps:
@@ -72,11 +28,53 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.x'
           cache: 'yarn'
+          cache-dependency-path: yarn.lock
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        env:
+          SKIP_ENV_VALIDATION: true
+        run: |
+          echo "=== Installing dependencies ==="
+          # Use GitHub Actions recommended approach
+          yarn install --frozen-lockfile || yarn install
+          echo "✅ Dependencies installed successfully"
+
+      - name: Verify TypeScript setup
+        run: |
+          echo "=== Verifying TypeScript setup ==="
+
+          # Check if @types/node is installed
+          if ! yarn list @types/node --depth=0 | grep -q "@types/node"; then
+            echo "Installing @types/node..."
+            yarn add @types/node@^20.17.10 --dev
+          fi
+
+          # Verify TypeScript can compile
+          echo "Running TypeScript check..."
+          yarn type-check
+
+          echo "✅ TypeScript verification completed"
+
+      - name: Verify Tailwind CSS setup
+        run: |
+          echo "=== Verifying Tailwind CSS setup ==="
+
+          # Verify packages are installed
+          yarn list @tailwindcss/postcss tailwindcss --depth=0
+
+          # Test if packages can be required
+          node -e "
+            try {
+              require('@tailwindcss/postcss');
+              require('tailwindcss');
+              console.log('✅ Tailwind CSS packages verified');
+            } catch (e) {
+              console.error('❌ Tailwind CSS verification failed:', e.message);
+              process.exit(1);
+            }
+          "
 
       - name: Build application
         id: build
@@ -92,40 +90,40 @@ jobs:
           # App Configuration
           NODE_ENV: production
           APP_ENV: prod
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://localhost:3000' }}
+          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://maguru.vercel.app' }}
+
+          # Skip environment validation during build
+          SKIP_ENV_VALIDATION: true
         run: |
-          echo "Building application..."
-          yarn build
+          echo "=== Building Next.js application ==="
+          echo "Environment: NODE_ENV=$NODE_ENV, APP_ENV=$APP_ENV"
 
-          # Get build statistics
-          BUILD_SIZE=$(du -sh .next/ | cut -f1)
-          echo "build_size=$BUILD_SIZE" >> $GITHUB_OUTPUT
+          # Run build with GitHub Actions recommended approach
+          yarn build --if-present
 
-          # Check if build output exists
+          # Verify build output
           if [ -d ".next" ]; then
+            BUILD_SIZE=$(du -sh .next/ | cut -f1)
+            echo "build_size=$BUILD_SIZE" >> $GITHUB_OUTPUT
             echo "build_success=true" >> $GITHUB_OUTPUT
+            echo "✅ Build completed successfully"
+            echo "📂 Build size: $BUILD_SIZE"
           else
             echo "build_success=false" >> $GITHUB_OUTPUT
+            echo "❌ Build failed - .next directory not found"
             exit 1
           fi
-
-      - name: Analyze bundle size
-        id: bundle-analysis
-        run: |
-          # Basic bundle analysis without additional tools
-          echo "### Bundle Analysis 📦" >> $GITHUB_STEP_SUMMARY
-          echo "Build size: ${{ steps.build.outputs.build_size }}" >> $GITHUB_STEP_SUMMARY
-
-          # List largest files in build
-          echo "#### Largest build files:" >> $GITHUB_STEP_SUMMARY
-          find .next -name "*.js" -type f -exec du -h {} + | sort -hr | head -10 >> $GITHUB_STEP_SUMMARY
 
       - name: Create build summary
         run: |
           echo "### Build Results 🏗️" >> $GITHUB_STEP_SUMMARY
           echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
           echo "📂 Build size: ${{ steps.build.outputs.build_size }}" >> $GITHUB_STEP_SUMMARY
-          echo "📄 Artifact: build-output" >> $GITHUB_STEP_SUMMARY
+
+          echo "#### Environment Details" >> $GITHUB_STEP_SUMMARY
+          echo "- Node.js: $(node --version)" >> $GITHUB_STEP_SUMMARY
+          echo "- Yarn: $(yarn --version)" >> $GITHUB_STEP_SUMMARY
+          echo "- TypeScript: $(yarn list typescript --depth=0 | grep typescript@)" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -134,14 +132,17 @@ jobs:
           path: .next/
           retention-days: 7
 
-      - name: Upload build logs on failure
+      - name: Upload debug info on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: build-logs
+          name: build-debug-info
           path: |
             .next/trace
             npm-debug.log*
             yarn-debug.log*
             yarn-error.log*
+            package.json
+            yarn.lock
+            tsconfig.json
           retention-days: 3

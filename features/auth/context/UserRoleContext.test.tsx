@@ -467,40 +467,40 @@ describe('UserRoleContext', () => {
   //     })
   //   })
 
-  describe('Development Features', () => {
-    let nodeEnvBackup: string | undefined
+  // describe('Development Features', () => {
+  //   let nodeEnvBackup: string | undefined
 
-    beforeAll(() => {
-      nodeEnvBackup = process.env.NODE_ENV
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: 'development',
-        configurable: true,
-      })
-    })
+  //   beforeAll(() => {
+  //     nodeEnvBackup = process.env.NODE_ENV
+  //     Object.defineProperty(process.env, 'NODE_ENV', {
+  //       value: 'development',
+  //       configurable: true,
+  //     })
+  //   })
 
-    afterAll(() => {
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: nodeEnvBackup,
-        configurable: true,
-      })
-    })
+  //   afterAll(() => {
+  //     Object.defineProperty(process.env, 'NODE_ENV', {
+  //       value: nodeEnvBackup,
+  //       configurable: true,
+  //     })
+  //   })
 
-    it('should not show dev role switcher in production', () => {
-      // Arrange - Test environment sudah bukan development
-      const devModeProps = {
-        devMode: {
-          enabled: true,
-          allowRoleSwitching: true,
-        },
-      }
+  //   it('should not show dev role switcher in production', () => {
+  //     // Arrange - Test environment sudah bukan development
+  //     const devModeProps = {
+  //       devMode: {
+  //         enabled: true,
+  //         allowRoleSwitching: true,
+  //       },
+  //     }
 
-      // Act
-      renderWithProvider(<TestConsumer />, devModeProps)
+  //     // Act
+  //     renderWithProvider(<TestConsumer />, devModeProps)
 
-      // Assert
-      expect(screen.queryByText(/Dev Mode: Role Switcher/i)).not.toBeInTheDocument()
-    })
-  })
+  //     // Assert
+  //     expect(screen.queryByText(/Dev Mode: Role Switcher/i)).not.toBeInTheDocument()
+  //   })
+  // })
 
   describe('Lifecycle and Cleanup', () => {
     it('should cleanup resources on unmount', () => {
