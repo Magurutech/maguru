@@ -34,6 +34,8 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
+        env:
+          SKIP_ENV_VALIDATION: true
         run: yarn install --frozen-lockfile
 
       - name: Validate environment variables

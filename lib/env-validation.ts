@@ -68,6 +68,12 @@ export type ValidatedEnv = z.infer<typeof envSchema>
  * Validasi environment variables
  */
 export function validateEnv(): ValidatedEnv {
+  // Skip validation if explicitly disabled (for CI/CD)
+  if (process.env.SKIP_ENV_VALIDATION === 'true') {
+    console.log('⏭️ Environment validation skipped (SKIP_ENV_VALIDATION=true)')
+    return process.env as unknown as ValidatedEnv
+  }
+
   try {
     const result = envSchema.parse(process.env)
     return result
@@ -106,7 +112,7 @@ export function getCurrentEnvironment(): 'development' | 'production' {
   if (nodeEnv === 'development' || nodeEnv === 'production') {
     return nodeEnv
   }
-  return 'development'  
+  return 'development'
 }
 
 /**
@@ -122,7 +128,6 @@ export function isDevelopment(): boolean {
 export function isProduction(): boolean {
   return getCurrentEnvironment() === 'production'
 }
-
 
 /**
  * Log environment configuration (development only)
