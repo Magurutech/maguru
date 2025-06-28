@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-// Skip validation untuk testing environment
+// Skip validation untuk testing dan CI environment
 const isTestEnvironment = process.env.NODE_ENV === 'test' || typeof jest !== 'undefined'
+const isCIEnvironment = process.env.CI === 'true'
 
-if (!isTestEnvironment) {
+if (!isTestEnvironment && !isCIEnvironment) {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { validateEnvSafe } = require('./lib/env-validation.ts')
@@ -19,6 +20,8 @@ if (!isTestEnvironment) {
       error instanceof Error ? error.message : 'Unknown error',
     )
   }
+} else {
+  console.log('ℹ️ Environment validation skipped for CI/Test environment')
 }
 
 const nextConfig = {
@@ -69,23 +72,15 @@ const nextConfig = {
     styledComponents: true,
   },
 
-  // Turbopack configuration (stable in Next.js 15+)
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
-
-  // Experimental features
+  // Experimental features - hanya yang stabil untuk CI
   experimental: {
-    // Performance optimizations
+    // Performance optimizations yang sudah stabil
     optimizePackageImports: ['@radix-ui/react-slot', 'lucide-react', 'clsx', 'tailwind-merge'],
 
-    // Memory usage optimization
-    memoryBasedWorkersCount: true,
+    // Memory usage optimization - skip di CI untuk stabilitas
+    ...(!isCIEnvironment && {
+      memoryBasedWorkersCount: true,
+    }),
   },
 
   // Security headers
@@ -122,32 +117,28 @@ const nextConfig = {
     },
   ],
 
-  // Environment variables untuk client-side
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-
   // Output configuration
   output: 'standalone',
 
-  // TypeScript configuration
+  // TypeScript configuration - strict untuk semua environment
   typescript: {
     ignoreBuildErrors: false,
   },
 
-  // ESLint configuration
+  // ESLint configuration - strict untuk semua environment
   eslint: {
     ignoreDuringBuilds: false,
   },
 
-  // Performance logging (development only)
-  ...(process.env.NODE_ENV === 'development' && {
-    logging: {
-      fetches: {
-        fullUrl: true,
+  // Performance logging - hanya di development
+  ...(process.env.NODE_ENV === 'development' &&
+    !isCIEnvironment && {
+      logging: {
+        fetches: {
+          fullUrl: true,
+        },
       },
-    },
-  }),
+    }),
 }
 
 module.exports = nextConfig
