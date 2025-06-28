@@ -391,10 +391,10 @@
 
 | Test Case                   | File Test                                                                 | Komponen Terkait      | Status     |
 | --------------------------- | ------------------------------------------------------------------------- | --------------------- | ---------- |
-| Context + Hooks Integration | `features/auth/__tests__/integration/role-management.integration.test.ts` | Context, All Hooks    | 📋 Planned |
-| Clerk Session Integration   | `features/auth/__tests__/integration/clerk-session.integration.test.ts`   | Context, Clerk Hooks  | 📋 Planned |
-| Cross-tab Sync Integration  | `features/auth/__tests__/integration/cross-tab-sync.integration.test.ts`  | SyncManager, Context  | 📋 Planned |
-| Cache Integration           | `features/auth/__tests__/integration/cache-integration.test.ts`           | CacheManager, Context | 📋 Planned |
+| Context + Hooks Integration | `__tests__/integration/role-management.integration.test.ts` | Context, All Hooks    | 📋 Planned |
+| Clerk Session Integration   | `__tests__/integration/clerk-session.integration.test.ts`   | Context, Clerk Hooks  | 📋 Planned |
+| Cross-tab Sync Integration  | `__tests__/integration/cross-tab-sync.integration.test.ts`  | SyncManager, Context  | 📋 Planned |
+| Cache Integration           | `__tests__/integration/cache-integration.test.ts`           | CacheManager, Context | 📋 Planned |
 
 #### 3.3.1 Integration Test Cases Detail
 

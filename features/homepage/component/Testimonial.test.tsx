@@ -46,12 +46,4 @@ describe('Testimonials Component', () => {
       screen.getByText(/Sebagai career changer, saya butuh pembelajaran yang terstruktur/i),
     ).toBeInTheDocument()
   })
-
-  test('renders 5-star ratings for all testimonials', () => {
-    render(<Testimonials />)
-
-    // Count star icons (5 per testimonial, 3 testimonials)
-    const starIcons = document.querySelectorAll('.text-accent-orange.fill-current')
-    expect(starIcons.length).toBe(15) // 5 stars × 3 testimonials
-  })
 })

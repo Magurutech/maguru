@@ -41,8 +41,7 @@ project/
 │       │   ├── service.ts
 │       │   └── service.test.ts        # Unit test (co-location)
 │       │── __tests__/
-│       │    └── integration/
-│       │        └── Feature.integration.test.ts
+│       │   
         ├── docs/
 │           └── task/
 │               └── [feature-name]/
@@ -51,17 +50,20 @@ project/
 │                       ├── integration-test-report.md
 │                       ├── e2e-test-report.md
 │                       └── performance-test-report.md
-├── playwright/
-│   ├── tests/
-│   │   ├── e2e/
-│   │   │   └── Feature.spec.ts
-│   │   └── performance/
-│   │       └── Feature.perf.spec.ts
-│   └── pages/
-│       └── performance-test-page.ts
+├
 └── __tests__/
     └── __mocks__/
-        └── global-mocks.ts
+    ├     └── global-mocks.ts
+    └── integration/
+            └── Feature/
+                └── Feature.integration.test.ts
+    ├── playwright/
+            ├── e2e/
+            │   └── Feature/
+            │         └──   Feature.spec.ts
+            └── performance/
+                └── Feature.perf.spec.ts
+
 ```
 
 ## 1. Unit Testing (TDD)
