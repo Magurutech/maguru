@@ -54,12 +54,12 @@ jobs:
           echo "Testing Library React: $(yarn list @testing-library/react --depth=0)"
           echo "Testing Library Jest DOM: $(yarn list @testing-library/jest-dom --depth=0)"
 
-      - name: Type check (skip test files)
+      - name: Type check
         id: type-check
         run: |
           echo "=== Running TypeScript check ==="
-          # Gunakan flag untuk exclude test files
-          yarn tsc --noEmit --skipLibCheck --exclude "**/*.test.ts" --exclude "**/*.test.tsx" --exclude "**/*.spec.ts" --exclude "**/*.spec.tsx"
+          # Gunakan tsc tanpa flag --exclude
+          yarn tsc --noEmit --skipLibCheck
           echo "✅ TypeScript check passed"
 
       - name: Debug TypeScript on failure
