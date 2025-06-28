@@ -51,15 +51,9 @@ jobs:
             yarn add @types/node@^20.17.10 --dev
           fi
 
-          # Check if @types/jest is installed
-          if ! yarn list @types/jest --depth=0 | grep -q "@types/jest"; then
-            echo "Installing @types/jest..."
-            yarn add @types/jest@^30.0.0 --dev
-          fi
-
-          # Verify TypeScript can compile (skip test files for now)
-          echo "Running TypeScript check (excluding test files)..."
-          yarn tsc --noEmit --skipLibCheck
+          # Verify TypeScript can compile
+          echo "Running TypeScript check..."
+          yarn type-check
 
           echo "✅ TypeScript verification completed"
 
