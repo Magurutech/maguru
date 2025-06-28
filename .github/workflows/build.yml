@@ -40,9 +40,9 @@ jobs:
           echo "=== Installing dependencies ==="
           yarn install --frozen-lockfile
 
-          # Install testing libraries secara eksplisit
-          echo "=== Installing testing libraries ==="
-          yarn add --dev @testing-library/react@^16.3.0 @testing-library/jest-dom@^6.6.3
+          # Install ALL required types explicitly
+          echo "=== Installing type definitions ==="
+          yarn add --dev @types/jest@^30.0.0 @types/node@^24.0.7 @testing-library/jest-dom@^6.6.3 @testing-library/react@^16.3.0
 
           echo "✅ Dependencies installed successfully"
 
@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "=== Running TypeScript check ==="
           # Gunakan tsc tanpa flag --exclude
-          yarn tsc --noEmit --skipLibCheck
+          yarn type-check:ci
           echo "✅ TypeScript check passed"
 
       - name: Debug TypeScript on failure
