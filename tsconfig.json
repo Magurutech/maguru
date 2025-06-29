@@ -32,6 +32,8 @@
     "coverage",
     "**/*.test.ts",
     "**/*.test.tsx",
+    "**/*.integration.test.ts",
+    "**/*.integration.test.tsx",
     "**/*.spec.ts",
     "**/*.spec.tsx"
   ]
