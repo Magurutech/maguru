@@ -17,14 +17,14 @@ export interface TestUser {
 export const testUsers = {
   // Authentication test users
   newUser: {
-    email: 'newuser+clerk_test@maguru.test',
-    password: 'TestPassword123!',
+    email: 'newuser+clerk_test@example.com',
+    password: 'SecureTestPass2024!',
     firstName: 'Test',
     lastName: 'User',
   },
   existingUser: {
-    email: 'existing+clerk_test@maguru.test',
-    password: 'ExistingPassword123!',
+    email: 'existing+clerk_test@example.com',
+    password: 'ExistingSecurePass2024!',
   },
   invalidUser: {
     email: 'invalid-email',
@@ -33,20 +33,20 @@ export const testUsers = {
 
   // Role-based test users (untuk authorization testing)
   adminUser: {
-    email: 'admin+clerk_test@maguru.test',
-    password: 'AdminPassword123!',
+    email: 'admin+clerk_test@example.com',
+    password: 'AdminSecurePass2024!',
     role: 'admin' as const,
     displayName: 'Admin Test User',
   },
   creatorUser: {
-    email: 'creator+clerk_test@maguru.test',
-    password: 'CreatorPassword123!',
+    email: 'creator+clerk_test@example.com',
+    password: 'CreatorSecurePass2024!',
     role: 'creator' as const,
     displayName: 'Creator Test User',
   },
   regularUser: {
-    email: 'user+clerk_test@maguru.test',
-    password: 'UserPassword123!',
+    email: 'user+clerk_test@example.com',
+    password: 'UserSecurePass2024!',
     role: 'user' as const,
     displayName: 'Regular Test User',
   },

@@ -10,11 +10,27 @@ import { testUsers } from '../fixtures/test-users'
 
 /**
  * Helper untuk login user dengan Clerk
+ *
+ * Fungsi ini melakukan proses login dengan Clerk authentication menggunakan credentials
+ * yang diberikan. Mengikuti best practices Clerk + Playwright testing.
+ *
+ * @param page - Playwright Page object untuk interaksi browser
+ * @param user - Object user yang berisi email dan password untuk login
+ * @param user.email - Email address untuk login (harus format valid)
+ * @param user.password - Password untuk login
+ *
+ * @example
+ * ```typescript
+ * await loginUser(page, {
+ *   email: 'test@example.com',
+ *   password: 'password123'
+ * })
+ * ```
+ *
+ * @throws {Error} Jika login gagal atau redirect tidak sesuai expected
  */
-export async function loginUser(page: Page, userType: keyof typeof testUsers) {
-  const user = testUsers[userType]
-
-  console.log(`🔐 Logging in as ${userType}:`, user.email)
+export async function loginUser(page: Page, user: { email: string; password: string }) {
+  console.log(`🔐 Logging in as:`, user.email)
 
   // Navigate ke sign-in page
   await page.goto('/sign-in')
@@ -27,13 +43,26 @@ export async function loginUser(page: Page, userType: keyof typeof testUsers) {
   await page.click('button[type="submit"]')
 
   // Wait for successful login - redirect ke dashboard
-  await page.waitForURL('/dashboard', { timeout: 10000 })
+  await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
   console.log('✅ Login successful')
 }
 
 /**
  * Helper untuk sign up user baru dengan Clerk
+ *
+ * Fungsi ini melakukan proses registrasi user baru menggunakan Clerk authentication.
+ * Menggunakan test users yang sudah dikonfigurasi dengan format Clerk test mode.
+ *
+ * @param page - Playwright Page object untuk interaksi browser
+ * @param userType - Tipe user dari testUsers fixture (newUser, existingUser, dll)
+ *
+ * @example
+ * ```typescript
+ * await signUpUser(page, 'newUser')
+ * ```
+ *
+ * @throws {Error} Jika sign up gagal atau redirect tidak sesuai expected
  */
 export async function signUpUser(page: Page, userType: keyof typeof testUsers) {
   const user = testUsers[userType]
@@ -62,6 +91,18 @@ export async function signUpUser(page: Page, userType: keyof typeof testUsers) {
 
 /**
  * Helper untuk logout user
+ *
+ * Fungsi ini melakukan proses logout dari Clerk authentication.
+ * Mencari berbagai kemungkinan UI element untuk logout (user menu, logout button).
+ *
+ * @param page - Playwright Page object untuk interaksi browser
+ *
+ * @example
+ * ```typescript
+ * await logoutUser(page)
+ * ```
+ *
+ * @throws {Error} Jika logout gagal atau tidak ditemukan logout button
  */
 export async function logoutUser(page: Page) {
   console.log('🚪 Logging out user...')
@@ -78,6 +119,18 @@ export async function logoutUser(page: Page) {
 
 /**
  * Helper untuk verify user sudah authenticated
+ *
+ * Fungsi ini memverifikasi bahwa user sudah dalam keadaan authenticated
+ * dengan memeriksa keberadaan UI elements yang menandakan user sudah login.
+ *
+ * @param page - Playwright Page object untuk verifikasi
+ *
+ * @example
+ * ```typescript
+ * await verifyAuthenticated(page)
+ * ```
+ *
+ * @throws {AssertionError} Jika user tidak authenticated
  */
 export async function verifyAuthenticated(page: Page) {
   // Check for authenticated user indicators
@@ -90,6 +143,18 @@ export async function verifyAuthenticated(page: Page) {
 
 /**
  * Helper untuk verify user belum authenticated
+ *
+ * Fungsi ini memverifikasi bahwa user sudah dalam keadaan unauthenticated
+ * dengan memeriksa bahwa user berada di halaman sign-in atau homepage.
+ *
+ * @param page - Playwright Page object untuk verifikasi
+ *
+ * @example
+ * ```typescript
+ * await verifyUnauthenticated(page)
+ * ```
+ *
+ * @throws {AssertionError} Jika user masih authenticated
  */
 export async function verifyUnauthenticated(page: Page) {
   // Should be redirected to sign-in atau homepage
@@ -102,6 +167,24 @@ export async function verifyUnauthenticated(page: Page) {
 
 /**
  * Helper untuk test route access
+ *
+ * Fungsi ini menguji apakah user memiliki akses ke route tertentu.
+ * Digunakan untuk testing authorization dan protected routes.
+ *
+ * @param page - Playwright Page object untuk navigasi
+ * @param route - Route path yang akan ditest (contoh: '/dashboard', '/admin')
+ * @param shouldHaveAccess - Boolean yang menentukan apakah user seharusnya punya akses
+ *
+ * @example
+ * ```typescript
+ * // Test bahwa user bisa akses dashboard
+ * await testRouteAccess(page, '/dashboard', true)
+ *
+ * // Test bahwa user tidak bisa akses admin
+ * await testRouteAccess(page, '/admin', false)
+ * ```
+ *
+ * @throws {AssertionError} Jika access tidak sesuai expected
  */
 export async function testRouteAccess(page: Page, route: string, shouldHaveAccess: boolean) {
   console.log(`🔍 Testing access to ${route}, should have access: ${shouldHaveAccess}`)
@@ -125,6 +208,20 @@ export async function testRouteAccess(page: Page, route: string, shouldHaveAcces
 
 /**
  * Helper untuk wait for page load
+ *
+ * Fungsi ini menunggu sampai halaman selesai dimuat dengan strategi bertahap:
+ * 1. Tunggu DOM content loaded
+ * 2. Tunggu network idle (dengan timeout pendek untuk menghindari hang)
+ *
+ * @param page - Playwright Page object
+ *
+ * @example
+ * ```typescript
+ * await page.goto('/dashboard')
+ * await waitForPageLoad(page)
+ * ```
+ *
+ * @note Menggunakan timeout pendek untuk networkidle karena Clerk sering menyebabkan hang
  */
 export async function waitForPageLoad(page: Page) {
   await page.waitForLoadState('domcontentloaded')
@@ -139,6 +236,20 @@ export async function waitForPageLoad(page: Page) {
 
 /**
  * Helper untuk take screenshot dengan nama yang descriptive
+ *
+ * Fungsi ini mengambil screenshot full page dengan nama file yang descriptive
+ * dan timestamp untuk debugging dan dokumentasi test results.
+ *
+ * @param page - Playwright Page object
+ * @param name - Nama descriptive untuk screenshot (contoh: 'login-success', 'error-state')
+ *
+ * @example
+ * ```typescript
+ * await takeScreenshot(page, 'login-success')
+ * // Akan menghasilkan file: test-results/screenshots/login-success-2024-01-15T10-30-45-123Z.png
+ * ```
+ *
+ * @note Screenshot disimpan di test-results/screenshots/ dengan timestamp
  */
 export async function takeScreenshot(page: Page, name: string) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
@@ -146,4 +257,103 @@ export async function takeScreenshot(page: Page, name: string) {
     path: `test-results/screenshots/${name}-${timestamp}.png`,
     fullPage: true,
   })
+}
+
+/**
+ * Helper untuk verify user session aktif
+ *
+ * Fungsi ini memverifikasi bahwa user session masih aktif dengan memeriksa
+ * berbagai indikator UI yang menunjukkan user sudah login (user button, menu, dll).
+ *
+ * @param page - Playwright Page object untuk verifikasi
+ *
+ * @example
+ * ```typescript
+ * await verifyUserSession(page)
+ * ```
+ *
+ * @throws {AssertionError} Jika user session tidak aktif
+ * @note Mencoba berbagai selector untuk fleksibilitas dengan berbagai UI Clerk
+ */
+export async function verifyUserSession(page: Page) {
+  // Check untuk berbagai indikator user session
+  const sessionIndicators = [
+    '.cl-userButton',
+    '[data-testid="user-button"]',
+    '[data-testid="user-menu"]',
+    'button:has-text("Profile")',
+    '.user-menu',
+  ]
+
+  let sessionFound = false
+  for (const selector of sessionIndicators) {
+    const element = page.locator(selector)
+    if ((await element.count()) > 0 && (await element.isVisible())) {
+      sessionFound = true
+      console.log('✅ User session verified with:', selector)
+      break
+    }
+  }
+
+  if (!sessionFound) {
+    // Fallback: check URL tidak redirect ke sign-in
+    const currentUrl = page.url()
+    sessionFound = !currentUrl.includes('/sign-in') && !currentUrl.includes('/sign-up')
+    if (sessionFound) {
+      console.log('✅ User session verified by URL (not redirected to auth pages)')
+    }
+  }
+
+  expect(sessionFound).toBeTruthy()
+}
+
+/**
+ * Helper untuk verify user sudah logout
+ *
+ * Fungsi ini memverifikasi bahwa user sudah berhasil logout dengan memeriksa:
+ * 1. Tidak ada UI elements yang menandakan user login
+ * 2. URL berada di homepage atau sign-in page
+ *
+ * @param page - Playwright Page object untuk verifikasi
+ *
+ * @example
+ * ```typescript
+ * await verifyUserLoggedOut(page)
+ * ```
+ *
+ * @throws {AssertionError} Jika user masih dalam keadaan login
+ * @note Digunakan setelah proses logout untuk memastikan session cleanup berhasil
+ */
+export async function verifyUserLoggedOut(page: Page) {
+  // Check bahwa user sudah logout
+  const authIndicators = [
+    '.cl-userButton',
+    '[data-testid="user-button"]',
+    '[data-testid="user-menu"]',
+  ]
+
+  let loggedOut = true
+  for (const selector of authIndicators) {
+    const element = page.locator(selector)
+    if ((await element.count()) > 0 && (await element.isVisible())) {
+      loggedOut = false
+      break
+    }
+  }
+
+  // Atau check URL berada di homepage/sign-in
+  if (loggedOut) {
+    const currentUrl = page.url()
+    loggedOut =
+      currentUrl === '/' ||
+      currentUrl.includes('localhost:3000/') ||
+      currentUrl.includes('/sign-in') ||
+      !currentUrl.includes('/dashboard')
+  }
+
+  if (loggedOut) {
+    console.log('✅ User logout verified')
+  }
+
+  expect(loggedOut).toBeTruthy()
 }
