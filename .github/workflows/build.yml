@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "=== Running TypeScript check ==="
           # Gunakan tsc tanpa flag --exclude
-          yarn type-check:ci
+          yarn type-check
           echo "✅ TypeScript check passed"
 
       - name: Debug TypeScript on failure
