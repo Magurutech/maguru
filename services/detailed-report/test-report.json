@@ -1,567 +1,944 @@
 {
-  "numTotalTests": 48,
-  "numPassedTests": 48,
+  "numTotalTests": 83,
+  "numPassedTests": 83,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-06-27T00:48:32.801Z",
-  "endTime": "2025-06-27T00:48:43.218Z",
+  "startTime": "2025-06-28T15:43:10.452Z",
+  "endTime": "2025-06-28T15:43:17.367Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\app\\sign-up\\[[...sign-up]]\\page.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\lib\\roleUtils.test.ts",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "Halaman SignUp"
+            "roleUtils",
+            "parseJWT"
           ],
-          "fullName": "Halaman SignUp menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "fullName": "roleUtils parseJWT should parse valid JWT token correctly",
           "status": "passed",
-          "title": "menampilkan wrapper glass panel dan komponen SignUp Clerk",
+          "title": "should parse valid JWT token correctly",
           "failureMessages": [],
-          "duration": 193
+          "duration": 11
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "parseJWT"
+          ],
+          "fullName": "roleUtils parseJWT should return null for invalid JWT format",
+          "status": "passed",
+          "title": "should return null for invalid JWT format",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "parseJWT"
+          ],
+          "fullName": "roleUtils parseJWT should return null for expired token",
+          "status": "passed",
+          "title": "should return null for expired token",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "parseJWT"
+          ],
+          "fullName": "roleUtils parseJWT should handle malformed base64 payload",
+          "status": "passed",
+          "title": "should handle malformed base64 payload",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "parseJWT"
+          ],
+          "fullName": "roleUtils parseJWT should handle invalid JSON in payload",
+          "status": "passed",
+          "title": "should handle invalid JSON in payload",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "parseJWT"
+          ],
+          "fullName": "roleUtils parseJWT should handle missing required claims",
+          "status": "passed",
+          "title": "should handle missing required claims",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "isValidRole"
+          ],
+          "fullName": "roleUtils isValidRole should validate correct role strings",
+          "status": "passed",
+          "title": "should validate correct role strings",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "isValidRole"
+          ],
+          "fullName": "roleUtils isValidRole should reject invalid role values",
+          "status": "passed",
+          "title": "should reject invalid role values",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "extractRoleFromPayload"
+          ],
+          "fullName": "roleUtils extractRoleFromPayload should extract valid role from payload",
+          "status": "passed",
+          "title": "should extract valid role from payload",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "extractRoleFromPayload"
+          ],
+          "fullName": "roleUtils extractRoleFromPayload should return default role for invalid role in payload",
+          "status": "passed",
+          "title": "should return default role for invalid role in payload",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "getRoleFromToken"
+          ],
+          "fullName": "roleUtils getRoleFromToken should extract role from valid token",
+          "status": "passed",
+          "title": "should extract role from valid token",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "getRoleFromToken"
+          ],
+          "fullName": "roleUtils getRoleFromToken should return default role for invalid token",
+          "status": "passed",
+          "title": "should return default role for invalid token",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "getRoleFromToken"
+          ],
+          "fullName": "roleUtils getRoleFromToken should return default role for missing role claim",
+          "status": "passed",
+          "title": "should return default role for missing role claim",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "createRoleError"
+          ],
+          "fullName": "roleUtils createRoleError should create standardized error object",
+          "status": "passed",
+          "title": "should create standardized error object",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "createRoleError"
+          ],
+          "fullName": "roleUtils createRoleError should work without original error",
+          "status": "passed",
+          "title": "should work without original error",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should implement singleton pattern correctly",
+          "status": "passed",
+          "title": "should implement singleton pattern correctly",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should set and get role with TTL",
+          "status": "passed",
+          "title": "should set and get role with TTL",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should handle cache expiration",
+          "status": "passed",
+          "title": "should handle cache expiration",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should integrate with sessionStorage",
+          "status": "passed",
+          "title": "should integrate with sessionStorage",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should handle sessionStorage errors gracefully",
+          "status": "passed",
+          "title": "should handle sessionStorage errors gracefully",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should clear role cache",
+          "status": "passed",
+          "title": "should clear role cache",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleCacheManager"
+          ],
+          "fullName": "roleUtils RoleCacheManager should clear all cache entries",
+          "status": "passed",
+          "title": "should clear all cache entries",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleSyncManager"
+          ],
+          "fullName": "roleUtils RoleSyncManager should implement singleton pattern correctly",
+          "status": "passed",
+          "title": "should implement singleton pattern correctly",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleSyncManager"
+          ],
+          "fullName": "roleUtils RoleSyncManager should initialize and broadcast role updates",
+          "status": "passed",
+          "title": "should initialize and broadcast role updates",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleSyncManager"
+          ],
+          "fullName": "roleUtils RoleSyncManager should broadcast role clearing",
+          "status": "passed",
+          "title": "should broadcast role clearing",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleSyncManager"
+          ],
+          "fullName": "roleUtils RoleSyncManager should handle subscription and unsubscription",
+          "status": "passed",
+          "title": "should handle subscription and unsubscription",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "RoleSyncManager"
+          ],
+          "fullName": "roleUtils RoleSyncManager should cleanup channel on destroy",
+          "status": "passed",
+          "title": "should cleanup channel on destroy",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "retryOperation"
+          ],
+          "fullName": "roleUtils retryOperation should execute operation successfully on first try",
+          "status": "passed",
+          "title": "should execute operation successfully on first try",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "retryOperation"
+          ],
+          "fullName": "roleUtils retryOperation should retry on failure and succeed",
+          "status": "passed",
+          "title": "should retry on failure and succeed",
+          "failureMessages": [],
+          "duration": 52
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "retryOperation"
+          ],
+          "fullName": "roleUtils retryOperation should throw after exhausting all retries",
+          "status": "passed",
+          "title": "should throw after exhausting all retries",
+          "failureMessages": [],
+          "duration": 64
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "retryOperation"
+          ],
+          "fullName": "roleUtils retryOperation should respect delay between retries",
+          "status": "passed",
+          "title": "should respect delay between retries",
+          "failureMessages": [],
+          "duration": 63
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "debounce"
+          ],
+          "fullName": "roleUtils debounce should debounce function calls",
+          "status": "passed",
+          "title": "should debounce function calls",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "debounce"
+          ],
+          "fullName": "roleUtils debounce should reset debounce timer on each call",
+          "status": "passed",
+          "title": "should reset debounce timer on each call",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "roleUtils",
+            "debounce"
+          ],
+          "fullName": "roleUtils debounce should maintain function context",
+          "status": "passed",
+          "title": "should maintain function context",
+          "failureMessages": [],
+          "duration": 1
         }
       ],
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\CustomCard.test.tsx",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\hooks\\useUserRole.test.ts",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "CustomCard Component"
+            "useUserRole hooks",
+            "useUserRole (main hook)"
           ],
-          "fullName": "CustomCard Component renders with title and children",
+          "fullName": "useUserRole hooks useUserRole (main hook) should return role state from context",
           "status": "passed",
-          "title": "renders with title and children",
+          "title": "should return role state from context",
           "failureMessages": [],
-          "duration": 62
+          "duration": 19
         },
         {
           "ancestorTitles": [
-            "CustomCard Component"
+            "useUserRole hooks",
+            "useUserRole (main hook)"
           ],
-          "fullName": "CustomCard Component does not render action button when no onAction provided",
+          "fullName": "useUserRole hooks useUserRole (main hook) should provide computed helper values",
           "status": "passed",
-          "title": "does not render action button when no onAction provided",
+          "title": "should provide computed helper values",
           "failureMessages": [],
-          "duration": 9
+          "duration": 8
         },
         {
           "ancestorTitles": [
-            "CustomCard Component"
+            "useUserRole hooks",
+            "useUserRole (main hook)"
           ],
-          "fullName": "CustomCard Component renders action button with default label when onAction provided",
+          "fullName": "useUserRole hooks useUserRole (main hook) should handle different roles correctly",
           "status": "passed",
-          "title": "renders action button with default label when onAction provided",
+          "title": "should handle different roles correctly",
           "failureMessages": [],
-          "duration": 9
+          "duration": 10
         },
         {
           "ancestorTitles": [
-            "CustomCard Component"
+            "useUserRole hooks",
+            "useUserRole (main hook)"
           ],
-          "fullName": "CustomCard Component renders action button with custom label when provided",
+          "fullName": "useUserRole hooks useUserRole (main hook) should handle context unavailable error",
           "status": "passed",
-          "title": "renders action button with custom label when provided",
-          "failureMessages": [],
-          "duration": 12
-        },
-        {
-          "ancestorTitles": [
-            "CustomCard Component"
-          ],
-          "fullName": "CustomCard Component calls onAction when action button is clicked",
-          "status": "passed",
-          "title": "calls onAction when action button is clicked",
-          "failureMessages": [],
-          "duration": 26
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Stat.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders all statistics values correctly",
-          "status": "passed",
-          "title": "renders all statistics values correctly",
-          "failureMessages": [],
-          "duration": 89
-        },
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders all statistic labels correctly",
-          "status": "passed",
-          "title": "renders all statistic labels correctly",
-          "failureMessages": [],
-          "duration": 22
-        },
-        {
-          "ancestorTitles": [
-            "Stats Component"
-          ],
-          "fullName": "Stats Component renders inside a glass panel",
-          "status": "passed",
-          "title": "renders inside a glass panel",
-          "failureMessages": [],
-          "duration": 21
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\app\\sign-in\\[[...sign-in]]\\page.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Halaman SignIn"
-          ],
-          "fullName": "Halaman SignIn menampilkan wrapper glass panel dan komponen SignIn Clerk",
-          "status": "passed",
-          "title": "menampilkan wrapper glass panel dan komponen SignIn Clerk",
-          "failureMessages": [],
-          "duration": 172
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Feature.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Features Component"
-          ],
-          "fullName": "Features Component renders section title and description",
-          "status": "passed",
-          "title": "renders section title and description",
-          "failureMessages": [],
-          "duration": 141
-        },
-        {
-          "ancestorTitles": [
-            "Features Component"
-          ],
-          "fullName": "Features Component renders all feature cards with correct titles",
-          "status": "passed",
-          "title": "renders all feature cards with correct titles",
-          "failureMessages": [],
-          "duration": 65
-        },
-        {
-          "ancestorTitles": [
-            "Features Component"
-          ],
-          "fullName": "Features Component renders feature descriptions correctly",
-          "status": "passed",
-          "title": "renders feature descriptions correctly",
-          "failureMessages": [],
-          "duration": 61
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Testimonial.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Testimonials Component"
-          ],
-          "fullName": "Testimonials Component renders section title and description",
-          "status": "passed",
-          "title": "renders section title and description",
-          "failureMessages": [],
-          "duration": 153
-        },
-        {
-          "ancestorTitles": [
-            "Testimonials Component"
-          ],
-          "fullName": "Testimonials Component renders all testimonial cards with correct names and roles",
-          "status": "passed",
-          "title": "renders all testimonial cards with correct names and roles",
-          "failureMessages": [],
-          "duration": 75
-        },
-        {
-          "ancestorTitles": [
-            "Testimonials Component"
-          ],
-          "fullName": "Testimonials Component renders testimonial quotes correctly",
-          "status": "passed",
-          "title": "renders testimonial quotes correctly",
+          "title": "should handle context unavailable error",
           "failureMessages": [],
           "duration": 45
         },
         {
           "ancestorTitles": [
-            "Testimonials Component"
+            "useUserRole hooks",
+            "useRoleGuard"
           ],
-          "fullName": "Testimonials Component renders 5-star ratings for all testimonials",
+          "fullName": "useUserRole hooks useRoleGuard should provide basic role checks",
           "status": "passed",
-          "title": "renders 5-star ratings for all testimonials",
+          "title": "should provide basic role checks",
           "failureMessages": [],
-          "duration": 50
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Footers.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders brand info",
-          "status": "passed",
-          "title": "renders brand info",
-          "failureMessages": [],
-          "duration": 108
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "Footer Component"
+            "useUserRole hooks",
+            "useRoleGuard"
           ],
-          "fullName": "Footer Component renders contact information",
+          "fullName": "useUserRole hooks useRoleGuard should implement role hierarchy correctly",
           "status": "passed",
-          "title": "renders contact information",
+          "title": "should implement role hierarchy correctly",
           "failureMessages": [],
-          "duration": 44
+          "duration": 6
         },
         {
           "ancestorTitles": [
-            "Footer Component"
+            "useUserRole hooks",
+            "useRoleGuard"
           ],
-          "fullName": "Footer Component renders course links section",
+          "fullName": "useUserRole hooks useRoleGuard should handle context-aware guards",
           "status": "passed",
-          "title": "renders course links section",
-          "failureMessages": [],
-          "duration": 57
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders company links section",
-          "status": "passed",
-          "title": "renders company links section",
-          "failureMessages": [],
-          "duration": 48
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders support links section",
-          "status": "passed",
-          "title": "renders support links section",
-          "failureMessages": [],
-          "duration": 51
-        },
-        {
-          "ancestorTitles": [
-            "Footer Component"
-          ],
-          "fullName": "Footer Component renders copyright and social links",
-          "status": "passed",
-          "title": "renders copyright and social links",
-          "failureMessages": [],
-          "duration": 47
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Heros.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Hero Component"
-          ],
-          "fullName": "Hero Component renders headline and main call-to-action",
-          "status": "passed",
-          "title": "renders headline and main call-to-action",
-          "failureMessages": [],
-          "duration": 221
-        },
-        {
-          "ancestorTitles": [
-            "Hero Component"
-          ],
-          "fullName": "Hero Component renders social proof elements",
-          "status": "passed",
-          "title": "renders social proof elements",
-          "failureMessages": [],
-          "duration": 54
-        },
-        {
-          "ancestorTitles": [
-            "Hero Component"
-          ],
-          "fullName": "Hero Component renders interactive learning section",
-          "status": "passed",
-          "title": "renders interactive learning section",
-          "failureMessages": [],
-          "duration": 42
-        },
-        {
-          "ancestorTitles": [
-            "Hero Component"
-          ],
-          "fullName": "Hero Component renders floating information cards",
-          "status": "passed",
-          "title": "renders floating information cards",
-          "failureMessages": [],
-          "duration": 32
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Cts.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders headline and sub-headline",
-          "status": "passed",
-          "title": "renders headline and sub-headline",
-          "failureMessages": [],
-          "duration": 213
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders call-to-action buttons",
-          "status": "passed",
-          "title": "renders call-to-action buttons",
-          "failureMessages": [],
-          "duration": 33
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders trust indicators",
-          "status": "passed",
-          "title": "renders trust indicators",
-          "failureMessages": [],
-          "duration": 33
-        },
-        {
-          "ancestorTitles": [
-            "CTA Component"
-          ],
-          "fullName": "CTA Component renders with glass panel styling",
-          "status": "passed",
-          "title": "renders with glass panel styling",
-          "failureMessages": [],
-          "duration": 31
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Navbars.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is not signed in"
-          ],
-          "fullName": "Navbar Component when user is not signed in renders logo and brand name",
-          "status": "passed",
-          "title": "renders logo and brand name",
-          "failureMessages": [],
-          "duration": 178
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is not signed in"
-          ],
-          "fullName": "Navbar Component when user is not signed in renders desktop menu items",
-          "status": "passed",
-          "title": "renders desktop menu items",
-          "failureMessages": [],
-          "duration": 29
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is not signed in"
-          ],
-          "fullName": "Navbar Component when user is not signed in renders desktop CTA buttons as links",
-          "status": "passed",
-          "title": "renders desktop CTA buttons as links",
-          "failureMessages": [],
-          "duration": 21
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is not signed in"
-          ],
-          "fullName": "Navbar Component when user is not signed in toggles mobile menu and links close menu on click",
-          "status": "passed",
-          "title": "toggles mobile menu and links close menu on click",
-          "failureMessages": [],
-          "duration": 159
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is signed in"
-          ],
-          "fullName": "Navbar Component when user is signed in renders sign out button and user button in desktop",
-          "status": "passed",
-          "title": "renders sign out button and user button in desktop",
-          "failureMessages": [],
-          "duration": 8
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is signed in"
-          ],
-          "fullName": "Navbar Component when user is signed in renders sign out button and user button in mobile menu",
-          "status": "passed",
-          "title": "renders sign out button and user button in mobile menu",
-          "failureMessages": [],
-          "duration": 29
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is signed in"
-          ],
-          "fullName": "Navbar Component when user is signed in closes mobile menu when sign out button is clicked",
-          "status": "passed",
-          "title": "closes mobile menu when sign out button is clicked",
-          "failureMessages": [],
-          "duration": 43
-        },
-        {
-          "ancestorTitles": [
-            "Navbar Component",
-            "when user is signed in"
-          ],
-          "fullName": "Navbar Component when user is signed in sign out button has correct redirect configuration",
-          "status": "passed",
-          "title": "sign out button has correct redirect configuration",
-          "failureMessages": [],
-          "duration": 8
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\homepage\\component\\Course.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders section title and description",
-          "status": "passed",
-          "title": "renders section title and description",
-          "failureMessages": [],
-          "duration": 296
-        },
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders course cards with correct information",
-          "status": "passed",
-          "title": "renders course cards with correct information",
-          "failureMessages": [],
-          "duration": 93
-        },
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders course ratings and statistics",
-          "status": "passed",
-          "title": "renders course ratings and statistics",
-          "failureMessages": [],
-          "duration": 25
-        },
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders course level badges",
-          "status": "passed",
-          "title": "renders course level badges",
-          "failureMessages": [],
-          "duration": 31
-        },
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders pricing information",
-          "status": "passed",
-          "title": "renders pricing information",
-          "failureMessages": [],
-          "duration": 47
-        },
-        {
-          "ancestorTitles": [
-            "Courses Component"
-          ],
-          "fullName": "Courses Component renders view all button",
-          "status": "passed",
-          "title": "renders view all button",
-          "failureMessages": [],
-          "duration": 37
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\app\\dashboard\\page.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Dashboard Page"
-          ],
-          "fullName": "Dashboard Page menampilkan halaman dashboard dengan informasi user",
-          "status": "passed",
-          "title": "menampilkan halaman dashboard dengan informasi user",
-          "failureMessages": [],
-          "duration": 83
-        },
-        {
-          "ancestorTitles": [
-            "Dashboard Page"
-          ],
-          "fullName": "Dashboard Page menampilkan loading state ketika user belum loaded",
-          "status": "passed",
-          "title": "menampilkan loading state ketika user belum loaded",
+          "title": "should handle context-aware guards",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "Dashboard Page"
+            "useUserRole hooks",
+            "useRoleLoadingState"
           ],
-          "fullName": "Dashboard Page menampilkan fallback name ketika firstName tidak ada",
+          "fullName": "useUserRole hooks useRoleLoadingState should provide loading state management",
           "status": "passed",
-          "title": "menampilkan fallback name ketika firstName tidak ada",
+          "title": "should provide loading state management",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleLoadingState"
+          ],
+          "fullName": "useUserRole hooks useRoleLoadingState should generate appropriate status messages",
+          "status": "passed",
+          "title": "should generate appropriate status messages",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleConditional"
+          ],
+          "fullName": "useUserRole hooks useRoleConditional should provide conditional rendering helpers",
+          "status": "passed",
+          "title": "should provide conditional rendering helpers",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleConditional"
+          ],
+          "fullName": "useUserRole hooks useRoleConditional should handle feature flags correctly",
+          "status": "passed",
+          "title": "should handle feature flags correctly",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleErrorHandling"
+          ],
+          "fullName": "useUserRole hooks useRoleErrorHandling should categorize errors correctly",
+          "status": "passed",
+          "title": "should categorize errors correctly",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleErrorHandling"
+          ],
+          "fullName": "useUserRole hooks useRoleErrorHandling should provide user-friendly error messages",
+          "status": "passed",
+          "title": "should provide user-friendly error messages",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleDevelopment"
+          ],
+          "fullName": "useUserRole hooks useRoleDevelopment should provide development utilities when NODE_ENV is development",
+          "status": "passed",
+          "title": "should provide development utilities when NODE_ENV is development",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleDevelopment"
+          ],
+          "fullName": "useUserRole hooks useRoleDevelopment should return development functions structure correctly",
+          "status": "passed",
+          "title": "should return development functions structure correctly",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useUserRole hooks",
+            "useRoleDevelopment"
+          ],
+          "fullName": "useUserRole hooks useRoleDevelopment should handle role switching warnings in production-like environment",
+          "status": "passed",
+          "title": "should handle role switching warnings in production-like environment",
+          "failureMessages": [],
+          "duration": 2
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\context\\UserRoleContext.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should initialize with loading state",
+          "status": "passed",
+          "title": "should initialize with loading state",
+          "failureMessages": [],
+          "duration": 40
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should fetch role from Clerk session on mount",
+          "status": "passed",
+          "title": "should fetch role from Clerk session on mount",
+          "failureMessages": [],
+          "duration": 20
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle Clerk session unavailable",
+          "status": "passed",
+          "title": "should handle Clerk session unavailable",
+          "failureMessages": [],
+          "duration": 22
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should integrate with cache manager",
+          "status": "passed",
+          "title": "should integrate with cache manager",
           "failureMessages": [],
           "duration": 15
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle cross-tab synchronization",
+          "status": "passed",
+          "title": "should handle cross-tab synchronization",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle error boundary with fallback UI",
+          "status": "passed",
+          "title": "should handle error boundary with fallback UI",
+          "failureMessages": [],
+          "duration": 60
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should support development mode",
+          "status": "passed",
+          "title": "should support development mode",
+          "failureMessages": [],
+          "duration": 9
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide setRole action",
+          "status": "passed",
+          "title": "should provide setRole action",
+          "failureMessages": [],
+          "duration": 12
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide clearRole action",
+          "status": "passed",
+          "title": "should provide clearRole action",
+          "failureMessages": [],
+          "duration": 15
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide refreshRole action",
+          "status": "passed",
+          "title": "should provide refreshRole action",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "useUserRoleContext hook"
+          ],
+          "fullName": "UserRoleContext useUserRoleContext hook should throw error when used outside provider",
+          "status": "passed",
+          "title": "should throw error when used outside provider",
+          "failureMessages": [],
+          "duration": 31
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "useUserRoleContext hook"
+          ],
+          "fullName": "UserRoleContext useUserRoleContext hook should return context value when used within provider",
+          "status": "passed",
+          "title": "should return context value when used within provider",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Lifecycle and Cleanup"
+          ],
+          "fullName": "UserRoleContext Lifecycle and Cleanup should cleanup resources on unmount",
+          "status": "passed",
+          "title": "should cleanup resources on unmount",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Lifecycle and Cleanup"
+          ],
+          "fullName": "UserRoleContext Lifecycle and Cleanup should handle auth state changes",
+          "status": "passed",
+          "title": "should handle auth state changes",
+          "failureMessages": [],
+          "duration": 4
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\components\\RoleDisplay.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should render loading state correctly",
+          "status": "passed",
+          "title": "should render loading state correctly",
+          "failureMessages": [],
+          "duration": 42
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should render error state with retry button",
+          "status": "passed",
+          "title": "should render error state with retry button",
+          "failureMessages": [],
+          "duration": 18
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should display role information correctly for admin",
+          "status": "passed",
+          "title": "should display role information correctly for admin",
+          "failureMessages": [],
+          "duration": 31
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should display role information correctly for creator",
+          "status": "passed",
+          "title": "should display role information correctly for creator",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should display role information correctly for user",
+          "status": "passed",
+          "title": "should display role information correctly for user",
+          "failureMessages": [],
+          "duration": 13
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Component Rendering"
+          ],
+          "fullName": "RoleDisplay Component Rendering should show role status and flags correctly",
+          "status": "passed",
+          "title": "should show role status and flags correctly",
+          "failureMessages": [],
+          "duration": 21
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "User Interactions"
+          ],
+          "fullName": "RoleDisplay User Interactions should handle refresh role button",
+          "status": "passed",
+          "title": "should handle refresh role button",
+          "failureMessages": [],
+          "duration": 20
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "User Interactions"
+          ],
+          "fullName": "RoleDisplay User Interactions should disable refresh button when loading",
+          "status": "passed",
+          "title": "should disable refresh button when loading",
+          "failureMessages": [],
+          "duration": 11
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "User Interactions"
+          ],
+          "fullName": "RoleDisplay User Interactions should handle retry on error",
+          "status": "passed",
+          "title": "should handle retry on error",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Permission Examples Display"
+          ],
+          "fullName": "RoleDisplay Permission Examples Display should display permission examples correctly for admin",
+          "status": "passed",
+          "title": "should display permission examples correctly for admin",
+          "failureMessages": [],
+          "duration": 28
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Permission Examples Display"
+          ],
+          "fullName": "RoleDisplay Permission Examples Display should display permission examples correctly for user",
+          "status": "passed",
+          "title": "should display permission examples correctly for user",
+          "failureMessages": [],
+          "duration": 10
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Feature Flags Status"
+          ],
+          "fullName": "RoleDisplay Feature Flags Status should show feature flags status correctly for admin",
+          "status": "passed",
+          "title": "should show feature flags status correctly for admin",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Feature Flags Status"
+          ],
+          "fullName": "RoleDisplay Feature Flags Status should show feature flags status correctly for user",
+          "status": "passed",
+          "title": "should show feature flags status correctly for user",
+          "failureMessages": [],
+          "duration": 8
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Conditional Content Rendering"
+          ],
+          "fullName": "RoleDisplay Conditional Content Rendering should render role-specific content for admin",
+          "status": "passed",
+          "title": "should render role-specific content for admin",
+          "failureMessages": [],
+          "duration": 9
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Conditional Content Rendering"
+          ],
+          "fullName": "RoleDisplay Conditional Content Rendering should render role-specific content for creator",
+          "status": "passed",
+          "title": "should render role-specific content for creator",
+          "failureMessages": [],
+          "duration": 8
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Conditional Content Rendering"
+          ],
+          "fullName": "RoleDisplay Conditional Content Rendering should display public content for all users",
+          "status": "passed",
+          "title": "should display public content for all users",
+          "failureMessages": [],
+          "duration": 9
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Helper Components"
+          ],
+          "fullName": "RoleDisplay Helper Components should render PermissionItem with correct allowed state",
+          "status": "passed",
+          "title": "should render PermissionItem with correct allowed state",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Helper Components"
+          ],
+          "fullName": "RoleDisplay Helper Components should render PermissionItem with correct denied state",
+          "status": "passed",
+          "title": "should render PermissionItem with correct denied state",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "RoleDisplay",
+            "Helper Components"
+          ],
+          "fullName": "RoleDisplay Helper Components should render FeatureFlag with correct enabled state",
+          "status": "passed",
+          "title": "should render FeatureFlag with correct enabled state",
+          "failureMessages": [],
+          "duration": 19
         }
       ],
       "failureMessage": null

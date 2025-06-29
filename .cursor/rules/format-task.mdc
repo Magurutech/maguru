@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: true
 ---
 
@@ -155,7 +155,7 @@ END
    - Expected: [hasil yang diharapkan]
    - Edge cases: [kondisi batas yang perlu diuji]
 
-### 2. Integration Testing
+### 2. Integration Testing (opsional)
 
 #### Pendekatan:
 
@@ -170,7 +170,7 @@ END
    - Components: [komponen yang terlibat]
    - Expected: [hasil yang diharapkan]
 
-### 3. E2E Testing (BDD)
+### 3. E2E Testing (BDD) (opsional)
 
 #### Pendekatan:
 
@@ -222,6 +222,9 @@ END
 1. **Draft**: Dokumentasi awal dibuat oleh assignee
 2. **Review**: Ditinjau oleh minimal 1 developer dan 1 product owner
 3. **Final**: Disetujui dan siap untuk implementasi
+
+### Refresni:
+1. Daftar referensi yang dibutuhkan atau relevan dengan task yang dikerjakan
 
 ### Contoh Task Documentation
 

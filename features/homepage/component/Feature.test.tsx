@@ -1,11 +1,11 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import { Features } from './Feature'
+import { Feature } from './Feature'
 
 describe('Features Component', () => {
   test('renders section title and description', () => {
-    render(<Features />)
+    render(<Feature />)
 
     expect(screen.getByText('Kenapa Pilih')).toBeInTheDocument()
     expect(screen.getByText('Maguru?')).toBeInTheDocument()
@@ -15,7 +15,7 @@ describe('Features Component', () => {
   })
 
   test('renders all feature cards with correct titles', () => {
-    render(<Features />)
+    render(<Feature />)
 
     // Check feature titles
     const featureTitles = [
@@ -33,7 +33,7 @@ describe('Features Component', () => {
   })
 
   test('renders feature descriptions correctly', () => {
-    render(<Features />)
+    render(<Feature />)
 
     // Check some feature descriptions
     expect(

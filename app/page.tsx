@@ -1,5 +1,5 @@
 import { Hero } from '@/features/homepage/component/Heros'
-import { Features } from '@/features/homepage/component/Feature'
+import { Feature } from '@/features/homepage/component/Feature'
 import { Courses } from '@/features/homepage/component/Course'
 import { Stats } from '@/features/homepage/component/Stat'
 import { Testimonials } from '@/features/homepage/component/Testimonial'
@@ -17,7 +17,7 @@ export default function HomePage() {
         <p>This is a custom card powered by your Tailwind v4 config.</p>
       </CustomCard>
       <Stats />
-      <Features />
+      <Feature />
       <Courses />
       <Testimonials />
       <CTA />

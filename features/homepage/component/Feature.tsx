@@ -1,6 +1,6 @@
 import { Zap, Shield, Headphones, Trophy, Users, BookOpen } from 'lucide-react'
 
-export function Features() {
+export function Feature() {
   const features = [
     {
       icon: Zap,

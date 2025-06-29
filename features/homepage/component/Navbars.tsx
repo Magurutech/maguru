@@ -6,10 +6,12 @@ import { Button } from '@/components/ui/button'
 import { Menu, X, BookOpen } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 import { SignOutButton, UserButton } from '@clerk/nextjs'
+import { useUserRole } from '@/features/auth'
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { isSignedIn } = useUser()
+  const { role, isAdmin, isCreator, isUser } = useUserRole()
 
   // Handler untuk close menu mobile setelah klik link
   const handleNavClick = () => setIsOpen(false)
@@ -17,6 +19,14 @@ export function Navbar() {
   // Handler untuk sign out dengan close mobile menu
   const handleSignOut = () => {
     setIsOpen(false)
+  }
+
+  // Get dashboard URL based on role
+  const getDashboardUrl = () => {
+    if (isAdmin) return '/admin/dashboard'
+    if (isCreator) return '/creator/dashboard'
+    if (isUser) return '/dashboard'
+    return '/dashboard' // Default fallback
   }
 
   return (
@@ -76,6 +86,18 @@ export function Navbar() {
               </>
             ) : (
               <>
+                {/* Role-based Dashboard Link */}
+                <Link href={getDashboardUrl()}>
+                  <Button variant="ghost" className="text-sm">
+                    Dashboard
+                    {role && (
+                      <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                        {role}
+                      </span>
+                    )}
+                  </Button>
+                </Link>
+
                 <SignOutButton
                   signOutOptions={{ redirectUrl: '/' }}
                   data-testid="desktop-sign-out-button"
@@ -151,6 +173,24 @@ export function Navbar() {
                 </>
               ) : (
                 <>
+                  {/* Mobile Role-based Dashboard Link */}
+                  <Link href={getDashboardUrl()}>
+                    <Button
+                      variant="outline"
+                      className="justify-start cursor-pointer w-full"
+                      onClick={handleNavClick}
+                    >
+                      <span className="flex items-center">
+                        Dashboard
+                        {role && (
+                          <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                            {role}
+                          </span>
+                        )}
+                      </span>
+                    </Button>
+                  </Link>
+
                   <SignOutButton
                     signOutOptions={{ redirectUrl: '/' }}
                     data-testid="mobile-sign-out-button"
