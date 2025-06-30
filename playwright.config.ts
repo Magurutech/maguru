@@ -2,7 +2,6 @@ import { defineConfig, devices } from '@playwright/test'
 
 process.env.NODE_ENV = 'test'
 
-
 export default defineConfig({
   testDir: '__tests__/playwright',
   timeout: 60000,
@@ -10,6 +9,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 1 : 2,
+  outputDir: 'services/test-results',
   reporter: [
     ['html', { outputFolder: 'services/playwright-report' }],
     ['json', { outputFile: 'services/test-results/results.json' }],
