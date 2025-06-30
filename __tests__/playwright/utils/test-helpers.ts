@@ -207,31 +207,44 @@ export async function testRouteAccess(page: Page, route: string, shouldHaveAcces
 }
 
 /**
- * Helper untuk wait for page load
+ * Helper untuk wait for page load dengan optimasi untuk Clerk
  *
- * Fungsi ini menunggu sampai halaman selesai dimuat dengan strategi bertahap:
+ * Fungsi ini menunggu sampai halaman selesai dimuat dengan strategi yang dioptimasi untuk Clerk:
  * 1. Tunggu DOM content loaded
- * 2. Tunggu network idle (dengan timeout pendek untuk menghindari hang)
+ * 2. Skip networkidle karena Clerk sering menyebabkan hang
+ * 3. Tunggu elemen form/UI terlihat sebagai indikator halaman siap
  *
  * @param page - Playwright Page object
+ * @param waitForSelector - Optional selector untuk memastikan elemen penting sudah muncul
  *
  * @example
  * ```typescript
- * await page.goto('/dashboard')
- * await waitForPageLoad(page)
+ * await page.goto('/sign-in')
+ * await waitForPageLoad(page, 'form') // tunggu form sign-in muncul
  * ```
  *
- * @note Menggunakan timeout pendek untuk networkidle karena Clerk sering menyebabkan hang
+ * @note Dioptimasi khusus untuk Clerk authentication flows
  */
-export async function waitForPageLoad(page: Page) {
+export async function waitForPageLoad(page: Page, waitForSelector?: string) {
+  // Tunggu DOM content loaded (cepat dan reliable)
   await page.waitForLoadState('domcontentloaded')
-  // Gunakan timeout yang lebih pendek untuk networkidle
-  try {
-    await page.waitForLoadState('networkidle', { timeout: 5000 })
-  } catch {
-    // Jika networkidle timeout, lanjutkan saja (common issue dengan Clerk)
-    console.log('⚠️ NetworkIdle timeout, continuing...')
+
+  // Skip networkidle karena Clerk melakukan banyak background requests
+  // yang menyebabkan timeout. Ini adalah best practice untuk Clerk testing.
+  console.log('⚠️ Skipping networkidle wait (Clerk optimization)')
+
+  // Jika ada selector spesifik, tunggu sampai terlihat
+  if (waitForSelector) {
+    try {
+      await page.waitForSelector(waitForSelector, { timeout: 10000 })
+      console.log(`✅ Element ${waitForSelector} is visible`)
+    } catch {
+      console.log(`⚠️ Element ${waitForSelector} not found, but continuing...`)
+    }
   }
+
+  // Tunggu sebentar untuk memastikan JavaScript selesai loading
+  await page.waitForTimeout(1000)
 }
 
 /**
