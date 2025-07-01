@@ -9,34 +9,24 @@ import { Page, expect } from '@playwright/test'
 import { testUsers } from '../fixtures/test-users'
 
 /**
- * Helper untuk login user dengan Clerk
+ * Helper untuk login user dengan Clerk (DEPRECATED - Use clerk.signIn() instead)
  *
- * Fungsi ini melakukan proses login dengan Clerk authentication menggunakan credentials
- * yang diberikan. Mengikuti best practices Clerk + Playwright testing.
+ * @deprecated Gunakan clerk.signIn() helper sesuai dokumentasi Clerk
+ * Fungsi ini disimpan untuk backward compatibility
  *
  * @param page - Playwright Page object untuk interaksi browser
- * @param user - Object user yang berisi email dan password untuk login
- * @param user.email - Email address untuk login (harus format valid)
+ * @param user - Object user yang berisi identifier dan password untuk login
+ * @param user.identifier - Email/username untuk login
  * @param user.password - Password untuk login
- *
- * @example
- * ```typescript
- * await loginUser(page, {
- *   email: 'test@example.com',
- *   password: 'password123'
- * })
- * ```
- *
- * @throws {Error} Jika login gagal atau redirect tidak sesuai expected
  */
-export async function loginUser(page: Page, user: { email: string; password: string }) {
-  console.log(`🔐 Logging in as:`, user.email)
+export async function loginUser(page: Page, user: { identifier: string; password: string }) {
+  console.log(`🔐 Logging in as:`, user.identifier)
 
   // Navigate ke sign-in page
   await page.goto('/sign-in')
 
   // Fill login form
-  await page.fill('input[name="identifier"]', user.email)
+  await page.fill('input[name="identifier"]', user.identifier)
   await page.fill('input[name="password"]', user.password)
 
   // Submit form
@@ -49,34 +39,28 @@ export async function loginUser(page: Page, user: { email: string; password: str
 }
 
 /**
- * Helper untuk sign up user baru dengan Clerk
+ * Helper untuk sign up user baru dengan Clerk (DEPRECATED - Use clerk.signUp() instead)
  *
- * Fungsi ini melakukan proses registrasi user baru menggunakan Clerk authentication.
- * Menggunakan test users yang sudah dikonfigurasi dengan format Clerk test mode.
+ * @deprecated Gunakan clerk.signUp() helper sesuai dokumentasi Clerk
+ * Fungsi ini disimpan untuk backward compatibility
  *
  * @param page - Playwright Page object untuk interaksi browser
- * @param userType - Tipe user dari testUsers fixture (newUser, existingUser, dll)
- *
- * @example
- * ```typescript
- * await signUpUser(page, 'newUser')
- * ```
- *
- * @throws {Error} Jika sign up gagal atau redirect tidak sesuai expected
+ * @param userType - Tipe user dari testUsers fixture
  */
 export async function signUpUser(page: Page, userType: keyof typeof testUsers) {
   const user = testUsers[userType]
 
-  console.log(`📝 Signing up as ${userType}:`, user.email)
+  console.log(`📝 Signing up as ${userType}:`, user.identifier)
 
   // Navigate ke sign-up page
   await page.goto('/sign-up')
 
-  // Fill sign-up form
-  if ('firstName' in user && user.firstName)
+  // Fill sign-up form dengan conditional checks yang aman
+  if ('firstName' in user && user.firstName && typeof user.firstName === 'string')
     await page.fill('input[name="firstName"]', user.firstName)
-  if ('lastName' in user && user.lastName) await page.fill('input[name="lastName"]', user.lastName)
-  await page.fill('input[name="emailAddress"]', user.email)
+  if ('lastName' in user && user.lastName && typeof user.lastName === 'string')
+    await page.fill('input[name="lastName"]', user.lastName)
+  await page.fill('input[name="emailAddress"]', user.identifier)
   await page.fill('input[name="password"]', user.password)
 
   // Submit form

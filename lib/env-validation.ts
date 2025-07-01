@@ -33,10 +33,6 @@ const envSchema = z.object({
     .string()
     .transform((val) => val === 'true')
     .default('false'),
-  CLERK_DISABLE_BOT_PROTECTION: z
-    .string()
-    .transform((val) => val === 'true')
-    .optional(),
   NEXT_PUBLIC_CLERK_FRONTEND_API: z.string().optional(),
 })
 

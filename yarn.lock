@@ -1028,6 +1028,17 @@
     snakecase-keys "8.0.1"
     tslib "2.8.1"
 
+"@clerk/backend@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@clerk/backend/-/backend-2.3.1.tgz#27079b69e0ea843e3a95b9369b097e165a549a54"
+  integrity sha512-T4Ug8R3PtLUkG/5YWZXB9NpgmgqPnVOloINnlWUJPH323sFHz2AAOhfx6r/li/fpQ99Xn3oaqTOmVYlMy0AIsA==
+  dependencies:
+    "@clerk/shared" "^3.10.1"
+    "@clerk/types" "^4.62.1"
+    cookie "1.0.2"
+    snakecase-keys "8.0.1"
+    tslib "2.8.1"
+
 "@clerk/clerk-react@^5.32.2":
   version "5.32.2"
   resolved "https://registry.yarnpkg.com/@clerk/clerk-react/-/clerk-react-5.32.2.tgz#a689240e2960df06a24eb1f2ae86c0c3f0359d67"
@@ -1061,20 +1072,39 @@
     std-env "^3.9.0"
     swr "^2.3.3"
 
-"@clerk/testing@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@clerk/testing/-/testing-1.9.0.tgz#7a8c5b7aa70b60a4962848dbd34879000655ab40"
-  integrity sha512-vm8ZY33d9wCh9URh5S8HueOOjNhTFl4Y9jG++X6j58k97dmvM4azdy0VU037SKc+8AMussugf9bMvHcAmJ3Qeg==
+"@clerk/shared@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@clerk/shared/-/shared-3.10.1.tgz#a59d267c1ad71a3a3b21c976da7dec22f630137c"
+  integrity sha512-V3MFEja75qcH7MHdZ8OUo+ndQK+ivGcIQHSeDpnIAvVRXWjYy8JDpS/tYwt81FW8hgq/WcxT1rpEd27XUKrrNg==
   dependencies:
-    "@clerk/backend" "^2.3.0"
-    "@clerk/shared" "^3.10.0"
-    "@clerk/types" "^4.62.0"
+    "@clerk/types" "^4.62.1"
+    dequal "2.0.3"
+    glob-to-regexp "0.4.1"
+    js-cookie "3.0.5"
+    std-env "^3.9.0"
+    swr "^2.3.3"
+
+"@clerk/testing@^1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@clerk/testing/-/testing-1.9.1.tgz#398173050f63b8288a4de339ccbed1151d7dd061"
+  integrity sha512-HqGreXcDDwWT0GIXzR9ACWGxaUZ+o2hJny88ynJExQ7bYzV/Sjmv+UuLLfxZmpoQDC3oN9EHNtk1gPLIlehuRg==
+  dependencies:
+    "@clerk/backend" "^2.3.1"
+    "@clerk/shared" "^3.10.1"
+    "@clerk/types" "^4.62.1"
     dotenv "16.4.7"
 
 "@clerk/types@^4.62.0":
   version "4.62.0"
   resolved "https://registry.yarnpkg.com/@clerk/types/-/types-4.62.0.tgz#5b602efab3431ecc73e8211232fdc8bfba71e853"
   integrity sha512-Ps/8eQHCuv2bZYgTG3+4xgxlltoX91GNf+G5TG/DSSmECgR657qGoasOrLLcMMyE+OZiX57k51oH137Ohhggog==
+  dependencies:
+    csstype "3.1.3"
+
+"@clerk/types@^4.62.1":
+  version "4.62.1"
+  resolved "https://registry.yarnpkg.com/@clerk/types/-/types-4.62.1.tgz#08b424d65fddd0eb03415edc18e2394303778645"
+  integrity sha512-qr0HrlM+VS/QEqjRP+1qSp2ipi+MrGGs/ih+HDqe0d/egfobFGGOg0Z759ZBE6Nd5WHWVTWWuFiilnfhJ8QqdQ==
   dependencies:
     csstype "3.1.3"
 
