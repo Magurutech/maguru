@@ -15,6 +15,7 @@
 import { clerk, clerkSetup } from '@clerk/testing/playwright'
 import { test as setup } from '@playwright/test'
 import path from 'path'
+import dotenv from 'dotenv'
 
 // CRITICAL: Setup must be run serially sesuai dokumentasi Overview
 // https://clerk.com/docs/testing/playwright/overview
@@ -24,6 +25,19 @@ setup.describe.configure({ mode: 'serial' })
 setup('global setup', async () => {
   console.log('🎉  NODE_ENV:', process.env.NODE_ENV)
   await clerkSetup()
+  try {
+    if (process.env.NODE_ENV) {
+      dotenv.config({
+        path: `.env.${process.env.NODE_ENV}`,
+        override: true,
+      })
+      console.log(`Loaded environment variables from .env.${process.env.NODE_ENV}`)
+    } else {
+      console.log('No specific ENV provided, using default environment variables.')
+    }
+  } catch (error) {
+    console.error('Error in loading environment variables', error)
+  }
   if (
     !process.env.E2E_CLERK_USER_USERNAME ||
     !process.env.E2E_CLERK_USER_PASSWORD ||
