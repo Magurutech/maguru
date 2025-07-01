@@ -6,7 +6,6 @@
  */
 
 import { Page, expect } from '@playwright/test'
-import { testUsers } from '../fixtures/test-users'
 
 /**
  * Helper untuk login user dengan Clerk (DEPRECATED - Use clerk.signIn() instead)
@@ -36,41 +35,6 @@ export async function loginUser(page: Page, user: { identifier: string; password
   await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
   console.log('✅ Login successful')
-}
-
-/**
- * Helper untuk sign up user baru dengan Clerk (DEPRECATED - Use clerk.signUp() instead)
- *
- * @deprecated Gunakan clerk.signUp() helper sesuai dokumentasi Clerk
- * Fungsi ini disimpan untuk backward compatibility
- *
- * @param page - Playwright Page object untuk interaksi browser
- * @param userType - Tipe user dari testUsers fixture
- */
-export async function signUpUser(page: Page, userType: keyof typeof testUsers) {
-  const user = testUsers[userType]
-
-  console.log(`📝 Signing up as ${userType}:`, user.identifier)
-
-  // Navigate ke sign-up page
-  await page.goto('/sign-up')
-
-  // Fill sign-up form dengan conditional checks yang aman
-  if ('firstName' in user && user.firstName && typeof user.firstName === 'string')
-    await page.fill('input[name="firstName"]', user.firstName)
-  if ('lastName' in user && user.lastName && typeof user.lastName === 'string')
-    await page.fill('input[name="lastName"]', user.lastName)
-  await page.fill('input[name="emailAddress"]', user.identifier)
-  await page.fill('input[name="password"]', user.password)
-
-  // Submit form
-  await page.click('button[type="submit"]')
-
-  // Handle verification jika diperlukan (dalam test mode, auto-verified)
-  // Wait for successful signup - redirect ke dashboard
-  await page.waitForURL('/dashboard', { timeout: 15000 })
-
-  console.log('✅ Sign up successful')
 }
 
 /**
@@ -251,7 +215,7 @@ export async function waitForPageLoad(page: Page, waitForSelector?: string) {
 export async function takeScreenshot(page: Page, name: string) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
   await page.screenshot({
-    path: `test-results/screenshots/${name}-${timestamp}.png`,
+    path: `services/screenshots/${name}-${timestamp}.png`,
     fullPage: true,
   })
 }

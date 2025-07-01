@@ -22,6 +22,7 @@ setup.describe.configure({ mode: 'serial' })
 
 // Setup 1: Configure Clerk ONLY - sesuai dokumentasi
 setup('global setup', async () => {
+  console.log('🎉  NODE_ENV:', process.env.NODE_ENV)
   await clerkSetup()
   if (
     !process.env.E2E_CLERK_USER_USERNAME ||
@@ -40,6 +41,7 @@ const authFile = path.join(__dirname, '.clerk/user.json')
 // Setup 2: Authenticate dan save state - sesuai dokumentasi Test Authenticated Flows
 setup('authenticate', async ({ page }) => {
   console.log('🔐 Authenticating user and saving state to storage...')
+  console.log('  NODE_ENV:', process.env.NODE_ENV)
 
   // ✅ FIX: More detailed debugging
   console.log('- 🔍 Global Setup Environment variables values:')
@@ -49,7 +51,6 @@ setup('authenticate', async ({ page }) => {
   console.log('  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:', process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
   console.log('  CLERK_SECRET_KEY:', process.env.CLERK_SECRET_KEY)
   console.log('  CLERK_TEST_MODE:', process.env.CLERK_TEST_MODE)
-  console.log('  NODE_ENV:', process.env.NODE_ENV)
 
   // Navigate to unprotected page that loads Clerk - sesuai dokumentasi Test Helpers
   await page.goto('/')

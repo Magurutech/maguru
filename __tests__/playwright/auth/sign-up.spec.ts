@@ -6,14 +6,28 @@
  * - Error handling untuk email yang sudah terdaftar
  * - Validasi form untuk data invalid
  * - Redirect flow setelah registrasi berhasil
+ *
+ * CRITICAL: Test ini berjalan tanpa authentication state untuk menguji alur sign-up yang sebenarnya
  */
 
 import { test, expect } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { testUsers } from '../fixtures/test-users'
+import { testUsers, generateTestEmail, generateTestUsername } from '../fixtures/test-users'
 import { waitForPageLoad, takeScreenshot } from '../utils/test-helpers'
 
+// Configure test untuk tidak menggunakan storageState (authentication state)
+test.use({
+  storageState: { cookies: [], origins: [] }, // Fresh browser state
+})
+
 test.describe('Sign Up Flow', () => {
+  // Ensure fresh browser context untuk setiap test
+  test.beforeEach(async ({ context }) => {
+    // Clear all cookies dan storage untuk memastikan fresh state
+    await context.clearCookies()
+    await context.clearPermissions()
+  })
+
   /**
    * Test: Successful sign up dengan data valid
    *
@@ -35,54 +49,76 @@ test.describe('Sign Up Flow', () => {
 
     // Verify halaman sign up dimuat dengan benar
     await expect(page).toHaveURL('/sign-up')
-    await expect(page.locator('form').first()).toBeVisible()
 
-    // Debug: Log semua button yang ada di halaman
-    const allButtons = await page.locator('button').all()
-    console.log('🔍 Available buttons:', allButtons.length)
-    for (let i = 0; i < allButtons.length; i++) {
-      const buttonText = await allButtons[i].textContent()
-      const buttonType = await allButtons[i].getAttribute('type')
-      const isVisible = await allButtons[i].isVisible()
-      console.log(`Button ${i}: text="${buttonText}", type="${buttonType}", visible=${isVisible}`)
+    // Wait untuk Clerk component dimuat - gunakan selector yang lebih fleksibel
+    try {
+      await page.waitForSelector('[data-clerk-component="SignUp"], .cl-signUp-root', {
+        state: 'visible',
+        timeout: 15000,
+      })
+      console.log('✅ Clerk SignUp component loaded and visible')
+    } catch {
+      console.log('⚠️ Clerk component timeout, trying alternative approach')
+      // Fallback - wait for any input fields
+      await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
+        timeout: 10000,
+      })
+    }
+
+    // Debug: Log semua input yang ada di halaman
+    const allInputs = await page.locator('input').all()
+    console.log('🔍 Available inputs:', allInputs.length)
+    for (let i = 0; i < allInputs.length; i++) {
+      const inputName = await allInputs[i].getAttribute('name')
+      const inputType = await allInputs[i].getAttribute('type')
+      const isVisible = await allInputs[i].isVisible()
+      console.log(`Input ${i}: name="${inputName}", type="${inputType}", visible=${isVisible}`)
     }
 
     // When: User mengisi form dengan data valid dan submit
-    const newUser = testUsers.newUser
+    const newUser = {
+      username: generateTestUsername('signuptest'),
+      email: generateTestEmail('signuptest'),
+      password: 'SignUpTestPassword123!',
+    }
 
-    // Fill email field dengan Clerk-specific selector
-    await page.fill('input[name="emailAddress"]', newUser.email)
+    console.log('📝 Filling form with user data:', {
+      username: newUser.username,
+      email: newUser.email,
+      password: '***', // Don't log actual password
+    })
+
+    // Fill username field - Clerk menggunakan name="username"
+    const usernameInput = page.locator('input[name="username"]').first()
+    if ((await usernameInput.count()) > 0) {
+      await usernameInput.fill(newUser.username)
+      console.log('✅ Username filled')
+    } else {
+      console.log('⚠️ Username field not found')
+    }
+
+    // Fill email field - Clerk menggunakan name="emailAddress"
+    const emailInput = page.locator('input[name="emailAddress"]').first()
+    await emailInput.fill(newUser.email)
+    console.log('✅ Email filled')
 
     // Fill password field
-    await page.fill('input[name="password"]', newUser.password)
-
-    // Fill first name if available
-    const firstNameInput = page.locator('input[name="firstName"]')
-    if ((await firstNameInput.count()) > 0) {
-      await firstNameInput.fill(newUser.firstName || 'Test')
-    }
-
-    // Fill last name if available
-    const lastNameInput = page.locator('input[name="lastName"]')
-    if ((await lastNameInput.count()) > 0) {
-      await lastNameInput.fill(newUser.lastName || 'User')
-    }
+    const passwordInput = page.locator('input[name="password"]').first()
+    await passwordInput.fill(newUser.password)
+    console.log('✅ Password filled')
 
     // Wait untuk validasi form selesai
     await page.waitForTimeout(1000)
 
     // Submit form dengan mencari button Continue yang tepat
     console.log('📝 Looking for Continue button...')
-    const continueButton = page
-      .locator('button')
-      .filter({ hasText: 'Continue' })
-      .and(page.locator(':not(:has-text("Google"))'))
+    const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
       console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying Enter key...')
+      console.log('⚠️ Continue button not found, trying form submission...')
       await page.keyboard.press('Enter')
     }
 
@@ -92,7 +128,8 @@ test.describe('Sign Up Flow', () => {
       (url) =>
         url.toString().includes('/verify-email-address') ||
         url.toString().includes('/dashboard') ||
-        url.toString().includes('/sign-in'),
+        url.toString().includes('/sign-in') ||
+        url.toString().includes('/sso-callback'),
       { timeout: 15000 },
     )
 
@@ -106,6 +143,8 @@ test.describe('Sign Up Flow', () => {
       await expect(page.locator('text=Verify your email')).toBeVisible({ timeout: 5000 })
     } else if (currentUrl.includes('/dashboard')) {
       console.log('✅ Sign up berhasil - User langsung diarahkan ke dashboard (auto-verified)')
+    } else if (currentUrl.includes('/sso-callback')) {
+      console.log('✅ Sign up berhasil - Processing SSO callback')
     } else {
       console.log('⚠️ Unexpected redirect URL:', currentUrl)
     }
@@ -135,13 +174,31 @@ test.describe('Sign Up Flow', () => {
     await page.goto('/sign-up')
     await waitForPageLoad(page)
 
+    // Wait untuk Clerk component dimuat - gunakan selector yang lebih fleksibel
+    try {
+      await page.waitForSelector('[data-clerk-component="SignUp"], .cl-signUp-root', {
+        state: 'visible',
+        timeout: 15000,
+      })
+    } catch {
+      await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
+        timeout: 10000,
+      })
+    }
+
     // When: User mengisi form dengan email yang sudah terdaftar
     const existingUser = testUsers.existingUser
 
-    const emailInput = page.locator('input[name="emailAddress"], input[type="email"]').first()
-    await emailInput.fill(existingUser.email)
+    // Fill username field if exists
+    const usernameInput = page.locator('input[name="username"]').first()
+    if ((await usernameInput.count()) > 0) {
+      await usernameInput.fill('existingtest' + Date.now())
+    }
 
-    const passwordInput = page.locator('input[name="password"], input[type="password"]').first()
+    const emailInput = page.locator('input[name="emailAddress"]').first()
+    await emailInput.fill(existingUser.email!)
+
+    const passwordInput = page.locator('input[name="password"]').first()
     await passwordInput.fill(existingUser.password)
 
     // Wait untuk validasi form selesai
@@ -149,10 +206,7 @@ test.describe('Sign Up Flow', () => {
 
     // Submit form dengan strategi yang sama seperti successful test
     console.log('📝 Looking for Continue button...')
-    const continueButton = page
-      .locator('button')
-      .filter({ hasText: 'Continue' })
-      .and(page.locator(':not(:has-text("Google"))'))
+    const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
       console.log('✅ Found Continue button, clicking...')
@@ -164,16 +218,18 @@ test.describe('Sign Up Flow', () => {
 
     // Then: Error message ditampilkan
     // Tunggu error message muncul
-    await page.waitForTimeout(2000)
+    await page.waitForTimeout(3000)
 
     // Check untuk berbagai kemungkinan error message
     const errorSelectors = [
-      '[data-localization-key*="error"]',
       '.cl-formFieldErrorText',
+      '.cl-fieldError',
+      '[data-localization-key*="error"]',
       '[role="alert"]',
       '.error',
       'text=already exists',
       'text=already taken',
+      'text=already registered',
     ]
 
     let errorFound = false
@@ -215,13 +271,31 @@ test.describe('Sign Up Flow', () => {
     await page.goto('/sign-up')
     await waitForPageLoad(page)
 
+    // Wait untuk Clerk component dimuat - gunakan selector yang lebih fleksibel
+    try {
+      await page.waitForSelector('[data-clerk-component="SignUp"], .cl-signUp-root', {
+        state: 'visible',
+        timeout: 15000,
+      })
+    } catch {
+      await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
+        timeout: 10000,
+      })
+    }
+
     // When: User mengisi email dengan format invalid
     const invalidUser = testUsers.invalidUser
 
-    const emailInput = page.locator('input[name="emailAddress"], input[type="email"]').first()
-    await emailInput.fill(invalidUser.email)
+    // Fill username field if exists
+    const usernameInput = page.locator('input[name="username"]').first()
+    if ((await usernameInput.count()) > 0) {
+      await usernameInput.fill(invalidUser.username!)
+    }
 
-    const passwordInput = page.locator('input[name="password"], input[type="password"]').first()
+    const emailInput = page.locator('input[name="emailAddress"]').first()
+    await emailInput.fill(invalidUser.email!)
+
+    const passwordInput = page.locator('input[name="password"]').first()
     await passwordInput.fill('ValidPassword123!')
 
     // Wait untuk validasi form selesai
@@ -229,10 +303,7 @@ test.describe('Sign Up Flow', () => {
 
     // Submit form dengan strategi yang sama seperti successful test
     console.log('📝 Looking for Continue button...')
-    const continueButton = page
-      .locator('button')
-      .filter({ hasText: 'Continue' })
-      .and(page.locator(':not(:has-text("Google"))'))
+    const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
       console.log('✅ Found Continue button, clicking...')
@@ -252,7 +323,9 @@ test.describe('Sign Up Flow', () => {
       console.log('✅ HTML5 email validation working')
     } else {
       // Check untuk Clerk validation error
-      const errorElement = page.locator('.cl-formFieldErrorText, [role="alert"]').first()
+      const errorElement = page
+        .locator('.cl-formFieldErrorText, .cl-fieldError, [role="alert"]')
+        .first()
       if ((await errorElement.count()) > 0) {
         console.log('✅ Clerk email validation working:', await errorElement.textContent())
       }
@@ -282,22 +355,39 @@ test.describe('Sign Up Flow', () => {
     await page.goto('/sign-up')
     await waitForPageLoad(page)
 
-    // When: User mengisi password yang lemah
-    const emailInput = page.locator('input[name="emailAddress"], input[type="email"]').first()
-    await emailInput.fill('test.weak.password+clerk_test@example.com')
+    // Wait untuk Clerk component dimuat - gunakan selector yang lebih fleksibel
+    try {
+      await page.waitForSelector('[data-clerk-component="SignUp"], .cl-signUp-root', {
+        state: 'visible',
+        timeout: 15000,
+      })
+    } catch {
+      await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
+        timeout: 10000,
+      })
+    }
 
-    const passwordInput = page.locator('input[name="password"], input[type="password"]').first()
-    await passwordInput.fill('123') // Password lemah
+    // When: User mengisi password yang lemah
+    const weakUser = testUsers.weakPasswordUser
+
+    // Fill username field if exists
+    const usernameInput = page.locator('input[name="username"]').first()
+    if ((await usernameInput.count()) > 0) {
+      await usernameInput.fill(weakUser.username!)
+    }
+
+    const emailInput = page.locator('input[name="emailAddress"]').first()
+    await emailInput.fill(weakUser.email!)
+
+    const passwordInput = page.locator('input[name="password"]').first()
+    await passwordInput.fill(weakUser.password) // Password lemah: "123"
 
     // Wait untuk validasi form selesai
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
     console.log('📝 Looking for Continue button...')
-    const continueButton = page
-      .locator('button')
-      .filter({ hasText: 'Continue' })
-      .and(page.locator(':not(:has-text("Google"))'))
+    const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
       console.log('✅ Found Continue button, clicking...')
@@ -313,10 +403,12 @@ test.describe('Sign Up Flow', () => {
     // Check untuk password validation
     const passwordErrorSelectors = [
       '.cl-formFieldErrorText',
+      '.cl-fieldError',
       '[role="alert"]',
       'text=password',
       'text=weak',
       'text=requirements',
+      'text=characters',
     ]
 
     let passwordErrorFound = false
@@ -358,29 +450,48 @@ test.describe('Sign Up Flow', () => {
     await page.goto('/sign-up')
     await waitForPageLoad(page)
 
+    // Wait untuk Clerk component dimuat - gunakan selector yang lebih fleksibel
+    try {
+      await page.waitForSelector('[data-clerk-component="SignUp"], .cl-signUp-root', {
+        state: 'visible',
+        timeout: 15000,
+      })
+    } catch {
+      await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
+        timeout: 10000,
+      })
+    }
+
     // Simulate slow network untuk test timeout handling
     await page.route('**/*clerk*', (route) => {
       setTimeout(() => route.continue(), 5000) // Delay 5 detik
     })
 
     // When: User submit form dengan network delay
-    const newUser = testUsers.newUser
+    const timeoutUser = {
+      username: generateTestUsername('timeouttest'),
+      email: generateTestEmail('timeouttest'),
+      password: 'TimeoutTestPassword123!',
+    }
 
-    const emailInput = page.locator('input[name="emailAddress"], input[type="email"]').first()
-    await emailInput.fill(`timeout.test+clerk_test@example.com`)
+    // Fill username field if exists
+    const usernameInput = page.locator('input[name="username"]').first()
+    if ((await usernameInput.count()) > 0) {
+      await usernameInput.fill(timeoutUser.username)
+    }
 
-    const passwordInput = page.locator('input[name="password"], input[type="password"]').first()
-    await passwordInput.fill(newUser.password)
+    const emailInput = page.locator('input[name="emailAddress"]').first()
+    await emailInput.fill(timeoutUser.email)
+
+    const passwordInput = page.locator('input[name="password"]').first()
+    await passwordInput.fill(timeoutUser.password)
 
     // Wait untuk validasi form selesai
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
     console.log('📝 Looking for Continue button...')
-    const continueButton = page
-      .locator('button')
-      .filter({ hasText: 'Continue' })
-      .and(page.locator(':not(:has-text("Google"))'))
+    const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
       console.log('✅ Found Continue button, clicking...')
@@ -395,6 +506,7 @@ test.describe('Sign Up Flow', () => {
     console.log('🔍 Checking for loading indicators...')
     const loadingSelectors = [
       '.cl-spinner',
+      '.cl-loading',
       '[data-testid="loading"]',
       'button[disabled]',
       '.loading',
@@ -410,9 +522,9 @@ test.describe('Sign Up Flow', () => {
           console.log('✅ Loading state found during network delay')
           break
         }
-      } catch (error) {
+      } catch {
         // Ignore errors saat checking loading states dan log untuk debugging
-        console.log('⚠️ Error checking loading selector:', selector, 'Error:', error)
+        console.log('⚠️ Error checking loading selector:', selector)
       }
     }
 
