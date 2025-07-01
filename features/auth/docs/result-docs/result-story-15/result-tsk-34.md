@@ -96,8 +96,8 @@ Implementasi mencakup complete middleware authorization system dengan role-based
 
 **Utils**:
 
-- `middlewareUtils.ts`: Comprehensive utilities untuk route protection
-- Enhanced validation dan security utilities
+- `middlewareUtils.ts`: ❌ **REMOVED** - Functionalities migrated to direct Clerk auth implementation
+- Enhanced validation dan security utilities migrated to Clerk-native approach
 
 ## Perubahan dari Rencana Awal
 
@@ -114,12 +114,13 @@ Implementasi mengalami significant improvement dari rencana awal dengan adopsi r
 
 ### Perubahan Teknis
 
-| Aspek               | Rencana Awal            | Implementasi Aktual                                         | Justifikasi                             |
-| ------------------- | ----------------------- | ----------------------------------------------------------- | --------------------------------------- |
-| Route Configuration | Simple pattern matching | Advanced regex dengan array support                         | Support untuk complex routing patterns  |
-| Error Handling      | Basic unauthorized page | Comprehensive error handling dengan role-specific messaging | Better debugging dan user experience    |
-| Development Tools   | Basic logging           | Comprehensive dev utilities dengan bypass options           | Improved developer experience           |
-| Mobile Support      | Tidak direncanakan      | Full responsive design dengan mobile-specific navigation    | Complete user experience across devices |
+| Aspek                   | Rencana Awal                | Implementasi Aktual                                                   | Justifikasi                                |
+| ----------------------- | --------------------------- | --------------------------------------------------------------------- | ------------------------------------------ |
+| Route Configuration     | Simple pattern matching     | Advanced regex dengan array support                                   | Support untuk complex routing patterns     |
+| Error Handling          | Basic unauthorized page     | Comprehensive error handling dengan role-specific messaging           | Better debugging dan user experience       |
+| Development Tools       | Basic logging               | Comprehensive dev utilities dengan bypass options                     | Improved developer experience              |
+| Mobile Support          | Tidak direncanakan          | Full responsive design dengan mobile-specific navigation              | Complete user experience across devices    |
+| Authentication Approach | Custom middleware utilities | **UPDATE 2025-01-27**: Simplified to native Clerk auth implementation | Reduced complexity, better maintainability |
 
 ## Status Acceptance Criteria
 
@@ -160,10 +161,7 @@ app/
 └── unauthorized/
     └── page.tsx           # Enhanced error page
 
-features/auth/lib/
-└── middlewareUtils.ts     # Enhanced middleware utilities
-
-middleware.ts              # Core authorization middleware
+middleware.ts              # **UPDATE 2025-01-27**: Simplified Clerk auth middleware
 ```
 
 ### Komponen Utama
@@ -183,24 +181,24 @@ middleware.ts              # Core authorization middleware
 
 **File**: `/middleware.ts`
 
-**Pattern yang Digunakan**:
+**Pattern yang Digunakan** _(Updated 2025-01-27)_:
 
-- Layered authorization checking
-- Legacy route compatibility dengan automatic redirects
-- Development utilities dengan bypass options
-- Comprehensive error handling dengan context preservation
+- **SIMPLIFIED**: Direct Clerk auth integration dengan `clerkMiddleware()`
+- **REMOVED**: Complex role-based routing (migrated to app-level handling)
+- **MAINTAINED**: Legacy route compatibility dengan automatic redirects
+- **ENHANCED**: Improved performance dengan reduced middleware complexity
 
 ### Alur Data
 
-Alur authorization berjalan sebagai berikut:
+Alur authorization berjalan sebagai berikut _(Updated 2025-01-27)_:
 
-1. **Request Interception**: Middleware menangkap semua incoming requests
-2. **Route Analysis**: System menganalisis pathname terhadap protected route patterns
-3. **Session Validation**: Clerk session dicek untuk authentication status
-4. **Role Extraction**: User role diekstrak dari session claims (dengan limitation acknowledgment)
-5. **Authorization Check**: Role validation terhadap required permissions
-6. **Decision Making**: Allow, deny, atau redirect berdasarkan business rules
-7. **Response Generation**: Appropriate response dengan proper error handling
+1. **Request Interception**: Middleware menangkap semua incoming requests menggunakan `clerkMiddleware()`
+2. **Authentication Check**: Clerk secara otomatis memvalidasi session dan authentication status
+3. **Route Protection**: Protected routes dihandle di app level menggunakan Clerk's native auth checking
+4. **Redirect Handling**: Sign-in redirects dan unauthorized access dihandle secara otomatis oleh Clerk
+5. **REMOVED**: Complex role validation (moved to application level)
+6. **SIMPLIFIED**: Authorization decisions handled by Clerk's built-in mechanisms
+7. **SIMPLIFIED**: Response generation handled automatically by Clerk middleware
 
 ### Route Protection Schema
 
@@ -266,6 +264,82 @@ Implementasi adaptive navigation dengan role-specific sidebars dan mobile-optimi
 **Pembelajaran**:
 Mobile-first design approach sangat important untuk role-based applications dengan complex navigation requirements.
 
+## Update Implementasi (2025-01-27)
+
+### Perubahan Utama
+
+Dalam proses implementasi E2E testing untuk authentication (TSK-27), kami melakukan simplifikasi significant pada middleware implementation yang berdampak pada TSK-34:
+
+#### 1. Middleware Simplification
+
+**Sebelum (TSK-34 Original Implementation)**:
+
+- Complex custom middleware dengan role-based routing logic
+- `middlewareUtils.ts` dengan custom protection functions
+- Manual session validation dan role extraction
+- Custom error handling dan redirect logic
+
+**Sesudah (TSK-27 Optimization)**:
+
+- Direct `clerkMiddleware()` implementation
+- Removal `middlewareUtils.ts` dependencies
+- Native Clerk authentication handling
+- Simplified configuration dengan automatic redirects
+
+#### 2. Alasan Perubahan
+
+1. **E2E Testing Compatibility**: Testing dengan Playwright memerlukan predictable authentication behavior yang lebih baik didukung oleh native Clerk implementation
+2. **Reduced Complexity**: Custom middleware utility menambah complexity tanpa significant benefit over native Clerk features
+3. **Better Maintainability**: Native Clerk implementation memiliki better documentation dan community support
+4. **Performance Optimization**: Reduced middleware processing time dengan native implementation
+
+#### 3. Impact Assessment
+
+**Functionality Maintained**:
+
+- ✅ Authentication requirement untuk protected routes
+- ✅ Automatic sign-in redirects
+- ✅ Session management
+- ✅ Application layout dan navigation
+
+**Functionality Removed**:
+
+- ❌ Complex role-based middleware routing (moved to app-level components)
+- ❌ Custom middleware utilities
+- ❌ Manual role validation di middleware level
+
+### Code Changes
+
+**Updated `middleware.ts`**:
+
+```typescript
+import { clerkMiddleware } from '@clerk/nextjs/server'
+
+export default clerkMiddleware()
+
+export const config = {
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
+}
+```
+
+**Removed Files**:
+
+- `features/auth/lib/middlewareUtils.ts` - All functionality migrated to app-level handling
+
+### Testing Validation
+
+Perubahan ini telah divalidasi melalui comprehensive E2E testing di TSK-39 yang mencakup:
+
+- Authentication flows (sign-in, sign-up, sign-out)
+- Protected route access
+- Session management
+- Error handling
+
+Total 20 test scenarios dengan 100% pass rate memvalidasi bahwa simplified implementation maintain semua required functionality.
+
 ## Rekomendasi Selanjutnya
 
 ### Peningkatan Fitur
@@ -291,8 +365,12 @@ Mobile-first design approach sangat important untuk role-based applications deng
 
 ## Lampiran
 
-- [Task Documentation](features/auth/docs/task-docs/story-15/task-ops-34.md)
-- [Middleware Utilities Code](features/auth/lib/middlewareUtils.ts)
-- [Authorization Test Suite](features/auth/__tests__/middleware/)
+- [Task Documentation TSK-34](../../task-docs/story-15/task-ops-34.md)
+- [E2E Testing Story TSK-27](../../task-docs/story-tsk-27.md)
+- [E2E Test Results TSK-39](../result-story-27/result-tsk.39.md)
+- [Current Middleware Implementation](../../../middleware.ts)
+- [E2E Test Report](../../report-test/e2e-test-report.md)
+- [Middleware Utilities Code](features/auth/lib/middlewareUtils.ts) - ❌ **REMOVED in 2025-01-27 update**
+- [Authorization Test Suite](features/auth/__tests__/middleware/) - ❌ **DEPRECATED** - Replaced by E2E tests
 
 > **Catatan**: Untuk detail pengujian yang comprehensive, silakan merujuk ke dokumentasi test report yang akan dibuat setelah implementasi testing suite lengkap. Dokumentasi ini fokus pada architectural implementation dan business logic.
