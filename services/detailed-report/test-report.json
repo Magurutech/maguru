@@ -3,8 +3,8 @@
   "numPassedTests": 83,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-06-28T15:43:10.452Z",
-  "endTime": "2025-06-28T15:43:17.367Z",
+  "startTime": "2025-06-29T07:26:58.254Z",
+  "endTime": "2025-06-29T07:27:03.019Z",
   "testResults": [
     {
       "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\lib\\roleUtils.test.ts",
@@ -18,7 +18,7 @@
           "status": "passed",
           "title": "should parse valid JWT token correctly",
           "failureMessages": [],
-          "duration": 11
+          "duration": 8
         },
         {
           "ancestorTitles": [
@@ -29,7 +29,7 @@
           "status": "passed",
           "title": "should return null for invalid JWT format",
           "failureMessages": [],
-          "duration": 2
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -51,7 +51,7 @@
           "status": "passed",
           "title": "should handle malformed base64 payload",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -73,7 +73,7 @@
           "status": "passed",
           "title": "should handle missing required claims",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -84,7 +84,7 @@
           "status": "passed",
           "title": "should validate correct role strings",
           "failureMessages": [],
-          "duration": 3
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -106,7 +106,7 @@
           "status": "passed",
           "title": "should extract valid role from payload",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -128,7 +128,7 @@
           "status": "passed",
           "title": "should extract role from valid token",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -139,7 +139,7 @@
           "status": "passed",
           "title": "should return default role for invalid token",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -150,7 +150,7 @@
           "status": "passed",
           "title": "should return default role for missing role claim",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -161,7 +161,7 @@
           "status": "passed",
           "title": "should create standardized error object",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -172,7 +172,7 @@
           "status": "passed",
           "title": "should work without original error",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -183,7 +183,7 @@
           "status": "passed",
           "title": "should implement singleton pattern correctly",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -205,7 +205,7 @@
           "status": "passed",
           "title": "should handle cache expiration",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -227,7 +227,7 @@
           "status": "passed",
           "title": "should handle sessionStorage errors gracefully",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -249,7 +249,7 @@
           "status": "passed",
           "title": "should clear all cache entries",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -260,7 +260,7 @@
           "status": "passed",
           "title": "should implement singleton pattern correctly",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -271,7 +271,7 @@
           "status": "passed",
           "title": "should initialize and broadcast role updates",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -304,7 +304,7 @@
           "status": "passed",
           "title": "should cleanup channel on destroy",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -326,7 +326,7 @@
           "status": "passed",
           "title": "should retry on failure and succeed",
           "failureMessages": [],
-          "duration": 52
+          "duration": 60
         },
         {
           "ancestorTitles": [
@@ -337,7 +337,7 @@
           "status": "passed",
           "title": "should throw after exhausting all retries",
           "failureMessages": [],
-          "duration": 64
+          "duration": 71
         },
         {
           "ancestorTitles": [
@@ -348,7 +348,7 @@
           "status": "passed",
           "title": "should respect delay between retries",
           "failureMessages": [],
-          "duration": 63
+          "duration": 60
         },
         {
           "ancestorTitles": [
@@ -370,7 +370,7 @@
           "status": "passed",
           "title": "should reset debounce timer on each call",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -398,7 +398,7 @@
           "status": "passed",
           "title": "should return role state from context",
           "failureMessages": [],
-          "duration": 19
+          "duration": 31
         },
         {
           "ancestorTitles": [
@@ -420,7 +420,7 @@
           "status": "passed",
           "title": "should handle different roles correctly",
           "failureMessages": [],
-          "duration": 10
+          "duration": 9
         },
         {
           "ancestorTitles": [
@@ -431,7 +431,7 @@
           "status": "passed",
           "title": "should handle context unavailable error",
           "failureMessages": [],
-          "duration": 45
+          "duration": 38
         },
         {
           "ancestorTitles": [
@@ -442,7 +442,7 @@
           "status": "passed",
           "title": "should provide basic role checks",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -453,7 +453,7 @@
           "status": "passed",
           "title": "should implement role hierarchy correctly",
           "failureMessages": [],
-          "duration": 6
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -464,7 +464,7 @@
           "status": "passed",
           "title": "should handle context-aware guards",
           "failureMessages": [],
-          "duration": 4
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -475,7 +475,7 @@
           "status": "passed",
           "title": "should provide loading state management",
           "failureMessages": [],
-          "duration": 5
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -497,7 +497,7 @@
           "status": "passed",
           "title": "should provide conditional rendering helpers",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -508,7 +508,7 @@
           "status": "passed",
           "title": "should handle feature flags correctly",
           "failureMessages": [],
-          "duration": 3
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -519,7 +519,7 @@
           "status": "passed",
           "title": "should categorize errors correctly",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -530,7 +530,7 @@
           "status": "passed",
           "title": "should provide user-friendly error messages",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -541,7 +541,7 @@
           "status": "passed",
           "title": "should provide development utilities when NODE_ENV is development",
           "failureMessages": [],
-          "duration": 6
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -569,166 +569,6 @@
       "failureMessage": null
     },
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\context\\UserRoleContext.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should initialize with loading state",
-          "status": "passed",
-          "title": "should initialize with loading state",
-          "failureMessages": [],
-          "duration": 40
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should fetch role from Clerk session on mount",
-          "status": "passed",
-          "title": "should fetch role from Clerk session on mount",
-          "failureMessages": [],
-          "duration": 20
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should handle Clerk session unavailable",
-          "status": "passed",
-          "title": "should handle Clerk session unavailable",
-          "failureMessages": [],
-          "duration": 22
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should integrate with cache manager",
-          "status": "passed",
-          "title": "should integrate with cache manager",
-          "failureMessages": [],
-          "duration": 15
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should handle cross-tab synchronization",
-          "status": "passed",
-          "title": "should handle cross-tab synchronization",
-          "failureMessages": [],
-          "duration": 17
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should handle error boundary with fallback UI",
-          "status": "passed",
-          "title": "should handle error boundary with fallback UI",
-          "failureMessages": [],
-          "duration": 60
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "UserRoleProvider"
-          ],
-          "fullName": "UserRoleContext UserRoleProvider should support development mode",
-          "status": "passed",
-          "title": "should support development mode",
-          "failureMessages": [],
-          "duration": 9
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "Context Actions"
-          ],
-          "fullName": "UserRoleContext Context Actions should provide setRole action",
-          "status": "passed",
-          "title": "should provide setRole action",
-          "failureMessages": [],
-          "duration": 12
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "Context Actions"
-          ],
-          "fullName": "UserRoleContext Context Actions should provide clearRole action",
-          "status": "passed",
-          "title": "should provide clearRole action",
-          "failureMessages": [],
-          "duration": 15
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "Context Actions"
-          ],
-          "fullName": "UserRoleContext Context Actions should provide refreshRole action",
-          "status": "passed",
-          "title": "should provide refreshRole action",
-          "failureMessages": [],
-          "duration": 7
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "useUserRoleContext hook"
-          ],
-          "fullName": "UserRoleContext useUserRoleContext hook should throw error when used outside provider",
-          "status": "passed",
-          "title": "should throw error when used outside provider",
-          "failureMessages": [],
-          "duration": 31
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "useUserRoleContext hook"
-          ],
-          "fullName": "UserRoleContext useUserRoleContext hook should return context value when used within provider",
-          "status": "passed",
-          "title": "should return context value when used within provider",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "Lifecycle and Cleanup"
-          ],
-          "fullName": "UserRoleContext Lifecycle and Cleanup should cleanup resources on unmount",
-          "status": "passed",
-          "title": "should cleanup resources on unmount",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "UserRoleContext",
-            "Lifecycle and Cleanup"
-          ],
-          "fullName": "UserRoleContext Lifecycle and Cleanup should handle auth state changes",
-          "status": "passed",
-          "title": "should handle auth state changes",
-          "failureMessages": [],
-          "duration": 4
-        }
-      ],
-      "failureMessage": null
-    },
-    {
       "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\components\\RoleDisplay.test.tsx",
       "testFileResults": [
         {
@@ -740,7 +580,7 @@
           "status": "passed",
           "title": "should render loading state correctly",
           "failureMessages": [],
-          "duration": 42
+          "duration": 46
         },
         {
           "ancestorTitles": [
@@ -751,7 +591,7 @@
           "status": "passed",
           "title": "should render error state with retry button",
           "failureMessages": [],
-          "duration": 18
+          "duration": 19
         },
         {
           "ancestorTitles": [
@@ -762,7 +602,7 @@
           "status": "passed",
           "title": "should display role information correctly for admin",
           "failureMessages": [],
-          "duration": 31
+          "duration": 24
         },
         {
           "ancestorTitles": [
@@ -773,7 +613,7 @@
           "status": "passed",
           "title": "should display role information correctly for creator",
           "failureMessages": [],
-          "duration": 17
+          "duration": 9
         },
         {
           "ancestorTitles": [
@@ -784,7 +624,7 @@
           "status": "passed",
           "title": "should display role information correctly for user",
           "failureMessages": [],
-          "duration": 13
+          "duration": 19
         },
         {
           "ancestorTitles": [
@@ -795,7 +635,7 @@
           "status": "passed",
           "title": "should show role status and flags correctly",
           "failureMessages": [],
-          "duration": 21
+          "duration": 22
         },
         {
           "ancestorTitles": [
@@ -806,7 +646,7 @@
           "status": "passed",
           "title": "should handle refresh role button",
           "failureMessages": [],
-          "duration": 20
+          "duration": 7
         },
         {
           "ancestorTitles": [
@@ -817,7 +657,7 @@
           "status": "passed",
           "title": "should disable refresh button when loading",
           "failureMessages": [],
-          "duration": 11
+          "duration": 15
         },
         {
           "ancestorTitles": [
@@ -828,7 +668,7 @@
           "status": "passed",
           "title": "should handle retry on error",
           "failureMessages": [],
-          "duration": 3
+          "duration": 7
         },
         {
           "ancestorTitles": [
@@ -839,7 +679,7 @@
           "status": "passed",
           "title": "should display permission examples correctly for admin",
           "failureMessages": [],
-          "duration": 28
+          "duration": 18
         },
         {
           "ancestorTitles": [
@@ -850,7 +690,7 @@
           "status": "passed",
           "title": "should display permission examples correctly for user",
           "failureMessages": [],
-          "duration": 10
+          "duration": 8
         },
         {
           "ancestorTitles": [
@@ -861,7 +701,7 @@
           "status": "passed",
           "title": "should show feature flags status correctly for admin",
           "failureMessages": [],
-          "duration": 17
+          "duration": 13
         },
         {
           "ancestorTitles": [
@@ -872,7 +712,7 @@
           "status": "passed",
           "title": "should show feature flags status correctly for user",
           "failureMessages": [],
-          "duration": 8
+          "duration": 7
         },
         {
           "ancestorTitles": [
@@ -883,7 +723,7 @@
           "status": "passed",
           "title": "should render role-specific content for admin",
           "failureMessages": [],
-          "duration": 9
+          "duration": 10
         },
         {
           "ancestorTitles": [
@@ -894,7 +734,7 @@
           "status": "passed",
           "title": "should render role-specific content for creator",
           "failureMessages": [],
-          "duration": 8
+          "duration": 11
         },
         {
           "ancestorTitles": [
@@ -905,7 +745,7 @@
           "status": "passed",
           "title": "should display public content for all users",
           "failureMessages": [],
-          "duration": 9
+          "duration": 7
         },
         {
           "ancestorTitles": [
@@ -916,7 +756,7 @@
           "status": "passed",
           "title": "should render PermissionItem with correct allowed state",
           "failureMessages": [],
-          "duration": 7
+          "duration": 8
         },
         {
           "ancestorTitles": [
@@ -938,7 +778,167 @@
           "status": "passed",
           "title": "should render FeatureFlag with correct enabled state",
           "failureMessages": [],
+          "duration": 11
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\auth\\context\\UserRoleContext.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should initialize with loading state",
+          "status": "passed",
+          "title": "should initialize with loading state",
+          "failureMessages": [],
+          "duration": 45
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should fetch role from Clerk session on mount",
+          "status": "passed",
+          "title": "should fetch role from Clerk session on mount",
+          "failureMessages": [],
+          "duration": 26
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle Clerk session unavailable",
+          "status": "passed",
+          "title": "should handle Clerk session unavailable",
+          "failureMessages": [],
           "duration": 19
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should integrate with cache manager",
+          "status": "passed",
+          "title": "should integrate with cache manager",
+          "failureMessages": [],
+          "duration": 14
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle cross-tab synchronization",
+          "status": "passed",
+          "title": "should handle cross-tab synchronization",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should handle error boundary with fallback UI",
+          "status": "passed",
+          "title": "should handle error boundary with fallback UI",
+          "failureMessages": [],
+          "duration": 36
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "UserRoleProvider"
+          ],
+          "fullName": "UserRoleContext UserRoleProvider should support development mode",
+          "status": "passed",
+          "title": "should support development mode",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide setRole action",
+          "status": "passed",
+          "title": "should provide setRole action",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide clearRole action",
+          "status": "passed",
+          "title": "should provide clearRole action",
+          "failureMessages": [],
+          "duration": 12
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Context Actions"
+          ],
+          "fullName": "UserRoleContext Context Actions should provide refreshRole action",
+          "status": "passed",
+          "title": "should provide refreshRole action",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "useUserRoleContext hook"
+          ],
+          "fullName": "UserRoleContext useUserRoleContext hook should throw error when used outside provider",
+          "status": "passed",
+          "title": "should throw error when used outside provider",
+          "failureMessages": [],
+          "duration": 31
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "useUserRoleContext hook"
+          ],
+          "fullName": "UserRoleContext useUserRoleContext hook should return context value when used within provider",
+          "status": "passed",
+          "title": "should return context value when used within provider",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Lifecycle and Cleanup"
+          ],
+          "fullName": "UserRoleContext Lifecycle and Cleanup should cleanup resources on unmount",
+          "status": "passed",
+          "title": "should cleanup resources on unmount",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "UserRoleContext",
+            "Lifecycle and Cleanup"
+          ],
+          "fullName": "UserRoleContext Lifecycle and Cleanup should handle auth state changes",
+          "status": "passed",
+          "title": "should handle auth state changes",
+          "failureMessages": [],
+          "duration": 11
         }
       ],
       "failureMessage": null

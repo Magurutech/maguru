@@ -14,7 +14,7 @@ export function Courses() {
       level: 'Beginner',
       price: 'Rp 299,000',
       originalPrice: 'Rp 499,000',
-      image: '/placeholder.svg?height=200&width=300',
+      image: '/globe.svg',
       tags: ['React', 'Node.js', 'MongoDB'],
     },
     {
@@ -26,7 +26,7 @@ export function Courses() {
       level: 'Intermediate',
       price: 'Rp 249,000',
       originalPrice: 'Rp 399,000',
-      image: '/placeholder.svg?height=200&width=300',
+      image: '/globe.svg',
       tags: ['Figma', 'Design System', 'Prototyping'],
     },
     {
@@ -38,7 +38,7 @@ export function Courses() {
       level: 'Beginner',
       price: 'Rp 199,000',
       originalPrice: 'Rp 299,000',
-      image: '/placeholder.svg?height=200&width=300',
+      image: '/globe.svg',
       tags: ['SEO', 'Social Media', 'Analytics'],
     },
   ]

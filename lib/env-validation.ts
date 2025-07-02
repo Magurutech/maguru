@@ -32,11 +32,8 @@ const envSchema = z.object({
   CLERK_TEST_MODE: z
     .string()
     .transform((val) => val === 'true')
-    .optional(),
-  CLERK_DISABLE_BOT_PROTECTION: z
-    .string()
-    .transform((val) => val === 'true')
-    .optional(),
+    .default('false'),
+  NEXT_PUBLIC_CLERK_FRONTEND_API: z.string().optional(),
 })
 
 /**
@@ -144,4 +141,21 @@ export function logEnvironmentInfo(): void {
     console.log(`   Clerk Keys: ${hasClerkKeys ? '✅' : '❌'}`)
     console.log(`   Database: ${hasDatabase ? '✅' : '❌'}`)
   }
+}
+
+/**
+ * Validasi environment untuk testing
+ */
+export function validateTestingEnv(): boolean {
+  const hasClerkKeys = !!(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY
+  )
+
+  if (!hasClerkKeys) {
+    console.error('❌ Missing Clerk keys for testing')
+    return false
+  }
+
+  console.log('✅ Testing environment validated')
+  return true
 }

@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: true
 ---
 
@@ -29,7 +29,7 @@ Dokumen ini berisi panduan standar untuk format dokumentasi hasil implementasi t
 5. [Kendala dan Solusi](mdc:#kendala-dan-solusi)
 6. [Rekomendasi Selanjutnya](mdc:#rekomendasi-selanjutnya)
 
-## Ringkasan Implementasi
+## Ringkasan Implementasi (opsional Jika berhbungan dengan pembuatan fitur)
 
 [Ringkasan singkat (3-5 kalimat) tentang fitur yang diimplementasikan, highlight utama, dan nilai bisnis yang dihasilkan]
 

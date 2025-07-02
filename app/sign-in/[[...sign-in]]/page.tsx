@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { SignIn } from '@clerk/nextjs';
+import React from 'react'
+import { SignIn } from '@clerk/nextjs'
 
 export default function SignInPage() {
   return (
@@ -41,10 +41,12 @@ export default function SignInPage() {
               borderRadius: '0.5rem',
             },
           }}
-          forceRedirectUrl="/dashboard"
+          fallbackRedirectUrl="/dashboard"
           signUpUrl="/sign-up"
+          routing="path"
+          path="/sign-in"
         />
       </div>
     </main>
-  );
+  )
 }

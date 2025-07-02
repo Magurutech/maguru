@@ -60,7 +60,6 @@ DIRECT_URL=
 
 # Testing (dev/staging only)
 CLERK_TESTING_TOKEN=
-CLERK_DISABLE_BOT_PROTECTION=
 ```
 
 ## Implementasi Teknis
@@ -90,7 +89,6 @@ BEGIN Configure_Development
   SET CLERK keys untuk development
   ENABLE testing features:
     - CLERK_TESTING_TOKEN=test_xxx
-    - CLERK_DISABLE_BOT_PROTECTION=true
 END
 ```
 

@@ -9,7 +9,7 @@ export function Testimonials() {
       content:
         'Maguru benar-benar mengubah karir saya. Dari yang tidak tahu coding sama sekali, sekarang saya sudah bekerja di tech company impian. Mentor-mentornya sangat supportive dan materinya up-to-date.',
       rating: 5,
-      avatar: '/placeholder.svg?height=60&width=60',
+      avatar: '/globe.svg',
     },
     {
       name: 'Ahmad Rizki',
@@ -17,7 +17,7 @@ export function Testimonials() {
       content:
         'Course UI/UX di Maguru sangat comprehensive. Tidak hanya teori, tapi juga praktik langsung dengan project nyata. Portfolio yang saya buat dari course ini yang membuat saya diterima di Gojek.',
       rating: 5,
-      avatar: '/placeholder.svg?height=60&width=60',
+      avatar: '/globe.svg',
     },
     {
       name: 'Lisa Chen',
@@ -25,7 +25,7 @@ export function Testimonials() {
       content:
         'Sebagai career changer, saya butuh pembelajaran yang terstruktur. Maguru memberikan roadmap yang jelas dan mentor yang selalu siap membantu. Sekarang saya sudah jadi Digital Marketing Manager.',
       rating: 5,
-      avatar: '/placeholder.svg?height=60&width=60',
+      avatar: '/globe.svg',
     },
   ]
 

@@ -29,6 +29,8 @@ Dokumen ini berisi panduan standar format dokumentasi task dalam project Maguru 
 
 [Deskripsi singkat task (1-2 paragraf) mencakup tujuan, konteks dalam sprint/project, dan nilai bisnis yang dihasilkan]
 
+> warning!! : dalam task docs jangan memberikan contoh pseudocode details
+
 ## Perbandingan dengan Referensi
 
 [Jika task terinspirasi oleh fitur dari aplikasi lain, sertakan tabel perbandingan seperti ini]
@@ -138,52 +140,7 @@ END
 - [Deskripsi peningkatan]
 - [Expected user benefit]
 
-## Test Plan
 
-### 1. Unit Testing (TDD)
-
-#### Pendekatan:
-
-- Mengikuti siklus Red (gagal) → Green (implementasi minimal) → Refactor (optimasi)
-- Menggunakan struktur AAA (Arrange, Act, Assert)
-- Target pengujian: komponen, fungsi, dan services individual
-
-#### Test Cases:
-
-1. **[Nama Komponen/Fungsi]**:
-   - Test case: [deskripsi fungsi yang diuji]
-   - Expected: [hasil yang diharapkan]
-   - Edge cases: [kondisi batas yang perlu diuji]
-
-### 2. Integration Testing (opsional)
-
-#### Pendekatan:
-
-- Verifikasi interaksi antar komponen dan services
-- Menggunakan Jest + React Testing Library + MSW
-- Target: alur kerja yang melibatkan beberapa komponen/service
-
-#### Test Cases:
-
-1. **[Nama Integrasi]**:
-   - Skenario: [deskripsi interaksi antar komponen]
-   - Components: [komponen yang terlibat]
-   - Expected: [hasil yang diharapkan]
-
-### 3. E2E Testing (BDD) (opsional)
-
-#### Pendekatan:
-
-- Menggunakan format Given-When-Then
-- Implementasi dengan Playwright
-- Target: user flow dan interaksi pengguna end-to-end
-
-#### Test Scenarios:
-
-1. **[Nama Scenario]**:
-   - **Given**: [kondisi awal]
-   - **When**: [tindakan pengguna]
-   - **Then**: [hasil yang diharapkan]
 
 ## Pertanyaan untuk Diklarifikasi
 
