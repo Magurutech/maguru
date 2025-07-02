@@ -22,13 +22,11 @@ test.describe('Sign Out Flow', () => {
   // Berbeda dengan sign-in tests yang menggunakan fresh state
   // Debug path untuk memastikan file storageState terbaca dengan benar
   const authFile = path.join(__dirname, '../.clerk/user.json')
-  console.log('🔍 Using auth file path:', authFile)
   test.use({ storageState: authFile })
 
   test.beforeEach(async ({ page }) => {
     // Setup Clerk testing token untuk setiap test
     await setupClerkTestingToken({ page })
-    console.log('🔧 Clerk testing token configured for authenticated session')
   })
 
   /**
@@ -67,7 +65,6 @@ test.describe('Sign Out Flow', () => {
       if ((await signOutElement.count()) > 0 && (await signOutElement.isVisible())) {
         await signOutElement.click()
         signOutClicked = true
-        console.log('✅ Sign out button clicked:', selector)
         break
       }
     }
@@ -93,7 +90,6 @@ test.describe('Sign Out Flow', () => {
             if ((await signOutElement.count()) > 0 && (await signOutElement.isVisible())) {
               await signOutElement.click()
               signOutClicked = true
-              console.log('✅ Sign out from user menu:', signOutSelector)
               break
             }
           }
@@ -118,9 +114,7 @@ test.describe('Sign Out Flow', () => {
       await verifyUserLoggedOut(page)
 
       await takeScreenshot(page, 'sign-out-success')
-      console.log('✅ Sign out berhasil dengan redirect ke:', page.url())
     } else {
-      console.log('⚠️ Sign out button tidak ditemukan, test perlu disesuaikan dengan UI')
       await takeScreenshot(page, 'sign-out-button-not-found')
     }
   })
@@ -181,9 +175,6 @@ test.describe('Sign Out Flow', () => {
       await expect(page).toHaveURL('/sign-in')
 
       await takeScreenshot(page, 'sign-out-protected-route-blocked')
-      console.log('✅ Protected route access blocked after sign out')
-    } else {
-      console.log('⚠️ Sign out tidak berhasil, test perlu disesuaikan')
     }
   })
 
@@ -256,9 +247,6 @@ test.describe('Sign Out Flow', () => {
 
       await verifyUserLoggedOut(page)
       await takeScreenshot(page, 'sign-out-from-homepage')
-      console.log('✅ Sign out dari homepage berhasil')
-    } else {
-      console.log('⚠️ Sign out dari homepage tidak ditemukan')
     }
   })
 
@@ -278,17 +266,6 @@ test.describe('Sign Out Flow', () => {
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
-    // Check session exists
-    const sessionBefore = await page.evaluate(() => {
-      return {
-        sessionStorage: Object.keys(sessionStorage).length,
-        localStorage: Object.keys(localStorage).length,
-        cookies: document.cookie.length,
-      }
-    })
-
-    console.log('Session data before logout:', sessionBefore)
-
     // When: User sign out
     const userButton = page.locator('.cl-userButton')
     if ((await userButton.count()) > 0) {
@@ -307,20 +284,9 @@ test.describe('Sign Out Flow', () => {
         // Then: Session data dibersihkan
         await page.waitForTimeout(2000) // Wait for cleanup
 
-        const sessionAfter = await page.evaluate(() => {
-          return {
-            sessionStorage: Object.keys(sessionStorage).length,
-            localStorage: Object.keys(localStorage).length,
-            cookies: document.cookie.length,
-          }
-        })
-
-        console.log('Session data after logout:', sessionAfter)
-
         // Verify session cleanup (at least some cleanup should occur)
         // Note: Complete cleanup depends on Clerk's implementation
         await takeScreenshot(page, 'sign-out-session-cleanup')
-        console.log('✅ Session cleanup verified')
       }
     }
   })
@@ -363,7 +329,6 @@ test.describe('Sign Out Flow', () => {
         await verifyUserLoggedOut(page)
 
         await takeScreenshot(page, 'sign-out-after-refresh')
-        console.log('✅ Sign out berhasil setelah browser refresh')
       }
     }
   })
@@ -382,24 +347,17 @@ test.describe('Sign Out Flow', () => {
    * antar tab memerlukan setup yang lebih kompleks
    */
   test('should handle multiple tab sign out', async ({ context }) => {
-    console.log('🧪 Testing multiple tab sign out...')
-
     // Given: User login di tab pertama - menggunakan storageState dari global setup
     const page1 = await context.newPage()
     await setupClerkTestingToken({ page: page1 })
 
     // Navigate ke dashboard dengan error handling yang lebih baik
-    console.log('📱 Tab1: Navigating to dashboard...')
     await page1.goto('/dashboard')
     await waitForPageLoad(page1)
 
     try {
       await page1.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
-      console.log('✅ Tab1 berhasil access dashboard:', page1.url())
     } catch {
-      console.log('❌ Tab1 failed to access dashboard:', page1.url())
-      console.log('   This indicates authentication state issue from global.setup.ts')
-
       // If Tab1 can't access dashboard, skip the test gracefully
       await takeScreenshot(page1, 'tab1-auth-failed')
       await page1.close()
@@ -407,7 +365,6 @@ test.describe('Sign Out Flow', () => {
     }
 
     // When: User sign out dari tab pertama
-    console.log('🔓 Starting logout process from tab1...')
     const userButton = page1.locator('.cl-userButton')
 
     let signOutSuccess = false
@@ -429,7 +386,6 @@ test.describe('Sign Out Flow', () => {
         const signOutButton = page1.locator(selector).first()
         if ((await signOutButton.count()) > 0 && (await signOutButton.isVisible())) {
           await signOutButton.click()
-          console.log('✅ Sign out button clicked:', selector)
           signOutSuccess = true
           break
         }
@@ -441,31 +397,20 @@ test.describe('Sign Out Flow', () => {
           await page1.waitForURL((url) => !url.toString().includes('/dashboard'), {
             timeout: 15000,
           })
-          console.log('✅ Tab1 logged out successfully, new URL:', page1.url())
 
           // Then: Verify protected route access setelah logout
-          console.log('🔄 Testing protected route access after logout...')
           await page1.goto('/dashboard')
 
-          try {
-            await page1.waitForURL('/sign-in', { timeout: 10000 })
-            console.log('✅ Tab1 correctly redirected to sign-in when accessing protected route')
-          } catch {
-            console.log('⚠️ Tab1 redirect test inconclusive, but initial logout was successful')
-          }
+          await page1.waitForURL('/sign-in', { timeout: 10000 })
 
           await takeScreenshot(page1, 'sign-out-multi-tab-success')
-          console.log('✅ Multi-tab sign out test completed successfully')
         } catch {
-          console.log('❌ Tab1 logout process incomplete')
           await takeScreenshot(page1, 'sign-out-multi-tab-failed')
         }
       } else {
-        console.log('⚠️ Sign out button tidak ditemukan, skip test verification')
         await takeScreenshot(page1, 'sign-out-button-not-found-tab1')
       }
     } else {
-      console.log('⚠️ User button tidak ditemukan di tab1')
       await takeScreenshot(page1, 'user-button-not-found-tab1')
     }
 
@@ -514,7 +459,6 @@ test.describe('Sign Out Flow', () => {
         // Then: Error handled gracefully (user might still be logged in)
         // This depends on Clerk's error handling implementation
         await takeScreenshot(page, 'sign-out-network-error')
-        console.log('✅ Sign out network error handled')
       }
     }
 

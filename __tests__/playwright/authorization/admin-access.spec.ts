@@ -39,11 +39,10 @@ test.beforeAll(async () => {
       `Admin role not available. Missing environment variables: ${missingVars.join(', ')}`,
     )
   }
-
-  console.log('✅ Admin role test environment validation passed')
 })
 
 test.describe('Admin Access Verification', () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let adminUser: RoleTestUser
 
   test.beforeEach(async ({ page }) => {
@@ -54,16 +53,11 @@ test.describe('Admin Access Verification', () => {
     await page.context().clearCookies()
     await page.context().clearPermissions()
 
-    console.log('🔧 Test environment prepared for admin access testing')
   })
 
   test.afterEach(async ({ page }) => {
     // Cleanup setelah setiap test
-    try {
-      await logoutFromRoleSession(page)
-    } catch {
-      console.log('ℹ️ Logout cleanup completed (session might already be cleared)')
-    }
+    await logoutFromRoleSession(page)
   })
 
   /**
@@ -79,14 +73,12 @@ test.describe('Admin Access Verification', () => {
    */
   test('should allow admin full access to all routes', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin full access to all routes...')
 
     adminUser = await loginWithRole(page, 'admin')
     await waitForPageLoad(page)
 
     // When & Then: Test semua allowed routes untuk admin
     await testAllowedRoutesForRole(page, 'admin')
-    console.log('✅ Admin full access verification completed successfully')
     await takeScreenshot(page, 'admin-full-access-verified')
   })
 
@@ -103,7 +95,6 @@ test.describe('Admin Access Verification', () => {
    */
   test('should display admin-specific UI elements and menu items', async ({ page }) => {
     // Given: Admin user login dan navigate ke dashboard
-    console.log('🧪 Testing admin-specific UI elements...')
 
     adminUser = await loginWithRole(page, 'admin')
 
@@ -118,8 +109,6 @@ test.describe('Admin Access Verification', () => {
     await expect(page.locator('main')).toBeVisible()
     await expect(page).not.toHaveURL('/unauthorized')
 
-    console.log('✅ Admin UI elements verification completed')
-    console.log(`ℹ️ Admin user: ${adminUser.displayName}`)
     await takeScreenshot(page, 'admin-ui-elements-verified')
   })
 
@@ -136,7 +125,6 @@ test.describe('Admin Access Verification', () => {
    */
   test('should access admin dashboard with full functionality', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin dashboard functionality...')
 
     adminUser = await loginWithRole(page, 'admin')
 
@@ -152,8 +140,6 @@ test.describe('Admin Access Verification', () => {
     await expect(page).not.toHaveURL('/unauthorized')
     await expect(page).not.toHaveURL('/sign-in')
 
-    console.log('✅ Admin dashboard access verified')
-    console.log(`ℹ️ Admin user: ${adminUser.displayName}`)
     await takeScreenshot(page, 'admin-dashboard-access')
   })
 
@@ -170,14 +156,12 @@ test.describe('Admin Access Verification', () => {
    */
   test('should maintain admin role persistence across navigation', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin role persistence...')
 
     adminUser = await loginWithRole(page, 'admin')
 
     // When & Then: Test role persistence
     await testRolePersistence(page, 'admin')
 
-    console.log('✅ Admin role persistence verified')
     await takeScreenshot(page, 'admin-role-persistence')
   })
 
@@ -194,7 +178,6 @@ test.describe('Admin Access Verification', () => {
    */
   test('should allow admin direct URL access to all protected routes', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin direct URL access...')
 
     adminUser = await loginWithRole(page, 'admin')
 
@@ -209,7 +192,6 @@ test.describe('Admin Access Verification', () => {
       await testDirectUrlAccess(page, 'admin', route)
     }
 
-    console.log('✅ Admin direct URL access verified')
     await takeScreenshot(page, 'admin-direct-url-access')
   })
 
@@ -226,7 +208,6 @@ test.describe('Admin Access Verification', () => {
    */
   test('should navigate seamlessly across all role areas', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin cross-area navigation...')
 
     adminUser = await loginWithRole(page, 'admin')
 
@@ -238,7 +219,6 @@ test.describe('Admin Access Verification', () => {
     ]
 
     for (const area of areas) {
-      console.log(`📍 Testing navigation to ${area.name}`)
 
       await page.goto(area.path)
       await waitForPageLoad(page)
@@ -248,10 +228,8 @@ test.describe('Admin Access Verification', () => {
       await expect(page).not.toHaveURL('/unauthorized')
       await expect(page.locator('main')).toBeVisible() // Fallback selector
 
-      console.log(`✅ ${area.name} access confirmed`)
     }
 
-    console.log('✅ Admin cross-area navigation verified')
     await takeScreenshot(page, 'admin-cross-area-navigation')
   })
 
@@ -268,7 +246,6 @@ test.describe('Admin Access Verification', () => {
    */
   test('should maintain stable admin session during extended usage', async ({ page }) => {
     // Given: Admin user login
-    console.log('🧪 Testing admin session stability...')
 
     adminUser = await loginWithRole(page, 'admin')
 
@@ -292,7 +269,6 @@ test.describe('Admin Access Verification', () => {
       await expect(page).not.toHaveURL('/unauthorized')
     }
 
-    console.log('✅ Admin session stability verified')
     await takeScreenshot(page, 'admin-session-stability')
   })
 })

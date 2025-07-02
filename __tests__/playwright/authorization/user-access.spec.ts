@@ -41,8 +41,6 @@ test.beforeAll(async () => {
       `User role not available. Missing environment variables: ${missingVars.join(', ')}`,
     )
   }
-
-  console.log('✅ User role test environment validation passed')
 })
 
 test.describe('User Access Verification', () => {
@@ -56,17 +54,11 @@ test.describe('User Access Verification', () => {
     // Clear browser state untuk fresh session
     await page.context().clearCookies()
     await page.context().clearPermissions()
-
-    console.log('🔧 Test environment prepared for user access testing')
   })
 
   test.afterEach(async ({ page }) => {
     // Cleanup setelah setiap test
-    try {
-      await logoutFromRoleSession(page)
-    } catch {
-      console.log('ℹ️ Logout cleanup completed (session might already be cleared)')
-    }
+    await logoutFromRoleSession(page)
   })
 
   /**
@@ -82,15 +74,12 @@ test.describe('User Access Verification', () => {
    */
   test('should allow user access to user routes only', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user allowed access to user routes...')
 
     regularUser = await loginWithRole(page, 'user')
     await waitForPageLoad(page)
 
     // When & Then: Test semua allowed routes untuk user
     await testAllowedRoutesForRole(page, 'user')
-
-    console.log('✅ User allowed access verification completed successfully')
     await takeScreenshot(page, 'user-allowed-access-verified')
   })
 
@@ -107,15 +96,12 @@ test.describe('User Access Verification', () => {
    */
   test('should block user access to admin and creator routes', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user restricted access to admin and creator routes...')
 
     regularUser = await loginWithRole(page, 'user')
     await waitForPageLoad(page)
 
     // When & Then: Test semua restricted routes untuk user
     await testRestrictedRoutesForRole(page, 'user')
-
-    console.log('✅ User restricted access verification completed successfully')
     await takeScreenshot(page, 'user-restricted-access-verified')
   })
 
@@ -132,7 +118,6 @@ test.describe('User Access Verification', () => {
    */
   test('should display limited user UI elements and hide privileged elements', async ({ page }) => {
     // Given: Regular user login dan navigate ke dashboard
-    console.log('🧪 Testing user-specific UI elements...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -146,8 +131,6 @@ test.describe('User Access Verification', () => {
     // Verify user area tersedia
     await expect(page.locator('main, [role="main"], body')).toBeVisible()
     await expect(page).not.toHaveURL('/unauthorized')
-
-    console.log('✅ User UI elements verification completed')
     await takeScreenshot(page, 'user-ui-elements-verified')
   })
 
@@ -164,7 +147,6 @@ test.describe('User Access Verification', () => {
    */
   test('should access user dashboard with limited functionality', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user dashboard functionality...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -179,8 +161,6 @@ test.describe('User Access Verification', () => {
     // Verify tidak ada error atau unauthorized access
     await expect(page).not.toHaveURL('/unauthorized')
     await expect(page).not.toHaveURL('/sign-in')
-
-    console.log('✅ User dashboard access verified')
     await takeScreenshot(page, 'user-dashboard-access')
   })
 
@@ -197,7 +177,6 @@ test.describe('User Access Verification', () => {
    */
   test('should block user from accessing admin routes via direct URL', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user admin route blocking...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -208,7 +187,6 @@ test.describe('User Access Verification', () => {
       await testDirectUrlAccess(page, 'user', route)
     }
 
-    console.log('✅ User admin route blocking verified')
     await takeScreenshot(page, 'user-admin-route-blocking')
   })
 
@@ -225,7 +203,6 @@ test.describe('User Access Verification', () => {
    */
   test('should block user from accessing creator routes via direct URL', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user creator route blocking...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -236,7 +213,6 @@ test.describe('User Access Verification', () => {
       await testDirectUrlAccess(page, 'user', route)
     }
 
-    console.log('✅ User creator route blocking verified')
     await takeScreenshot(page, 'user-creator-route-blocking')
   })
 
@@ -255,7 +231,6 @@ test.describe('User Access Verification', () => {
     page,
   }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user unauthorized page functionality...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -268,8 +243,6 @@ test.describe('User Access Verification', () => {
 
     // When & Then: Verify unauthorized page functionality
     await verifyUnauthorizedPageFunctionality(page, 'user', '/admin')
-
-    console.log('✅ User unauthorized page functionality verified')
     await takeScreenshot(page, 'user-unauthorized-page')
   })
 
@@ -286,14 +259,11 @@ test.describe('User Access Verification', () => {
    */
   test('should maintain user role persistence with consistent limitations', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user role persistence...')
 
     regularUser = await loginWithRole(page, 'user')
 
     // When & Then: Test role persistence
     await testRolePersistence(page, 'user')
-
-    console.log('✅ User role persistence verified')
     await takeScreenshot(page, 'user-role-persistence')
   })
 
@@ -310,7 +280,6 @@ test.describe('User Access Verification', () => {
    */
   test('should consistently block all privilege escalation attempts', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user privilege escalation prevention...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -325,8 +294,6 @@ test.describe('User Access Verification', () => {
     ]
 
     for (const route of privilegedRoutes) {
-      console.log(`🚫 Attempting privileged access: ${route}`)
-
       await page.goto(route)
       await waitForPageLoad(page)
 
@@ -338,11 +305,8 @@ test.describe('User Access Verification', () => {
       await waitForPageLoad(page)
       await expect(page).toHaveURL('/user')
       await expect(page).not.toHaveURL('/sign-in')
-
-      console.log(`✅ Privileged access blocked, session stable`)
     }
 
-    console.log('✅ User privilege escalation prevention verified')
     await takeScreenshot(page, 'user-privilege-escalation-blocked')
   })
 
@@ -359,7 +323,6 @@ test.describe('User Access Verification', () => {
    */
   test('should navigate smoothly within allowed user scope', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user navigation within allowed scope...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -367,8 +330,6 @@ test.describe('User Access Verification', () => {
     const allowedUserAreas = [{ path: '/dashboard', name: 'General Dashboard' }]
 
     for (const area of allowedUserAreas) {
-      console.log(`📍 Testing navigation to ${area.name}`)
-
       await page.goto(area.path)
       await waitForPageLoad(page)
 
@@ -376,11 +337,8 @@ test.describe('User Access Verification', () => {
       await expect(page).toHaveURL(area.path)
       await expect(page).not.toHaveURL('/unauthorized')
       await expect(page.locator('main')).toBeVisible()
-
-      console.log(`✅ ${area.name} access confirmed`)
     }
 
-    console.log('✅ User allowed scope navigation verified')
     await takeScreenshot(page, 'user-allowed-navigation')
   })
 
@@ -397,7 +355,6 @@ test.describe('User Access Verification', () => {
    */
   test('should maintain session stability under repeated access blocking', async ({ page }) => {
     // Given: Regular user login
-    console.log('🧪 Testing user session stability under blocking...')
 
     regularUser = await loginWithRole(page, 'user')
 
@@ -412,8 +369,6 @@ test.describe('User Access Verification', () => {
     for (let i = 0; i < 2; i++) {
       // Repeat cycle twice
       for (const scenario of blockingScenarios) {
-        console.log(`🔄 Cycle ${i + 1}: Testing ${scenario.name}`)
-
         // Attempt privileged access
         await page.goto(scenario.route)
         await waitForPageLoad(page)
@@ -424,12 +379,9 @@ test.describe('User Access Verification', () => {
         await waitForPageLoad(page)
         await expect(page).toHaveURL('/user')
         await expect(page).not.toHaveURL('/sign-in')
-
-        console.log(`✅ Session stable after ${scenario.name} blocking`)
       }
     }
 
-    console.log('✅ User session stability under blocking verified')
     await takeScreenshot(page, 'user-session-stability')
   })
 })

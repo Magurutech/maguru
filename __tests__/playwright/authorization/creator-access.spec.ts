@@ -41,8 +41,6 @@ test.beforeAll(async () => {
       `Creator role not available. Missing environment variables: ${missingVars.join(', ')}`,
     )
   }
-
-  console.log('✅ Creator role test environment validation passed')
 })
 
 test.describe('Creator Access Verification', () => {
@@ -56,17 +54,11 @@ test.describe('Creator Access Verification', () => {
     // Clear browser state untuk fresh session
     await page.context().clearCookies()
     await page.context().clearPermissions()
-
-    console.log('🔧 Test environment prepared for creator access testing')
   })
 
   test.afterEach(async ({ page }) => {
     // Cleanup setelah setiap test
-    try {
-      await logoutFromRoleSession(page)
-    } catch {
-      console.log('ℹ️ Logout cleanup completed (session might already be cleared)')
-    }
+    await logoutFromRoleSession(page)
   })
 
   /**
@@ -82,15 +74,12 @@ test.describe('Creator Access Verification', () => {
    */
   test('should allow creator access to creator and user routes', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator allowed access to creator and user routes...')
 
     creatorUser = await loginWithRole(page, 'creator')
     await waitForPageLoad(page)
 
     // When & Then: Test semua allowed routes untuk creator
     await testAllowedRoutesForRole(page, 'creator')
-
-    console.log('✅ Creator allowed access verification completed successfully')
     await takeScreenshot(page, 'creator-allowed-access-verified')
   })
 
@@ -107,15 +96,12 @@ test.describe('Creator Access Verification', () => {
    */
   test('should block creator access to admin routes', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator restricted access to admin routes...')
 
     creatorUser = await loginWithRole(page, 'creator')
     await waitForPageLoad(page)
 
     // When & Then: Test semua restricted routes untuk creator
     await testRestrictedRoutesForRole(page, 'creator')
-
-    console.log('✅ Creator restricted access verification completed successfully')
     await takeScreenshot(page, 'creator-restricted-access-verified')
   })
 
@@ -132,7 +118,6 @@ test.describe('Creator Access Verification', () => {
    */
   test('should display creator-specific UI elements and hide admin elements', async ({ page }) => {
     // Given: Creator user login dan navigate ke dashboard
-    console.log('🧪 Testing creator-specific UI elements...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
@@ -146,8 +131,6 @@ test.describe('Creator Access Verification', () => {
     // Verify creator area tersedia
     await expect(page.locator('main, [role="main"]')).toBeVisible()
     await expect(page).not.toHaveURL('/unauthorized')
-
-    console.log('✅ Creator UI elements verification completed')
     await takeScreenshot(page, 'creator-ui-elements-verified')
   })
 
@@ -164,7 +147,6 @@ test.describe('Creator Access Verification', () => {
    */
   test('should access creator dashboard with appropriate functionality', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator dashboard functionality...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
@@ -179,8 +161,6 @@ test.describe('Creator Access Verification', () => {
     // Verify tidak ada error atau unauthorized access
     await expect(page).not.toHaveURL('/unauthorized')
     await expect(page).not.toHaveURL('/sign-in')
-
-    console.log('✅ Creator dashboard access verified')
     await takeScreenshot(page, 'creator-dashboard-access')
   })
 
@@ -197,7 +177,6 @@ test.describe('Creator Access Verification', () => {
    */
   test('should block creator from accessing admin routes via direct URL', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator admin route blocking...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
@@ -208,7 +187,6 @@ test.describe('Creator Access Verification', () => {
       await testDirectUrlAccess(page, 'creator', route)
     }
 
-    console.log('✅ Creator admin route blocking verified')
     await takeScreenshot(page, 'creator-admin-route-blocking')
   })
 
@@ -225,14 +203,12 @@ test.describe('Creator Access Verification', () => {
    */
   test('should display appropriate unauthorized page for creator', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator unauthorized page functionality...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
     // When & Then: Verify unauthorized page functionality
     await verifyUnauthorizedPageFunctionality(page, 'creator', '/admin')
 
-    console.log('✅ Creator unauthorized page functionality verified')
     await takeScreenshot(page, 'creator-unauthorized-page')
   })
 
@@ -249,14 +225,12 @@ test.describe('Creator Access Verification', () => {
    */
   test('should maintain creator role persistence across navigation', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator role persistence...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
     // When & Then: Test role persistence
     await testRolePersistence(page, 'creator')
 
-    console.log('✅ Creator role persistence verified')
     await takeScreenshot(page, 'creator-role-persistence')
   })
 
@@ -273,7 +247,6 @@ test.describe('Creator Access Verification', () => {
    */
   test('should navigate seamlessly between allowed areas', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator navigation between allowed areas...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
@@ -284,8 +257,6 @@ test.describe('Creator Access Verification', () => {
     ]
 
     for (const area of allowedAreas) {
-      console.log(`📍 Testing navigation to ${area.name}`)
-
       await page.goto(area.path)
       await waitForPageLoad(page)
 
@@ -293,11 +264,8 @@ test.describe('Creator Access Verification', () => {
       await expect(page).toHaveURL(area.path)
       await expect(page).not.toHaveURL('/unauthorized')
       await expect(page.locator('main, [role="main"]')).toBeVisible()
-
-      console.log(`✅ ${area.name} access confirmed`)
     }
 
-    console.log('✅ Creator allowed areas navigation verified')
     await takeScreenshot(page, 'creator-allowed-navigation')
   })
 
@@ -314,7 +282,6 @@ test.describe('Creator Access Verification', () => {
    */
   test('should consistently block admin access without session corruption', async ({ page }) => {
     // Given: Creator user login
-    console.log('🧪 Testing creator session boundary with admin access attempts...')
 
     creatorUser = await loginWithRole(page, 'creator')
 
@@ -322,8 +289,6 @@ test.describe('Creator Access Verification', () => {
     const adminAccessAttempts = ['/admin', '/admin/dashboard', '/admin/settings']
 
     for (const route of adminAccessAttempts) {
-      console.log(`🚫 Attempting admin access: ${route}`)
-
       await page.goto(route)
       await waitForPageLoad(page)
 
@@ -335,11 +300,8 @@ test.describe('Creator Access Verification', () => {
       await waitForPageLoad(page)
       await expect(page).toHaveURL('/creator')
       await expect(page).not.toHaveURL('/sign-in')
-
-      console.log(`✅ Admin access blocked, session stable`)
     }
 
-    console.log('✅ Creator session boundary testing completed')
     await takeScreenshot(page, 'creator-session-boundary')
   })
 })

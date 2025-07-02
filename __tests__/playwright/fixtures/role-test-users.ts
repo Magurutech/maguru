@@ -119,12 +119,7 @@ export function validateRoleTestEnvironment(): {
   missingVars: string[]
   availableRoles: UserRole[]
 } {
-  console.log('E2E_CLERK_ADMIN_USERNAME', process.env.E2E_CLERK_ADMIN_USERNAME)
-  console.log('E2E_CLERK_ADMIN_PASSWORD', process.env.E2E_CLERK_ADMIN_PASSWORD)
-  console.log('E2E_CLERK_CREATOR_USERNAME', process.env.E2E_CLERK_CREATOR_USERNAME)
-  console.log('E2E_CLERK_CREATOR_PASSWORD', process.env.E2E_CLERK_CREATOR_PASSWORD)
-  console.log('E2E_CLERK_USER_USERNAME', process.env.E2E_CLERK_USER_USERNAME)
-  console.log('E2E_CLERK_USER_PASSWORD', process.env.E2E_CLERK_USER_PASSWORD)
+
 
   const roleEnvVars = {
     admin: ['E2E_CLERK_ADMIN_USERNAME', 'E2E_CLERK_ADMIN_PASSWORD'],

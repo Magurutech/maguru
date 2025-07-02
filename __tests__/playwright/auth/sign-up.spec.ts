@@ -56,24 +56,13 @@ test.describe('Sign Up Flow', () => {
         state: 'visible',
         timeout: 15000,
       })
-      console.log('✅ Clerk SignUp component loaded and visible')
     } catch {
-      console.log('⚠️ Clerk component timeout, trying alternative approach')
       // Fallback - wait for any input fields
       await page.waitForSelector('input[name="emailAddress"], input[type="email"]', {
         timeout: 10000,
       })
     }
 
-    // Debug: Log semua input yang ada di halaman
-    const allInputs = await page.locator('input').all()
-    console.log('🔍 Available inputs:', allInputs.length)
-    for (let i = 0; i < allInputs.length; i++) {
-      const inputName = await allInputs[i].getAttribute('name')
-      const inputType = await allInputs[i].getAttribute('type')
-      const isVisible = await allInputs[i].isVisible()
-      console.log(`Input ${i}: name="${inputName}", type="${inputType}", visible=${isVisible}`)
-    }
 
     // When: User mengisi form dengan data valid dan submit
     const newUser = {
@@ -82,43 +71,31 @@ test.describe('Sign Up Flow', () => {
       password: 'SignUpTestPassword123!',
     }
 
-    console.log('📝 Filling form with user data:', {
-      username: newUser.username,
-      email: newUser.email,
-      password: '***', // Don't log actual password
-    })
+
 
     // Fill username field - Clerk menggunakan name="username"
     const usernameInput = page.locator('input[name="username"]').first()
     if ((await usernameInput.count()) > 0) {
       await usernameInput.fill(newUser.username)
-      console.log('✅ Username filled')
-    } else {
-      console.log('⚠️ Username field not found')
-    }
+    } 
 
     // Fill email field - Clerk menggunakan name="emailAddress"
     const emailInput = page.locator('input[name="emailAddress"]').first()
     await emailInput.fill(newUser.email)
-    console.log('✅ Email filled')
 
     // Fill password field
     const passwordInput = page.locator('input[name="password"]').first()
     await passwordInput.fill(newUser.password)
-    console.log('✅ Password filled')
 
     // Wait untuk validasi form selesai
     await page.waitForTimeout(1000)
 
     // Submit form dengan mencari button Continue yang tepat
-    console.log('📝 Looking for Continue button...')
     const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
-      console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying form submission...')
       await page.keyboard.press('Enter')
     }
 
@@ -137,22 +114,17 @@ test.describe('Sign Up Flow', () => {
     const currentUrl = page.url()
 
     if (currentUrl.includes('/verify-email-address')) {
-      console.log('✅ Sign up berhasil - User diarahkan ke email verification (expected flow)')
 
       // Verify halaman verification memiliki elemen yang tepat
       await expect(page.locator('text=Verify your email')).toBeVisible({ timeout: 5000 })
     } else if (currentUrl.includes('/dashboard')) {
-      console.log('✅ Sign up berhasil - User langsung diarahkan ke dashboard (auto-verified)')
     } else if (currentUrl.includes('/sso-callback')) {
-      console.log('✅ Sign up berhasil - Processing SSO callback')
     } else {
-      console.log('⚠️ Unexpected redirect URL:', currentUrl)
     }
 
     // Take screenshot untuk dokumentasi
     await takeScreenshot(page, 'sign-up-success')
 
-    console.log('✅ Sign up flow completed successfully with redirect to:', currentUrl)
   })
 
   /**
@@ -205,14 +177,11 @@ test.describe('Sign Up Flow', () => {
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
-    console.log('📝 Looking for Continue button...')
     const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
-      console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying Enter key...')
       await page.keyboard.press('Enter')
     }
 
@@ -237,7 +206,6 @@ test.describe('Sign Up Flow', () => {
       const errorElement = page.locator(selector)
       if ((await errorElement.count()) > 0 && (await errorElement.isVisible())) {
         errorFound = true
-        console.log('✅ Error message found:', await errorElement.textContent())
         break
       }
     }
@@ -246,7 +214,6 @@ test.describe('Sign Up Flow', () => {
     if (!errorFound) {
       // Pastikan masih di halaman sign-up atau tidak redirect ke dashboard
       await expect(page).not.toHaveURL('/dashboard')
-      console.log('✅ No redirect to dashboard (expected behavior for existing email)')
     }
 
     await takeScreenshot(page, 'sign-up-existing-email-error')
@@ -302,34 +269,16 @@ test.describe('Sign Up Flow', () => {
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
-    console.log('📝 Looking for Continue button...')
     const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
-      console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying Enter key...')
       await page.keyboard.press('Enter')
     }
 
     // Then: Validation error ditampilkan atau form tidak submit
     await page.waitForTimeout(1000)
-
-    // Check HTML5 validation atau Clerk validation
-    const emailValidity = await emailInput.evaluate((el: HTMLInputElement) => el.validity.valid)
-
-    if (!emailValidity) {
-      console.log('✅ HTML5 email validation working')
-    } else {
-      // Check untuk Clerk validation error
-      const errorElement = page
-        .locator('.cl-formFieldErrorText, .cl-fieldError, [role="alert"]')
-        .first()
-      if ((await errorElement.count()) > 0) {
-        console.log('✅ Clerk email validation working:', await errorElement.textContent())
-      }
-    }
 
     // Pastikan tidak redirect ke dashboard
     await expect(page).not.toHaveURL('/dashboard')
@@ -386,14 +335,11 @@ test.describe('Sign Up Flow', () => {
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
-    console.log('📝 Looking for Continue button...')
     const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
-      console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying Enter key...')
       await page.keyboard.press('Enter')
     }
 
@@ -416,14 +362,12 @@ test.describe('Sign Up Flow', () => {
       const errorElement = page.locator(selector)
       if ((await errorElement.count()) > 0 && (await errorElement.isVisible())) {
         passwordErrorFound = true
-        console.log('✅ Password validation error found:', await errorElement.textContent())
         break
       }
     }
 
     // Log hasil untuk debugging
     if (!passwordErrorFound) {
-      console.log('⚠️ No password validation error found, but form should not submit')
     }
 
     // Pastikan tidak redirect ke dashboard
@@ -490,20 +434,16 @@ test.describe('Sign Up Flow', () => {
     await page.waitForTimeout(1000)
 
     // Submit form dengan strategi yang sama seperti successful test
-    console.log('📝 Looking for Continue button...')
     const continueButton = page.locator('button').filter({ hasText: 'Continue' }).first()
 
     if ((await continueButton.count()) > 0) {
-      console.log('✅ Found Continue button, clicking...')
       await continueButton.click()
     } else {
-      console.log('⚠️ Continue button not found, trying Enter key...')
       await page.keyboard.press('Enter')
     }
 
     // Then: Loading state ditampilkan atau graceful handling
     // Check untuk loading indicator dengan timeout yang lebih pendek
-    console.log('🔍 Checking for loading indicators...')
     const loadingSelectors = [
       '.cl-spinner',
       '.cl-loading',
@@ -519,24 +459,20 @@ test.describe('Sign Up Flow', () => {
         const loadingElement = page.locator(selector)
         if ((await loadingElement.count()) > 0) {
           loadingFound = true
-          console.log('✅ Loading state found during network delay')
           break
         }
       } catch {
         // Ignore errors saat checking loading states dan log untuk debugging
-        console.log('⚠️ Error checking loading selector:', selector)
       }
     }
 
     // Log hasil untuk debugging
     if (!loadingFound) {
-      console.log('⚠️ No loading state found, but network delay should be handled gracefully')
     }
 
     await takeScreenshot(page, 'sign-up-network-timeout')
 
     // Clear route untuk cleanup
     await page.unroute('**/*clerk*')
-    console.log('🧹 Cleaned up network route interception')
   })
 })

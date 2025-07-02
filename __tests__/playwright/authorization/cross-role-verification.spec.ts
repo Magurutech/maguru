@@ -37,9 +37,6 @@ test.beforeAll(async () => {
       `Missing required roles: ${missingRoles.join(', ')}. Missing environment variables: ${missingVars.join(', ')}`,
     )
   }
-
-  console.log('✅ Cross-role test environment validation passed')
-  console.log(`📊 Available roles: ${availableRoles.join(', ')}`)
 })
 
 test.describe('Cross-Role Authorization Verification', () => {
@@ -50,8 +47,6 @@ test.describe('Cross-Role Authorization Verification', () => {
     // Clear browser state untuk fresh session
     await page.context().clearCookies()
     await page.context().clearPermissions()
-
-    console.log('🔧 Test environment prepared for cross-role testing')
   })
 
   /**
@@ -66,7 +61,6 @@ test.describe('Cross-Role Authorization Verification', () => {
    * - Then: Access permissions sesuai dengan hierarchy yang didefinisikan
    */
   test('should enforce correct role hierarchy across all roles', async ({ page }) => {
-    console.log('🧪 Testing role hierarchy enforcement...')
     await setupClerkTestingToken({ page })
 
     // Test simplified role hierarchy dengan single assertions per role
@@ -80,8 +74,6 @@ test.describe('Cross-Role Authorization Verification', () => {
     ]
 
     for (const testCase of roleTests) {
-      console.log(`🔍 Testing ${testCase.role} access to ${testCase.route}`)
-
       // Fresh login for each test to avoid session conflicts
       await page.context().clearCookies()
       await loginWithRole(page, testCase.role as UserRole)
@@ -93,12 +85,8 @@ test.describe('Cross-Role Authorization Verification', () => {
       const hasAccess = !currentUrl.includes('/unauthorized')
 
       expect(hasAccess).toBe(testCase.shouldAccess)
-      console.log(
-        `✅ ${testCase.role} ${testCase.shouldAccess ? 'can' : 'cannot'} access ${testCase.route}`,
-      )
     }
 
-    console.log('✅ Role hierarchy verification completed')
     await takeScreenshot(page, 'role-hierarchy-verification')
   })
 
@@ -109,8 +97,6 @@ test.describe('Cross-Role Authorization Verification', () => {
    * Expected: Access matrix berfungsi sesuai dengan spesifikasi RBAC
    */
   test('should validate complete access control matrix', async ({ page }) => {
-    console.log('🧪 Testing complete access control matrix...')
-
     // Test access control matrix untuk semua role-route combinations
     const matrixValidationResult = await validateAccessControlMatrix(
       page,
@@ -121,16 +107,6 @@ test.describe('Cross-Role Authorization Verification', () => {
     expect(matrixValidationResult.isValid).toBe(true)
     expect(matrixValidationResult.failedCases.length).toBe(0)
 
-    if (matrixValidationResult.failedCases.length > 0) {
-      console.error('❌ Access control matrix validation failed:')
-      matrixValidationResult.failedCases.forEach((failedCase) => {
-        console.error(
-          `  - ${failedCase.role} accessing ${failedCase.route}: expected ${failedCase.expected}, got ${failedCase.actual}`,
-        )
-      })
-    }
-
-    console.log('✅ Access control matrix validation completed successfully')
     await takeScreenshot(page, 'access-control-matrix-validated')
   })
 
@@ -141,8 +117,6 @@ test.describe('Cross-Role Authorization Verification', () => {
    * Expected: System menangani basic security checks dengan benar
    */
   test('should handle basic security boundaries correctly', async ({ page }) => {
-    console.log('🧪 Testing basic security boundaries...')
-
     const securityTests = [
       {
         name: 'User Cannot Access Admin Area',
@@ -183,18 +157,13 @@ test.describe('Cross-Role Authorization Verification', () => {
     ]
 
     for (const securityTest of securityTests) {
-      console.log(`🔍 Testing: ${securityTest.name}`)
-
       try {
         await securityTest.test()
-        console.log(`✅ ${securityTest.name} passed`)
       } catch (error) {
-        console.error(`❌ ${securityTest.name} failed:`, error)
         throw error
       }
     }
 
-    console.log('✅ Basic security boundaries verification completed')
     await takeScreenshot(page, 'basic-security-boundaries')
   })
 })

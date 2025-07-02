@@ -22,8 +22,6 @@ import { Page, expect } from '@playwright/test'
  * @throws {Error} Jika logout gagal atau tidak ditemukan logout button
  */
 export async function logoutUser(page: Page) {
-  console.log('🚪 Logging out user...')
-
   // Click user menu atau logout button
   await page.click('[data-testid="user-menu"]')
   await page.click('[data-testid="logout-button"]')
@@ -31,7 +29,6 @@ export async function logoutUser(page: Page) {
   // Wait for redirect ke homepage atau sign-in
   await page.waitForURL('/', { timeout: 5000 })
 
-  console.log('✅ Logout successful')
 }
 
 /**
@@ -104,8 +101,6 @@ export async function verifyUnauthenticated(page: Page) {
  * @throws {AssertionError} Jika access tidak sesuai expected
  */
 export async function testRouteAccess(page: Page, route: string, shouldHaveAccess: boolean) {
-  console.log(`🔍 Testing access to ${route}, should have access: ${shouldHaveAccess}`)
-
   await page.goto(route)
 
   if (shouldHaveAccess) {
@@ -119,8 +114,6 @@ export async function testRouteAccess(page: Page, route: string, shouldHaveAcces
     const isBlocked = currentUrl.includes('/unauthorized') || currentUrl.includes('/sign-in')
     expect(isBlocked).toBeTruthy()
   }
-
-  console.log(`✅ Route access test completed for ${route}`)
 }
 
 /**
@@ -148,13 +141,11 @@ export async function waitForPageLoad(page: Page, waitForSelector?: string) {
 
   // Skip networkidle karena Clerk melakukan banyak background requests
   // yang menyebabkan timeout. Ini adalah best practice untuk Clerk testing.
-  console.log('⚠️ Skipping networkidle wait (Clerk optimization)')
 
   // Jika ada selector spesifik, tunggu sampai terlihat
   if (waitForSelector) {
     try {
       await page.waitForSelector(waitForSelector, { timeout: 10000 })
-      console.log(`✅ Element ${waitForSelector} is visible`)
     } catch {
       console.log(`⚠️ Element ${waitForSelector} not found, but continuing...`)
     }
@@ -220,7 +211,6 @@ export async function verifyUserSession(page: Page) {
     const element = page.locator(selector)
     if ((await element.count()) > 0 && (await element.isVisible())) {
       sessionFound = true
-      console.log('✅ User session verified with:', selector)
       break
     }
   }
@@ -229,9 +219,6 @@ export async function verifyUserSession(page: Page) {
     // Fallback: check URL tidak redirect ke sign-in
     const currentUrl = page.url()
     sessionFound = !currentUrl.includes('/sign-in') && !currentUrl.includes('/sign-up')
-    if (sessionFound) {
-      console.log('✅ User session verified by URL (not redirected to auth pages)')
-    }
   }
 
   expect(sessionFound).toBeTruthy()
@@ -279,10 +266,6 @@ export async function verifyUserLoggedOut(page: Page) {
       currentUrl.includes('localhost:3000/') ||
       currentUrl.includes('/sign-in') ||
       !currentUrl.includes('/dashboard')
-  }
-
-  if (loggedOut) {
-    console.log('✅ User logout verified')
   }
 
   expect(loggedOut).toBeTruthy()

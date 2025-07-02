@@ -23,14 +23,12 @@ test.beforeAll(async () => {
   if (!isValid) {
     throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`)
   }
-  console.log('✅ Test environment validation passed')
 })
 
 test.describe('Sign In Flow', () => {
   test.beforeEach(async ({ page }) => {
     // Setup Clerk testing token untuk setiap test sesuai dokumentasi
     await setupClerkTestingToken({ page })
-    console.log('🔧 Clerk testing token configured')
 
     // CRITICAL: Clear browser state untuk fresh session
     await page.context().clearCookies()
@@ -54,29 +52,23 @@ test.describe('Sign In Flow', () => {
    */
   test('should successfully sign in with valid credentials', async ({ page }) => {
     // Given: User navigasi ke halaman sign-in
-    console.log('🧪 Testing successful sign-in with valid credentials...')
 
     await page.goto('/sign-in')
     await waitForPageLoad(page)
 
-    // When: Fill form dengan kredensial yang benar
-    console.log('📧 Entering email/username...')
+      // When: Fill form dengan kredensial yang benar
     await page.fill('input[name="identifier"]', testUsers.existingUser.email)
 
-    console.log('📤 email submitted ')
     await page.click('button:has-text("Continue")')
 
-    console.log('🔐 Entering password...')
     await page.fill('input[name="password"]', testUsers.existingUser.password)
 
-    console.log('📤 password submitted ')
     await page.click('button:has-text("Continue")')
 
     // Then: User berhasil login dan redirect ke dashboard
     await expect(page).toHaveURL('/dashboard', { timeout: 15000 })
     await verifyUserSession(page)
 
-    console.log('✅ Sign-in completed successfully')
     await takeScreenshot(page, 'clerk-signin-success')
   })
 
@@ -93,19 +85,15 @@ test.describe('Sign In Flow', () => {
    */
   test('should show error for invalid password', async ({ page }) => {
     // Given: User navigasi ke halaman sign-in
-    console.log('🧪 Testing invalid password...')
 
     await page.goto('/sign-in')
     await waitForPageLoad(page)
 
     // When: Fill form dengan password yang salah
-    console.log('📧 Entering valid email...')
     await page.fill('input[name="identifier"]', testUsers.existingUser.identifier)
 
-    console.log('🔐 Entering wrong password...')
     await page.fill('input[name="password"]', 'WrongPassword123!')
 
-    console.log('📤 Submitting form...')
     await page.click('button:has-text("Continue")')
 
     // Then: Error message harus muncul
@@ -117,7 +105,6 @@ test.describe('Sign In Flow', () => {
     // Verify masih di halaman sign-in
     await expect(page).toHaveURL(/\/sign-in/, { timeout: 5000 })
 
-    console.log('✅ Invalid password error correctly displayed')
     await takeScreenshot(page, 'clerk-signin-invalid-password')
   })
 
@@ -134,19 +121,15 @@ test.describe('Sign In Flow', () => {
    */
   test('should show error for non-existent email', async ({ page }) => {
     // Given: User navigasi ke halaman sign-in
-    console.log('🧪 Testing non-existent email...')
 
     await page.goto('/sign-in')
     await waitForPageLoad(page)
 
     // When: Fill form dengan email yang tidak terdaftar
-    console.log('📧 Entering non-existent email...')
     await page.fill('input[name="identifier"]', 'nonexistent@maguru.test')
 
-    console.log('🔐 Entering password...')
     await page.fill('input[name="password"]', 'SomePassword123!')
 
-    console.log('📤 Submitting form...')
     await page.click('button:has-text("Continue")')
 
     // Then: Error message harus muncul
@@ -158,7 +141,6 @@ test.describe('Sign In Flow', () => {
     // Verify masih di halaman sign-in
     await expect(page).toHaveURL(/\/sign-in/, { timeout: 5000 })
 
-    console.log('✅ Non-existent email error correctly displayed')
     await takeScreenshot(page, 'clerk-signin-nonexistent-email')
   })
 
@@ -175,7 +157,6 @@ test.describe('Sign In Flow', () => {
    */
   test('should display sign in form elements correctly', async ({ page }) => {
     // Given: User navigasi ke halaman sign in
-    console.log('🧪 Testing sign in form UI elements...')
 
     await page.goto('/sign-in')
     await waitForPageLoad(page)
@@ -189,7 +170,6 @@ test.describe('Sign In Flow', () => {
     const signUpLink = page.locator('a').filter({ hasText: /sign.up/i })
     await expect(signUpLink).toBeVisible()
 
-    console.log('✅ Sign in form UI elements verified')
     await takeScreenshot(page, 'clerk-signin-form-ui')
   })
 
@@ -206,7 +186,6 @@ test.describe('Sign In Flow', () => {
    */
   test('should navigate to sign up from sign in page', async ({ page }) => {
     // Given: User berada di halaman sign in
-    console.log('🧪 Testing navigation to sign up...')
 
     await page.goto('/sign-in')
     await waitForPageLoad(page)
@@ -221,7 +200,6 @@ test.describe('Sign In Flow', () => {
     // Then: User diarahkan ke halaman sign up
     await expect(page).toHaveURL('/sign-up', { timeout: 10000 })
 
-    console.log('✅ Navigation to sign up verified')
     await takeScreenshot(page, 'clerk-signin-to-signup-nav')
   })
 
@@ -238,30 +216,24 @@ test.describe('Sign In Flow', () => {
    */
   test('should work correctly on mobile viewport', async ({ page }) => {
     // Given: Mobile viewport
-    console.log('🧪 Testing sign in on mobile viewport...')
 
     await page.setViewportSize({ width: 375, height: 667 }) // iPhone SE size
     await page.goto('/sign-in')
     await waitForPageLoad(page)
 
     // When: Fill form dengan kredensial yang benar
-    console.log('📧 Entering email/username...')
     await page.fill('input[name="identifier"]', testUsers.existingUser.email)
 
-    console.log('📤 email submitted ')
     await page.click('button:has-text("Continue")')
 
-    console.log('🔐 Entering password...')
     await page.fill('input[name="password"]', testUsers.existingUser.password)
 
-    console.log('📤 password submitted ')
     await page.click('button:has-text("Continue")')
 
     // Then: Sign in berhasil di mobile
     await expect(page).toHaveURL('/dashboard', { timeout: 15000 })
     await verifyUserSession(page)
 
-    console.log('✅ Mobile sign in verified')
     await takeScreenshot(page, 'clerk-signin-mobile')
   })
 })

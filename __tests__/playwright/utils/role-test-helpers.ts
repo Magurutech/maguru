@@ -477,19 +477,16 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
 
   try {
     // Login with first role
-    console.log(`🔐 Logging in as ${fromRole} for switching test`)
     await loginWithRole(page, fromRole)
     await waitForPageLoad(page)
 
     // Logout
-    console.log(`🚪 Logging out from ${fromRole} session`)
     await logoutFromRoleSession(page)
 
     // Add small delay to ensure logout is complete
     await page.waitForTimeout(1000)
 
     // Login with second role
-    console.log(`🔐 Logging in as ${toRole} for switching test`)
     await loginWithRole(page, toRole)
     await waitForPageLoad(page)
 
@@ -497,11 +494,8 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
     const toUser = getRoleTestUser(toRole)
     let permissionTest = true
 
-    console.log(`✅ Role switch ${fromRole} → ${toRole} login sequence completed`)
-
     // Test allowed routes (simplified - only test /dashboard which all roles should access)
     const testRoute = '/dashboard'
-    console.log(`🧪 Testing access to ${testRoute} for ${toRole}`)
 
     try {
       await page.goto(testRoute)
@@ -510,32 +504,24 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
       if (page.url().includes('/unauthorized')) {
         permissionTest = false
         results.errors.push(`Should have access to ${testRoute} but was unauthorized`)
-        console.log(`❌ ${toRole} should access ${testRoute} but was unauthorized`)
-      } else {
-        console.log(`✅ ${toRole} successfully accessed ${testRoute}`)
-      }
+      }   
     } catch (error) {
       permissionTest = false
       results.errors.push(`Error testing route ${testRoute}: ${error}`)
-      console.log(`❌ Error testing ${testRoute}: ${error}`)
     }
 
     // Test restricted routes (only if role has restrictions)
     if (toUser.restrictedRoutes.length > 0) {
       const restrictedRoute = toUser.restrictedRoutes[0] // Test first restricted route
-      console.log(`🧪 Testing restricted access to ${restrictedRoute} for ${toRole}`)
 
       try {
         await page.goto(restrictedRoute)
-        await waitForPageLoad(page)
+        await waitForPageLoad(page) 
 
         if (!page.url().includes('/unauthorized')) {
           permissionTest = false
           results.hasPermissionLeakage = true
           results.errors.push(`Should not have access to ${restrictedRoute} but was allowed`)
-          console.log(`❌ ${toRole} should NOT access ${restrictedRoute} but was allowed`)
-        } else {
-          console.log(`✅ ${toRole} correctly denied access to ${restrictedRoute}`)
         }
       } catch (error) {
         // Error accessing restricted route is actually expected/OK
@@ -547,14 +533,8 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
 
     results.switchSuccessful = true
     results.correctPermissions = permissionTest
-
-    console.log(`✅ Role switching test completed: ${fromRole} → ${toRole}`)
-    console.log(`   - Switch successful: ${results.switchSuccessful}`)
-    console.log(`   - Correct permissions: ${results.correctPermissions}`)
-    console.log(`   - Permission leakage: ${results.hasPermissionLeakage}`)
   } catch (error) {
     results.errors.push(`Role switching error: ${error}`)
-    console.log(`❌ Role switching failed ${fromRole} → ${toRole}: ${error}`)
   }
 
   return results
