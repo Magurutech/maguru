@@ -6,37 +6,6 @@
  */
 
 import { Page, expect } from '@playwright/test'
-
-/**
- * Helper untuk login user dengan Clerk (DEPRECATED - Use clerk.signIn() instead)
- *
- * @deprecated Gunakan clerk.signIn() helper sesuai dokumentasi Clerk
- * Fungsi ini disimpan untuk backward compatibility
- *
- * @param page - Playwright Page object untuk interaksi browser
- * @param user - Object user yang berisi identifier dan password untuk login
- * @param user.identifier - Email/username untuk login
- * @param user.password - Password untuk login
- */
-export async function loginUser(page: Page, user: { identifier: string; password: string }) {
-  console.log(`🔐 Logging in as:`, user.identifier)
-
-  // Navigate ke sign-in page
-  await page.goto('/sign-in')
-
-  // Fill login form
-  await page.fill('input[name="identifier"]', user.identifier)
-  await page.fill('input[name="password"]', user.password)
-
-  // Submit form
-  await page.click('button[type="submit"]')
-
-  // Wait for successful login - redirect ke dashboard
-  await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
-
-  console.log('✅ Login successful')
-}
-
 /**
  * Helper untuk logout user
  *

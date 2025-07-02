@@ -379,9 +379,34 @@ export function useUserRoleContext(): UserRoleContextType {
 }
 
 /**
+ * Helper function untuk mengecek apakah DevRoleSwitcher harus ditampilkan
+ *
+ * Kondisi untuk menampilkan DevRoleSwitcher:
+ * 1. NODE_ENV harus 'development'
+ * 2. Tidak sedang dalam mode testing Jest (NODE_ENV !== 'test')
+ */
+function shouldShowDevRoleSwitcher(): boolean {
+  // Jangan tampilkan jika APP_ENV adalah production
+  if (process.env.APP_ENV === 'prod') {
+    return false
+  }
+
+  // Jangan tampilkan jika sedang testing (Jest atau Playwright)
+  // if (process.env.APP_ENV === 'test') {
+  //   return false
+  // }
+
+  // Hanya tampilkan jika NODE_ENV development
+  return process.env.APP_ENV === 'dev'
+}
+
+/**
  * Development Role Switcher Component
- * Hanya muncul dalam development mode
- * Provides UI untuk testing role transitions
+ *
+ * Komponen ini akan muncul hanya jika:
+ * - APP_ENV = 'development'
+ *
+ * Provides UI untuk testing role transitions dalam development
  *
  * @param currentRole - Role saat ini
  * @param onRoleChange - Callback untuk change role
@@ -393,7 +418,8 @@ function DevRoleSwitcher({
   currentRole: UserRole | null
   onRoleChange: (role: UserRole) => void
 }) {
-  if (process.env.NODE_ENV !== 'development') {
+  // Check kondisi untuk menampilkan DevRoleSwitcher
+  if (!shouldShowDevRoleSwitcher()) {
     return null
   }
 
@@ -403,12 +429,15 @@ function DevRoleSwitcher({
     <div className="fixed bottom-4 right-4 p-4 bg-yellow-100 border border-yellow-300 rounded-lg shadow-lg z-50">
       <div className="text-sm font-medium text-yellow-800 mb-2">Dev Mode: Role Switcher</div>
       <div className="text-xs text-yellow-700 mb-2">Current: {currentRole || 'null'}</div>
+      <div className="text-xs text-yellow-600 mb-2">
+        APP_ENV: {process.env.APP_ENV || 'undefined'}
+      </div>
       <div className="flex gap-2">
         {roles.map((role) => (
           <button
             key={role}
             onClick={() => onRoleChange(role)}
-            className={`px-2 py-1 text-xs rounded ${
+            className={`px-2 py-1 text-xs rounded cursor-pointer ${
               currentRole === role
                 ? 'bg-yellow-300 text-yellow-900'
                 : 'bg-yellow-200 text-yellow-800 hover:bg-yellow-300'

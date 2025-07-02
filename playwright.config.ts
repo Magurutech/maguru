@@ -9,7 +9,7 @@ const baseURL = `http://localhost:${PORT}`
 export default defineConfig({
   testDir: '__tests__/playwright',
   webServer: {
-    command: 'yarn app:test',
+    command: 'yarn app:prod',
     url: baseURL,
     reuseExistingServer: !process.env.CI,
   },

@@ -17,12 +17,14 @@
  * 4. Set environment variables di .env.local dengan format yang EXACT
  */
 
+import { UserRole } from '../../../features/auth/types'
+
 export interface TestUser {
   identifier: string // username atau email sesuai Clerk config
   password: string
   firstName?: string
   lastName?: string
-  role?: 'admin' | 'creator' | 'user'
+  role?: UserRole
   displayName?: string
   email?: string // untuk sign-up tests
   username?: string // untuk sign-up tests
@@ -64,16 +66,16 @@ export const testUsers = {
   // Alternative users untuk testing berbagai scenarios (opsional)
   // Harus dibuat di Clerk Dashboard jika digunakan
   adminUser: {
-    identifier: process.env.E2E_CLERK_ADMIN_USERNAME,
-    password: process.env.E2E_CLERK_ADMIN_PASSWORD,
-    email: process.env.E2E_CLERK_ADMIN_EMAIL,
+    identifier: process.env.E2E_CLERK_ADMIN_USERNAME!,
+    password: process.env.E2E_CLERK_ADMIN_PASSWORD!,
+    email: process.env.E2E_CLERK_ADMIN_EMAIL!,
     role: 'admin' as const,
     displayName: 'Admin Test User',
   },
   creatorUser: {
-    identifier: process.env.E2E_CLERK_CREATOR_USERNAME,
-    password: process.env.E2E_CLERK_CREATOR_PASSWORD,
-    email: process.env.E2E_CLERK_CREATOR_EMAIL,
+    identifier: process.env.E2E_CLERK_CREATOR_USERNAME!,
+    password: process.env.E2E_CLERK_CREATOR_PASSWORD!,
+    email: process.env.E2E_CLERK_CREATOR_EMAIL!,
     role: 'creator' as const,
     displayName: 'Creator Test User',
   },
