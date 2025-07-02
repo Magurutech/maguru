@@ -102,7 +102,7 @@ export async function testRoleBasedAccess(
     // Check bahwa halaman berhasil dimuat - perbaiki selector
     const mainSelectors = ['main', '[role="main"]', 'body', '.main-content', '#main']
     let mainFound = false
-    
+
     for (const selector of mainSelectors) {
       const element = page.locator(selector)
       if ((await element.count()) > 0 && (await element.isVisible())) {
@@ -117,13 +117,14 @@ export async function testRoleBasedAccess(
       const pageContent = await page.content()
       console.log(`⚠️ No main element found, page title: ${await page.title()}`)
       console.log(`⚠️ Page content length: ${pageContent.length} characters`)
-      
+
       // Check if page has meaningful content (not just empty or error page)
-      const hasContent = pageContent.includes('dashboard') || 
-                        pageContent.includes('admin') || 
-                        pageContent.includes('control') ||
-                        pageContent.length > 1000
-      
+      const hasContent =
+        pageContent.includes('dashboard') ||
+        pageContent.includes('admin') ||
+        pageContent.includes('control') ||
+        pageContent.length > 1000
+
       if (hasContent) {
         console.log(`✅ Page seems to have content, considering as loaded`)
         mainFound = true
@@ -342,7 +343,7 @@ export async function verifyUnauthorizedPageFunctionality(
   await expect(page.locator('body')).toContainText(/tidak memiliki izin|unauthorized/i)
 
   // Check for role-specific messaging
-  const roleMessage = page.locator('[data-testid="role-message"], .role-message, p')
+  const roleMessage = page.locator('p').filter({ hasText: `Current Role: ${role}` })
   await expect(roleMessage).toBeVisible()
 
   // Check for navigation options

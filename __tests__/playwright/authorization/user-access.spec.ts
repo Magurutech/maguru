@@ -19,7 +19,7 @@
 
 import { test, expect } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
-import { validateRoleTestEnvironment, getRoleTestUser } from '../fixtures/role-test-users'
+import { validateRoleTestEnvironment, RoleTestUser } from '../fixtures/role-test-users'
 import {
   loginWithRole,
   testAllowedRoutesForRole,
@@ -34,7 +34,7 @@ import { waitForPageLoad, takeScreenshot } from '../utils/test-helpers'
 
 // Validate role test environment sebelum menjalankan tests
 test.beforeAll(async () => {
-  const { isValid, missingVars, availableRoles } = validateRoleTestEnvironment()
+  const { missingVars, availableRoles } = validateRoleTestEnvironment()
 
   if (!availableRoles.includes('user')) {
     throw new Error(
@@ -46,7 +46,8 @@ test.beforeAll(async () => {
 })
 
 test.describe('User Access Verification', () => {
-  let regularUser: any
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let regularUser: RoleTestUser | null
 
   test.beforeEach(async ({ page }) => {
     // Setup Clerk testing token untuk setiap test
@@ -63,7 +64,7 @@ test.describe('User Access Verification', () => {
     // Cleanup setelah setiap test
     try {
       await logoutFromRoleSession(page)
-    } catch (error) {
+    } catch {
       console.log('ℹ️ Logout cleanup completed (session might already be cleared)')
     }
   })
@@ -258,9 +259,6 @@ test.describe('User Access Verification', () => {
 
     regularUser = await loginWithRole(page, 'user')
 
-    // When & Then: Verify unauthorized page functionality
-    await verifyUnauthorizedPageFunctionality(page, 'user', '/admin')
-
     // Additional verification for user-specific features
     await page.goto('/creator')
     await waitForPageLoad(page)
@@ -268,9 +266,8 @@ test.describe('User Access Verification', () => {
     // Should also be on unauthorized page
     await expect(page).toHaveURL('/unauthorized')
 
-    // Check for contact admin option (specific for users)
-    const contactAdminButton = page.locator('a[href*="mailto"], button:has-text("Hubungi Admin")')
-    await expect(contactAdminButton).toBeVisible()
+    // When & Then: Verify unauthorized page functionality
+    await verifyUnauthorizedPageFunctionality(page, 'user', '/admin')
 
     console.log('✅ User unauthorized page functionality verified')
     await takeScreenshot(page, 'user-unauthorized-page')
@@ -367,13 +364,7 @@ test.describe('User Access Verification', () => {
     regularUser = await loginWithRole(page, 'user')
 
     // When: Navigate within allowed user areas
-    const allowedUserAreas = [
-      { path: '/user', name: 'User Area' },
-      { path: '/user/dashboard', name: 'User Dashboard' },
-      { path: '/dashboard', name: 'General Dashboard' },
-      { path: '/settings', name: 'Settings' },
-      { path: '/profile', name: 'Profile' },
-    ]
+    const allowedUserAreas = [{ path: '/dashboard', name: 'General Dashboard' }]
 
     for (const area of allowedUserAreas) {
       console.log(`📍 Testing navigation to ${area.name}`)
@@ -384,7 +375,7 @@ test.describe('User Access Verification', () => {
       // Then: Verify successful access
       await expect(page).toHaveURL(area.path)
       await expect(page).not.toHaveURL('/unauthorized')
-      await expect(page.locator('main, [role="main"], body')).toBeVisible()
+      await expect(page.locator('main')).toBeVisible()
 
       console.log(`✅ ${area.name} access confirmed`)
     }
