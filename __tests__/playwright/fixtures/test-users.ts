@@ -68,14 +68,12 @@ export const testUsers = {
   adminUser: {
     identifier: process.env.E2E_CLERK_ADMIN_USERNAME!,
     password: process.env.E2E_CLERK_ADMIN_PASSWORD!,
-    email: process.env.E2E_CLERK_ADMIN_EMAIL!,
     role: 'admin' as const,
     displayName: 'Admin Test User',
   },
   creatorUser: {
     identifier: process.env.E2E_CLERK_CREATOR_USERNAME!,
     password: process.env.E2E_CLERK_CREATOR_PASSWORD!,
-    email: process.env.E2E_CLERK_CREATOR_EMAIL!,
     role: 'creator' as const,
     displayName: 'Creator Test User',
   },

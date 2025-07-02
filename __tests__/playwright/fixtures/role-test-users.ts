@@ -121,22 +121,15 @@ export function validateRoleTestEnvironment(): {
 } {
   console.log('E2E_CLERK_ADMIN_USERNAME', process.env.E2E_CLERK_ADMIN_USERNAME)
   console.log('E2E_CLERK_ADMIN_PASSWORD', process.env.E2E_CLERK_ADMIN_PASSWORD)
-  console.log('E2E_CLERK_ADMIN_EMAIL', process.env.E2E_CLERK_ADMIN_EMAIL)
   console.log('E2E_CLERK_CREATOR_USERNAME', process.env.E2E_CLERK_CREATOR_USERNAME)
   console.log('E2E_CLERK_CREATOR_PASSWORD', process.env.E2E_CLERK_CREATOR_PASSWORD)
-  console.log('E2E_CLERK_CREATOR_EMAIL', process.env.E2E_CLERK_CREATOR_EMAIL)
   console.log('E2E_CLERK_USER_USERNAME', process.env.E2E_CLERK_USER_USERNAME)
   console.log('E2E_CLERK_USER_PASSWORD', process.env.E2E_CLERK_USER_PASSWORD)
-  console.log('E2E_CLERK_USER_EMAIL', process.env.E2E_CLERK_USER_EMAIL)
 
   const roleEnvVars = {
-    admin: ['E2E_CLERK_ADMIN_USERNAME', 'E2E_CLERK_ADMIN_PASSWORD', 'E2E_CLERK_ADMIN_EMAIL'],
-    creator: [
-      'E2E_CLERK_CREATOR_USERNAME',
-      'E2E_CLERK_CREATOR_PASSWORD',
-      'E2E_CLERK_CREATOR_EMAIL',
-    ],
-    user: ['E2E_CLERK_USER_USERNAME', 'E2E_CLERK_USER_PASSWORD', 'E2E_CLERK_USER_EMAIL'],
+    admin: ['E2E_CLERK_ADMIN_USERNAME', 'E2E_CLERK_ADMIN_PASSWORD'],
+    creator: ['E2E_CLERK_CREATOR_USERNAME', 'E2E_CLERK_CREATOR_PASSWORD'],
+    user: ['E2E_CLERK_USER_USERNAME', 'E2E_CLERK_USER_PASSWORD'],
   }
 
   const missingVars: string[] = []

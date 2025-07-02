@@ -237,17 +237,23 @@ jobs:
           # Clerk Authentication untuk E2E tests
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          E2E_CLERK_ADMIN_PASSWORD: ${{ secrets.E2E_CLERK_ADMIN_PASSWORD }}
+          E2E_CLERK_CREATOR_PASSWORD: ${{ secrets.E2E_CLERK_CREATOR_PASSWORD }}
+          E2E_CLERK_CREATOR_USERNAME: ${{ secrets.E2E_CLERK_CREATOR_USERNAME }}
+          E2E_CLERK_USER_EMAIL: ${{ secrets.E2E_CLERK_USER_EMAIL }}
+          E2E_CLERK_USER_PASSWORD: ${{ secrets.E2E_CLERK_USER_PASSWORD }}
+          E2E_CLERK_USER_USERNAME: ${{ secrets.E2E_CLERK_USER_USERNAME }}
           CLERK_TEST_MODE: true
 
           # App Configuration
           NODE_ENV: test
-          APP_ENV: dev
+          APP_ENV: prod
           NEXT_PUBLIC_APP_URL: http://localhost:3000
           SKIP_ENV_VALIDATION: true
           CI: true
         run: |
           echo "=== Running E2E tests ==="
-          yarn test:e2e:all --reporter=html,json
+          yarn test:e2e --reporter=html,json
           echo "✅ E2E tests completed"
 
       - name: Upload E2E test results
