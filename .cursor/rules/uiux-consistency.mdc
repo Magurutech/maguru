@@ -1,24 +1,15 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+alwaysApply: true
 ---
+
 ## **Instruksi Rules UI/UX Theme & Consistency Maguru**
 
 ### **A. Prinsip Umum**
 
-- **Theme:** Soft Glass-Neu (blur-glass untuk panel/card, neumorphism untuk tombol/form, flat untuk data).
+- **Theme:** Game UI Ancient Fantasy Asia dengan Whimsical (penuh imajinasi) dan cartoonish (bergaya kartun), dengan elemen-elemen alam seperti tanaman, bunga, dan lanskap hijau. Desainnya terasa hand-drawn (seperti digambar tangan), memberikan kesan playful namun detail, cocok untuk pengalaman game yang imersif.
+  untuk detailnya silahkan cek @theme-instruction.mdc
 - **Komponen:** Gunakan Shadcn UI terlebih dahulu, custom hanya jika tidak tersedia.
 - **Token:** Semua warna, radius, shadow, font didefinisikan di Tailwind config.
-
-### **B. Warna Branding**
-
-- **Primary:** `#8C4FFF` (Maguru Purple)
-- **Secondary:** `#4D90FE` (Soft Blue)
-- **Accent:** `#2DD897` (Mint Green), `#FF9F1C` (Warm Orange)
-- **Status:** Success, Warning, Error, Info sesuai tabel di dokumen.
-- **Surface:** Gunakan rgba/opacity untuk efek glass.
-- **Text:** Putih untuk dark surface, soft grey untuk secondary.
 
 ### **C. Font Family**
 
@@ -55,15 +46,6 @@ alwaysApply: false
 ### **H. Ikon**
 
 - **Heroicons:** Install via `@heroicons/react`, gunakan sebagai React component.
-
----
-
-## **Contoh Implementasi di `app/page.tsx`**
-
-- Gunakan `<Button className="shadow-neu bg-primary text-white ...">...</Button>`
-- Card dengan `shadow-glass`, background glass (`bg-[rgba(255,255,255,0.15)]` + `backdrop-blur`)
-- Input dengan border dan focus sesuai aturan
-- Spacing antar elemen dengan `gap-4`, `p-4`, dsb.
 
 ---
 
