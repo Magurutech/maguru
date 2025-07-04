@@ -40,7 +40,7 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
             {/* Navigation Menu */}
             <nav className="flex-1 p-6">
               <div className="space-y-2">
-                <Link href="/creator/dashboard">
+                <Link href="/creator">
                   <Button
                     variant="ghost"
                     className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"
@@ -50,7 +50,7 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                   </Button>
                 </Link>
 
-                <Link href="/creator/courses">
+                <Link href="/creator/course-manage">
                   <Button
                     variant="ghost"
                     className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"

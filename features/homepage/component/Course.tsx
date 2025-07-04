@@ -1,153 +1,183 @@
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Star, Clock, Users, Play } from 'lucide-react'
+import { Clock, Users, Star, BookOpen, Award } from 'lucide-react'
 import Image from 'next/image'
 
-export function Courses() {
+export default function Course() {
   const courses = [
     {
-      title: 'Full Stack Web Development',
-      instructor: 'John Doe',
+      id: 1,
+      title: 'Petualangan Matematika Nusantara',
+      description:
+        'Belajar matematika dengan cerita petualangan di kepulauan Indonesia yang menakjubkan',
+      instructor: 'Prof. Sari Dewi',
       rating: 4.9,
-      students: 1234,
-      duration: '12 weeks',
-      level: 'Beginner',
-      price: 'Rp 299,000',
-      originalPrice: 'Rp 499,000',
+      students: 1250,
+      duration: '8 minggu',
+      level: 'Pemula',
+      price: 'Rp 299.000',
+      originalPrice: 'Rp 599.000',
       image: '/globe.svg',
-      tags: ['React', 'Node.js', 'MongoDB'],
+      category: 'Matematika',
+      badge: 'Terpopuler',
     },
     {
-      title: 'UI/UX Design Mastery',
-      instructor: 'Jane Smith',
+      id: 2,
+      title: 'Legenda Bahasa Indonesia',
+      description: 'Menguasai bahasa Indonesia melalui cerita rakyat dan legenda yang memikat',
+      instructor: 'Dr. Budi Santoso',
       rating: 4.8,
-      students: 987,
-      duration: '8 weeks',
-      level: 'Intermediate',
-      price: 'Rp 249,000',
-      originalPrice: 'Rp 399,000',
+      students: 890,
+      duration: '6 minggu',
+      level: 'Menengah',
+      price: 'Rp 249.000',
+      originalPrice: 'Rp 499.000',
       image: '/globe.svg',
-      tags: ['Figma', 'Design System', 'Prototyping'],
+      category: 'Bahasa',
+      badge: 'Terbaru',
     },
     {
-      title: 'Digital Marketing Strategy',
-      instructor: 'Mike Johnson',
-      rating: 4.9,
-      students: 2156,
-      duration: '6 weeks',
-      level: 'Beginner',
-      price: 'Rp 199,000',
-      originalPrice: 'Rp 299,000',
+      id: 3,
+      title: 'Sains Alam Magis',
+      description: 'Eksplorasi sains dengan pendekatan fantasy dan eksperimen yang menakjubkan',
+      instructor: 'Dr. Maya Indira',
+      rating: 4.7,
+      students: 675,
+      duration: '10 minggu',
+      level: 'Lanjutan',
+      price: 'Rp 399.000',
+      originalPrice: 'Rp 799.000',
       image: '/globe.svg',
-      tags: ['SEO', 'Social Media', 'Analytics'],
+      category: 'Sains',
+      badge: 'Eksklusif',
     },
   ]
 
+  const getBadgeColor = (badge: string) => {
+    switch (badge) {
+      case 'Terpopuler':
+        return 'bg-primary-500 text-white'
+      case 'Terbaru':
+        return 'bg-accent-500 text-white'
+      case 'Eksklusif':
+        return 'bg-secondary-500 text-beige-900'
+      default:
+        return 'bg-beige-500 text-white'
+    }
+  }
+
   return (
-    <section id="courses" className="py-20 px-4 bg-gradient-to-b from-transparent to-primary/50">
-      <div className="container mx-auto">
-        {/* Header */}
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="text-3xl lg:text-5xl font-bold">
-            Course{' '}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Terpopuler
-            </span>
+    <section className="py-20 bg-ancient-fantasy relative overflow-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute top-10 right-10 text-6xl opacity-10 whimsical-bounce">📚</div>
+      <div className="absolute bottom-10 left-10 text-4xl opacity-20 whimsical-bounce animation-delay-1000">
+        🎓
+      </div>
+
+      <div className="container mx-auto px-4">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 glass-panel px-4 py-2 rounded-full mb-6">
+            <BookOpen className="w-5 h-5 text-secondary-600" />
+            <span className="text-beige-900 font-medium">Kursus Pilihan</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-beige-900 mb-6 font-serif">
+            Petualangan Belajar
+            <span className="text-gradient-primary block mt-2">Terbaik Untukmu ✨</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Pilihan course terbaik yang paling diminati oleh ribuan students. Dipandu oleh mentor
-            expert dengan pengalaman industri bertahun-tahun.
+
+          <p className="text-xl text-beige-700 max-w-3xl mx-auto leading-relaxed">
+            Temukan kursus-kursus berkualitas tinggi yang dirancang khusus untuk mengembangkan
+            potensi terbaikmu dengan cara yang menyenangkan dan interaktif
           </p>
         </div>
 
-        {/* Courses Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {/* Course Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {courses.map((course, index) => (
-            <div
-              key={index}
-              className="glass-panel rounded-xl overflow-hidden hover:shadow-neu transition-all duration-300 group animate-slide-up"
+            <Card
+              key={course.id}
+              className="card-ancient hover-lift group animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              {/* Course Image */}
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden rounded-t-lg">
                 <Image
-                  src={course.image || '/globe.svg'}
+                  src={course.image}
                   alt={course.title}
-                  className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  width={300}
-                  height={200}
+                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <Button
-                    size="sm"
-                    className="neu-button bg-white/20 backdrop-blur-sm text-white border-white/30"
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Preview
-                  </Button>
+                <div className="absolute top-4 left-4">
+                  <Badge className={`${getBadgeColor(course.badge)} neu-button`}>
+                    {course.badge}
+                  </Badge>
                 </div>
-                <Badge className="absolute top-4 left-4 bg-accent-orange text-white">
-                  {course.level}
-                </Badge>
+                <div className="absolute top-4 right-4">
+                  <div className="glass-panel px-2 py-1 rounded-full">
+                    <span className="text-xs font-semibold text-beige-900">{course.level}</span>
+                  </div>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
 
-              {/* Course Content */}
-              <div className="p-6 space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary transition-colors duration-300">
+              <CardContent className="p-6">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-beige-900 mb-2 line-clamp-2 group-hover:text-gradient-primary transition-colors">
                     {course.title}
                   </h3>
-                  <p className="text-sm text-gray-600">by {course.instructor}</p>
-                </div>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2">
-                  {course.tags.map((tag, tagIndex) => (
-                    <Badge key={tagIndex} variant="secondary" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
+                  <p className="text-beige-700 text-sm line-clamp-3 mb-3">{course.description}</p>
+                  <p className="text-beige-600 text-sm">
+                    oleh{' '}
+                    <span className="font-semibold text-secondary-600">{course.instructor}</span>
+                  </p>
                 </div>
 
                 {/* Course Stats */}
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  <div className="flex items-center space-x-1">
-                    <Star className="w-4 h-4 text-accent-orange fill-current" />
+                <div className="flex items-center gap-4 mb-4 text-sm text-beige-700">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-secondary-400 text-secondary-400" />
                     <span className="font-medium">{course.rating}</span>
                   </div>
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
-                    <span>{course.students.toLocaleString()}</span>
+                    <span>{course.students}</span>
                   </div>
-                  <div className="flex items-center space-x-1">
+                  <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
                     <span>{course.duration}</span>
                   </div>
                 </div>
 
                 {/* Price */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                  <div className="space-y-1">
-                    <div className="text-lg font-bold text-primary">{course.price}</div>
-                    <div className="text-sm text-gray-500 line-through">{course.originalPrice}</div>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-bold text-beige-900">{course.price}</span>
+                    <span className="text-sm text-beige-600 line-through">
+                      {course.originalPrice}
+                    </span>
                   </div>
-                  <Button className="neu-button bg-gradient-to-r from-primary to-secondary text-white">
-                    Daftar Sekarang
-                  </Button>
+                  <div className="glass-panel px-2 py-1 rounded-full">
+                    <span className="text-xs font-medium text-accent-600">50% OFF</span>
+                  </div>
                 </div>
-              </div>
-            </div>
+
+                {/* Action Button */}
+                <Button className="w-full btn-primary hover-glow">🚀 Mulai Belajar</Button>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        {/* View All Button */}
+        {/* CTA Section */}
         <div className="text-center">
           <Button
             size="lg"
             variant="outline"
-            className="neu-button border-2 border-primary/20 px-8 py-4"
+            className="btn-secondary hover-glow text-lg px-8 py-4 border-2"
           >
-            Lihat Semua Course
+            <Award className="w-5 h-5 mr-2" />
+            Lihat Semua Kursus
           </Button>
         </div>
       </div>
