@@ -21,8 +21,21 @@ Task ini berfokus pada implementasi backend API untuk operasi CRUD (Create, Read
 
 1. **Scope Data**:
    - Hanya metadata kursus: judul, deskripsi, struktur modul/pelajaran
-   - Tidak ada upload file, media, atau konten rich text
+     dengan metadata {
+     id: '1',
+     title: 'Petualangan Matematika Nusantara',
+     description: 'Belajar matematika dengan cerita petualangan di kepulauan Indonesia',
+     thumbnail: '/globe.svg ',
+     status: 'published',
+     students: 1250,
+     lessons: 24,
+     duration: '8 jam',
+     rating: 4.8,
+     category: 'Matematika',
+     createdAt: '2024-01-15',
+     },
    - Tidak ada versioning atau history tracking
+   - fokus pada layer Database -> Service -> layer API -> layer Adapter
 
 2. **Business Logic**:
    - Tidak ada workflow approval atau publishing
@@ -43,11 +56,28 @@ Task ini berfokus pada implementasi backend API untuk operasi CRUD (Create, Read
 
 ### Database Schema
 
+metadata {
+id: '1',
+title: 'Petualangan Matematika Nusantara',
+description: 'Belajar matematika dengan cerita petualangan di kepulauan Indonesia',
+thumbnail: '/globe.svg ',
+status: 'published',
+students: 1250,
+lessons: 24,
+duration: '8 jam',
+rating: 4.8,
+category: 'Matematika',
+createdAt: '2024-01-15',
+},
+
 ```prisma
 model Course {
   id          String   @id @default(uuid())
   title       String   @db.VarChar(100)
   description String   @db.Text
+  thumbnail   String?  @db.VarChar(255)
+  statusCourse         enum ['draft', 'published', 'archived']
+  students    Int      @db.Int
   creatorId   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -59,30 +89,6 @@ model Course {
   @@map("courses")
 }
 
-model Module {
-  id       String @id @default(uuid())
-  title    String @db.VarChar(100)
-  order    Int
-  courseId String
-
-  // Relasi
-  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  lessons  Lesson[]
-
-  @@map("modules")
-}
-
-model Page {
-  id       String @id @default(uuid())
-  title    String @db.VarChar(100)
-  order    Int
-  moduleId String
-
-  // Relasi
-  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-
-  @@map("pages")
-}
 ```
 
 ### TypeScript Interfaces
@@ -97,21 +103,6 @@ interface Course {
   createdAt: Date
   updatedAt: Date
   modules: Module[]
-}
-
-interface Module {
-  id: string
-  title: string
-  order: number
-  courseId: string
-  lessons: page[]
-}
-
-interface page {
-  id: string
-  title: string
-  order: number
-  moduleId: string
 }
 
 // Request/Response types
@@ -378,20 +369,6 @@ class CourseService {
    - Error propagation
 
 **Test Tools**: Jest + Test Database + MSW (untuk mocking external services)
-
-### Performance Tests
-
-**Scenarios**:
-
-- Create course dengan 10 modules, 5 lessons per module
-- Fetch 100 courses dengan pagination
-- Concurrent course creation
-
-**Metrics**:
-
-- Response time < 500ms untuk single operations
-- Response time < 1s untuk pagination queries
-- No memory leaks dalam concurrent operations
 
 ## Pertanyaan untuk Diklarifikasi
 

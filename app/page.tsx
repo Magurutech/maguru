@@ -1,5 +1,5 @@
 import { Navbar } from '@/features/homepage/component/Navbars'
-import Heros from '@/features/homepage/component/Heros'
+import { Heros } from '@/features/homepage/component/Heros'
 import Course from '@/features/homepage/component/Course'
 import { Feature } from '@/features/homepage/component/Feature'
 import { Testimonials } from '@/features/homepage/component/Testimonial'

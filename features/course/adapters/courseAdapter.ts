@@ -1,0 +1,400 @@
+import type {
+  Course,
+  CreateCourseRequest,
+  UpdateCourseRequest,
+  CourseListResponse,
+  CourseResponse,
+} from '../types'
+
+const API_BASE_URL = '/api/courses'
+
+/**
+ * Course Adapter - Client-side interface untuk komunikasi dengan API
+ *
+ * @description
+ * Adapter ini berfungsi sebagai jembatan antara frontend dan backend API untuk operasi CRUD kursus.
+ * Mengikuti arsitektur Maguru untuk Data Access Layer dengan:
+ * - Error handling yang konsisten
+ * - Type safety dengan TypeScript
+ * - Transformasi data untuk frontend consumption
+ * - Retry logic dan fallback mechanisms
+ *
+ * Semua method mengembalikan response yang konsisten dengan format:
+ * - Success: { success: true, data: ... }
+ * - Error: { success: false, error: string }
+ *
+ */
+export class CourseAdapter {
+  /**
+   * Mengambil daftar kursus dengan pagination dan filter opsional
+   *
+   * @description
+   * Method ini mengirim request GET ke /api/courses dengan query parameters untuk pagination.
+   * Dapat digunakan untuk menampilkan daftar kursus di homepage atau dashboard.
+   *
+   * @param page - Nomor halaman (default: 1)
+   * @param limit - Jumlah item per halaman (default: 10, max: 50 sesuai API)
+   * @returns Promise<CourseListResponse> - Response dengan daftar kursus dan pagination info
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async getCourses(page: number = 1, limit: number = 10): Promise<CourseListResponse> {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      })
+
+      const response = await fetch(`${API_BASE_URL}?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch courses')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in getCourses:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch courses',
+      }
+    }
+  }
+
+  /**
+   * Mengambil detail kursus berdasarkan ID
+   *
+   * @description
+   * Method ini mengirim request GET ke /api/courses/[id] untuk mendapatkan detail kursus.
+   * Dapat digunakan untuk menampilkan halaman detail kursus atau form edit.
+   *
+   * @param id - ID kursus yang akan diambil
+   * @returns Promise<CourseResponse> - Response dengan detail kursus
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async getCourseById(id: string): Promise<CourseResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch course')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in getCourseById:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch course',
+      }
+    }
+  }
+
+  /**
+   * Membuat kursus baru dengan metadata dasar
+   *
+   * @description
+   * Method ini mengirim request POST ke /api/courses untuk membuat kursus baru.
+   * Kursus yang dibuat akan memiliki status DRAFT secara default.
+   *
+   * TODO: Integrasi Clerk Authentication (TSK-48)
+   * - Tambahkan authorization header dengan Clerk token
+   * - Handle 401/403 errors untuk unauthorized access
+   * - Implementasi retry logic untuk network failures
+   *
+   * @param courseData - Data kursus yang akan dibuat (title, description, thumbnail, category)
+   * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil dibuat
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async createCourse(courseData: CreateCourseRequest): Promise<CourseResponse> {
+    try {
+      const response = await fetch(API_BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Tambahkan authorization header di TSK-48
+          // 'Authorization': `Bearer ${clerkToken}`
+        },
+        body: JSON.stringify(courseData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create course')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in createCourse:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to create course',
+      }
+    }
+  }
+
+  /**
+   * Update metadata kursus berdasarkan ID
+   *
+   * @description
+   * Method ini mengirim request PUT ke /api/courses/[id] untuk mengupdate kursus.
+   * Hanya pemilik kursus yang dapat mengupdate (akan divalidasi di backend).
+   *
+   * TODO: Integrasi Clerk Authentication (TSK-48)
+   * - Tambahkan authorization header dengan Clerk token
+   * - Handle 401/403 errors untuk unauthorized access
+   * - Implementasi optimistic update untuk UX yang lebih baik
+   *
+   * @param id - ID kursus yang akan diupdate
+   * @param courseData - Data baru untuk kursus (title, description, thumbnail, category)
+   * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil diupdate
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async updateCourse(id: string, courseData: UpdateCourseRequest): Promise<CourseResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Tambahkan authorization header di TSK-48
+          // 'Authorization': `Bearer ${clerkToken}`
+        },
+        body: JSON.stringify(courseData),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update course')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in updateCourse:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update course',
+      }
+    }
+  }
+
+  /**
+   * Hapus kursus secara permanen berdasarkan ID
+   *
+   * @description
+   * Method ini mengirim request DELETE ke /api/courses/[id] untuk menghapus kursus.
+   * Hanya pemilik kursus yang dapat menghapus (akan divalidasi di backend).
+   * Penghapusan bersifat permanen (hard delete).
+   *
+   * TODO: Integrasi Clerk Authentication (TSK-48)
+   * - Tambahkan authorization header dengan Clerk token
+   * - Handle 401/403 errors untuk unauthorized access
+   * - Implementasi konfirmasi dialog di frontend sebelum delete
+   *
+   * @param id - ID kursus yang akan dihapus
+   * @returns Promise<{success: boolean, message?: string, error?: string}> - Response konfirmasi penghapusan
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async deleteCourse(
+    id: string,
+  ): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Tambahkan authorization header di TSK-48
+          // 'Authorization': `Bearer ${clerkToken}`
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete course')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in deleteCourse:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to delete course',
+      }
+    }
+  }
+
+  /**
+   * Mengambil kursus berdasarkan creator ID (untuk dashboard creator)
+   *
+   * @description
+   * Method ini mengirim request GET ke /api/courses dengan query parameter creatorId.
+   * Digunakan untuk menampilkan dashboard creator dengan kursus miliknya sendiri.
+   *
+   * TODO: Integrasi Clerk Authentication (TSK-48)
+   * - Tambahkan authorization header dengan Clerk token
+   * - Extract creatorId dari Clerk session otomatis
+   * - Handle 401/403 errors untuk unauthorized access
+   *
+   * @param creatorId - ID creator yang kursusnya akan diambil
+   * @param page - Nomor halaman (default: 1)
+   * @param limit - Jumlah item per halaman (default: 10)
+   * @returns Promise<CourseListResponse> - Response dengan daftar kursus creator dan pagination info
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async getCoursesByCreator(
+    creatorId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<CourseListResponse> {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+        creatorId: creatorId,
+      })
+
+      const response = await fetch(`${API_BASE_URL}?${params}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Tambahkan authorization header di TSK-48
+          // 'Authorization': `Bearer ${clerkToken}`
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch creator courses')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in getCoursesByCreator:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to fetch creator courses',
+      }
+    }
+  }
+
+  /**
+   * Update status kursus (DRAFT, PUBLISHED, ARCHIVED)
+   *
+   * @description
+   * Method ini mengirim request PATCH ke /api/courses/[id]/status untuk mengupdate status kursus.
+   * Hanya pemilik kursus yang dapat mengupdate status (akan divalidasi di backend).
+   *
+   * TODO: Integrasi Clerk Authentication (TSK-48)
+   * - Tambahkan authorization header dengan Clerk token
+   * - Handle 401/403 errors untuk unauthorized access
+   * - Implementasi optimistic update untuk UX yang lebih baik
+   *
+   * @param id - ID kursus yang akan diupdate statusnya
+   * @param status - Status baru untuk kursus (DRAFT, PUBLISHED, ARCHIVED)
+   * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil diupdate statusnya
+   *
+   *
+   * @throws {Error} Jika terjadi network error atau API error
+   */
+  static async updateCourseStatus(id: string, status: string): Promise<CourseResponse> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/${id}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          // TODO: Tambahkan authorization header di TSK-48
+          // 'Authorization': `Bearer ${clerkToken}`
+        },
+        body: JSON.stringify({ status }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update course status')
+      }
+
+      return data
+    } catch (error) {
+      console.error('Error in updateCourseStatus:', error)
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update course status',
+      }
+    }
+  }
+}
+
+/**
+ * Utility functions untuk transformasi data antara backend dan frontend
+ *
+ * @description
+ * Kumpulan utility functions untuk mengubah format data dari database model
+ * ke format yang sesuai untuk frontend consumption.
+ *
+ * Fungsi-fungsi ini membantu:
+ * - Memformat data untuk display di UI
+ * - Menyederhanakan struktur data untuk frontend
+ * - Memastikan konsistensi format data
+ */
+export const courseAdapterUtils = {
+  /**
+   * Transform Course database model ke CourseMetadata untuk frontend
+   *
+   * @description
+   * Mengubah Course model dari database ke format yang lebih sederhana
+   * untuk digunakan di frontend components.
+   *
+   * @param course - Course object dari database
+   * @returns Object dengan format yang dioptimalkan untuk frontend
+   */
+  transformToMetadata: (course: Course) => ({
+    id: course.id,
+    title: course.title,
+    description: course.description,
+    thumbnail: course.thumbnail || '/globe.svg', // Fallback thumbnail
+    status: course.status,
+    students: course.students,
+    lessons: course.lessons,
+    duration: course.duration,
+    rating: course.rating,
+    category: course.category,
+    createdAt: course.createdAt.toISOString().split('T')[0], // Format: YYYY-MM-DD
+  }),
+
+  /**
+   * Transform array Course ke CourseMetadata[]
+   *
+   * @description
+   * Mengubah array Course objects dari database ke array CourseMetadata
+   * untuk digunakan di frontend components seperti list atau grid.
+   *
+   * @param courses - Array Course objects dari database
+   * @returns Array CourseMetadata objects
+   *
+   */
+  transformArrayToMetadata: (courses: Course[]) =>
+    courses.map(courseAdapterUtils.transformToMetadata),
+}

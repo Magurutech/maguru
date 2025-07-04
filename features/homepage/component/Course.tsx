@@ -107,6 +107,8 @@ export default function Course() {
                   src={course.image}
                   alt={course.title}
                   className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                  width={100}
+                  height={100}
                 />
                 <div className="absolute top-4 left-4">
                   <Badge className={`${getBadgeColor(course.badge)} neu-button`}>

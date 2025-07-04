@@ -12,6 +12,7 @@ export default defineConfig({
     command: 'yarn app:prod',
     url: baseURL,
     reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
   },
   timeout: 120 * 1000,
   fullyParallel: true,

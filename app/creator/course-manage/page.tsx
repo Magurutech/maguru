@@ -10,12 +10,12 @@ import {
   CreateCourseDialog,
   EditCourseDialog,
 } from '@/features/course/course-manage/components'
-import { mockCourses } from '@/features/course/course-manage/types'
+import { metadataCourse } from '@/features/course/course-manage/lib/metadatCourse'
 import { filterCourses } from '@/features/course/course-manage/lib/courseUtils'
 import type { Course } from '@/features/course/course-manage/types'
 
 export default function CourseManagePage() {
-  const [courses, setCourses] = useState<Course[]>(mockCourses)
+  const [courses, setCourses] = useState<Course[]>(metadataCourse)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState<string>('all')
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -40,7 +40,6 @@ export default function CourseManagePage() {
 
       <CourseSearchFilter
         searchQuery={searchQuery}
-        selectedStatus={selectedStatus}
         onSearchChange={setSearchQuery}
         onStatusChange={setSelectedStatus}
         onCreateCourse={() => setIsCreateDialogOpen(true)}
