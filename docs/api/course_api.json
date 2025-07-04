@@ -1,0 +1,648 @@
+{
+  "info": {
+    "name": "Course API - TSK-47",
+    "description": "Postman collection untuk testing Course API endpoints sesuai dengan implementasi TSK-47. Collection ini mencakup semua operasi CRUD untuk metadata kursus.",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "{{$randomUUID}}",
+      "type": "string"
+    },
+    {
+      "key": "creatorId",
+      "value": "user_2abc123def456",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{clerkToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Get All Courses",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "Mengambil daftar semua kursus dengan pagination. Endpoint ini bersifat publik dan tidak memerlukan autentikasi."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"courses\": [\n      {\n        \"id\": \"course-1\",\n        \"title\": \"JavaScript Fundamentals\",\n        \"description\": \"Learn JavaScript basics\",\n        \"thumbnail\": \"/js-thumbnail.jpg\",\n        \"category\": \"Programming\",\n        \"status\": \"published\",\n        \"students\": 100,\n        \"lessons\": 10,\n        \"duration\": \"2 jam\",\n        \"rating\": 4.5,\n        \"creatorId\": \"user_2abc123def456\",\n        \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n        \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 1,\n      \"limit\": 10,\n      \"total\": 1,\n      \"totalPages\": 1\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Course by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Mengambil detail kursus berdasarkan ID. Endpoint ini bersifat publik dan tidak memerlukan autentikasi."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"course-1\",\n    \"title\": \"JavaScript Fundamentals\",\n    \"description\": \"Learn JavaScript basics\",\n    \"thumbnail\": \"/js-thumbnail.jpg\",\n    \"category\": \"Programming\",\n    \"status\": \"published\",\n    \"students\": 100,\n    \"lessons\": 10,\n    \"duration\": \"2 jam\",\n    \"rating\": 4.5,\n    \"creatorId\": \"user_2abc123def456\",\n    \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n    \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n  }\n}"
+        },
+        {
+          "name": "Not Found Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/non-existent-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "non-existent-id"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": false,\n  \"error\": \"Course not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Create Course",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"New Course Title\",\n  \"description\": \"This is a new course description\",\n  \"thumbnail\": \"/new-thumbnail.jpg\",\n  \"category\": \"Programming\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"]
+        },
+        "description": "Membuat kursus baru. Endpoint ini memerlukan autentikasi (akan diimplementasikan di TSK-48)."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Course Title\",\n  \"description\": \"This is a new course description\",\n  \"thumbnail\": \"/new-thumbnail.jpg\",\n  \"category\": \"Programming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"course-2\",\n    \"title\": \"New Course Title\",\n    \"description\": \"This is a new course description\",\n    \"thumbnail\": \"/new-thumbnail.jpg\",\n    \"category\": \"Programming\",\n    \"status\": \"draft\",\n    \"students\": 0,\n    \"lessons\": 0,\n    \"duration\": \"0 jam\",\n    \"rating\": 0.0,\n    \"creatorId\": \"user_2abc123def456\",\n    \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n    \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n  }\n}"
+        },
+        {
+          "name": "Validation Error Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"description\": \"\",\n  \"category\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": false,\n  \"error\": \"Validation failed\",\n  \"details\": [\n    {\n      \"field\": \"title\",\n      \"message\": \"Judul kursus harus diisi\"\n    },\n    {\n      \"field\": \"description\",\n      \"message\": \"Deskripsi kursus harus diisi\"\n    },\n    {\n      \"field\": \"category\",\n      \"message\": \"Kategori harus diisi\"\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Update Course",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated Course Title\",\n  \"description\": \"This is an updated course description\",\n  \"thumbnail\": \"/updated-thumbnail.jpg\",\n  \"category\": \"Updated Programming\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Update metadata kursus berdasarkan ID. Hanya pemilik kursus yang dapat mengupdate (akan divalidasi di TSK-48)."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Course Title\",\n  \"description\": \"This is an updated course description\",\n  \"thumbnail\": \"/updated-thumbnail.jpg\",\n  \"category\": \"Updated Programming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"course-1\",\n    \"title\": \"Updated Course Title\",\n    \"description\": \"This is an updated course description\",\n    \"thumbnail\": \"/updated-thumbnail.jpg\",\n    \"category\": \"Updated Programming\",\n    \"status\": \"published\",\n    \"students\": 100,\n    \"lessons\": 10,\n    \"duration\": \"2 jam\",\n    \"rating\": 4.5,\n    \"creatorId\": \"user_2abc123def456\",\n    \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n    \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n  }\n}"
+        },
+        {
+          "name": "Forbidden Response",
+          "originalRequest": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Course Title\",\n  \"description\": \"This is an updated course description\",\n  \"thumbnail\": \"/updated-thumbnail.jpg\",\n  \"category\": \"Updated Programming\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1"]
+            }
+          },
+          "status": "Forbidden",
+          "code": 403,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": false,\n  \"error\": \"Access denied. You can only update your own courses.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Delete Course",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Hapus kursus secara permanen berdasarkan ID. Hanya pemilik kursus yang dapat menghapus (akan divalidasi di TSK-48)."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"message\": \"Course deleted successfully\"\n}"
+        },
+        {
+          "name": "Not Found Response",
+          "originalRequest": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/non-existent-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "non-existent-id"]
+            }
+          },
+          "status": "Not Found",
+          "code": 404,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": false,\n  \"error\": \"Course not found\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get Courses by Creator",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses?creatorId={{creatorId}}&page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"],
+          "query": [
+            {
+              "key": "creatorId",
+              "value": "{{creatorId}}"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "Mengambil daftar kursus berdasarkan creator ID. Digunakan untuk dashboard creator."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?creatorId=user_2abc123def456&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                {
+                  "key": "creatorId",
+                  "value": "user_2abc123def456"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"courses\": [\n      {\n        \"id\": \"course-1\",\n        \"title\": \"My Course\",\n        \"description\": \"This is my course\",\n        \"thumbnail\": \"/my-thumbnail.jpg\",\n        \"category\": \"Programming\",\n        \"status\": \"published\",\n        \"students\": 50,\n        \"lessons\": 8,\n        \"duration\": \"1.5 jam\",\n        \"rating\": 4.2,\n        \"creatorId\": \"user_2abc123def456\",\n        \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n        \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 1,\n      \"limit\": 10,\n      \"total\": 1,\n      \"totalPages\": 1\n    }\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Update Course Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"published\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}", "status"]
+        },
+        "description": "Update status kursus (draft, published). Hanya pemilik kursus yang dapat mengupdate status (akan divalidasi di TSK-48)."
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"published\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1", "status"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": \"course-1\",\n    \"title\": \"Test Course\",\n    \"description\": \"Test Description\",\n    \"thumbnail\": \"/test-thumbnail.jpg\",\n    \"category\": \"Programming\",\n    \"status\": \"published\",\n    \"students\": 100,\n    \"lessons\": 10,\n    \"duration\": \"2 jam\",\n    \"rating\": 4.5,\n    \"creatorId\": \"user_2abc123def456\",\n    \"createdAt\": \"2024-01-01T00:00:00.000Z\",\n    \"updatedAt\": \"2024-01-01T00:00:00.000Z\"\n  }\n}"
+        },
+        {
+          "name": "Invalid Status Response",
+          "originalRequest": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"invalid-status\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/course-1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "course-1", "status"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n  \"success\": false,\n  \"error\": \"Invalid status. Must be 'draft' or 'published'\"\n}"
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set dynamic variables",
+          "if (pm.collectionVariables.get('courseId') === '{{$randomUUID}}') {",
+          "    pm.collectionVariables.set('courseId', pm.variables.replaceIn('{{$randomUUID}}'));",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Common test script for all requests",
+          "pm.test('Status code is 2xx or 4xx', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400, 401, 403, 404, 500]);",
+          "});",
+          "",
+          "pm.test('Response has correct structure', function () {",
+          "    const response = pm.response.json();",
+          "    pm.expect(response).to.have.property('success');",
+          "    pm.expect(typeof response.success).to.equal('boolean');",
+          "});",
+          "",
+          "pm.test('Response time is less than 2000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});"
+        ]
+      }
+    }
+  ]
+}

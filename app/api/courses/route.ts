@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CourseService } from '@/features/course/services/courseService'
+import { CourseService } from '@/features/course/course-manage/services/courseService'
 import { CourseSchema } from '@/features/course/types'
 
 const courseService = new CourseService()

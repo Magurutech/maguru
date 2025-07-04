@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import type { Course, CreateCourseRequest, UpdateCourseRequest, PaginationInfo } from '../types'
-import { CourseStatus } from '../types'
+import type { Course, CreateCourseRequest, PaginationInfo } from '../../types'
+import { CourseStatus } from '@prisma/client'
 
 /**
  * Service class untuk mengelola operasi CRUD kursus
@@ -114,7 +114,7 @@ export class CourseService {
    * @throws {Error} Jika terjadi error saat update database
    *
    */
-  async updateCourse(id: string, data: UpdateCourseRequest, creatorId: string): Promise<Course> {
+  async updateCourse(id: string, data: CreateCourseRequest, creatorId: string): Promise<Course> {
     // Verifikasi ownership
     const existingCourse = await prisma.course.findFirst({
       where: { id, creatorId },

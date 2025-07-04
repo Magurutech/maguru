@@ -1,12 +1,13 @@
 import { z } from 'zod'
+import { CourseStatus as PrismaCourseStatus } from '@prisma/client'
 
 // Database Models (sesuai dengan Prisma schema)
 export interface Course {
   id: string
   title: string
   description: string
-  thumbnail?: string
-  status: CourseStatus
+  thumbnail: string | null
+  status: PrismaCourseStatus
   students: number
   lessons: number
   duration: string
@@ -17,11 +18,8 @@ export interface Course {
   updatedAt: Date
 }
 
-// Enums
-export enum CourseStatus {
-  DRAFT = 'DRAFT',
-  PUBLISHED = 'PUBLISHED',
-}
+// Re-export Prisma enum untuk konsistensi
+export { PrismaCourseStatus as CourseStatus }
 
 // Request/Response Types
 export interface CreateCourseRequest {
@@ -66,7 +64,7 @@ export const CourseSchema = z.object({
 })
 
 // Utility Types
-export type CourseStatusType = keyof typeof CourseStatus
+export type CourseStatusType = keyof typeof PrismaCourseStatus
 
 // Metadata untuk frontend (sesuai dengan contoh yang diminta)
 export interface CourseMetadata {
@@ -74,7 +72,7 @@ export interface CourseMetadata {
   title: string
   description: string
   thumbnail: string
-  status: CourseStatus
+  status: PrismaCourseStatus
   students: number
   lessons: number
   duration: string

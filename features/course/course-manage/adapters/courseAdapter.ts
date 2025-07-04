@@ -4,7 +4,7 @@ import type {
   UpdateCourseRequest,
   CourseListResponse,
   CourseResponse,
-} from '../types'
+} from '../../types'
 
 const API_BASE_URL = '/api/courses'
 
