@@ -9,6 +9,9 @@ import { getAuthHeader } from '@/lib/getAuthHeader'
 
 const API_BASE_URL = '/api/courses'
 
+// Timeout configuration untuk designing for failure
+const API_TIMEOUT = 10000 // 10 seconds
+
 /**
  * Course Adapter - Client-side interface untuk komunikasi dengan API
  *
@@ -20,6 +23,7 @@ const API_BASE_URL = '/api/courses'
  * - Transformasi data untuk frontend consumption
  * - Retry logic dan fallback mechanisms
  * - Clerk authentication integration
+ * - Timeout handling dan graceful degradation
  *
  * Semua method mengembalikan response yang konsisten dengan format:
  * - Success: { success: true, data: ... }
@@ -27,6 +31,33 @@ const API_BASE_URL = '/api/courses'
  *
  */
 export class CourseAdapter {
+  /**
+   * Utility function untuk membuat fetch request dengan timeout
+   */
+  private static async fetchWithTimeout(
+    url: string,
+    options: RequestInit,
+    timeout: number = API_TIMEOUT,
+  ): Promise<Response> {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+      })
+      clearTimeout(timeoutId)
+      return response
+    } catch (error) {
+      clearTimeout(timeoutId)
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Request timeout - server tidak merespons dalam waktu yang ditentukan')
+      }
+      throw error
+    }
+  }
+
   /**
    * Mengambil daftar kursus dengan pagination dan filter opsional
    *
@@ -57,7 +88,7 @@ export class CourseAdapter {
         headers['Authorization'] = authHeader
       }
 
-      const response = await fetch(`${API_BASE_URL}?${params}`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
         method: 'GET',
         headers,
       })
@@ -72,12 +103,24 @@ export class CourseAdapter {
         if (response.status === 403) {
           throw new Error('Access denied. You do not have permission to view courses.')
         }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to fetch courses')
       }
 
       return data
     } catch (error) {
       console.error('Error in getCourses:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch courses',
@@ -109,7 +152,7 @@ export class CourseAdapter {
         headers['Authorization'] = authHeader
       }
 
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'GET',
         headers,
       })
@@ -124,12 +167,27 @@ export class CourseAdapter {
         if (response.status === 403) {
           throw new Error('Access denied. You do not have permission to view this course.')
         }
+        if (response.status === 404) {
+          throw new Error('Course not found.')
+        }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to fetch course')
       }
 
       return data
     } catch (error) {
       console.error('Error in getCourseById:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch course',
@@ -167,7 +225,7 @@ export class CourseAdapter {
       }
       headers['Authorization'] = authHeader
 
-      const response = await fetch(API_BASE_URL, {
+      const response = await this.fetchWithTimeout(API_BASE_URL, {
         method: 'POST',
         headers,
         body: JSON.stringify(courseData),
@@ -183,12 +241,27 @@ export class CourseAdapter {
         if (response.status === 403) {
           throw new Error('Access denied. Only creators and admins can create courses.')
         }
+        if (response.status === 422) {
+          throw new Error('Data tidak valid. Silakan periksa kembali input Anda.')
+        }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to create course')
       }
 
       return data
     } catch (error) {
       console.error('Error in createCourse:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to create course',
@@ -227,7 +300,7 @@ export class CourseAdapter {
       }
       headers['Authorization'] = authHeader
 
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers,
         body: JSON.stringify(courseData),
@@ -246,12 +319,27 @@ export class CourseAdapter {
         if (response.status === 404) {
           throw new Error('Course not found or you do not have access to it.')
         }
+        if (response.status === 422) {
+          throw new Error('Data tidak valid. Silakan periksa kembali input Anda.')
+        }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to update course')
       }
 
       return data
     } catch (error) {
       console.error('Error in updateCourse:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to update course',
@@ -292,7 +380,7 @@ export class CourseAdapter {
       }
       headers['Authorization'] = authHeader
 
-      const response = await fetch(`${API_BASE_URL}/${id}`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
         headers,
       })
@@ -310,12 +398,24 @@ export class CourseAdapter {
         if (response.status === 404) {
           throw new Error('Course not found or you do not have access to it.')
         }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to delete course')
       }
 
       return data
     } catch (error) {
       console.error('Error in deleteCourse:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to delete course',
@@ -365,7 +465,7 @@ export class CourseAdapter {
       }
       headers['Authorization'] = authHeader
 
-      const response = await fetch(`${API_BASE_URL}?${params}`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
         method: 'GET',
         headers,
       })
@@ -380,12 +480,24 @@ export class CourseAdapter {
         if (response.status === 403) {
           throw new Error('Access denied. You do not have permission to view these courses.')
         }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to fetch creator courses')
       }
 
       return data
     } catch (error) {
       console.error('Error in getCoursesByCreator:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch creator courses',
@@ -424,7 +536,7 @@ export class CourseAdapter {
       }
       headers['Authorization'] = authHeader
 
-      const response = await fetch(`${API_BASE_URL}/${id}/status`, {
+      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}/status`, {
         method: 'PATCH',
         headers,
         body: JSON.stringify({ status }),
@@ -443,12 +555,27 @@ export class CourseAdapter {
         if (response.status === 404) {
           throw new Error('Course not found or you do not have access to it.')
         }
+        if (response.status === 422) {
+          throw new Error('Status tidak valid. Silakan pilih status yang benar.')
+        }
+        if (response.status === 503) {
+          throw new Error('Service temporarily unavailable. Please try again later.')
+        }
         throw new Error(data.error || 'Failed to update course status')
       }
 
       return data
     } catch (error) {
       console.error('Error in updateCourseStatus:', error)
+
+      // Graceful fallback untuk network errors
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          success: false,
+          error: 'Koneksi lambat. Silakan coba lagi.',
+        }
+      }
+
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to update course status',

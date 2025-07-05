@@ -1,10 +1,10 @@
 {
-  "numTotalTests": 77,
-  "numPassedTests": 77,
+  "numTotalTests": 88,
+  "numPassedTests": 88,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-05T02:19:39.219Z",
-  "endTime": "2025-07-05T02:19:43.615Z",
+  "startTime": "2025-07-05T12:05:33.484Z",
+  "endTime": "2025-07-05T12:05:39.235Z",
   "testResults": [
     {
       "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\course-manage\\adapters\\courseAdapter.test.ts",
@@ -18,7 +18,7 @@
           "status": "passed",
           "title": "should make successful GET request",
           "failureMessages": [],
-          "duration": 6
+          "duration": 13
         },
         {
           "ancestorTitles": [
@@ -29,7 +29,7 @@
           "status": "passed",
           "title": "should handle network errors",
           "failureMessages": [],
-          "duration": 1
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -40,7 +40,7 @@
           "status": "passed",
           "title": "should handle API error responses",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -51,7 +51,7 @@
           "status": "passed",
           "title": "should make successful GET request",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -62,7 +62,7 @@
           "status": "passed",
           "title": "should handle 404 error",
           "failureMessages": [],
-          "duration": 0
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -73,7 +73,7 @@
           "status": "passed",
           "title": "should make successful POST request with auth",
           "failureMessages": [],
-          "duration": 0
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -95,7 +95,7 @@
           "status": "passed",
           "title": "should handle 401 Unauthorized from API",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -117,7 +117,7 @@
           "status": "passed",
           "title": "should handle 400 Bad Request (validation failed)",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -139,7 +139,7 @@
           "status": "passed",
           "title": "should make successful PUT request with auth",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -161,7 +161,7 @@
           "status": "passed",
           "title": "should handle forbidden access",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -172,7 +172,7 @@
           "status": "passed",
           "title": "should make successful DELETE request with auth",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -183,7 +183,7 @@
           "status": "passed",
           "title": "should handle missing authentication",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -205,7 +205,7 @@
           "status": "passed",
           "title": "should make successful GET request with creatorId filter",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -216,7 +216,7 @@
           "status": "passed",
           "title": "should handle missing authentication",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -227,7 +227,7 @@
           "status": "passed",
           "title": "should make successful PATCH request with auth",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -255,7 +255,7 @@
           "status": "passed",
           "title": "should create course successfully with valid data",
           "failureMessages": [],
-          "duration": 7
+          "duration": 9
         },
         {
           "ancestorTitles": [
@@ -266,7 +266,7 @@
           "status": "passed",
           "title": "should handle database connection error",
           "failureMessages": [],
-          "duration": 14
+          "duration": 15
         },
         {
           "ancestorTitles": [
@@ -288,7 +288,7 @@
           "status": "passed",
           "title": "should return paginated courses list",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -299,7 +299,7 @@
           "status": "passed",
           "title": "should handle empty database",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -310,7 +310,7 @@
           "status": "passed",
           "title": "should filter by creatorId correctly",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -321,7 +321,7 @@
           "status": "passed",
           "title": "should handle invalid pagination parameters",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -354,7 +354,7 @@
           "status": "passed",
           "title": "should handle database query error",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -365,7 +365,7 @@
           "status": "passed",
           "title": "should update course successfully",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -376,7 +376,7 @@
           "status": "passed",
           "title": "should reject update for non-owner",
           "failureMessages": [],
-          "duration": 5
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -453,7 +453,7 @@
           "status": "passed",
           "title": "should call getCourses with creatorId filter",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         }
       ],
       "failureMessage": null
@@ -470,7 +470,7 @@
           "status": "passed",
           "title": "should return correct CSS classes for DRAFT status",
           "failureMessages": [],
-          "duration": 5
+          "duration": 8
         },
         {
           "ancestorTitles": [
@@ -481,7 +481,7 @@
           "status": "passed",
           "title": "should return correct CSS classes for PUBLISHED status",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -492,7 +492,7 @@
           "status": "passed",
           "title": "should return default color for invalid status",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -503,7 +503,7 @@
           "status": "passed",
           "title": "should return Indonesian text for DRAFT status",
           "failureMessages": [],
-          "duration": 1
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -514,7 +514,7 @@
           "status": "passed",
           "title": "should return Indonesian text for PUBLISHED status",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -536,7 +536,7 @@
           "status": "passed",
           "title": "should filter by title search",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -547,7 +547,7 @@
           "status": "passed",
           "title": "should filter by description search",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -558,7 +558,7 @@
           "status": "passed",
           "title": "should filter by status",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -569,7 +569,7 @@
           "status": "passed",
           "title": "should filter by combined search and status",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -580,7 +580,7 @@
           "status": "passed",
           "title": "should return all courses for empty search query",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -602,7 +602,7 @@
           "status": "passed",
           "title": "should filter by DRAFT status",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -613,7 +613,7 @@
           "status": "passed",
           "title": "should filter by PUBLISHED status",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -624,7 +624,7 @@
           "status": "passed",
           "title": "should return all courses without status filter",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -635,7 +635,7 @@
           "status": "passed",
           "title": "should format 60 minutes to \"1 jam\"",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -679,7 +679,7 @@
           "status": "passed",
           "title": "should format 4.8 to \"4.8\"",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -712,7 +712,7 @@
           "status": "passed",
           "title": "should format 1000 to \"1.000\"",
           "failureMessages": [],
-          "duration": 23
+          "duration": 103
         },
         {
           "ancestorTitles": [
@@ -723,7 +723,7 @@
           "status": "passed",
           "title": "should format 10000 to \"10.000\"",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -734,7 +734,7 @@
           "status": "passed",
           "title": "should format 100000 to \"100.000\"",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -756,7 +756,7 @@
           "status": "passed",
           "title": "should return full URL for valid path",
           "failureMessages": [],
-          "duration": 1
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -789,7 +789,7 @@
           "status": "passed",
           "title": "should return path as is for full URL",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -800,7 +800,7 @@
           "status": "passed",
           "title": "should use fallback URL when env variable is not set",
           "failureMessages": [],
-          "duration": 3
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -811,7 +811,7 @@
           "status": "passed",
           "title": "should validate correct course data",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -833,7 +833,7 @@
           "status": "passed",
           "title": "should reject empty description",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -867,6 +867,133 @@
           "title": "should handle whitespace-only values",
           "failureMessages": [],
           "duration": 0
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\course-manage\\hooks\\useCourse.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Initial State"
+          ],
+          "fullName": "useCourse Hook Initial State should initialize with default state",
+          "status": "passed",
+          "title": "should initialize with default state",
+          "failureMessages": [],
+          "duration": 25
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourses"
+          ],
+          "fullName": "useCourse Hook fetchCourses should fetch courses successfully",
+          "status": "passed",
+          "title": "should fetch courses successfully",
+          "failureMessages": [],
+          "duration": 13
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourses"
+          ],
+          "fullName": "useCourse Hook fetchCourses should handle fetch courses error",
+          "status": "passed",
+          "title": "should handle fetch courses error",
+          "failureMessages": [],
+          "duration": 10
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourseById"
+          ],
+          "fullName": "useCourse Hook fetchCourseById should fetch course by ID successfully",
+          "status": "passed",
+          "title": "should fetch course by ID successfully",
+          "failureMessages": [],
+          "duration": 21
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourseById"
+          ],
+          "fullName": "useCourse Hook fetchCourseById should handle fetch course by ID error",
+          "status": "passed",
+          "title": "should handle fetch course by ID error",
+          "failureMessages": [],
+          "duration": 13
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "createCourse"
+          ],
+          "fullName": "useCourse Hook createCourse should create course successfully",
+          "status": "passed",
+          "title": "should create course successfully",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "createCourse"
+          ],
+          "fullName": "useCourse Hook createCourse should handle create course error",
+          "status": "passed",
+          "title": "should handle create course error",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "updateCourse"
+          ],
+          "fullName": "useCourse Hook updateCourse should update course successfully",
+          "status": "passed",
+          "title": "should update course successfully",
+          "failureMessages": [],
+          "duration": 34
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "deleteCourse"
+          ],
+          "fullName": "useCourse Hook deleteCourse should delete course successfully",
+          "status": "passed",
+          "title": "should delete course successfully",
+          "failureMessages": [],
+          "duration": 34
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourse Hook Utility Functions should clear error",
+          "status": "passed",
+          "title": "should clear error",
+          "failureMessages": [],
+          "duration": 14
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourse Hook Utility Functions should reset state",
+          "status": "passed",
+          "title": "should reset state",
+          "failureMessages": [],
+          "duration": 19
         }
       ],
       "failureMessage": null

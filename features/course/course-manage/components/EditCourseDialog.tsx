@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,78 +23,81 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { Upload, ImageIcon } from 'lucide-react'
+import { Upload, ImageIcon, AlertCircle } from 'lucide-react'
+import { useCourseManagement } from '../hooks/useCourseManagement'
+import { useCourseDialog } from '../hooks/useCourseDialog'
+import { UpdateCourseRequest } from '../../types'
 
-interface Course {
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  status: 'draft' | 'published' | 'archived'
-  students: number
-  lessons: number
-  duration: string
-  rating: number
-  category: string
-  createdAt: string
-}
+export function EditCourseDialog() {
+  // Component state untuk UI interactions
+  const [isUploadHovered, setIsUploadHovered] = useState(false)
 
-interface EditCourseDialogProps {
-  course: Course | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onCourseUpdated: (course: Course) => void
-}
+  // Feature state dari hooks
+  const { updateCourseWithValidation, error: managementError, clearError } = useCourseManagement()
+  const {
+    activeDialog,
+    selectedCourse,
+    formState,
+    updateFormData,
+    validateForm,
+    closeDialog,
+    handleFileUpload,
+    setSubmitting,
+  } = useCourseDialog()
 
-export function EditCourseDialog({
-  course,
-  open,
-  onOpenChange,
-  onCourseUpdated,
-}: EditCourseDialogProps) {
-  const [formData, setFormData] = useState<{
-    title: string
-    description: string
-    category: string
-    thumbnail: string
-    status: 'draft' | 'published' | 'archived'
-  }>({
-    title: '',
-    description: '',
-    category: '',
-    thumbnail: '',
-    status: 'draft',
-  })
-
-  useEffect(() => {
-    if (course) {
-      setFormData({
-        title: course.title,
-        description: course.description,
-        category: course.category.toLowerCase(),
-        thumbnail: course.thumbnail,
-        status: course.status,
-      })
-    }
-  }, [course])
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (!course) return
-
-    const updatedCourse = {
-      ...course,
-      ...formData,
-    }
-
-    onCourseUpdated(updatedCourse)
+  // Handle input change dengan proper error handling
+  const handleInputChange = (field: string, value: string) => {
+    clearError() // Clear previous errors when user starts typing
+    updateFormData({ [field]: value })
   }
 
-  if (!course) return null
+  // Handle form submission dengan proper error handling
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!selectedCourse || !validateForm()) {
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      const updatedCourse: UpdateCourseRequest = {
+        id: selectedCourse.id,
+        ...formState.data,
+      }
+
+      const success = await updateCourseWithValidation(selectedCourse.id, updatedCourse)
+
+      if (success) {
+        closeDialog()
+      }
+    } catch (error) {
+      console.error('Failed to update course:', error)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  // Handle file selection dengan error handling
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      try {
+        await handleFileUpload(file)
+      } catch (error) {
+        console.error('File upload failed:', error)
+      }
+    }
+  }
+
+  // Check if form is valid
+  const isFormValid = formState.data.title && formState.data.description && formState.data.category
+
+  if (!selectedCourse) return null
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={activeDialog === 'edit'} onOpenChange={(open) => !open && closeDialog()}>
       <DialogContent className="max-w-2xl bg-ancient-fantasy border-secondary-300 glass-panel">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-beige-900 flex items-center gap-2 font-serif">
@@ -106,6 +109,22 @@ export function EditCourseDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Error Display */}
+          {(managementError || formState.errors.length > 0) && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-red-800">
+                <AlertCircle className="h-4 w-4" />
+                <span className="font-medium">Terjadi kesalahan:</span>
+              </div>
+              <ul className="mt-2 text-red-700 text-sm space-y-1">
+                {managementError && <li>{managementError}</li>}
+                {formState.errors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Course Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-beige-900 font-medium">
@@ -113,10 +132,11 @@ export function EditCourseDialog({
             </Label>
             <Input
               id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              value={formState.data.title || ''}
+              onChange={(e) => handleInputChange('title', e.target.value)}
               placeholder="Contoh: Petualangan Matematika Nusantara"
               required
+              disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200"
             />
           </div>
@@ -128,11 +148,12 @@ export function EditCourseDialog({
             </Label>
             <Textarea
               id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formState.data.description || ''}
+              onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Jelaskan tentang kursus Anda dan apa yang akan dipelajari siswa..."
               required
               rows={4}
+              disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200 resize-none"
             />
           </div>
@@ -144,8 +165,9 @@ export function EditCourseDialog({
                 Kategori *
               </Label>
               <Select
-                value={formData.category}
-                onValueChange={(value) => setFormData({ ...formData, category: value })}
+                value={formState.data.category || ''}
+                onValueChange={(value) => handleInputChange('category', value)}
+                disabled={formState.isSubmitting}
               >
                 <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
                   <SelectValue placeholder="Pilih kategori" />
@@ -166,18 +188,17 @@ export function EditCourseDialog({
                 Status
               </Label>
               <Select
-                value={formData.status}
-                onValueChange={(value: 'draft' | 'published' | 'archived') =>
-                  setFormData({ ...formData, status: value })
-                }
+                value={formState.data.status || 'DRAFT'}
+                onValueChange={(value) => handleInputChange('status', value)}
+                disabled={formState.isSubmitting}
               >
                 <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">📝 Draft</SelectItem>
-                  <SelectItem value="published">✨ Diterbitkan</SelectItem>
-                  <SelectItem value="archived">📦 Diarsipkan</SelectItem>
+                  <SelectItem value="DRAFT">📝 Draft</SelectItem>
+                  <SelectItem value="PUBLISHED">✨ Diterbitkan</SelectItem>
+                  <SelectItem value="ARCHIVED">📦 Diarsipkan</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -187,19 +208,21 @@ export function EditCourseDialog({
           <div className="grid grid-cols-3 gap-4">
             <Card className="bg-white/60 border-[#5AC88A]/20">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">{course.students}</div>
+                <div className="text-2xl font-bold text-[#7B5B2C]">{selectedCourse.students}</div>
                 <div className="text-sm text-[#997F58]">Siswa</div>
               </CardContent>
             </Card>
             <Card className="bg-white/60 border-[#FFB148]/20">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">{course.lessons}</div>
+                <div className="text-2xl font-bold text-[#7B5B2C]">{selectedCourse.lessons}</div>
                 <div className="text-sm text-[#997F58]">Pelajaran</div>
               </CardContent>
             </Card>
             <Card className="bg-white/60 border-[#FF4D4D]/20">
               <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">{course.rating || 'N/A'}</div>
+                <div className="text-2xl font-bold text-[#7B5B2C]">
+                  {selectedCourse.rating || 'N/A'}
+                </div>
                 <div className="text-sm text-[#997F58]">Rating</div>
               </CardContent>
             </Card>
@@ -208,18 +231,41 @@ export function EditCourseDialog({
           {/* Thumbnail Upload */}
           <div className="space-y-2">
             <Label className="text-beige-900 font-medium">Thumbnail Kursus</Label>
-            <Card className="border-2 border-dashed border-secondary-400 bg-beige-50 hover:bg-white/60 transition-colors card-ancient">
+            <Card
+              className={`border-2 border-dashed border-secondary-400 bg-beige-50 hover:bg-white/60 transition-all duration-300 card-ancient ${
+                isUploadHovered ? 'scale-[1.02] shadow-lg' : ''
+              }`}
+              onMouseEnter={() => setIsUploadHovered(true)}
+              onMouseLeave={() => setIsUploadHovered(false)}
+            >
               <CardContent className="p-8">
                 <div className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-secondary-200 rounded-full flex items-center justify-center mb-4 whimsical-bounce">
+                  <div
+                    className={`mx-auto w-16 h-16 bg-secondary-200 rounded-full flex items-center justify-center mb-4 transition-all duration-300 ${
+                      isUploadHovered ? 'scale-110' : ''
+                    }`}
+                  >
                     <ImageIcon className="h-8 w-8 text-secondary-600" />
                   </div>
                   <h3 className="text-lg font-medium text-beige-900 mb-2">Update Thumbnail</h3>
                   <p className="text-beige-700 text-sm mb-4">Pilih gambar baru untuk kursus Anda</p>
-                  <Button type="button" variant="outline" className="btn-secondary hover-glow">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Ganti File
-                  </Button>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    id="thumbnail-upload-edit"
+                  />
+                  <label htmlFor="thumbnail-upload-edit">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="btn-secondary hover-glow cursor-pointer"
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Ganti File
+                    </Button>
+                  </label>
                   <p className="text-xs text-beige-600 mt-2">PNG, JPG hingga 2MB</p>
                 </div>
               </CardContent>
@@ -230,7 +276,7 @@ export function EditCourseDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={closeDialog}
               className="border-beige-300 text-beige-900 hover:bg-beige-100 neu-button"
             >
               Batal
@@ -238,9 +284,9 @@ export function EditCourseDialog({
             <Button
               type="submit"
               className="btn-primary magical-glow"
-              disabled={!formData.title || !formData.description || !formData.category}
+              disabled={!isFormValid || formState.isSubmitting}
             >
-              💾 Simpan Perubahan
+              {formState.isSubmitting ? 'Menyimpan...' : '💾 Simpan Perubahan'}
             </Button>
           </DialogFooter>
         </form>

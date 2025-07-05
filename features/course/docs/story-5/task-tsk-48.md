@@ -59,6 +59,9 @@ Application/Business Logic Layer (Hooks)
 ├── useCourseSearch.ts
 ├── useCourseDialog.ts
 
+High-level hooks Logic Layer (Hooks)
+├── useCourse.ts
+
 Layer Context
 └── CourseManagementContext.tsx
 

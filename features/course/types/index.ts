@@ -27,10 +27,28 @@ export interface CreateCourseRequest {
   description: string
   category: string
   thumbnail?: string
+  status?: PrismaCourseStatus
 }
 
 export interface UpdateCourseRequest extends CreateCourseRequest {
   id: string
+}
+
+// Form interfaces untuk Create dan Edit dialogs
+export interface CreateCourseFormData {
+  title: string
+  description: string
+  category: string
+  thumbnail: string
+  status: PrismaCourseStatus
+}
+
+export interface EditCourseFormData {
+  title: string
+  description: string
+  category: string
+  thumbnail: string
+  status: PrismaCourseStatus
 }
 
 export interface CourseResponse {
@@ -61,6 +79,7 @@ export const CourseSchema = z.object({
   description: z.string().min(1, 'Deskripsi harus diisi').max(500, 'Deskripsi terlalu panjang'),
   category: z.string().min(1, 'Kategori harus diisi').max(50, 'Kategori terlalu panjang'),
   thumbnail: z.string().optional(),
+  status: z.nativeEnum(PrismaCourseStatus).optional(),
 })
 
 // Utility Types

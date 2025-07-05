@@ -2,7 +2,7 @@
 
 import type React from 'react'
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -23,74 +23,92 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { Upload, ImageIcon } from 'lucide-react'
+import { Upload, AlertCircle } from 'lucide-react'
+import { useCourseManagement } from '../hooks/useCourseManagement'
+import { useCourseDialog } from '../hooks/useCourseDialog'
+import { CreateCourseRequest } from '../../types'
+import Image from 'next/image'
 
-interface Course {
-  id?: string
-  title: string
-  description: string
-  thumbnail: string
-  status: 'draft' | 'published' | 'archived'
-  students: number
-  lessons: number
-  duration: string
-  rating: number
-  category: string
-  createdAt: string
-}
+export function CreateCourseDialog() {
+  // Component state untuk UI interactions ONLY
+  const [isUploadHovered, setIsUploadHovered] = useState(false)
 
-interface CreateCourseDialogProps {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onCourseCreated: (course: Course) => void
-}
+  // Feature state dari hooks
+  const { createCourseWithValidation, error: managementError, clearError } = useCourseManagement()
+  const {
+    activeDialog,
+    formState,
+    updateFormData,
+    validateForm,
+    resetForm,
+    closeDialog,
+    handleFileUpload,
+    setSubmitting,
+  } = useCourseDialog()
 
-export function CreateCourseDialog({
-  open,
-  onOpenChange,
-  onCourseCreated,
-}: CreateCourseDialogProps) {
-  const [formData, setFormData] = useState<{
-    title: string
-    description: string
-    category: string
-    thumbnail: string
-    status: 'draft' | 'published' | 'archived'
-  }>({
-    title: '',
-    description: '',
-    category: '',
-    thumbnail: '',
-    status: 'draft',
-  })
+  // Handle input change dengan proper error handling
+  const handleInputChange = useCallback(
+    (field: string, value: string) => {
+      clearError() // Clear previous errors when user starts typing
+      updateFormData({ [field]: value })
+    },
+    [updateFormData, clearError],
+  )
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  // Handle form submission dengan proper error handling
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
 
-    const newCourse: Course = {
-      ...formData,
-      thumbnail: formData.thumbnail || '/placeholder.svg?height=200&width=300',
-      students: 0,
-      lessons: 0,
-      duration: '0 jam',
-      rating: 0,
-      createdAt: new Date().toISOString().split('T')[0],
-    }
+      if (!validateForm()) {
+        return
+      }
 
-    onCourseCreated(newCourse)
+      setSubmitting(true)
 
-    // Reset form
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      thumbnail: '',
-      status: 'draft',
-    })
-  }
+      try {
+        const success = await createCourseWithValidation(formState.data as CreateCourseRequest)
+
+        if (success) {
+          resetForm()
+          closeDialog()
+        }
+      } catch (error) {
+        console.error('Failed to create course:', error)
+      } finally {
+        setSubmitting(false)
+      }
+    },
+    [
+      validateForm,
+      createCourseWithValidation,
+      formState.data,
+      resetForm,
+      closeDialog,
+      setSubmitting,
+    ],
+  )
+
+  // Handle file selection dengan error handling
+  const handleFileSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0]
+      if (file) {
+        try {
+          await handleFileUpload(file)
+        } catch (error) {
+          console.error('File upload failed:', error)
+        }
+      }
+    },
+    [handleFileUpload],
+  )
+
+  // Check if form is valid
+  const isFormValid = formState.data.title && formState.data.description && formState.data.category
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={activeDialog === 'create'} onOpenChange={(open) => !open && closeDialog()}>
       <DialogContent className="max-w-2xl bg-ancient-fantasy border-secondary-300 glass-panel">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-beige-900 flex items-center gap-2 font-serif">
@@ -102,6 +120,22 @@ export function CreateCourseDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Error Display */}
+          {(managementError || formState.errors.length > 0) && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-center gap-2 text-red-800">
+                <AlertCircle className="h-4 w-4" />
+                <span className="font-medium">Terjadi kesalahan:</span>
+              </div>
+              <ul className="mt-2 text-red-700 text-sm space-y-1">
+                {managementError && <li>{managementError}</li>}
+                {formState.errors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* Course Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-beige-900 font-medium">
@@ -109,10 +143,11 @@ export function CreateCourseDialog({
             </Label>
             <Input
               id="title"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              value={formState.data.title || ''}
+              onChange={(e) => handleInputChange('title', e.target.value)}
               placeholder="Contoh: Petualangan Matematika Nusantara"
               required
+              disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200"
             />
           </div>
@@ -124,11 +159,12 @@ export function CreateCourseDialog({
             </Label>
             <Textarea
               id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              value={formState.data.description || ''}
+              onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Jelaskan tentang kursus Anda dan apa yang akan dipelajari siswa..."
               required
               rows={4}
+              disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200 resize-none"
             />
           </div>
@@ -140,8 +176,9 @@ export function CreateCourseDialog({
                 Kategori *
               </Label>
               <Select
-                value={formData.category}
-                onValueChange={(value) => setFormData({ ...formData, category: value })}
+                value={formState.data.category || ''}
+                onValueChange={(value) => handleInputChange('category', value)}
+                disabled={formState.isSubmitting}
               >
                 <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
                   <SelectValue placeholder="Pilih kategori" />
@@ -162,17 +199,17 @@ export function CreateCourseDialog({
                 Status
               </Label>
               <Select
-                value={formData.status}
-                onValueChange={(value: 'draft' | 'published' | 'archived') =>
-                  setFormData({ ...formData, status: value })
-                }
+                value={formState.data.status || 'DRAFT'}
+                onValueChange={(value) => handleInputChange('status', value)}
+                disabled={formState.isSubmitting}
               >
                 <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">📝 Draft</SelectItem>
-                  <SelectItem value="published">✨ Diterbitkan</SelectItem>
+                  <SelectItem value="DRAFT">📝 Draft</SelectItem>
+                  <SelectItem value="PUBLISHED">✅ Dipublikasi</SelectItem>
+                  <SelectItem value="ARCHIVED">📦 Diarsipkan</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -181,41 +218,85 @@ export function CreateCourseDialog({
           {/* Thumbnail Upload */}
           <div className="space-y-2">
             <Label className="text-beige-900 font-medium">Thumbnail Kursus</Label>
-            <Card className="border-2 border-dashed border-secondary-400 bg-beige-50 hover:bg-white/60 transition-colors card-ancient">
-              <CardContent className="p-8">
-                <div className="text-center">
-                  <div className="mx-auto w-16 h-16 bg-secondary-200 rounded-full flex items-center justify-center mb-4 whimsical-bounce">
-                    <ImageIcon className="h-8 w-8 text-secondary-600" />
-                  </div>
-                  <h3 className="text-lg font-medium text-beige-900 mb-2">Upload Thumbnail</h3>
-                  <p className="text-beige-700 text-sm mb-4">
-                    Pilih gambar yang menarik untuk kursus Anda
-                  </p>
-                  <Button type="button" variant="outline" className="btn-secondary hover-glow">
-                    <Upload className="h-4 w-4 mr-2" />
-                    Pilih File
-                  </Button>
-                  <p className="text-xs text-beige-600 mt-2">PNG, JPG hingga 2MB</p>
+            <Card
+              className={`relative border-2 border-dashed transition-all duration-300 ${
+                isUploadHovered
+                  ? 'border-secondary-400 bg-secondary-50'
+                  : 'border-beige-300 hover:border-secondary-400'
+              }`}
+              onMouseEnter={() => setIsUploadHovered(true)}
+              onMouseLeave={() => setIsUploadHovered(false)}
+            >
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  {formState.data.thumbnail ? (
+                    <div className="relative">
+                      <Image
+                        src={formState.data.thumbnail}
+                        alt="Course thumbnail"
+                        className="w-32 h-24 object-cover rounded-lg"
+                        width={128}
+                        height={96}
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleInputChange('thumbnail', '')}
+                        disabled={formState.isSubmitting}
+                        className="absolute -top-2 -right-2 bg-white border-red-300 text-red-600 hover:bg-red-50"
+                      >
+                        ×
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Upload
+                        className={`h-12 w-12 transition-colors duration-300 ${
+                          isUploadHovered ? 'text-secondary-600' : 'text-beige-600'
+                        }`}
+                      />
+                      <div className="text-center">
+                        <p className="text-sm text-beige-700">Klik untuk upload atau drag & drop</p>
+                        <p className="text-xs text-beige-600 mt-1">PNG, JPG, WebP (max 5MB)</p>
+                      </div>
+                    </>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    disabled={formState.isSubmitting}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <DialogFooter className="gap-2">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="border-beige-300 text-beige-900 hover:bg-beige-100 neu-button"
+              onClick={closeDialog}
+              disabled={formState.isSubmitting}
+              className="btn-secondary"
             >
               Batal
             </Button>
             <Button
               type="submit"
+              disabled={!isFormValid || formState.isSubmitting}
               className="btn-primary magical-glow"
-              disabled={!formData.title || !formData.description || !formData.category}
             >
-              🚀 Buat Kursus
+              {formState.isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Membuat Kursus...
+                </>
+              ) : (
+                'Buat Kursus'
+              )}
             </Button>
           </DialogFooter>
         </form>

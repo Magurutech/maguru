@@ -18,7 +18,7 @@ const mockFetch = jest.fn()
 global.fetch = mockFetch
 
 // Mock the module with getAuthHeader as jest.fn()
-jest.mock('../../../../features/auth/services/getAuthHeader', () => ({
+jest.mock('../../../../lib/getAuthHeader', () => ({
   getAuthHeader: jest.fn(),
 }))
 
@@ -59,6 +59,7 @@ describe('CourseAdapter', () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -118,6 +119,7 @@ describe('CourseAdapter', () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -127,7 +129,7 @@ describe('CourseAdapter', () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
-        json: async () => ({ error: 'Course not found' }),
+        json: async () => ({ error: 'Course not found.' }),
       })
 
       // Act
@@ -136,7 +138,7 @@ describe('CourseAdapter', () => {
       // Assert
       expect(result).toEqual({
         success: false,
-        error: 'Course not found',
+        error: 'Course not found.',
       })
     })
   })
@@ -176,6 +178,7 @@ describe('CourseAdapter', () => {
           Authorization: 'Bearer mock-token',
         },
         body: JSON.stringify(validCourseData),
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -319,6 +322,7 @@ describe('CourseAdapter', () => {
           Authorization: 'Bearer mock-token',
         },
         body: JSON.stringify(courseData),
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -402,6 +406,7 @@ describe('CourseAdapter', () => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer mock-token',
         },
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -472,6 +477,7 @@ describe('CourseAdapter', () => {
           'Content-Type': 'application/json',
           Authorization: 'Bearer mock-token',
         },
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
@@ -519,6 +525,7 @@ describe('CourseAdapter', () => {
           Authorization: 'Bearer mock-token',
         },
         body: JSON.stringify({ status: 'PUBLISHED' }),
+        signal: expect.any(AbortSignal),
       })
       expect(result).toEqual(mockResponse)
     })
