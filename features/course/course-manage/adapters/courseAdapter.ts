@@ -5,6 +5,7 @@ import type {
   CourseListResponse,
   CourseResponse,
 } from '../../types'
+import { getAuthHeader } from '@/lib/getAuthHeader'
 
 const API_BASE_URL = '/api/courses'
 
@@ -18,6 +19,7 @@ const API_BASE_URL = '/api/courses'
  * - Type safety dengan TypeScript
  * - Transformasi data untuk frontend consumption
  * - Retry logic dan fallback mechanisms
+ * - Clerk authentication integration
  *
  * Semua method mengembalikan response yang konsisten dengan format:
  * - Success: { success: true, data: ... }
@@ -45,16 +47,31 @@ export class CourseAdapter {
         limit: limit.toString(),
       })
 
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header if available
+      const authHeader = await getAuthHeader()
+      if (authHeader) {
+        headers['Authorization'] = authHeader
+      }
+
       const response = await fetch(`${API_BASE_URL}?${params}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. You do not have permission to view courses.')
+        }
         throw new Error(data.error || 'Failed to fetch courses')
       }
 
@@ -82,16 +99,31 @@ export class CourseAdapter {
    */
   static async getCourseById(id: string): Promise<CourseResponse> {
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header if available
+      const authHeader = await getAuthHeader()
+      if (authHeader) {
+        headers['Authorization'] = authHeader
+      }
+
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. You do not have permission to view this course.')
+        }
         throw new Error(data.error || 'Failed to fetch course')
       }
 
@@ -112,10 +144,10 @@ export class CourseAdapter {
    * Method ini mengirim request POST ke /api/courses untuk membuat kursus baru.
    * Kursus yang dibuat akan memiliki status DRAFT secara default.
    *
-   * TODO: Integrasi Clerk Authentication (TSK-48)
-   * - Tambahkan authorization header dengan Clerk token
-   * - Handle 401/403 errors untuk unauthorized access
-   * - Implementasi retry logic untuk network failures
+   * Authentication & Authorization:
+   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Handle 401/403 errors untuk unauthorized access
+   * - ✅ Role validation: creator, admin only
    *
    * @param courseData - Data kursus yang akan dibuat (title, description, thumbnail, category)
    * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil dibuat
@@ -124,19 +156,33 @@ export class CourseAdapter {
    */
   static async createCourse(courseData: CreateCourseRequest): Promise<CourseResponse> {
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header (required for create)
+      const authHeader = await getAuthHeader()
+      if (!authHeader) {
+        throw new Error('Authentication required. Please sign in to create a course.')
+      }
+      headers['Authorization'] = authHeader
+
       const response = await fetch(API_BASE_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Tambahkan authorization header di TSK-48
-          // 'Authorization': `Bearer ${clerkToken}`
-        },
+        headers,
         body: JSON.stringify(courseData),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. Only creators and admins can create courses.')
+        }
         throw new Error(data.error || 'Failed to create course')
       }
 
@@ -157,10 +203,10 @@ export class CourseAdapter {
    * Method ini mengirim request PUT ke /api/courses/[id] untuk mengupdate kursus.
    * Hanya pemilik kursus yang dapat mengupdate (akan divalidasi di backend).
    *
-   * TODO: Integrasi Clerk Authentication (TSK-48)
-   * - Tambahkan authorization header dengan Clerk token
-   * - Handle 401/403 errors untuk unauthorized access
-   * - Implementasi optimistic update untuk UX yang lebih baik
+   * Authentication & Authorization:
+   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Handle 401/403 errors untuk unauthorized access
+   * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate
    *
    * @param id - ID kursus yang akan diupdate
    * @param courseData - Data baru untuk kursus (title, description, thumbnail, category)
@@ -170,19 +216,36 @@ export class CourseAdapter {
    */
   static async updateCourse(id: string, courseData: UpdateCourseRequest): Promise<CourseResponse> {
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header (required for update)
+      const authHeader = await getAuthHeader()
+      if (!authHeader) {
+        throw new Error('Authentication required. Please sign in to update a course.')
+      }
+      headers['Authorization'] = authHeader
+
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Tambahkan authorization header di TSK-48
-          // 'Authorization': `Bearer ${clerkToken}`
-        },
+        headers,
         body: JSON.stringify(courseData),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. Only course owners can update this course.')
+        }
+        if (response.status === 404) {
+          throw new Error('Course not found or you do not have access to it.')
+        }
         throw new Error(data.error || 'Failed to update course')
       }
 
@@ -204,10 +267,10 @@ export class CourseAdapter {
    * Hanya pemilik kursus yang dapat menghapus (akan divalidasi di backend).
    * Penghapusan bersifat permanen (hard delete).
    *
-   * TODO: Integrasi Clerk Authentication (TSK-48)
-   * - Tambahkan authorization header dengan Clerk token
-   * - Handle 401/403 errors untuk unauthorized access
-   * - Implementasi konfirmasi dialog di frontend sebelum delete
+   * Authentication & Authorization:
+   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Handle 401/403 errors untuk unauthorized access
+   * - ✅ Ownership validation: hanya pemilik kursus yang dapat menghapus
    *
    * @param id - ID kursus yang akan dihapus
    * @returns Promise<{success: boolean, message?: string, error?: string}> - Response konfirmasi penghapusan
@@ -218,18 +281,35 @@ export class CourseAdapter {
     id: string,
   ): Promise<{ success: boolean; message?: string; error?: string }> {
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header (required for delete)
+      const authHeader = await getAuthHeader()
+      if (!authHeader) {
+        throw new Error('Authentication required. Please sign in to delete a course.')
+      }
+      headers['Authorization'] = authHeader
+
       const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Tambahkan authorization header di TSK-48
-          // 'Authorization': `Bearer ${clerkToken}`
-        },
+        headers,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. Only course owners can delete this course.')
+        }
+        if (response.status === 404) {
+          throw new Error('Course not found or you do not have access to it.')
+        }
         throw new Error(data.error || 'Failed to delete course')
       }
 
@@ -250,10 +330,10 @@ export class CourseAdapter {
    * Method ini mengirim request GET ke /api/courses dengan query parameter creatorId.
    * Digunakan untuk menampilkan dashboard creator dengan kursus miliknya sendiri.
    *
-   * TODO: Integrasi Clerk Authentication (TSK-48)
-   * - Tambahkan authorization header dengan Clerk token
-   * - Extract creatorId dari Clerk session otomatis
-   * - Handle 401/403 errors untuk unauthorized access
+   * Authentication & Authorization:
+   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Extract creatorId dari Clerk session otomatis
+   * - ✅ Handle 401/403 errors untuk unauthorized access
    *
    * @param creatorId - ID creator yang kursusnya akan diambil
    * @param page - Nomor halaman (default: 1)
@@ -274,18 +354,32 @@ export class CourseAdapter {
         creatorId: creatorId,
       })
 
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header (required for creator-specific data)
+      const authHeader = await getAuthHeader()
+      if (!authHeader) {
+        throw new Error('Authentication required. Please sign in to view your courses.')
+      }
+      headers['Authorization'] = authHeader
+
       const response = await fetch(`${API_BASE_URL}?${params}`, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Tambahkan authorization header di TSK-48
-          // 'Authorization': `Bearer ${clerkToken}`
-        },
+        headers,
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. You do not have permission to view these courses.')
+        }
         throw new Error(data.error || 'Failed to fetch creator courses')
       }
 
@@ -306,33 +400,49 @@ export class CourseAdapter {
    * Method ini mengirim request PATCH ke /api/courses/[id]/status untuk mengupdate status kursus.
    * Hanya pemilik kursus yang dapat mengupdate status (akan divalidasi di backend).
    *
-   * TODO: Integrasi Clerk Authentication (TSK-48)
-   * - Tambahkan authorization header dengan Clerk token
-   * - Handle 401/403 errors untuk unauthorized access
-   * - Implementasi optimistic update untuk UX yang lebih baik
+   * Authentication & Authorization:
+   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Handle 401/403 errors untuk unauthorized access
+   * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate status
    *
    * @param id - ID kursus yang akan diupdate statusnya
    * @param status - Status baru untuk kursus (DRAFT, PUBLISHED, ARCHIVED)
    * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil diupdate statusnya
    *
-   *
    * @throws {Error} Jika terjadi network error atau API error
    */
   static async updateCourseStatus(id: string, status: string): Promise<CourseResponse> {
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+
+      // Add auth header (required for status update)
+      const authHeader = await getAuthHeader()
+      if (!authHeader) {
+        throw new Error('Authentication required. Please sign in to update course status.')
+      }
+      headers['Authorization'] = authHeader
+
       const response = await fetch(`${API_BASE_URL}/${id}/status`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          // TODO: Tambahkan authorization header di TSK-48
-          // 'Authorization': `Bearer ${clerkToken}`
-        },
+        headers,
         body: JSON.stringify({ status }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        // Handle auth errors specifically
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in.')
+        }
+        if (response.status === 403) {
+          throw new Error('Access denied. Only course owners can update course status.')
+        }
+        if (response.status === 404) {
+          throw new Error('Course not found or you do not have access to it.')
+        }
         throw new Error(data.error || 'Failed to update course status')
       }
 

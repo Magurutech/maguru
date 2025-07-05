@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { CourseService } from '@/features/course/course-manage/services/courseService'
 import { CourseSchema } from '@/features/course/types'
+import { requireAuth, requireRole } from '@/lib/auth-middleware'
 
 const courseService = new CourseService()
 
@@ -10,11 +11,11 @@ const courseService = new CourseService()
  * Mendapatkan detail kursus berdasarkan ID
  *
  * @description
- * Endpoint ini menyediakan akses publik untuk mengambil detail kursus berdasarkan ID.
- * Dapat digunakan untuk:
- * - Menampilkan halaman detail kursus
- * - Preview kursus sebelum edit
- * - API untuk frontend course viewer
+ * Endpoint ini menyediakan akses untuk mengambil detail kursus berdasarkan ID.
+ * Access control:
+ * - Public access untuk GET (tanpa auth)
+ * - Creator dapat melihat kursus miliknya sendiri
+ * - Admin dapat melihat semua kursus
  *
  * @param request - NextRequest object
  * @param params - Object yang berisi parameter route (id)
@@ -98,14 +99,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * Update metadata kursus berdasarkan ID
  *
  * @description
- * Endpoint ini memungkinkan creator untuk mengupdate metadata kursus yang dimilikinya.
+ * Endpoint ini memungkinkan creator dan admin untuk mengupdate metadata kursus.
  *
- * TODO: Integrasi Clerk Authentication (TSK-48)
- * - Implementasi middleware auth untuk memverifikasi user session
- * - Extract user ID dari Clerk session untuk creatorId
- * - Validasi ownership: hanya pemilik kursus yang dapat mengupdate
- * - Validasi role user (hanya Creator dan Admin yang dapat mengupdate kursus)
- * - Implementasi audit log untuk tracking perubahan
+ * Authentication & Authorization:
+ * - ✅ Authentication required
+ * - ✅ Role validation: creator, admin
+ * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate
  *
  * @param request - NextRequest object yang berisi data update dalam body
  * @param params - Object yang berisi parameter route (id)
@@ -130,13 +129,25 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * ```
  *
  * @throws {400} Jika validasi input gagal atau ID tidak valid
- * @throws {401} Jika user tidak terautentikasi (akan diimplementasi di TSK-48)
- * @throws {403} Jika user tidak memiliki permission (akan diimplementasi di TSK-48)
+ * @throws {401} Jika user tidak terautentikasi
+ * @throws {403} Jika user tidak memiliki permission
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Authentication check
+    const authResult = await requireAuth()
+    if (authResult.error) {
+      return authResult.error
+    }
+
+    // Role authorization check
+    const roleCheck = requireRole(['creator', 'admin'], authResult.user)
+    if (roleCheck) {
+      return roleCheck
+    }
+
     const { id } = params
     const body = await request.json()
 
@@ -166,15 +177,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       )
     }
 
-    // TODO: Authentication dan authorization akan di-handle di TSK-48
-    // Untuk sementara, gunakan placeholder creatorId
-    // Di TSK-48 akan diimplementasi:
-    // - Middleware auth untuk memverifikasi Clerk session
-    // - Extract user ID dari session: const creatorId = auth.userId
-    // - Validasi ownership: hanya pemilik kursus yang dapat mengupdate
-    // - Validasi role user (Creator/Admin only)
-    const creatorId = 'placeholder-creator-id'
-    // @ts-expect-error - TODO: TSK-48
+    // Extract creatorId dari authenticated user
+    const creatorId = authResult.user.clerkId
+
     const course = await courseService.updateCourse(id, validationResult.data, creatorId)
 
     return NextResponse.json(
@@ -223,15 +228,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * Hapus kursus secara permanen berdasarkan ID
  *
  * @description
- * Endpoint ini memungkinkan creator untuk menghapus kursus yang dimilikinya secara permanen.
+ * Endpoint ini memungkinkan creator dan admin untuk menghapus kursus secara permanen.
  *
- * TODO: Integrasi Clerk Authentication (TSK-48)
- * - Implementasi middleware auth untuk memverifikasi user session
- * - Extract user ID dari Clerk session untuk creatorId
- * - Validasi ownership: hanya pemilik kursus yang dapat menghapus
- * - Validasi role user (hanya Creator dan Admin yang dapat menghapus kursus)
- * - Implementasi soft delete sebagai alternatif (future enhancement)
- * - Implementasi cascade delete untuk related data (modules, lessons, dll)
+ * Authentication & Authorization:
+ * - ✅ Authentication required
+ * - ✅ Role validation: creator, admin
+ * - ✅ Ownership validation: hanya pemilik kursus yang dapat menghapus
  *
  * @param request - NextRequest object
  * @param params - Object yang berisi parameter route (id)
@@ -246,13 +248,25 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * ```
  *
  * @throws {400} Jika ID kursus tidak valid
- * @throws {401} Jika user tidak terautentikasi (akan diimplementasi di TSK-48)
- * @throws {403} Jika user tidak memiliki permission (akan diimplementasi di TSK-48)
+ * @throws {401} Jika user tidak terautentikasi
+ * @throws {403} Jika user tidak memiliki permission
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Authentication check
+    const authResult = await requireAuth()
+    if (authResult.error) {
+      return authResult.error
+    }
+
+    // Role authorization check
+    const roleCheck = requireRole(['creator', 'admin'], authResult.user)
+    if (roleCheck) {
+      return roleCheck
+    }
+
     const { id } = params
 
     if (!id) {
@@ -265,15 +279,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       )
     }
 
-    // TODO: Authentication dan authorization akan di-handle di TSK-48
-    // Untuk sementara, gunakan placeholder creatorId
-    // Di TSK-48 akan diimplementasi:
-    // - Middleware auth untuk memverifikasi Clerk session
-    // - Extract user ID dari session: const creatorId = auth.userId
-    // - Validasi ownership: hanya pemilik kursus yang dapat menghapus
-    // - Validasi role user (Creator/Admin only)
-    // - Implementasi soft delete sebagai alternatif
-    const creatorId = 'placeholder-creator-id'
+    // Extract creatorId dari authenticated user
+    const creatorId = authResult.user.clerkId
 
     await courseService.deleteCourse(id, creatorId)
 

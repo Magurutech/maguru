@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { CourseService } from '@/features/course/course-manage/services/courseService'
 import { CourseStatus } from '@/features/course/types'
 import { z } from 'zod'
+import { requireAuth, requireRole } from '@/lib/auth-middleware'
 
 const courseService = new CourseService()
 
@@ -16,10 +17,13 @@ const UpdateStatusSchema = z.object({
  * Update status kursus (DRAFT, PUBLISHED, ARCHIVED)
  *
  * @description
- * Endpoint ini memungkinkan creator untuk mengupdate status kursus yang dimilikinya.
+ * Endpoint ini memungkinkan creator dan admin untuk mengupdate status kursus.
  * Status yang tersedia: DRAFT, PUBLISHED, ARCHIVED
  *
- * TODO: Integrasi Clerk Authentication (TSK-48)
+ * Authentication & Authorization:
+ * - ✅ Authentication required
+ * - ✅ Role validation: creator, admin
+ * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate status
  *
  * @param request - NextRequest object yang berisi data status dalam body
  * @param params - Object yang berisi parameter route (id)
@@ -41,13 +45,25 @@ const UpdateStatusSchema = z.object({
  * ```
  *
  * @throws {400} Jika validasi input gagal atau ID tidak valid
- * @throws {401} Jika user tidak terautentikasi (akan diimplementasi di TSK-48)
- * @throws {403} Jika user tidak memiliki permission (akan diimplementasi di TSK-48)
+ * @throws {401} Jika user tidak terautentikasi
+ * @throws {403} Jika user tidak memiliki permission
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Authentication check
+    const authResult = await requireAuth()
+    if (authResult.error) {
+      return authResult.error
+    }
+
+    // Role authorization check
+    const roleCheck = requireRole(['creator', 'admin'], authResult.user)
+    if (roleCheck) {
+      return roleCheck
+    }
+
     const { id } = params
     const body = await request.json()
 
@@ -77,14 +93,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       )
     }
 
-    // TODO: Authentication dan authorization akan di-handle di TSK-48
-    // Untuk sementara, gunakan placeholder creatorId
-    // Di TSK-48 akan diimplementasi:
-    // - Middleware auth untuk memverifikasi Clerk session
-    // - Extract user ID dari session: const creatorId = auth.userId
-    // - Validasi ownership: hanya pemilik kursus yang dapat mengupdate status
-    // - Validasi role user (Creator/Admin only)
-    const creatorId = 'placeholder-creator-id'
+    // Extract creatorId dari authenticated user
+    const creatorId = authResult.user.clerkId
 
     const course = await courseService.updateCourseStatus(
       id,

@@ -1,97 +1,74 @@
+// import { auth } from '@clerk/nextjs/server'
+// import { Feature } from '@/features/homepage/component/Feature'
 /**
  * Unit Test: CourseAdapter
  *
- * Test ini mencakup semua operasi HTTP untuk CourseAdapter:
- * - getCourses: GET request untuk daftar kursus
- * - getCourseById: GET request untuk detail kursus
- * - createCourse: POST request untuk membuat kursus
- * - updateCourse: PUT request untuk update kursus
- * - deleteCourse: DELETE request untuk hapus kursus
- * - getCoursesByCreator: GET request dengan filter creator
- * - updateCourseStatus: PATCH request untuk update status
- *
- * Mengikuti prinsip TDD dan Designing for Failure dengan fokus pada:
- * - Network error handling
- * - API error responses
- * - Response parsing
- * - Retry mechanisms
- *
- * Mock Strategy:
- * - Menggunakan jest.fn() untuk mock fetch globally
- * - Test semua HTTP methods (GET, POST, PUT, DELETE, PATCH)
- * - Test error scenarios (network, 4xx, 5xx)
- * - Test success scenarios dengan proper response parsing
+ * Test ini menguji semua method dalam CourseAdapter:
+ * - getCourses: Mengambil daftar kursus dengan pagination
+ * - getCourseById: Mengambil detail kursus berdasarkan ID
+ * - createCourse: Membuat kursus baru
+ * - updateCourse: Update metadata kursus
+ * - deleteCourse: Hapus kursus
+ * - getCoursesByCreator: Mengambil kursus berdasarkan creator
+ * - updateCourseStatus: Update status kursus
  */
 
-import { CourseAdapter } from './courseAdapter'
-import type { CreateCourseRequest, UpdateCourseRequest } from '../../types'
-
 // Mock fetch globally
-global.fetch = jest.fn()
+const mockFetch = jest.fn()
+global.fetch = mockFetch
 
-const mockedFetch = fetch as jest.MockedFunction<typeof fetch>
+// Mock the module with getAuthHeader as jest.fn()
+jest.mock('../../../../features/auth/services/getAuthHeader', () => ({
+  getAuthHeader: jest.fn(),
+}))
+
+import { CourseAdapter } from './courseAdapter'
+import { getAuthHeader } from '../../../../lib/getAuthHeader'
+
+// Get the mocked function after import
+const mockGetAuthHeader = getAuthHeader as jest.Mock
 
 describe('CourseAdapter', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    mockFetch.mockClear()
+    mockGetAuthHeader.mockClear()
   })
 
   describe('getCourses', () => {
-    const mockCoursesResponse = {
-      success: true,
-      data: {
-        courses: [
-          {
-            id: 'course-1',
-            title: 'Test Course',
-            description: 'Test Description',
-            thumbnail: '/test-thumbnail.jpg',
-            category: 'Test Category',
-            status: 'published',
-            students: 100,
-            lessons: 10,
-            duration: '2 jam',
-            rating: 4.5,
-            creatorId: 'creator-1',
-            createdAt: '2024-01-01T00:00:00.000Z',
-            updatedAt: '2024-01-01T00:00:00.000Z',
-          },
-        ],
-        pagination: {
-          page: 1,
-          limit: 10,
-          total: 1,
-          totalPages: 1,
-        },
-      },
-    }
-
-    it('should make successful GET request', async () => {
+    test('should make successful GET request', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      const mockResponse = {
+        success: true,
+        data: {
+          courses: [],
+          pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockCoursesResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
       const result = await CourseAdapter.getCourses(1, 10)
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses?page=1&limit=10', {
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses?page=1&limit=10', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      expect(result).toEqual(mockCoursesResponse)
+      expect(result).toEqual(mockResponse)
     })
 
-    it('should handle network errors', async () => {
+    test('should handle network errors', async () => {
       // Arrange
-      mockedFetch.mockRejectedValueOnce(new Error('Network error'))
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       // Act
-      const result = await CourseAdapter.getCourses(1, 10)
+      const result = await CourseAdapter.getCourses()
 
       // Assert
       expect(result).toEqual({
@@ -100,101 +77,61 @@ describe('CourseAdapter', () => {
       })
     })
 
-    it('should handle API error responses', async () => {
+    test('should handle API error responses', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
-        status: 400,
-        json: async () => ({ error: 'Bad Request' }),
-      } as Response)
+        status: 500,
+        json: async () => ({ error: 'Internal Server Error' }),
+      })
 
       // Act
-      const result = await CourseAdapter.getCourses(1, 10)
+      const result = await CourseAdapter.getCourses()
 
       // Assert
       expect(result).toEqual({
         success: false,
-        error: 'Bad Request',
+        error: 'Internal Server Error',
       })
-    })
-
-    it('should handle empty response', async () => {
-      // Arrange
-      const emptyResponse = {
-        success: true,
-        data: {
-          courses: [],
-          pagination: {
-            page: 1,
-            limit: 10,
-            total: 0,
-            totalPages: 0,
-          },
-        },
-      }
-      mockedFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => emptyResponse,
-      } as Response)
-
-      // Act
-      const result = await CourseAdapter.getCourses(1, 10)
-
-      // Assert
-      expect(result).toEqual(emptyResponse)
     })
   })
 
   describe('getCourseById', () => {
-    const mockCourseResponse = {
-      success: true,
-      data: {
-        id: 'course-1',
-        title: 'Test Course',
-        description: 'Test Description',
-        thumbnail: '/test-thumbnail.jpg',
-        category: 'Test Category',
-        status: 'published',
-        students: 100,
-        lessons: 10,
-        duration: '2 jam',
-        rating: 4.5,
-        creatorId: 'creator-1',
-        createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-      },
-    }
-
-    it('should make successful GET request', async () => {
+    test('should make successful GET request', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      const mockResponse = {
+        success: true,
+        data: { id: 'course-1', title: 'Test Course' },
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockCourseResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
       const result = await CourseAdapter.getCourseById('course-1')
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses/course-1', {
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses/course-1', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
-      expect(result).toEqual(mockCourseResponse)
+      expect(result).toEqual(mockResponse)
     })
 
-    it('should handle 404 error', async () => {
+    test('should handle 404 error', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
         json: async () => ({ error: 'Course not found' }),
-      } as Response)
+      })
 
       // Act
-      const result = await CourseAdapter.getCourseById('non-existent-id')
+      const result = await CourseAdapter.getCourseById('non-existent')
 
       // Assert
       expect(result).toEqual({
@@ -205,196 +142,300 @@ describe('CourseAdapter', () => {
   })
 
   describe('createCourse', () => {
-    const mockCourseData: CreateCourseRequest = {
+    const validCourseData = {
       title: 'New Course',
       description: 'New Description',
       thumbnail: '/new-thumbnail.jpg',
       category: 'New Category',
     }
 
-    const mockCreatedResponse = {
-      success: true,
-      data: {
-        id: 'course-2',
-        title: 'New Course',
-        description: 'New Description',
-        thumbnail: '/new-thumbnail.jpg',
-        category: 'New Category',
-        status: 'draft',
-        students: 0,
-        lessons: 0,
-        duration: '0 jam',
-        rating: 0.0,
-        creatorId: 'creator-1',
-        createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-      },
-    }
-
-    it('should make successful POST request', async () => {
+    test('should make successful POST request with auth', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const mockResponse = {
+        success: true,
+        data: { id: 'course-2', ...validCourseData },
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockCreatedResponse,
-      } as Response)
+        status: 201,
+        json: async () => mockResponse,
+      })
 
       // Act
-      const result = await CourseAdapter.createCourse(mockCourseData)
+      const result = await CourseAdapter.createCourse(validCourseData)
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses', {
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer mock-token',
         },
-        body: JSON.stringify(mockCourseData),
+        body: JSON.stringify(validCourseData),
       })
-      expect(result).toEqual(mockCreatedResponse)
+      expect(result).toEqual(mockResponse)
     })
 
-    it('should handle validation errors', async () => {
+    test('should handle missing authentication', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 400,
-        json: async () => ({ error: 'Validation failed' }),
-      } as Response)
+      mockGetAuthHeader.mockResolvedValue(null)
 
       // Act
-      const result = await CourseAdapter.createCourse(mockCourseData)
+      const result = await CourseAdapter.createCourse(validCourseData)
 
       // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in to create a course.',
+      })
+    })
+
+    test('should handle 401 Unauthorized from API', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer invalid-token')
+
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: async () => ({ error: 'Invalid token' }),
+      })
+
+      // Act
+      const result = await CourseAdapter.createCourse(validCourseData)
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in.',
+      })
+    })
+
+    test('should handle 403 Forbidden (role validation)', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer user-token')
+
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        json: async () => ({ error: 'Access denied' }),
+      })
+
+      // Act
+      const result = await CourseAdapter.createCourse(validCourseData)
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Access denied. Only creators and admins can create courses.',
+      })
+    })
+
+    test('should handle 400 Bad Request (validation failed)', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const invalidCourseData = {
+        title: '', // Invalid: empty title
+        description: 'New Description',
+        category: 'New Category',
+      }
+
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        json: async () => ({
+          error: 'Validation failed',
+          details: [{ field: 'title', message: 'Judul kursus harus diisi' }],
+        }),
+      })
+
+      // Act
+      const result = await CourseAdapter.createCourse(invalidCourseData)
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
       expect(result).toEqual({
         success: false,
         error: 'Validation failed',
       })
     })
 
-    it('should handle unauthorized access', async () => {
+    test('should handle network errors', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 401,
-        json: async () => ({ error: 'Unauthorized' }),
-      } as Response)
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       // Act
-      const result = await CourseAdapter.createCourse(mockCourseData)
+      const result = await CourseAdapter.createCourse(validCourseData)
 
       // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
       expect(result).toEqual({
         success: false,
-        error: 'Unauthorized',
+        error: 'Network error',
       })
     })
   })
 
   describe('updateCourse', () => {
-    const mockUpdateData: UpdateCourseRequest = {
-      id: 'course-1',
-      title: 'Updated Course',
-      description: 'Updated Description',
-      thumbnail: '/updated-thumbnail.jpg',
-      category: 'Updated Category',
-    }
+    test('should make successful PUT request with auth', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
 
-    const mockUpdatedResponse = {
-      success: true,
-      data: {
+      const courseData = {
         id: 'course-1',
         title: 'Updated Course',
         description: 'Updated Description',
         thumbnail: '/updated-thumbnail.jpg',
         category: 'Updated Category',
-        status: 'published',
-        students: 100,
-        lessons: 10,
-        duration: '2 jam',
-        rating: 4.5,
-        creatorId: 'creator-1',
-        createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-      },
-    }
+      }
 
-    it('should make successful PUT request', async () => {
-      // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      const mockResponse = {
+        success: true,
+        data: courseData,
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockUpdatedResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
-      const result = await CourseAdapter.updateCourse('course-1', mockUpdateData)
+      const result = await CourseAdapter.updateCourse('course-1', courseData)
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses/course-1', {
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses/course-1', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer mock-token',
         },
-        body: JSON.stringify(mockUpdateData),
+        body: JSON.stringify(courseData),
       })
-      expect(result).toEqual(mockUpdatedResponse)
+      expect(result).toEqual(mockResponse)
     })
 
-    it('should handle forbidden access', async () => {
+    test('should handle missing authentication', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockGetAuthHeader.mockResolvedValue(null)
+
+      const courseData = {
+        id: 'course-1',
+        title: 'Updated Course',
+        description: 'Updated Description',
+        thumbnail: '/updated-thumbnail.jpg',
+        category: 'Updated Category',
+      }
+
+      // Act
+      const result = await CourseAdapter.updateCourse('course-1', courseData)
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in to update a course.',
+      })
+    })
+
+    test('should handle forbidden access', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const courseData = {
+        id: 'course-1',
+        title: 'Updated Course',
+        description: 'Updated Description',
+        thumbnail: '/updated-thumbnail.jpg',
+        category: 'Updated Category',
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 403,
         json: async () => ({ error: 'Forbidden' }),
-      } as Response)
+      })
 
       // Act
-      const result = await CourseAdapter.updateCourse('course-1', mockUpdateData)
+      const result = await CourseAdapter.updateCourse('course-1', courseData)
 
       // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
       expect(result).toEqual({
         success: false,
-        error: 'Forbidden',
+        error: 'Access denied. Only course owners can update this course.',
       })
     })
   })
 
   describe('deleteCourse', () => {
-    const mockDeleteResponse = {
-      success: true,
-      message: 'Course deleted successfully',
-    }
-
-    it('should make successful DELETE request', async () => {
+    test('should make successful DELETE request with auth', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const mockResponse = {
+        success: true,
+        message: 'Course deleted successfully',
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockDeleteResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
       const result = await CourseAdapter.deleteCourse('course-1')
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses/course-1', {
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses/course-1', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer mock-token',
         },
       })
-      expect(result).toEqual(mockDeleteResponse)
+      expect(result).toEqual(mockResponse)
     })
 
-    it('should handle server error', async () => {
+    test('should handle missing authentication', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-        json: async () => ({ error: 'Internal Server Error' }),
-      } as Response)
+      mockGetAuthHeader.mockResolvedValue(null)
 
       // Act
       const result = await CourseAdapter.deleteCourse('course-1')
 
       // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in to delete a course.',
+      })
+    })
+
+    test('should handle server error', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({ error: 'Internal Server Error' }),
+      })
+
+      // Act
+      const result = await CourseAdapter.deleteCourse('course-1')
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
       expect(result).toEqual({
         success: false,
         error: 'Internal Server Error',
@@ -403,95 +444,98 @@ describe('CourseAdapter', () => {
   })
 
   describe('getCoursesByCreator', () => {
-    const mockCreatorResponse = {
-      success: true,
-      data: {
-        courses: [
-          {
-            id: 'course-1',
-            title: 'Creator Course',
-            description: 'Creator Description',
-            thumbnail: '/creator-thumbnail.jpg',
-            category: 'Creator Category',
-            status: 'published',
-            students: 50,
-            lessons: 5,
-            duration: '1 jam',
-            rating: 4.0,
-            creatorId: 'creator-1',
-            createdAt: '2024-01-01T00:00:00.000Z',
-            updatedAt: '2024-01-01T00:00:00.000Z',
-          },
-        ],
-        pagination: {
-          page: 1,
-          limit: 10,
-          total: 1,
-          totalPages: 1,
-        },
-      },
-    }
-
-    it('should make successful GET request with creatorId filter', async () => {
+    test('should make successful GET request with creatorId filter', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const mockResponse = {
+        success: true,
+        data: {
+          courses: [],
+          pagination: { page: 1, limit: 10, total: 0, totalPages: 0 },
+        },
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockCreatorResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
       const result = await CourseAdapter.getCoursesByCreator('creator-1', 1, 10)
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses?page=1&limit=10&creatorId=creator-1', {
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses?page=1&limit=10&creatorId=creator-1', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer mock-token',
         },
       })
-      expect(result).toEqual(mockCreatorResponse)
+      expect(result).toEqual(mockResponse)
+    })
+
+    test('should handle missing authentication', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue(null)
+
+      // Act
+      const result = await CourseAdapter.getCoursesByCreator('creator-1', 1, 10)
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in to view your courses.',
+      })
     })
   })
 
   describe('updateCourseStatus', () => {
-    const mockStatusResponse = {
-      success: true,
-      data: {
-        id: 'course-1',
-        title: 'Test Course',
-        description: 'Test Description',
-        thumbnail: '/test-thumbnail.jpg',
-        category: 'Test Category',
-        status: 'published',
-        students: 100,
-        lessons: 10,
-        duration: '2 jam',
-        rating: 4.5,
-        creatorId: 'creator-1',
-        createdAt: '2024-01-01T00:00:00.000Z',
-        updatedAt: '2024-01-01T00:00:00.000Z',
-      },
-    }
-
-    it('should make successful PATCH request', async () => {
+    test('should make successful PATCH request with auth', async () => {
       // Arrange
-      mockedFetch.mockResolvedValueOnce({
+      mockGetAuthHeader.mockResolvedValue('Bearer mock-token')
+
+      const mockResponse = {
+        success: true,
+        data: { id: 'course-1', status: 'PUBLISHED' },
+      }
+
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockStatusResponse,
-      } as Response)
+        json: async () => mockResponse,
+      })
 
       // Act
-      const result = await CourseAdapter.updateCourseStatus('course-1', 'published')
+      const result = await CourseAdapter.updateCourseStatus('course-1', 'PUBLISHED')
 
       // Assert
-      expect(mockedFetch).toHaveBeenCalledWith('/api/courses/course-1/status', {
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(mockFetch).toHaveBeenCalledWith('/api/courses/course-1/status', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer mock-token',
         },
-        body: JSON.stringify({ status: 'published' }),
+        body: JSON.stringify({ status: 'PUBLISHED' }),
       })
-      expect(result).toEqual(mockStatusResponse)
+      expect(result).toEqual(mockResponse)
+    })
+
+    test('should handle missing authentication', async () => {
+      // Arrange
+      mockGetAuthHeader.mockResolvedValue(null)
+
+      // Act
+      const result = await CourseAdapter.updateCourseStatus('course-1', 'PUBLISHED')
+
+      // Assert
+      expect(mockGetAuthHeader).toHaveBeenCalled()
+      expect(result).toEqual({
+        success: false,
+        error: 'Authentication required. Please sign in to update course status.',
+      })
     })
   })
 })

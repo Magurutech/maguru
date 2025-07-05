@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { CourseService } from '@/features/course/course-manage/services/courseService'
 import { CourseSchema } from '@/features/course/types'
+import { requireAuth, requireRole } from '@/lib/auth-middleware'
 
 const courseService = new CourseService()
 
@@ -10,12 +11,11 @@ const courseService = new CourseService()
  * Mendapatkan daftar kursus dengan pagination dan filter opsional
  *
  * @description
- * Endpoint ini menyediakan akses publik untuk mengambil daftar kursus dengan pagination.
- * Dapat digunakan untuk:
- * - Menampilkan daftar kursus di homepage
- * - Implementasi search dan filter (future enhancement)
- * - Dashboard admin untuk melihat semua kursus
- * - Dashboard creator untuk melihat kursus miliknya sendiri
+ * Endpoint ini menyediakan akses untuk mengambil daftar kursus dengan pagination.
+ * Access control:
+ * - Public access untuk GET (tanpa auth)
+ * - Creator dapat melihat kursus miliknya sendiri
+ * - Admin dapat melihat semua kursus
  *
  * Query Parameters:
  * - page: Nomor halaman (default: 1)
@@ -30,7 +30,7 @@ const courseService = new CourseService()
  * // Mengambil semua kursus (public)
  * GET /api/courses?page=1&limit=10
  *
- * // Mengambil kursus milik creator tertentu
+ * // Mengambil kursus milik creator tertentu (authenticated)
  * GET /api/courses?page=1&limit=10&creatorId=user_123
  * ```
  *
@@ -68,7 +68,40 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const result = await courseService.getCourses(page, limit, creatorId)
+    // Authentication check (optional untuk GET)
+    let authenticatedUser = null
+    try {
+      const authResult = await requireAuth()
+      if (authResult.error) {
+        // Jika tidak ada auth, tetap bisa akses public courses
+        console.log('No authentication for GET /api/courses - public access')
+      } else {
+        authenticatedUser = authResult.user
+      }
+    } catch {
+      // Continue without authentication for public access
+      console.log('Authentication failed for GET /api/courses - continuing with public access')
+    }
+
+    // Role-based filtering
+    let finalCreatorId = creatorId
+    if (authenticatedUser) {
+      if (authenticatedUser.role === 'creator') {
+        // Creator hanya bisa lihat kursus miliknya sendiri
+        finalCreatorId = authenticatedUser.clerkId
+      } else if (authenticatedUser.role === 'admin') {
+        // Admin bisa lihat semua kursus (creatorId tetap sesuai parameter)
+        finalCreatorId = creatorId
+      } else {
+        // User biasa tidak bisa akses creator-specific data
+        finalCreatorId = undefined
+      }
+    } else {
+      // Public access - tidak ada creatorId filter
+      finalCreatorId = undefined
+    }
+
+    const result = await courseService.getCourses(page, limit, finalCreatorId)
 
     return NextResponse.json(
       {
@@ -95,13 +128,12 @@ export async function GET(request: NextRequest) {
  * Membuat kursus baru dengan metadata dasar
  *
  * @description
- * Endpoint ini memungkinkan creator untuk membuat kursus baru.
+ * Endpoint ini memungkinkan creator dan admin untuk membuat kursus baru.
  *
- * TODO: Integrasi Clerk Authentication (TSK-48)
- * - Implementasi middleware auth untuk memverifikasi user session
- * - Extract user ID dari Clerk session untuk creatorId
- * - Validasi role user (hanya Creator dan Admin yang dapat membuat kursus)
- * - Implementasi rate limiting untuk mencegah spam
+ * Authentication & Authorization:
+ * - ✅ Authentication required
+ * - ✅ Role validation: creator, admin
+ * - ✅ CreatorId otomatis dari session
  *
  * @param request - NextRequest object yang berisi data kursus dalam body
  * @returns NextResponse dengan data kursus yang berhasil dibuat
@@ -123,12 +155,24 @@ export async function GET(request: NextRequest) {
  * ```
  *
  * @throws {400} Jika validasi input gagal
- * @throws {401} Jika user tidak terautentikasi (akan diimplementasi di TSK-48)
- * @throws {403} Jika user tidak memiliki permission (akan diimplementasi di TSK-48)
+ * @throws {401} Jika user tidak terautentikasi
+ * @throws {403} Jika user tidak memiliki permission
  * @throws {500} Jika terjadi error internal server
  */
 export async function POST(request: NextRequest) {
   try {
+    // Authentication check
+    const authResult = await requireAuth()
+    if (authResult.error) {
+      return authResult.error
+    }
+
+    // Role authorization check
+    const roleCheck = requireRole(['creator', 'admin'], authResult.user)
+    if (roleCheck) {
+      return roleCheck
+    }
+
     const body = await request.json()
 
     // Validasi input menggunakan Zod
@@ -147,13 +191,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // TODO: Authentication dan authorization akan di-handle di TSK-48
-    // Untuk sementara, gunakan placeholder creatorId
-    // Di TSK-48 akan diimplementasi:
-    // - Middleware auth untuk memverifikasi Clerk session
-    // - Extract user ID dari session: const creatorId = auth.userId
-    // - Validasi role user (Creator/Admin only)
-    const creatorId = 'placeholder-creator-id'
+    // Extract creatorId dari authenticated user
+    const creatorId = authResult.user.clerkId
 
     const course = await courseService.createCourse(validationResult.data, creatorId)
 
