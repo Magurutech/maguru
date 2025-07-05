@@ -11,9 +11,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-import { useCourseSearch } from '../hooks/useCourseSearch'
-import { useCourseDialog } from '../hooks/useCourseDialog'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseSearch } from '../../hooks/useCourseSearch'
+import { useCourseDialog } from '../../hooks/useCourseDialog'
 
 export function CourseSearchFilter() {
   // Component state untuk UI interactions

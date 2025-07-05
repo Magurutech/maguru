@@ -8,7 +8,7 @@ import {
   CreateCourseDialog,
   EditCourseDialog,
   DeleteCourseDialog,
-} from '@/features/course/course-manage/components'
+} from '@/features/course/components/course-manage'
 
 export default function CourseManagePage() {
   return (

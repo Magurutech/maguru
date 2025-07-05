@@ -22,7 +22,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { filterCourses } from '../lib/courseUtils'
-import type { Course } from '../../types'
+import type { Course } from '../types'
 
 // Search history item
 interface SearchHistoryItem {

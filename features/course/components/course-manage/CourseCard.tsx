@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Course, CourseStatus } from '../../types'
-import { getStatusColor, getStatusText } from '../lib/courseUtils'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-import { useCourseDialog } from '../hooks/useCourseDialog'
+import { getStatusColor, getStatusText } from '../../lib/courseUtils'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseDialog } from '../../hooks/useCourseDialog'
 import Image from 'next/image'
 
 interface CourseCardProps {

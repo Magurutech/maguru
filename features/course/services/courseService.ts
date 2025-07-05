@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { Course, CreateCourseRequest, PaginationInfo } from '../../types'
+import type { Course, CreateCourseRequest, PaginationInfo } from '../types'
 import { CourseStatus } from '@prisma/client'
 
 /**

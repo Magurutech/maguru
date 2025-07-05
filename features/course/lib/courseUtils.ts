@@ -1,5 +1,5 @@
-import type { Course, CreateCourseRequest } from '../../types'
-import { CourseStatus } from '../../types'
+import type { Course, CreateCourseRequest } from '../types'
+import { CourseStatus } from '../types'
 
 /**
  * Utility functions untuk manajemen dan formatting data kursus

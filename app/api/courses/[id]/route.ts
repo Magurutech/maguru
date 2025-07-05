@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CourseService } from '@/features/course/course-manage/services/courseService'
+import { CourseService } from '@/features/course/services/courseService'
 import { CourseSchema } from '@/features/course/types'
 import { requireAuth, requireRole } from '@/lib/auth-middleware'
 
@@ -48,9 +48,9 @@ const courseService = new CourseService()
  * @throws {404} Jika kursus tidak ditemukan
  * @throws {500} Jika terjadi error internal server
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params
+    const { id } = await params
 
     if (!id) {
       return NextResponse.json(
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authentication check
     const authResult = await requireAuth()
@@ -148,7 +148,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return roleCheck
     }
 
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
 
     if (!id) {
@@ -253,7 +253,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     // Authentication check
     const authResult = await requireAuth()
@@ -267,7 +270,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return roleCheck
     }
 
-    const { id } = params
+    const { id } = await params
 
     if (!id) {
       return NextResponse.json(

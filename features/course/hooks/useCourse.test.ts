@@ -13,7 +13,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useCourse } from './useCourse'
 import { CourseAdapter } from '../adapters/courseAdapter'
-import type { Course, CreateCourseRequest, UpdateCourseRequest } from '../../types'
+import type { Course, CreateCourseRequest, UpdateCourseRequest } from '../types'
 
 // Mock CourseAdapter
 jest.mock('../adapters/courseAdapter')

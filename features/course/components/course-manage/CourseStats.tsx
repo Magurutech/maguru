@@ -2,8 +2,7 @@
 
 import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-
+import { useCourseManagement } from '../../hooks/useCourseManagement'
 
 export function CourseStats() {
   // Component state untuk UI interactions

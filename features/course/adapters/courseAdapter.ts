@@ -4,7 +4,7 @@ import type {
   UpdateCourseRequest,
   CourseListResponse,
   CourseResponse,
-} from '../../types'
+} from '../types'
 import { getAuthHeader } from '@/lib/getAuthHeader'
 
 const API_BASE_URL = '/api/courses'

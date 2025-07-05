@@ -18,12 +18,12 @@ const mockFetch = jest.fn()
 global.fetch = mockFetch
 
 // Mock the module with getAuthHeader as jest.fn()
-jest.mock('../../../../lib/getAuthHeader', () => ({
+jest.mock('../../../lib/getAuthHeader', () => ({
   getAuthHeader: jest.fn(),
 }))
 
 import { CourseAdapter } from './courseAdapter'
-import { getAuthHeader } from '../../../../lib/getAuthHeader'
+import { getAuthHeader } from '../../../lib/getAuthHeader'
 
 // Get the mocked function after import
 const mockGetAuthHeader = getAuthHeader as jest.Mock

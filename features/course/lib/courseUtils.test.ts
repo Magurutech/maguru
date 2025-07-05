@@ -36,8 +36,8 @@ import {
   getThumbnailUrl,
   validateCourseData,
 } from './courseUtils'
-import { CourseStatus } from '../../types'
-import type { Course, CreateCourseRequest } from '../../types'
+import { CourseStatus } from '../types'
+import type { Course, CreateCourseRequest } from '../types'
 
 describe('courseUtils', () => {
   describe('getStatusColor', () => {

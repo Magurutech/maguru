@@ -24,8 +24,8 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Upload, AlertCircle } from 'lucide-react'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-import { useCourseDialog } from '../hooks/useCourseDialog'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseDialog } from '../../hooks/useCourseDialog'
 import { CreateCourseRequest } from '../../types'
 import Image from 'next/image'
 

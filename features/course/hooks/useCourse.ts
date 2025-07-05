@@ -24,7 +24,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { CourseAdapter } from '../adapters/courseAdapter'
-import type { Course, CreateCourseRequest, UpdateCourseRequest } from '../../types'
+import type { Course, CreateCourseRequest, UpdateCourseRequest } from '../types'
 
 // Retry configuration untuk designing for failure
 const RETRY_CONFIG = {

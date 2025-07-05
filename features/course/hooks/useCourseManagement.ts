@@ -23,7 +23,7 @@
 import { useState, useCallback } from 'react'
 import { useUserRole } from '@/features/auth/hooks/useUserRole'
 import { useCourse } from './useCourse'
-import type { CreateCourseRequest, UpdateCourseRequest, Course } from '../../types'
+import type { CreateCourseRequest, UpdateCourseRequest, Course } from '../types'
 
 // Hook return type
 interface UseCourseManagementReturn {

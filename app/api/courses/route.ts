@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CourseService } from '@/features/course/course-manage/services/courseService'
+import { CourseService } from '@/features/course/services/courseService'
 import { CourseSchema } from '@/features/course/types'
 import { requireAuth, requireRole } from '@/lib/auth-middleware'
 

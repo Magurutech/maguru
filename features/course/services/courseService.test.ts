@@ -24,10 +24,10 @@
  */
 
 import { CourseService } from './courseService'
-import { CourseStatus, CreateCourseRequest } from '../../types'
+import { CourseStatus, CreateCourseRequest } from '../types'
 
 // Mock prisma module
-jest.mock('../../../../lib/prisma', () => ({
+jest.mock('../../../lib/prisma', () => ({
   prisma: {
     course: {
       create: jest.fn(),
@@ -75,7 +75,7 @@ describe('CourseService', () => {
     jest.clearAllMocks()
     // ✅ SOLUSI: Akses mock yang benar dari jest.mock()
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    mockPrisma = require('../../../../lib/prisma').prisma
+    mockPrisma = require('../../../lib/prisma').prisma
   })
 
   describe('createCourse', () => {

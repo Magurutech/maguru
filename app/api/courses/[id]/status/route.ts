@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { CourseService } from '@/features/course/course-manage/services/courseService'
+import { CourseService } from '@/features/course/services/courseService'
 import { CourseStatus } from '@/features/course/types'
 import { z } from 'zod'
 import { requireAuth, requireRole } from '@/lib/auth-middleware'
@@ -50,7 +50,7 @@ const UpdateStatusSchema = z.object({
  * @throws {404} Jika kursus tidak ditemukan atau user tidak memiliki akses
  * @throws {500} Jika terjadi error internal server
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Authentication check
     const authResult = await requireAuth()
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       return roleCheck
     }
 
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
 
     if (!id) {

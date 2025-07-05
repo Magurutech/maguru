@@ -21,7 +21,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { validateCourseData } from '../lib/courseUtils'
-import type { Course, CreateCourseFormData, CourseStatus } from '../../types'
+import type { Course, CreateCourseFormData, CourseStatus } from '../types'
 
 // Dialog types
 type DialogType = 'create' | 'edit' | 'delete' | null
@@ -90,7 +90,7 @@ export function useCourseDialog(): UseCourseDialogReturn {
   const openCreateDialog = useCallback(() => {
     setActiveDialog('create')
     setSelectedCourse(null)
-    resetForm()
+    setFormState(initialFormState)
   }, [])
 
   // Open edit dialog
@@ -123,7 +123,7 @@ export function useCourseDialog(): UseCourseDialogReturn {
   const closeDialog = useCallback(() => {
     setActiveDialog(null)
     setSelectedCourse(null)
-    resetForm()
+    setFormState(initialFormState)
   }, [])
 
   // Update form data

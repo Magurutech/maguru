@@ -11,9 +11,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { AlertTriangle, Trash2, AlertCircle } from 'lucide-react'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-import { useCourseDialog } from '../hooks/useCourseDialog'
-import type { Course } from '../../types'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseDialog } from '../../hooks/useCourseDialog'
 
 export function DeleteCourseDialog() {
   // Component state untuk UI interactions

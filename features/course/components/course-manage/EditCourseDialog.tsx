@@ -24,8 +24,8 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
 import { Upload, ImageIcon, AlertCircle } from 'lucide-react'
-import { useCourseManagement } from '../hooks/useCourseManagement'
-import { useCourseDialog } from '../hooks/useCourseDialog'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseDialog } from '../../hooks/useCourseDialog'
 import { UpdateCourseRequest } from '../../types'
 
 export function EditCourseDialog() {

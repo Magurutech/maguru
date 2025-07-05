@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { CheckSquare, Square, Trash2, Settings } from 'lucide-react'
 import { CourseCard } from './CourseCard'
-import { useCourseSearch } from '../hooks/useCourseSearch'
-import { useCourseManagement } from '../hooks/useCourseManagement'
+import { useCourseSearch } from '../../hooks/useCourseSearch'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { Button } from '@/components/ui/button'
 
 export function CourseGrid() {
