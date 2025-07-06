@@ -5,6 +5,7 @@ import { CheckSquare, Square, Trash2, Settings } from 'lucide-react'
 import { CourseCard } from './CourseCard'
 import { useCourseSearch } from '../../hooks/useCourseSearch'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseContext } from '../../contexts/courseContext'
 import { Button } from '@/components/ui/button'
 
 export function CourseGrid() {
@@ -12,9 +13,12 @@ export function CourseGrid() {
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set())
   const [isSelectMode, setIsSelectMode] = useState(false)
 
-  // Feature state dari hooks
+  // Feature state dari hooks dan context
   const { courses, isLoading, deleteMultipleCourses } = useCourseManagement()
-  const { filteredCourses, hasActiveFilters } = useCourseSearch(courses)
+  const { hasActiveFilters } = useCourseContext()
+
+  // Use hook untuk filtering dengan internal state
+  const { filteredCourses } = useCourseSearch(courses)
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourses((prev) => {

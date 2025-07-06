@@ -191,13 +191,18 @@ export function useCourseDialog(): UseCourseDialogReturn {
         }
 
         // TODO: Implement actual file upload to Supabase Storage
-        // For now, return a placeholder URL
-        const fakeUploadUrl = `/uploads/${Date.now()}-${file.name}`
+        // For now, use base64 as temporary solution
 
-        // Update form data dengan new thumbnail URL
-        updateFormData({ thumbnail: fakeUploadUrl })
-
-        return fakeUploadUrl
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = (event) => {
+            const base64String = event.target?.result as string
+            updateFormData({ thumbnail: base64String })
+            resolve(base64String)
+          }
+          reader.onerror = () => reject(new Error('Failed to read file'))
+          reader.readAsDataURL(file)
+        })
       } catch (error) {
         console.error('File upload failed:', error)
         return null

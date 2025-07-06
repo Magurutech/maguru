@@ -9,22 +9,25 @@ import {
   EditCourseDialog,
   DeleteCourseDialog,
 } from '@/features/course/components/course-manage'
+import { CourseContextProvider } from '@/features/course/contexts/courseContext'
 
 export default function CourseManagePage() {
   return (
-    <div className="min-h-screen bg-ancient-fantasy p-6">
-      <CourseHeader />
+    <CourseContextProvider>
+      <div className="min-h-screen bg-ancient-fantasy p-6">
+        <CourseHeader />
 
-      <CourseStats />
+        <CourseStats />
 
-      <CourseSearchFilter />
+        <CourseSearchFilter />
 
-      <CourseGrid />
+        <CourseGrid />
 
-      {/* Course Management Dialogs */}
-      <CreateCourseDialog />
-      <EditCourseDialog />
-      <DeleteCourseDialog />
-    </div>
+        {/* Course Management Dialogs */}
+        <CreateCourseDialog />
+        <EditCourseDialog />
+        <DeleteCourseDialog />
+      </div>
+    </CourseContextProvider>
   )
 }

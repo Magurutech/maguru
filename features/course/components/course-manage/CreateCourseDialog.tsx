@@ -25,26 +25,26 @@ import {
 import { Card, CardContent } from '@/components/ui/card'
 import { Upload, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
-import { useCourseDialog } from '../../hooks/useCourseDialog'
-import { CreateCourseRequest } from '../../types'
+import { useCourseContext } from '../../contexts/courseContext'
+import { CreateCourseRequest, CreateCourseFormData } from '../../types'
 import Image from 'next/image'
 
 export function CreateCourseDialog() {
   // Component state untuk UI interactions ONLY
   const [isUploadHovered, setIsUploadHovered] = useState(false)
 
-  // Feature state dari hooks
+  // Feature state dari hooks dan context
   const { createCourseWithValidation, error: managementError, clearError } = useCourseManagement()
   const {
     activeDialog,
     formState,
     updateFormData,
-    validateForm,
+    setFormErrors,
+    setFormValid,
+    setFormSubmitting,
     resetForm,
     closeDialog,
-    handleFileUpload,
-    setSubmitting,
-  } = useCourseDialog()
+  } = useCourseContext()
 
   // Handle input change dengan proper error handling
   const handleInputChange = useCallback(
@@ -60,11 +60,16 @@ export function CreateCourseDialog() {
     async (e: React.FormEvent) => {
       e.preventDefault()
 
-      if (!validateForm()) {
+      // Validate form
+      const validation = validateCourseData(formState.data)
+      setFormErrors(validation.errors)
+      setFormValid(validation.isValid)
+
+      if (!validation.isValid) {
         return
       }
 
-      setSubmitting(true)
+      setFormSubmitting(true)
 
       try {
         const success = await createCourseWithValidation(formState.data as CreateCourseRequest)
@@ -76,16 +81,17 @@ export function CreateCourseDialog() {
       } catch (error) {
         console.error('Failed to create course:', error)
       } finally {
-        setSubmitting(false)
+        setFormSubmitting(false)
       }
     },
     [
-      validateForm,
-      createCourseWithValidation,
       formState.data,
+      createCourseWithValidation,
       resetForm,
       closeDialog,
-      setSubmitting,
+      setFormErrors,
+      setFormValid,
+      setFormSubmitting,
     ],
   )
 
@@ -95,13 +101,54 @@ export function CreateCourseDialog() {
       const file = e.target.files?.[0]
       if (file) {
         try {
-          await handleFileUpload(file)
+          // Validate file type
+          const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+          if (!allowedTypes.includes(file.type)) {
+            setFormErrors(['File type not supported. Please upload JPEG, PNG, or WebP image.'])
+            return
+          }
+
+          // Validate file size (max 5MB)
+          const maxSize = 5 * 1024 * 1024 // 5MB
+          if (file.size > maxSize) {
+            setFormErrors(['File size too large. Please upload an image smaller than 5MB.'])
+            return
+          }
+
+          // TODO: Implement actual file upload to Supabase Storage
+          // For now, use a temporary solution with base64 or placeholder
+
+          // Option 1: Convert to base64 (temporary solution)
+          const reader = new FileReader()
+          reader.onload = (event) => {
+            const base64String = event.target?.result as string
+            updateFormData({ thumbnail: base64String })
+          }
+          reader.readAsDataURL(file)
+
+          // Option 2: Use placeholder image (fallback)
+          // updateFormData({ thumbnail: '/globe.svg' })
+
+          // Option 3: Upload to server (recommended for production)
+          // const formData = new FormData()
+          // formData.append('file', file)
+          // const response = await fetch('/api/upload', {
+          //   method: 'POST',
+          //   body: formData,
+          // })
+          // const result = await response.json()
+          // if (result.success) {
+          //   updateFormData({ thumbnail: result.data.url })
+          // } else {
+          //   setFormErrors([result.error || 'Upload failed'])
+          // }
         } catch (error) {
           console.error('File upload failed:', error)
+          setFormErrors(['File upload failed. Please try again.'])
         }
       }
     },
-    [handleFileUpload],
+    [updateFormData, setFormErrors],
   )
 
   // Check if form is valid
@@ -180,7 +227,7 @@ export function CreateCourseDialog() {
                 onValueChange={(value) => handleInputChange('category', value)}
                 disabled={formState.isSubmitting}
               >
-                <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
+                <SelectTrigger className="neu-input border-beige-100 focus:border-secondary-400 focus:ring-secondary-200">
                   <SelectValue placeholder="Pilih kategori" />
                 </SelectTrigger>
                 <SelectContent>
@@ -219,7 +266,7 @@ export function CreateCourseDialog() {
           <div className="space-y-2">
             <Label className="text-beige-900 font-medium">Thumbnail Kursus</Label>
             <Card
-              className={`relative border-2 border-dashed transition-all duration-300 ${
+              className={`relative border-2 border-dashed transition-all duration-300 aspect-[4/2] w-full max-w-2xl mx-auto overflow-hidden p-0 ${
                 isUploadHovered
                   ? 'border-secondary-400 bg-secondary-50'
                   : 'border-beige-300 hover:border-secondary-400'
@@ -227,16 +274,17 @@ export function CreateCourseDialog() {
               onMouseEnter={() => setIsUploadHovered(true)}
               onMouseLeave={() => setIsUploadHovered(false)}
             >
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center justify-center space-y-4">
+              <CardContent className="p-0 h-full w-full flex items-center justify-center">
+                <div className="relative w-full h-full min-h-[96px]">
                   {formState.data.thumbnail ? (
-                    <div className="relative">
+                    <>
                       <Image
                         src={formState.data.thumbnail}
                         alt="Course thumbnail"
-                        className="w-32 h-24 object-cover rounded-lg"
-                        width={128}
-                        height={96}
+                        className="w-full h-full object-cover rounded-lg"
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 640px"
                       />
                       <Button
                         type="button"
@@ -244,13 +292,13 @@ export function CreateCourseDialog() {
                         size="sm"
                         onClick={() => handleInputChange('thumbnail', '')}
                         disabled={formState.isSubmitting}
-                        className="absolute -top-2 -right-2 bg-white border-red-300 text-red-600 hover:bg-red-50"
+                        className="absolute top-2 right-2 text-2xl bg-white border-red-300 text-red-600 hover:bg-red-50 z-10"
                       >
                         ×
                       </Button>
-                    </div>
+                    </>
                   ) : (
-                    <>
+                    <div className="flex flex-col items-center justify-center w-full h-full py-8">
                       <Upload
                         className={`h-12 w-12 transition-colors duration-300 ${
                           isUploadHovered ? 'text-secondary-600' : 'text-beige-600'
@@ -260,14 +308,14 @@ export function CreateCourseDialog() {
                         <p className="text-sm text-beige-700">Klik untuk upload atau drag & drop</p>
                         <p className="text-xs text-beige-600 mt-1">PNG, JPG, WebP (max 5MB)</p>
                       </div>
-                    </>
+                    </div>
                   )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleFileSelect}
                     disabled={formState.isSubmitting}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                   />
                 </div>
               </CardContent>
@@ -303,4 +351,26 @@ export function CreateCourseDialog() {
       </DialogContent>
     </Dialog>
   )
+}
+
+// Helper function untuk validation (temporary, should be moved to courseUtils)
+function validateCourseData(data: CreateCourseFormData): { isValid: boolean; errors: string[] } {
+  const errors: string[] = []
+
+  if (!data.title?.trim()) {
+    errors.push('Judul kursus wajib diisi')
+  }
+
+  if (!data.description?.trim()) {
+    errors.push('Deskripsi kursus wajib diisi')
+  }
+
+  if (!data.category?.trim()) {
+    errors.push('Kategori kursus wajib dipilih')
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  }
 }

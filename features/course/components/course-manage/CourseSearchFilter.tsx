@@ -11,17 +11,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useCourseManagement } from '../../hooks/useCourseManagement'
-import { useCourseSearch } from '../../hooks/useCourseSearch'
-import { useCourseDialog } from '../../hooks/useCourseDialog'
+import { useCourseContext } from '../../contexts/courseContext'
 
 export function CourseSearchFilter() {
   // Component state untuk UI interactions
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // Feature state dari hooks
-  const { courses } = useCourseManagement()
+  // Feature state dari hooks dan context
   const {
     searchQuery,
     selectedStatus,
@@ -29,8 +26,8 @@ export function CourseSearchFilter() {
     setSelectedStatus,
     clearFilters,
     hasActiveFilters,
-  } = useCourseSearch(courses)
-  const { openCreateDialog } = useCourseDialog()
+    openCreateDialog,
+  } = useCourseContext()
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true)

@@ -8,7 +8,7 @@ export function CourseStats() {
   // Component state untuk UI interactions
   const [hoveredCard, setHoveredCard] = useState<string | null>(null)
 
-  // Feature state dari hook
+  // Feature state dari hooks dan context
   const { courses, isLoading } = useCourseManagement()
 
   const totalCourses = courses.length

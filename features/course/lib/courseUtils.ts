@@ -259,6 +259,11 @@ export function getThumbnailUrl(path: string): string {
       return '/globe.svg'
     }
 
+    // Handle base64 images (temporary solution)
+    if (path.startsWith('data:image/')) {
+      return path
+    }
+
     // Jika sudah full URL, return as is
     if (path.startsWith('http')) {
       return path
@@ -327,13 +332,22 @@ export function validateCourseData(data: Partial<CreateCourseRequest>): {
 
     // Validate thumbnail URL (if provided)
     if (data.thumbnail && typeof data.thumbnail === 'string') {
+      // Handle base64 images (temporary solution)
+      if (data.thumbnail.startsWith('data:image/')) {
+        // Base64 is valid, no need to validate further
+        return
+      }
+
+      // Handle relative paths
+      if (data.thumbnail.startsWith('/') || data.thumbnail.startsWith('./')) {
+        return
+      }
+
+      // Handle full URLs
       try {
         new URL(data.thumbnail)
       } catch {
-        // If not a valid URL, check if it's a relative path
-        if (!data.thumbnail.startsWith('/') && !data.thumbnail.startsWith('./')) {
-          errors.push('URL thumbnail tidak valid')
-        }
+        errors.push('URL thumbnail tidak valid')
       }
     }
   } catch (error) {

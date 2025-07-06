@@ -359,7 +359,7 @@
   /* ===== NEUMORPHIC INPUTS ===== */
   .neu-input {
     box-shadow: var(--shadow-neu-inset);
-    border: 0;
+    border: 1px solid var(--color-beige-400);
     background-color: var(--color-beige-50);
   }
 

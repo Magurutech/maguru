@@ -14,7 +14,7 @@ import {
 import type { Course, CourseStatus } from '../../types'
 import { getStatusColor, getStatusText } from '../../lib/courseUtils'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
-import { useCourseDialog } from '../../hooks/useCourseDialog'
+import { useCourseContext } from '../../contexts/courseContext'
 import Image from 'next/image'
 
 interface CourseCardProps {
@@ -29,9 +29,9 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
   const [isActionLoading, setIsActionLoading] = useState(false)
   const [imageError, setImageError] = useState(false)
 
-  // Feature state dari hooks
+  // Feature state dari hooks dan context
   const { updateCourseStatusWithValidation, error: managementError } = useCourseManagement()
-  const { openEditDialog, openDeleteDialog } = useCourseDialog()
+  const { openEditDialog, openDeleteDialog } = useCourseContext()
 
   // Memoized event handlers untuk performance
   const handleEdit = useCallback(async () => {

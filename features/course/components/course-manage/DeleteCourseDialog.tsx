@@ -12,15 +12,15 @@ import {
 } from '@/components/ui/dialog'
 import { AlertTriangle, Trash2, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
-import { useCourseDialog } from '../../hooks/useCourseDialog'
+import { useCourseContext } from '../../contexts/courseContext'
 
 export function DeleteCourseDialog() {
   // Component state untuk UI interactions
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Feature state dari hooks
+  // Feature state dari hooks dan context
   const { deleteCourseWithConfirmation, error: managementError, clearError } = useCourseManagement()
-  const { activeDialog, selectedCourse, closeDialog } = useCourseDialog()
+  const { activeDialog, selectedCourse, closeDialog } = useCourseContext()
 
   // Handle delete confirmation
   const handleDeleteConfirm = async () => {
