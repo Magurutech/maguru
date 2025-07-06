@@ -304,4 +304,94 @@ test.describe('Creator Access Verification', () => {
 
     await takeScreenshot(page, 'creator-session-boundary')
   })
+
+  /**
+   * Test: Creator Course Management Access
+   *
+   * Skenario: Creator mengakses course management page dan fitur-fitur terkait
+   * Expected: Creator dapat mengakses course management dengan semua fitur
+   *
+   * BDD Format:
+   * - Given: Creator user sudah login
+   * - When: Creator mengakses course management page
+   * - Then: Creator dapat mengakses semua course management features
+   */
+  test('should access course management with full functionality', async ({ page }) => {
+    // Given: Creator user login
+    creatorUser = await loginWithRole(page, 'creator')
+
+    // When: Navigate ke course management page
+    await page.goto('/creator/course-manage')
+    await waitForPageLoad(page)
+
+    // Then: Verify course management accessibility
+    await expect(page).toHaveURL('/creator/course-manage')
+    await expect(page.locator('main, [role="main"]')).toBeVisible()
+
+    // Verify course management UI elements are available
+    await expect(page.locator('[data-testid="create-course-button"]')).toBeVisible()
+    await expect(page.locator('[data-testid="course-list"]')).toBeVisible()
+
+    // Verify tidak ada error atau unauthorized access
+    await expect(page).not.toHaveURL('/unauthorized')
+    await expect(page).not.toHaveURL('/sign-in')
+
+    await takeScreenshot(page, 'creator-course-management-access')
+  })
+
+  /**
+   * Test: Creator Course Creation Access
+   *
+   * Skenario: Creator mengakses course creation page
+   * Expected: Creator dapat mengakses form pembuatan course
+   *
+   * BDD Format:
+   * - Given: Creator user sudah login
+   * - When: Creator mengakses course creation page
+   * - Then: Creator dapat mengakses course creation form
+   */
+  test('should access course creation form', async ({ page }) => {
+    // Given: Creator user login
+    creatorUser = await loginWithRole(page, 'creator')
+
+    // When: Navigate ke course creation page
+    await page.goto('/creator/course-manage/create')
+    await waitForPageLoad(page)
+
+    // Then: Verify course creation form accessibility
+    await expect(page).toHaveURL('/creator/course-manage/create')
+    await expect(page.locator('[data-testid="course-creation-form"]')).toBeVisible()
+    await expect(page.locator('[data-testid="course-title-input"]')).toBeVisible()
+    await expect(page.locator('[data-testid="course-description-input"]')).toBeVisible()
+
+    await takeScreenshot(page, 'creator-course-creation-access')
+  })
+
+  /**
+   * Test: Creator Course Edit Access
+   *
+   * Skenario: Creator mengakses course edit page untuk course milik sendiri
+   * Expected: Creator dapat mengakses form edit course
+   *
+   * BDD Format:
+   * - Given: Creator user sudah login
+   * - When: Creator mengakses course edit page
+   * - Then: Creator dapat mengakses course edit form
+   */
+  test('should access course edit form for own courses', async ({ page }) => {
+    // Given: Creator user login
+    creatorUser = await loginWithRole(page, 'creator')
+
+    // When: Navigate ke course edit page (assuming course ID 1 exists)
+    await page.goto('/creator/course-manage/edit/1')
+    await waitForPageLoad(page)
+
+    // Then: Verify course edit form accessibility
+    await expect(page).toHaveURL('/creator/course-manage/edit/1')
+    await expect(page.locator('[data-testid="course-creation-form"]')).toBeVisible()
+    await expect(page.locator('[data-testid="course-title-input"]')).toBeVisible()
+    await expect(page.locator('[data-testid="course-description-input"]')).toBeVisible()
+
+    await takeScreenshot(page, 'creator-course-edit-access')
+  })
 })

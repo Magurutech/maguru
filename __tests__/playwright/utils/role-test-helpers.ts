@@ -37,6 +37,14 @@ export async function loginWithRole(page: Page, role: UserRole): Promise<RoleTes
   // Setup Clerk testing token
   await setupClerkTestingToken({ page })
 
+  // CRITICAL: Sign out first jika sudah ada session
+  try {
+    await clerk.signOut({ page })
+    await page.waitForTimeout(1000) // Wait for sign out to complete
+  } catch {
+    console.log('ℹ️ No existing session to sign out from')
+  }
+
   // Navigate to homepage first untuk inisialisasi Clerk
   await page.goto('/')
   await waitForPageLoad(page)
@@ -504,7 +512,7 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
       if (page.url().includes('/unauthorized')) {
         permissionTest = false
         results.errors.push(`Should have access to ${testRoute} but was unauthorized`)
-      }   
+      }
     } catch (error) {
       permissionTest = false
       results.errors.push(`Error testing route ${testRoute}: ${error}`)
@@ -516,7 +524,7 @@ export async function testRoleSwitching(page: Page, fromRole: UserRole, toRole: 
 
       try {
         await page.goto(restrictedRoute)
-        await waitForPageLoad(page) 
+        await waitForPageLoad(page)
 
         if (!page.url().includes('/unauthorized')) {
           permissionTest = false

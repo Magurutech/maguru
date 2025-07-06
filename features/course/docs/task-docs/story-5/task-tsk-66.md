@@ -25,8 +25,8 @@ Task ini berfokus pada implementasi End-to-End (E2E) testing menggunakan Playwri
    - Tidak mencakup performance testing (dilakukan terpisah)
 
 2. **Browser Coverage**:
-   - Primary testing pada Chromium
-   - Cross-browser testing pada Firefox dan WebKit untuk critical paths
+   - Testing hanya pada Chromium browser
+   - Tidak testing Firefox dan WebKit
    - Tidak testing mobile browsers secara terpisah
 
 3. **Test Environment**:
@@ -46,11 +46,11 @@ Task ini berfokus pada implementasi End-to-End (E2E) testing menggunakan Playwri
 ```
 __tests__/
 └── playwright/
-    ├── e2e/
-    │   └── course/
-    │       ├── course-creation.spec.ts     # Test pembuatan kursus
-    │       ├── course-management.spec.ts   # Test edit/delete kursus
-    │       └── course-authorization.spec.ts # Test role-based access
+    ├── course/
+    │   ├── course-creation.spec.ts     # Test pembuatan kursus
+    │   ├── course-management.spec.ts   # Test edit/delete kursus
+    │   ├── course-authorization.spec.ts # Test role-based access
+    │   └── course-search-filter.spec.ts # Test search dan filter
     ├── fixtures/
     │   ├── course-test-data.ts            # Test data factories
     │   └── course-test-users.ts           # Test user data
@@ -68,6 +68,81 @@ __tests__/
 | View own courses              | ✅      | ✅ (all) | ❌   | Creator: Own only, Admin: All courses                  |
 | Edit own course               | ✅      | ✅ (all) | ❌   | Creator: Own only, Admin: Any course                   |
 | Delete own course             | ✅      | ✅ (all) | ❌   | Creator: Own only, Admin: Any course                   |
+
+### Detailed Test Scenarios
+
+#### Course Creation Flow
+
+1. **Happy Path - Creator Creates Course**
+   - Creator login dan akses course management page
+   - Creator klik "Create New Course" button
+   - Creator isi form dengan data valid (title, description, thumbnail)
+   - Creator submit form
+   - Course berhasil dibuat dan muncul di list
+   - Redirect ke course list dengan success message
+
+2. **Happy Path - Admin Creates Course**
+   - Admin login dan akses course management page
+   - Admin dapat membuat course seperti creator
+   - Course tersimpan dengan admin sebagai owner
+
+3. **Validation Error Scenarios**
+   - Empty title field → Error message displayed
+   - Title terlalu pendek (< 3 karakter) → Error message
+   - Empty description → Error message
+   - Invalid thumbnail format → Error message
+
+4. **Network Error Scenarios**
+   - Server error saat submit → Error message dengan retry option
+   - Network timeout → Timeout error message
+   - Database connection error → Server error message
+
+#### Course Management Flow
+
+1. **Edit Course - Creator**
+   - Creator akses course list
+   - Creator klik edit button pada course sendiri
+   - Form pre-filled dengan data existing
+   - Creator update data dan submit
+   - Course berhasil diupdate
+
+2. **Edit Course - Admin**
+   - Admin dapat edit course milik creator lain
+   - Admin dapat edit course milik sendiri
+
+3. **Delete Course - Creator**
+   - Creator klik delete button pada course sendiri
+   - Confirmation dialog muncul
+   - Creator confirm deletion
+   - Course berhasil dihapus dari list
+
+4. **Delete Course - Admin**
+   - Admin dapat delete course milik creator lain
+   - Admin dapat delete course milik sendiri
+
+#### Authorization Flow
+
+1. **Unauthorized Access**
+   - User tanpa role creator/admin akses course management
+   - Redirect ke unauthorized page
+   - Error message displayed
+
+2. **Session Expired**
+   - User dengan session expired akses course management
+   - Redirect ke login page
+   - Error message tentang session expired
+
+#### Search and Filter Flow
+
+1. **Search Functionality**
+   - User input search term
+   - Course list filtered berdasarkan search term
+   - Empty state displayed jika tidak ada hasil
+
+2. **Filter by Status**
+   - User filter berdasarkan draft/published status
+   - Course list filtered sesuai status
+   - Filter state maintained saat navigation
 
 ### BDD Test Structure
 
@@ -97,133 +172,6 @@ test.describe('Course Management - Creator Flow', () => {
  */
 
 // __tests__/playwright/e2e/course/course-creation.spec.ts
-import { test, expect } from '@playwright/test'
-import { loginAsCreator, loginAsAdmin, loginAsUser } from '../../utils/auth-helpers'
-import { createTestCourse, cleanupTestCourses } from '../../utils/course-helpers'
-
-test.describe('Course Creation', () => {
-  test.beforeEach(async ({ page }) => {
-    await cleanupTestCourses()
-  })
-
-  test.afterEach(async ({ page }) => {
-    await cleanupTestCourses()
-  })
-
-  test('Creator should be able to create new course successfully', async ({ page }) => {
-    // Given: Creator is authenticated and on course management page
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage')
-
-    // Verify page loads correctly
-    await expect(page.locator('h1')).toContainText('Kelola Kursus')
-    await expect(page.locator('[data-testid="create-course-btn"]')).toBeVisible()
-
-    // When: Creator clicks create course button
-    await page.click('[data-testid="create-course-btn"]')
-
-    // Verify navigation to create form
-    await expect(page).toHaveURL('/creator/course-manage/create')
-    await expect(page.locator('h1')).toContainText('Buat Kursus Baru')
-
-    // When: Creator fills course information
-    await page.fill('[data-testid="course-title"]', 'E2E Test Course')
-    await page.fill('[data-testid="course-description"]', 'Deskripsi kursus untuk E2E testing')
-
-    // Add module and lesson
-    await page.click('[data-testid="add-module-btn"]')
-    await page.fill('[data-testid="module-title-0"]', 'Module 1: Introduction')
-
-    await page.click('[data-testid="add-lesson-btn-0"]')
-    await page.fill('[data-testid="lesson-title-0-0"]', 'Lesson 1: Getting Started')
-
-    // When: Creator submits the form
-    await page.click('[data-testid="save-course-btn"]')
-
-    // Then: Course should be created successfully
-    await expect(page.locator('[data-testid="success-message"]')).toBeVisible()
-    await expect(page.locator('[data-testid="success-message"]')).toContainText(
-      'Kursus berhasil dibuat',
-    )
-
-    // Then: Should redirect to course list
-    await expect(page).toHaveURL('/creator/course-manage')
-
-    // Then: New course should appear in the list
-    await expect(page.locator('[data-testid="course-list"]')).toBeVisible()
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'E2E Test Course',
-    )
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Deskripsi kursus untuk E2E testing',
-    )
-
-    // Verify module and lesson count
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      '1 Modul, 1 Pelajaran',
-    )
-  })
-
-  test('Creator should see validation errors for invalid course data', async ({ page }) => {
-    // Given: Creator is on create course page
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage/create')
-
-    // When: Creator submits empty form
-    await page.click('[data-testid="save-course-btn"]')
-
-    // Then: Should show validation errors
-    await expect(page.locator('[data-testid="title-error"]')).toContainText(
-      'Judul kursus harus diisi',
-    )
-    await expect(page.locator('[data-testid="description-error"]')).toContainText(
-      'Deskripsi harus diisi',
-    )
-
-    // Then: Should not navigate away from form
-    await expect(page).toHaveURL('/creator/course-manage/create')
-  })
-
-  test('Creator should be able to cancel course creation', async ({ page }) => {
-    // Given: Creator is on create course page with partial data
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage/create')
-
-    await page.fill('[data-testid="course-title"]', 'Cancelled Course')
-
-    // When: Creator clicks cancel
-    await page.click('[data-testid="cancel-btn"]')
-
-    // Then: Should return to course list without creating course
-    await expect(page).toHaveURL('/creator/course-manage')
-    await expect(page.locator('[data-testid="course-list"]')).not.toContainText('Cancelled Course')
-  })
-
-  test('Admin should be able to create course', async ({ page }) => {
-    // Given: Admin is authenticated
-    await loginAsAdmin(page)
-    await page.goto('/creator/course-manage')
-
-    // When: Admin creates a course (same flow as creator)
-    await page.click('[data-testid="create-course-btn"]')
-    await page.fill('[data-testid="course-title"]', 'Admin Test Course')
-    await page.fill('[data-testid="course-description"]', 'Course created by admin')
-
-    await page.click('[data-testid="add-module-btn"]')
-    await page.fill('[data-testid="module-title-0"]', 'Admin Module')
-
-    await page.click('[data-testid="add-lesson-btn-0"]')
-    await page.fill('[data-testid="lesson-title-0-0"]', 'Admin Lesson')
-
-    await page.click('[data-testid="save-course-btn"]')
-
-    // Then: Course should be created successfully
-    await expect(page.locator('[data-testid="success-message"]')).toBeVisible()
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Admin Test Course',
-    )
-  })
-})
 ```
 
 #### Course Management Tests
@@ -236,241 +184,6 @@ test.describe('Course Creation', () => {
  */
 
 // __tests__/playwright/e2e/course/course-management.spec.ts
-test.describe('Course Management', () => {
-  let testCourseId: string
-
-  test.beforeEach(async ({ page }) => {
-    await cleanupTestCourses()
-    // Create test course for manipulation
-    testCourseId = await createTestCourse({
-      title: 'Test Course for Management',
-      description: 'Course for testing edit/delete operations',
-    })
-  })
-
-  test('Creator should be able to edit own course', async ({ page }) => {
-    // Given: Creator has an existing course
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage')
-
-    // Verify course exists
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Test Course for Management',
-    )
-
-    // When: Creator clicks edit button
-    await page.click('[data-testid="edit-course-btn"]')
-
-    // Then: Should navigate to edit form with pre-filled data
-    await expect(page).toHaveURL(`/creator/course-manage/edit/${testCourseId}`)
-    await expect(page.locator('[data-testid="course-title"]')).toHaveValue(
-      'Test Course for Management',
-    )
-
-    // When: Creator updates course information
-    await page.fill('[data-testid="course-title"]', 'Updated Test Course')
-    await page.fill('[data-testid="course-description"]', 'Updated description for testing')
-
-    await page.click('[data-testid="update-course-btn"]')
-
-    // Then: Course should be updated successfully
-    await expect(page.locator('[data-testid="success-message"]')).toContainText(
-      'Kursus berhasil diperbarui',
-    )
-    await expect(page).toHaveURL('/creator/course-manage')
-
-    // Then: Updated information should be reflected in course list
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Updated Test Course',
-    )
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Updated description for testing',
-    )
-  })
-
-  test('Creator should be able to delete own course with confirmation', async ({ page }) => {
-    // Given: Creator has an existing course
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage')
-
-    // When: Creator clicks delete button
-    await page.click('[data-testid="delete-course-btn"]')
-
-    // Then: Confirmation modal should appear
-    await expect(page.locator('[data-testid="delete-confirmation-modal"]')).toBeVisible()
-    await expect(page.locator('[data-testid="confirmation-message"]')).toContainText(
-      'Yakin ingin menghapus kursus',
-    )
-
-    // When: Creator confirms deletion
-    await page.click('[data-testid="confirm-delete-btn"]')
-
-    // Then: Course should be deleted
-    await expect(page.locator('[data-testid="success-message"]')).toContainText(
-      'Kursus berhasil dihapus',
-    )
-
-    // Then: Course should no longer appear in list
-    await expect(page.locator('[data-testid="course-list"]')).not.toContainText(
-      'Test Course for Management',
-    )
-  })
-
-  test('Creator should be able to cancel course deletion', async ({ page }) => {
-    // Given: Creator has an existing course
-    await loginAsCreator(page)
-    await page.goto('/creator/course-manage')
-
-    // When: Creator clicks delete but cancels
-    await page.click('[data-testid="delete-course-btn"]')
-    await page.click('[data-testid="cancel-delete-btn"]')
-
-    // Then: Modal should close and course should remain
-    await expect(page.locator('[data-testid="delete-confirmation-modal"]')).not.toBeVisible()
-    await expect(page.locator('[data-testid="course-card"]').first()).toContainText(
-      'Test Course for Management',
-    )
-  })
-})
-```
-
-#### Authorization Tests
-
-```typescript
-/**
- * E2E Test: Role-Based Authorization
- *
- * Test access control untuk berbagai role user.
- */
-
-// __tests__/playwright/e2e/course/course-authorization.spec.ts
-test.describe('Course Authorization', () => {
-  test('Regular user should not access course management', async ({ page }) => {
-    // Given: Regular user is authenticated
-    await loginAsUser(page)
-
-    // When: User tries to access course management
-    await page.goto('/creator/course-manage')
-
-    // Then: Should be redirected to unauthorized page
-    await expect(page).toHaveURL('/unauthorized')
-    await expect(page.locator('h1')).toContainText('Access Denied')
-    await expect(page.locator('[data-testid="error-message"]')).toContainText(
-      'You do not have permission',
-    )
-  })
-
-  test('Unauthenticated user should be redirected to sign-in', async ({ page }) => {
-    // Given: No user is authenticated
-
-    // When: User tries to access course management
-    await page.goto('/creator/course-manage')
-
-    // Then: Should be redirected to sign-in page
-    await expect(page).toHaveURL('/sign-in')
-  })
-
-  test('Creator should only see own courses', async ({ page }) => {
-    // Given: Multiple creators with different courses exist
-    const creatorAId = await createTestUser({ role: 'creator', email: 'creator-a@test.com' })
-    const creatorBId = await createTestUser({ role: 'creator', email: 'creator-b@test.com' })
-
-    await createTestCourse({ title: 'Course A', creatorId: creatorAId })
-    await createTestCourse({ title: 'Course B', creatorId: creatorBId })
-
-    // When: Creator A logs in and views course list
-    await loginAs(page, 'creator-a@test.com')
-    await page.goto('/creator/course-manage')
-
-    // Then: Should only see own courses
-    await expect(page.locator('[data-testid="course-list"]')).toContainText('Course A')
-    await expect(page.locator('[data-testid="course-list"]')).not.toContainText('Course B')
-  })
-
-  test('Admin should see all courses', async ({ page }) => {
-    // Given: Multiple creators with different courses exist
-    const creatorAId = await createTestUser({ role: 'creator', email: 'creator-a@test.com' })
-    const creatorBId = await createTestUser({ role: 'creator', email: 'creator-b@test.com' })
-
-    await createTestCourse({ title: 'Course A', creatorId: creatorAId })
-    await createTestCourse({ title: 'Course B', creatorId: creatorBId })
-
-    // When: Admin logs in and views course list
-    await loginAsAdmin(page)
-    await page.goto('/creator/course-manage')
-
-    // Then: Should see all courses
-    await expect(page.locator('[data-testid="course-list"]')).toContainText('Course A')
-    await expect(page.locator('[data-testid="course-list"]')).toContainText('Course B')
-  })
-})
-```
-
-### Test Helpers Implementation
-
-```typescript
-// __tests__/playwright/utils/course-helpers.ts
-import { Page } from '@playwright/test'
-
-export async function createTestCourse(courseData: {
-  title: string
-  description: string
-  creatorId?: string
-}) {
-  // API call to create test course
-  const response = await fetch('/api/test/courses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(courseData),
-  })
-
-  const data = await response.json()
-  return data.id
-}
-
-export async function cleanupTestCourses() {
-  // API call to cleanup test data
-  await fetch('/api/test/cleanup/courses', { method: 'DELETE' })
-}
-
-export async function waitForCourseListToLoad(page: Page) {
-  await page.waitForSelector('[data-testid="course-list"]')
-  await page.waitForLoadState('networkidle')
-}
-
-export async function fillCourseForm(
-  page: Page,
-  courseData: {
-    title: string
-    description: string
-    modules: Array<{
-      title: string
-      lessons: Array<{ title: string }>
-    }>
-  },
-) {
-  await page.fill('[data-testid="course-title"]', courseData.title)
-  await page.fill('[data-testid="course-description"]', courseData.description)
-
-  for (let i = 0; i < courseData.modules.length; i++) {
-    if (i > 0) {
-      await page.click('[data-testid="add-module-btn"]')
-    }
-
-    await page.fill(`[data-testid="module-title-${i}"]`, courseData.modules[i].title)
-
-    for (let j = 0; j < courseData.modules[i].lessons.length; j++) {
-      if (j > 0) {
-        await page.click(`[data-testid="add-lesson-btn-${i}"]`)
-      }
-
-      await page.fill(
-        `[data-testid="lesson-title-${i}-${j}"]`,
-        courseData.modules[i].lessons[j].title,
-      )
-    }
-  }
-}
 ```
 
 ## Test Plan
@@ -509,19 +222,17 @@ export async function fillCourseForm(
 - Manual cleanup untuk interrupted tests
 - Separate test database untuk isolation
 
-### Cross-Browser Testing
+### Browser Testing Strategy
 
-**Primary Browsers**:
+**Browser Coverage**:
 
-- Chromium (primary development)
-- Firefox (cross-browser validation)
-- WebKit (Safari compatibility)
+- Chromium browser only (primary development)
 
 **Test Matrix**:
 
 - Full test suite pada Chromium
-- Smoke tests pada Firefox dan WebKit
-- Critical path tests pada semua browsers
+- Tidak testing Firefox dan WebKit
+- Focus pada functional testing di Chromium
 
 ### Performance Validation
 
