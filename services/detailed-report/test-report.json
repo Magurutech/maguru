@@ -1,9 +1,2021 @@
 {
-  "numTotalTests": 0,
-  "numPassedTests": 0,
+  "numTotalTests": 179,
+  "numPassedTests": 179,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-05T12:28:58.544Z",
-  "endTime": "2025-07-05T12:28:58.559Z",
-  "testResults": []
+  "startTime": "2025-07-06T01:47:40.336Z",
+  "endTime": "2025-07-06T01:47:46.336Z",
+  "testResults": [
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\services\\courseService.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "createCourse"
+          ],
+          "fullName": "CourseService createCourse should create course successfully with valid data",
+          "status": "passed",
+          "title": "should create course successfully with valid data",
+          "failureMessages": [],
+          "duration": 12
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "createCourse"
+          ],
+          "fullName": "CourseService createCourse should handle database connection error",
+          "status": "passed",
+          "title": "should handle database connection error",
+          "failureMessages": [],
+          "duration": 16
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "createCourse"
+          ],
+          "fullName": "CourseService createCourse should handle empty title validation",
+          "status": "passed",
+          "title": "should handle empty title validation",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourses"
+          ],
+          "fullName": "CourseService getCourses should return paginated courses list",
+          "status": "passed",
+          "title": "should return paginated courses list",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourses"
+          ],
+          "fullName": "CourseService getCourses should handle empty database",
+          "status": "passed",
+          "title": "should handle empty database",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourses"
+          ],
+          "fullName": "CourseService getCourses should filter by creatorId correctly",
+          "status": "passed",
+          "title": "should filter by creatorId correctly",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourses"
+          ],
+          "fullName": "CourseService getCourses should handle invalid pagination parameters",
+          "status": "passed",
+          "title": "should handle invalid pagination parameters",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourseById"
+          ],
+          "fullName": "CourseService getCourseById should return course by valid ID",
+          "status": "passed",
+          "title": "should return course by valid ID",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourseById"
+          ],
+          "fullName": "CourseService getCourseById should return null for non-existent ID",
+          "status": "passed",
+          "title": "should return null for non-existent ID",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCourseById"
+          ],
+          "fullName": "CourseService getCourseById should handle database query error",
+          "status": "passed",
+          "title": "should handle database query error",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "updateCourse"
+          ],
+          "fullName": "CourseService updateCourse should update course successfully",
+          "status": "passed",
+          "title": "should update course successfully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "updateCourse"
+          ],
+          "fullName": "CourseService updateCourse should reject update for non-owner",
+          "status": "passed",
+          "title": "should reject update for non-owner",
+          "failureMessages": [],
+          "duration": 11
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "updateCourse"
+          ],
+          "fullName": "CourseService updateCourse should handle course not found",
+          "status": "passed",
+          "title": "should handle course not found",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "deleteCourse"
+          ],
+          "fullName": "CourseService deleteCourse should delete course successfully",
+          "status": "passed",
+          "title": "should delete course successfully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "deleteCourse"
+          ],
+          "fullName": "CourseService deleteCourse should reject delete for non-owner",
+          "status": "passed",
+          "title": "should reject delete for non-owner",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "deleteCourse"
+          ],
+          "fullName": "CourseService deleteCourse should handle course not found",
+          "status": "passed",
+          "title": "should handle course not found",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "updateCourseStatus"
+          ],
+          "fullName": "CourseService updateCourseStatus should update status successfully",
+          "status": "passed",
+          "title": "should update status successfully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "updateCourseStatus"
+          ],
+          "fullName": "CourseService updateCourseStatus should reject status update for non-owner",
+          "status": "passed",
+          "title": "should reject status update for non-owner",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseService",
+            "getCoursesByCreator"
+          ],
+          "fullName": "CourseService getCoursesByCreator should call getCourses with creatorId filter",
+          "status": "passed",
+          "title": "should call getCourses with creatorId filter",
+          "failureMessages": [],
+          "duration": 0
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\adapters\\courseAdapter.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCourses"
+          ],
+          "fullName": "CourseAdapter getCourses should make successful GET request",
+          "status": "passed",
+          "title": "should make successful GET request",
+          "failureMessages": [],
+          "duration": 15
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCourses"
+          ],
+          "fullName": "CourseAdapter getCourses should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCourses"
+          ],
+          "fullName": "CourseAdapter getCourses should handle API error responses",
+          "status": "passed",
+          "title": "should handle API error responses",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCourseById"
+          ],
+          "fullName": "CourseAdapter getCourseById should make successful GET request",
+          "status": "passed",
+          "title": "should make successful GET request",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCourseById"
+          ],
+          "fullName": "CourseAdapter getCourseById should handle 404 error",
+          "status": "passed",
+          "title": "should handle 404 error",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should make successful POST request with auth",
+          "status": "passed",
+          "title": "should make successful POST request with auth",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should handle 401 Unauthorized from API",
+          "status": "passed",
+          "title": "should handle 401 Unauthorized from API",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should handle 403 Forbidden (role validation)",
+          "status": "passed",
+          "title": "should handle 403 Forbidden (role validation)",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should handle 400 Bad Request (validation failed)",
+          "status": "passed",
+          "title": "should handle 400 Bad Request (validation failed)",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "createCourse"
+          ],
+          "fullName": "CourseAdapter createCourse should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "updateCourse"
+          ],
+          "fullName": "CourseAdapter updateCourse should make successful PUT request with auth",
+          "status": "passed",
+          "title": "should make successful PUT request with auth",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "updateCourse"
+          ],
+          "fullName": "CourseAdapter updateCourse should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "updateCourse"
+          ],
+          "fullName": "CourseAdapter updateCourse should handle forbidden access",
+          "status": "passed",
+          "title": "should handle forbidden access",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "deleteCourse"
+          ],
+          "fullName": "CourseAdapter deleteCourse should make successful DELETE request with auth",
+          "status": "passed",
+          "title": "should make successful DELETE request with auth",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "deleteCourse"
+          ],
+          "fullName": "CourseAdapter deleteCourse should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "deleteCourse"
+          ],
+          "fullName": "CourseAdapter deleteCourse should handle server error",
+          "status": "passed",
+          "title": "should handle server error",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCoursesByCreator"
+          ],
+          "fullName": "CourseAdapter getCoursesByCreator should make successful GET request with creatorId filter",
+          "status": "passed",
+          "title": "should make successful GET request with creatorId filter",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "getCoursesByCreator"
+          ],
+          "fullName": "CourseAdapter getCoursesByCreator should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "updateCourseStatus"
+          ],
+          "fullName": "CourseAdapter updateCourseStatus should make successful PATCH request with auth",
+          "status": "passed",
+          "title": "should make successful PATCH request with auth",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAdapter",
+            "updateCourseStatus"
+          ],
+          "fullName": "CourseAdapter updateCourseStatus should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 1
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\lib\\courseUtils.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusColor"
+          ],
+          "fullName": "courseUtils getStatusColor should return correct CSS classes for DRAFT status",
+          "status": "passed",
+          "title": "should return correct CSS classes for DRAFT status",
+          "failureMessages": [],
+          "duration": 10
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusColor"
+          ],
+          "fullName": "courseUtils getStatusColor should return correct CSS classes for PUBLISHED status",
+          "status": "passed",
+          "title": "should return correct CSS classes for PUBLISHED status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusColor"
+          ],
+          "fullName": "courseUtils getStatusColor should return default color for invalid status",
+          "status": "passed",
+          "title": "should return default color for invalid status",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusText"
+          ],
+          "fullName": "courseUtils getStatusText should return Indonesian text for DRAFT status",
+          "status": "passed",
+          "title": "should return Indonesian text for DRAFT status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusText"
+          ],
+          "fullName": "courseUtils getStatusText should return Indonesian text for PUBLISHED status",
+          "status": "passed",
+          "title": "should return Indonesian text for PUBLISHED status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getStatusText"
+          ],
+          "fullName": "courseUtils getStatusText should return default text for invalid status",
+          "status": "passed",
+          "title": "should return default text for invalid status",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should filter by title search",
+          "status": "passed",
+          "title": "should filter by title search",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should filter by description search",
+          "status": "passed",
+          "title": "should filter by description search",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should filter by status",
+          "status": "passed",
+          "title": "should filter by status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should filter by combined search and status",
+          "status": "passed",
+          "title": "should filter by combined search and status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should return all courses for empty search query",
+          "status": "passed",
+          "title": "should return all courses for empty search query",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCourses"
+          ],
+          "fullName": "courseUtils filterCourses should handle case-insensitive search",
+          "status": "passed",
+          "title": "should handle case-insensitive search",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCoursesByStatus"
+          ],
+          "fullName": "courseUtils filterCoursesByStatus should filter by DRAFT status",
+          "status": "passed",
+          "title": "should filter by DRAFT status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCoursesByStatus"
+          ],
+          "fullName": "courseUtils filterCoursesByStatus should filter by PUBLISHED status",
+          "status": "passed",
+          "title": "should filter by PUBLISHED status",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "filterCoursesByStatus"
+          ],
+          "fullName": "courseUtils filterCoursesByStatus should return all courses without status filter",
+          "status": "passed",
+          "title": "should return all courses without status filter",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatDuration"
+          ],
+          "fullName": "courseUtils formatDuration should format 60 minutes to \"1 jam\"",
+          "status": "passed",
+          "title": "should format 60 minutes to \"1 jam\"",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatDuration"
+          ],
+          "fullName": "courseUtils formatDuration should format 90 minutes to \"1 jam 30 menit\"",
+          "status": "passed",
+          "title": "should format 90 minutes to \"1 jam 30 menit\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatDuration"
+          ],
+          "fullName": "courseUtils formatDuration should format 30 minutes to \"30 menit\"",
+          "status": "passed",
+          "title": "should format 30 minutes to \"30 menit\"",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatDuration"
+          ],
+          "fullName": "courseUtils formatDuration should format 0 minutes to \"0 menit\"",
+          "status": "passed",
+          "title": "should format 0 minutes to \"0 menit\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatRating"
+          ],
+          "fullName": "courseUtils formatRating should format 4.8 to \"4.8\"",
+          "status": "passed",
+          "title": "should format 4.8 to \"4.8\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatRating"
+          ],
+          "fullName": "courseUtils formatRating should format 5.0 to \"5.0\"",
+          "status": "passed",
+          "title": "should format 5.0 to \"5.0\"",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatRating"
+          ],
+          "fullName": "courseUtils formatRating should format 0.0 to \"0.0\"",
+          "status": "passed",
+          "title": "should format 0.0 to \"0.0\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatNumber"
+          ],
+          "fullName": "courseUtils formatNumber should format 1000 to \"1.000\"",
+          "status": "passed",
+          "title": "should format 1000 to \"1.000\"",
+          "failureMessages": [],
+          "duration": 23
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatNumber"
+          ],
+          "fullName": "courseUtils formatNumber should format 10000 to \"10.000\"",
+          "status": "passed",
+          "title": "should format 10000 to \"10.000\"",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatNumber"
+          ],
+          "fullName": "courseUtils formatNumber should format 100000 to \"100.000\"",
+          "status": "passed",
+          "title": "should format 100000 to \"100.000\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "formatNumber"
+          ],
+          "fullName": "courseUtils formatNumber should format 0 to \"0\"",
+          "status": "passed",
+          "title": "should format 0 to \"0\"",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getThumbnailUrl"
+          ],
+          "fullName": "courseUtils getThumbnailUrl should return full URL for valid path",
+          "status": "passed",
+          "title": "should return full URL for valid path",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getThumbnailUrl"
+          ],
+          "fullName": "courseUtils getThumbnailUrl should return default image for empty path",
+          "status": "passed",
+          "title": "should return default image for empty path",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getThumbnailUrl"
+          ],
+          "fullName": "courseUtils getThumbnailUrl should return default image for null/undefined path",
+          "status": "passed",
+          "title": "should return default image for null/undefined path",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getThumbnailUrl"
+          ],
+          "fullName": "courseUtils getThumbnailUrl should return path as is for full URL",
+          "status": "passed",
+          "title": "should return path as is for full URL",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "getThumbnailUrl"
+          ],
+          "fullName": "courseUtils getThumbnailUrl should use fallback URL when env variable is not set",
+          "status": "passed",
+          "title": "should use fallback URL when env variable is not set",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should validate correct course data",
+          "status": "passed",
+          "title": "should validate correct course data",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should reject empty title",
+          "status": "passed",
+          "title": "should reject empty title",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should reject empty description",
+          "status": "passed",
+          "title": "should reject empty description",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should reject empty category",
+          "status": "passed",
+          "title": "should reject empty category",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should handle multiple errors",
+          "status": "passed",
+          "title": "should handle multiple errors",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "courseUtils",
+            "validateCourseData"
+          ],
+          "fullName": "courseUtils validateCourseData should handle whitespace-only values",
+          "status": "passed",
+          "title": "should handle whitespace-only values",
+          "failureMessages": [],
+          "duration": 0
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\hooks\\useCourseManagement.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Initial State"
+          ],
+          "fullName": "useCourseManagement Hook Initial State should initialize with default state",
+          "status": "passed",
+          "title": "should initialize with default state",
+          "failureMessages": [],
+          "duration": 19
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Permission Validation"
+          ],
+          "fullName": "useCourseManagement Hook Permission Validation should check create permission correctly for creator",
+          "status": "passed",
+          "title": "should check create permission correctly for creator",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Permission Validation"
+          ],
+          "fullName": "useCourseManagement Hook Permission Validation should check create permission correctly for admin",
+          "status": "passed",
+          "title": "should check create permission correctly for admin",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Permission Validation"
+          ],
+          "fullName": "useCourseManagement Hook Permission Validation should check create permission correctly for user",
+          "status": "passed",
+          "title": "should check create permission correctly for user",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Permission Validation"
+          ],
+          "fullName": "useCourseManagement Hook Permission Validation should check create permission correctly for no role",
+          "status": "passed",
+          "title": "should check create permission correctly for no role",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Business Logic Operations"
+          ],
+          "fullName": "useCourseManagement Hook Business Logic Operations should load creator courses with role validation",
+          "status": "passed",
+          "title": "should load creator courses with role validation",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Business Logic Operations"
+          ],
+          "fullName": "useCourseManagement Hook Business Logic Operations should not load creator courses without permission",
+          "status": "passed",
+          "title": "should not load creator courses without permission",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Business Logic Operations"
+          ],
+          "fullName": "useCourseManagement Hook Business Logic Operations should load public courses",
+          "status": "passed",
+          "title": "should load public courses",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Business Logic Operations"
+          ],
+          "fullName": "useCourseManagement Hook Business Logic Operations should refresh courses correctly",
+          "status": "passed",
+          "title": "should refresh courses correctly",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should create course with validation successfully",
+          "status": "passed",
+          "title": "should create course with validation successfully",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should not create course without permission",
+          "status": "passed",
+          "title": "should not create course without permission",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should handle create course error",
+          "status": "passed",
+          "title": "should handle create course error",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should update course with validation successfully",
+          "status": "passed",
+          "title": "should update course with validation successfully",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should not update course without permission",
+          "status": "passed",
+          "title": "should not update course without permission",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should delete course with confirmation successfully",
+          "status": "passed",
+          "title": "should delete course with confirmation successfully",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "CRUD Operations with Validation"
+          ],
+          "fullName": "useCourseManagement Hook CRUD Operations with Validation should update course status with validation successfully",
+          "status": "passed",
+          "title": "should update course status with validation successfully",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Batch Operations"
+          ],
+          "fullName": "useCourseManagement Hook Batch Operations should delete multiple courses successfully",
+          "status": "passed",
+          "title": "should delete multiple courses successfully",
+          "failureMessages": [],
+          "duration": 16
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Batch Operations"
+          ],
+          "fullName": "useCourseManagement Hook Batch Operations should handle partial batch deletion failure",
+          "status": "passed",
+          "title": "should handle partial batch deletion failure",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Batch Operations"
+          ],
+          "fullName": "useCourseManagement Hook Batch Operations should update multiple course status successfully",
+          "status": "passed",
+          "title": "should update multiple course status successfully",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Error Recovery"
+          ],
+          "fullName": "useCourseManagement Hook Error Recovery should clear errors correctly",
+          "status": "passed",
+          "title": "should clear errors correctly",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Error Recovery"
+          ],
+          "fullName": "useCourseManagement Hook Error Recovery should reset state correctly",
+          "status": "passed",
+          "title": "should reset state correctly",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseManagement Hook Edge Cases should handle loading state correctly",
+          "status": "passed",
+          "title": "should handle loading state correctly",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseManagement Hook Edge Cases should handle error state correctly",
+          "status": "passed",
+          "title": "should handle error state correctly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseManagement Hook Edge Cases should handle empty courses array",
+          "status": "passed",
+          "title": "should handle empty courses array",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseManagement Hook Edge Cases should handle role loading state",
+          "status": "passed",
+          "title": "should handle role loading state",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseManagement Hook Edge Cases should handle role error state",
+          "status": "passed",
+          "title": "should handle role error state",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Performance and Memory"
+          ],
+          "fullName": "useCourseManagement Hook Performance and Memory should not cause memory leaks with rapid operations",
+          "status": "passed",
+          "title": "should not cause memory leaks with rapid operations",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseManagement Hook",
+            "Performance and Memory"
+          ],
+          "fullName": "useCourseManagement Hook Performance and Memory should handle concurrent operations gracefully",
+          "status": "passed",
+          "title": "should handle concurrent operations gracefully",
+          "failureMessages": [],
+          "duration": 2
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\hooks\\useCourseSearch.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Initial State"
+          ],
+          "fullName": "useCourseSearch Hook Initial State should initialize with default state",
+          "status": "passed",
+          "title": "should initialize with default state",
+          "failureMessages": [],
+          "duration": 55
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search State Management"
+          ],
+          "fullName": "useCourseSearch Hook Search State Management should set search query correctly",
+          "status": "passed",
+          "title": "should set search query correctly",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search State Management"
+          ],
+          "fullName": "useCourseSearch Hook Search State Management should set selected status correctly",
+          "status": "passed",
+          "title": "should set selected status correctly",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search State Management"
+          ],
+          "fullName": "useCourseSearch Hook Search State Management should set selected category correctly",
+          "status": "passed",
+          "title": "should set selected category correctly",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search State Management"
+          ],
+          "fullName": "useCourseSearch Hook Search State Management should clear all filters",
+          "status": "passed",
+          "title": "should clear all filters",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Debounced Search"
+          ],
+          "fullName": "useCourseSearch Hook Debounced Search should debounce search query correctly",
+          "status": "passed",
+          "title": "should debounce search query correctly",
+          "failureMessages": [],
+          "duration": 13
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Debounced Search"
+          ],
+          "fullName": "useCourseSearch Hook Debounced Search should handle rapid search input changes",
+          "status": "passed",
+          "title": "should handle rapid search input changes",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Debounced Search"
+          ],
+          "fullName": "useCourseSearch Hook Debounced Search should cancel previous debounce on new input",
+          "status": "passed",
+          "title": "should cancel previous debounce on new input",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Filter Logic"
+          ],
+          "fullName": "useCourseSearch Hook Filter Logic should filter courses with search query",
+          "status": "passed",
+          "title": "should filter courses with search query",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Filter Logic"
+          ],
+          "fullName": "useCourseSearch Hook Filter Logic should filter courses with status",
+          "status": "passed",
+          "title": "should filter courses with status",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Filter Logic"
+          ],
+          "fullName": "useCourseSearch Hook Filter Logic should filter courses with category",
+          "status": "passed",
+          "title": "should filter courses with category",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Filter Logic"
+          ],
+          "fullName": "useCourseSearch Hook Filter Logic should combine multiple filters",
+          "status": "passed",
+          "title": "should combine multiple filters",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Filter Logic"
+          ],
+          "fullName": "useCourseSearch Hook Filter Logic should handle case-insensitive search",
+          "status": "passed",
+          "title": "should handle case-insensitive search",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should add query to search history",
+          "status": "passed",
+          "title": "should add query to search history",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should not add empty query to history",
+          "status": "passed",
+          "title": "should not add empty query to history",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should limit search history to max items",
+          "status": "passed",
+          "title": "should limit search history to max items",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should remove existing entry when adding duplicate",
+          "status": "passed",
+          "title": "should remove existing entry when adding duplicate",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should clear search history",
+          "status": "passed",
+          "title": "should clear search history",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search History Management"
+          ],
+          "fullName": "useCourseSearch Hook Search History Management should remove specific query from history",
+          "status": "passed",
+          "title": "should remove specific query from history",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should generate suggestions from history",
+          "status": "passed",
+          "title": "should generate suggestions from history",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should generate suggestions from course titles",
+          "status": "passed",
+          "title": "should generate suggestions from course titles",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should generate suggestions from course descriptions",
+          "status": "passed",
+          "title": "should generate suggestions from course descriptions",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should limit suggestions count",
+          "status": "passed",
+          "title": "should limit suggestions count",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should handle empty partial query",
+          "status": "passed",
+          "title": "should handle empty partial query",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Search Suggestions"
+          ],
+          "fullName": "useCourseSearch Hook Search Suggestions should handle case-insensitive suggestions",
+          "status": "passed",
+          "title": "should handle case-insensitive suggestions",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseSearch Hook Utility Functions should get unique categories from courses",
+          "status": "passed",
+          "title": "should get unique categories from courses",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseSearch Hook Utility Functions should get unique statuses from courses",
+          "status": "passed",
+          "title": "should get unique statuses from courses",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseSearch Hook Utility Functions should check for active filters",
+          "status": "passed",
+          "title": "should check for active filters",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseSearch Hook Utility Functions should count filtered results correctly",
+          "status": "passed",
+          "title": "should count filtered results correctly",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Auto-add to Search History"
+          ],
+          "fullName": "useCourseSearch Hook Auto-add to Search History should auto-add to search history when search is performed",
+          "status": "passed",
+          "title": "should auto-add to search history when search is performed",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Auto-add to Search History"
+          ],
+          "fullName": "useCourseSearch Hook Auto-add to Search History should not auto-add empty queries to history",
+          "status": "passed",
+          "title": "should not auto-add empty queries to history",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseSearch Hook Edge Cases should handle empty courses array",
+          "status": "passed",
+          "title": "should handle empty courses array",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseSearch Hook Edge Cases should handle null/undefined courses",
+          "status": "passed",
+          "title": "should handle null/undefined courses",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseSearch Hook Edge Cases should handle courses with missing properties",
+          "status": "passed",
+          "title": "should handle courses with missing properties",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseSearch Hook Edge Cases should handle rapid filter changes",
+          "status": "passed",
+          "title": "should handle rapid filter changes",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseSearch Hook Edge Cases should handle filterCourses returning null/undefined",
+          "status": "passed",
+          "title": "should handle filterCourses returning null/undefined",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Performance"
+          ],
+          "fullName": "useCourseSearch Hook Performance should handle large datasets efficiently",
+          "status": "passed",
+          "title": "should handle large datasets efficiently",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseSearch Hook",
+            "Performance"
+          ],
+          "fullName": "useCourseSearch Hook Performance should not cause memory leaks with rapid updates",
+          "status": "passed",
+          "title": "should not cause memory leaks with rapid updates",
+          "failureMessages": [],
+          "duration": 2
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\hooks\\useCourse.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Initial State"
+          ],
+          "fullName": "useCourse Hook Initial State should initialize with default state",
+          "status": "passed",
+          "title": "should initialize with default state",
+          "failureMessages": [],
+          "duration": 32
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourses"
+          ],
+          "fullName": "useCourse Hook fetchCourses should fetch courses successfully",
+          "status": "passed",
+          "title": "should fetch courses successfully",
+          "failureMessages": [],
+          "duration": 16
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourses"
+          ],
+          "fullName": "useCourse Hook fetchCourses should handle fetch courses error",
+          "status": "passed",
+          "title": "should handle fetch courses error",
+          "failureMessages": [],
+          "duration": 8
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourseById"
+          ],
+          "fullName": "useCourse Hook fetchCourseById should fetch course by ID successfully",
+          "status": "passed",
+          "title": "should fetch course by ID successfully",
+          "failureMessages": [],
+          "duration": 21
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "fetchCourseById"
+          ],
+          "fullName": "useCourse Hook fetchCourseById should handle fetch course by ID error",
+          "status": "passed",
+          "title": "should handle fetch course by ID error",
+          "failureMessages": [],
+          "duration": 8
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "createCourse"
+          ],
+          "fullName": "useCourse Hook createCourse should create course successfully",
+          "status": "passed",
+          "title": "should create course successfully",
+          "failureMessages": [],
+          "duration": 18
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "createCourse"
+          ],
+          "fullName": "useCourse Hook createCourse should handle create course error",
+          "status": "passed",
+          "title": "should handle create course error",
+          "failureMessages": [],
+          "duration": 15
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "updateCourse"
+          ],
+          "fullName": "useCourse Hook updateCourse should update course successfully",
+          "status": "passed",
+          "title": "should update course successfully",
+          "failureMessages": [],
+          "duration": 23
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "deleteCourse"
+          ],
+          "fullName": "useCourse Hook deleteCourse should delete course successfully",
+          "status": "passed",
+          "title": "should delete course successfully",
+          "failureMessages": [],
+          "duration": 27
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourse Hook Utility Functions should clear error",
+          "status": "passed",
+          "title": "should clear error",
+          "failureMessages": [],
+          "duration": 16
+        },
+        {
+          "ancestorTitles": [
+            "useCourse Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourse Hook Utility Functions should reset state",
+          "status": "passed",
+          "title": "should reset state",
+          "failureMessages": [],
+          "duration": 17
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\hooks\\useCourseDialog.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Initial State"
+          ],
+          "fullName": "useCourseDialog Hook Initial State should initialize with default state",
+          "status": "passed",
+          "title": "should initialize with default state",
+          "failureMessages": [],
+          "duration": 25
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Dialog State Management"
+          ],
+          "fullName": "useCourseDialog Hook Dialog State Management should open create dialog correctly",
+          "status": "passed",
+          "title": "should open create dialog correctly",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Dialog State Management"
+          ],
+          "fullName": "useCourseDialog Hook Dialog State Management should open edit dialog with course data",
+          "status": "passed",
+          "title": "should open edit dialog with course data",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Dialog State Management"
+          ],
+          "fullName": "useCourseDialog Hook Dialog State Management should open delete dialog with course data",
+          "status": "passed",
+          "title": "should open delete dialog with course data",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Dialog State Management"
+          ],
+          "fullName": "useCourseDialog Hook Dialog State Management should close dialog and reset state",
+          "status": "passed",
+          "title": "should close dialog and reset state",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form State Management"
+          ],
+          "fullName": "useCourseDialog Hook Form State Management should update form data correctly",
+          "status": "passed",
+          "title": "should update form data correctly",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form State Management"
+          ],
+          "fullName": "useCourseDialog Hook Form State Management should handle validation errors in form update",
+          "status": "passed",
+          "title": "should handle validation errors in form update",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form State Management"
+          ],
+          "fullName": "useCourseDialog Hook Form State Management should reset form to initial state",
+          "status": "passed",
+          "title": "should reset form to initial state",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form State Management"
+          ],
+          "fullName": "useCourseDialog Hook Form State Management should set submitting state correctly",
+          "status": "passed",
+          "title": "should set submitting state correctly",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form Validation"
+          ],
+          "fullName": "useCourseDialog Hook Form Validation should validate form with valid data",
+          "status": "passed",
+          "title": "should validate form with valid data",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form Validation"
+          ],
+          "fullName": "useCourseDialog Hook Form Validation should validate form with invalid data",
+          "status": "passed",
+          "title": "should validate form with invalid data",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form Validation"
+          ],
+          "fullName": "useCourseDialog Hook Form Validation should check form changes against original data",
+          "status": "passed",
+          "title": "should check form changes against original data",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Form Validation"
+          ],
+          "fullName": "useCourseDialog Hook Form Validation should handle hasFormChanges with no original data",
+          "status": "passed",
+          "title": "should handle hasFormChanges with no original data",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "File Upload Handling"
+          ],
+          "fullName": "useCourseDialog Hook File Upload Handling should handle valid file upload",
+          "status": "passed",
+          "title": "should handle valid file upload",
+          "failureMessages": [],
+          "duration": 11
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "File Upload Handling"
+          ],
+          "fullName": "useCourseDialog Hook File Upload Handling should reject invalid file types",
+          "status": "passed",
+          "title": "should reject invalid file types",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "File Upload Handling"
+          ],
+          "fullName": "useCourseDialog Hook File Upload Handling should reject oversized files",
+          "status": "passed",
+          "title": "should reject oversized files",
+          "failureMessages": [],
+          "duration": 326
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "File Upload Handling"
+          ],
+          "fullName": "useCourseDialog Hook File Upload Handling should remove thumbnail correctly",
+          "status": "passed",
+          "title": "should remove thumbnail correctly",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "File Upload Handling"
+          ],
+          "fullName": "useCourseDialog Hook File Upload Handling should handle file upload errors gracefully",
+          "status": "passed",
+          "title": "should handle file upload errors gracefully",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Error Handling"
+          ],
+          "fullName": "useCourseDialog Hook Error Handling should handle validation errors gracefully",
+          "status": "passed",
+          "title": "should handle validation errors gracefully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Error Handling"
+          ],
+          "fullName": "useCourseDialog Hook Error Handling should provide clear error messages",
+          "status": "passed",
+          "title": "should provide clear error messages",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseDialog Hook Utility Functions should get form errors correctly",
+          "status": "passed",
+          "title": "should get form errors correctly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Utility Functions"
+          ],
+          "fullName": "useCourseDialog Hook Utility Functions should handle form changes detection",
+          "status": "passed",
+          "title": "should handle form changes detection",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseDialog Hook Edge Cases should handle null/undefined course data",
+          "status": "passed",
+          "title": "should handle null/undefined course data",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseDialog Hook Edge Cases should handle rapid state changes",
+          "status": "passed",
+          "title": "should handle rapid state changes",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "useCourseDialog Hook",
+            "Edge Cases"
+          ],
+          "fullName": "useCourseDialog Hook Edge Cases should handle concurrent form updates",
+          "status": "passed",
+          "title": "should handle concurrent form updates",
+          "failureMessages": [],
+          "duration": 2
+        }
+      ],
+      "failureMessage": null
+    }
+  ]
 }

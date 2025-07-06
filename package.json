@@ -16,9 +16,9 @@
     "test": "jest app/creator/dashboard/page.test.tsx  --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --collectCoverageFrom='**/*.{ts,tsx}' --collectCoverageFrom='!**/*.d.ts' --collectCoverageFrom='!**/node_modules/**'",
-    "test:unit": "jest features/course/ --verbose --passWithNoTests --coverage",
+    "test:unit": "jest features/course/ --verbose --passWithNoTests",
     "test:unit:all": "jest features/ --verbose --passWithNoTests",
-    "test:integration": "jest __tests__/integration/courses/ --verbose --passWithNoTests",
+    "test:integration": "jest __tests__/integration/course/ --verbose --passWithNoTests",
     "test:integration:all": "jest __tests__/integration --verbose --passWithNoTests",
     "test:e2e": "cross-env NODE_ENV=test  playwright test __tests__/playwright/smoke.spec.ts",
     "test:e2e:all": "cross-env NODE_ENV=test playwright test __tests__/playwright",
@@ -74,10 +74,12 @@
     "jest": "^30.0.3",
     "jest-environment-jsdom": "^30.0.2",
     "msw": "^2.10.2",
+    "node-fetch": "2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.1",
     "tailwindcss": "^4.1.11",
     "tsx": "^4.20.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "web-streams-polyfill": "^4.1.0"
   }
 }

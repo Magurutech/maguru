@@ -103,7 +103,7 @@ export function useCourseManagement(): UseCourseManagementReturn {
         case 'delete':
           return role === 'creator' || role === 'admin'
         case 'view':
-          return true // Public access
+          return role === 'creator' || role === 'admin' || role === 'user'
         default:
           return false
       }

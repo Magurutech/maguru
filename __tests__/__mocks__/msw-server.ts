@@ -7,6 +7,6 @@ import { handlers } from './msw-handlers'
 export const server = setupServer(...handlers)
 
 // Konfigurasi server untuk pengujian
-beforeAll(() => server.listen())
+beforeAll(() => server.listen({ onUnhandledRequest: 'bypass' }))
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())

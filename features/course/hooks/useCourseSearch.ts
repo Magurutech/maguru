@@ -90,15 +90,22 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
     return () => clearTimeout(timer)
   }, [searchQuery])
 
-  // Filtered courses menggunakan courseUtils
+  // Filtered courses menggunakan courseUtils dengan safe handling
   const filteredCourses = useMemo(() => {
-    return filterCourses(courses, debouncedSearchQuery, selectedStatus).filter((course) => {
+    // Handle null/undefined courses
+    if (!courses || !Array.isArray(courses)) {
+      return []
+    }
+
+    let filteredBySearchAndStatus = filterCourses(courses, debouncedSearchQuery, selectedStatus)
+    if (!filteredBySearchAndStatus) filteredBySearchAndStatus = []
+
       // Additional category filter
       if (selectedCategory !== 'all') {
-        return course.category === selectedCategory
+      return filteredBySearchAndStatus.filter((course) => course.category === selectedCategory)
       }
-      return true
-    })
+
+    return filteredBySearchAndStatus
   }, [courses, debouncedSearchQuery, selectedStatus, selectedCategory])
 
   // Filtered count
@@ -109,19 +116,25 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
     return searchQuery !== '' || selectedStatus !== 'all' || selectedCategory !== 'all'
   }, [searchQuery, selectedStatus, selectedCategory])
 
-  // Get unique categories from courses
+  // Get unique categories from courses dengan safe handling
   const getUniqueCategories = useCallback(() => {
-    const categories = new Set(courses.map((course) => course.category))
+    if (!courses || !Array.isArray(courses)) {
+      return []
+    }
+    const categories = new Set(courses.map((course) => course.category).filter(Boolean))
     return Array.from(categories).sort()
   }, [courses])
 
-  // Get unique statuses from courses
+  // Get unique statuses from courses dengan safe handling
   const getUniqueStatuses = useCallback(() => {
-    const statuses = new Set(courses.map((course) => course.status))
+    if (!courses || !Array.isArray(courses)) {
+      return []
+    }
+    const statuses = new Set(courses.map((course) => course.status).filter(Boolean))
     return Array.from(statuses).sort()
   }, [courses])
 
-  // Get search suggestions based on history and course titles
+  // Get search suggestions based on history and course titles dengan safe handling
   const getSearchSuggestions = useCallback(
     (partialQuery: string): string[] => {
       if (!partialQuery.trim()) return []
@@ -133,15 +146,19 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
         .filter((item) => item.query.toLowerCase().includes(partialQuery.toLowerCase()))
         .forEach((item) => suggestions.add(item.query))
 
-      // Add suggestions from course titles
+      // Add suggestions from course titles (safe handling)
+      if (courses && Array.isArray(courses)) {
       courses
-        .filter((course) => course.title.toLowerCase().includes(partialQuery.toLowerCase()))
+          .filter((course) => course.title?.toLowerCase().includes(partialQuery.toLowerCase()))
         .forEach((course) => suggestions.add(course.title))
 
       // Add suggestions from course descriptions
       courses
-        .filter((course) => course.description.toLowerCase().includes(partialQuery.toLowerCase()))
+          .filter((course) =>
+            course.description?.toLowerCase().includes(partialQuery.toLowerCase()),
+          )
         .forEach((course) => suggestions.add(course.description.substring(0, 50) + '...'))
+      }
 
       return Array.from(suggestions).slice(0, 5) // Limit to 5 suggestions
     },

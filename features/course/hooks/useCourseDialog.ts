@@ -98,15 +98,15 @@ export function useCourseDialog(): UseCourseDialogReturn {
     setActiveDialog('edit')
     setSelectedCourse(course)
 
-    // Pre-populate form dengan course data
+    // Pre-populate form dengan course data dengan safe handling
     setFormState((prev) => ({
       ...prev,
       data: {
-        title: course.title,
-        description: course.description,
+        title: course.title || '',
+        description: course.description || '',
         thumbnail: course.thumbnail || '',
-        category: course.category,
-        status: course.status,
+        category: course.category || '',
+        status: course.status || 'DRAFT',
       },
       errors: [],
       isValid: true, // Assume valid since it's existing data
@@ -130,13 +130,23 @@ export function useCourseDialog(): UseCourseDialogReturn {
   const updateFormData = useCallback((data: Partial<CreateCourseFormData>) => {
     setFormState((prev) => {
       const newData = { ...prev.data, ...data }
-      const validation = validateCourseData(newData)
 
-      return {
-        ...prev,
-        data: newData,
-        errors: validation.errors,
-        isValid: validation.isValid,
+      try {
+        const validation = validateCourseData(newData)
+        return {
+          ...prev,
+          data: newData,
+          errors: validation.errors,
+          isValid: validation.isValid,
+        }
+      } catch (error) {
+        console.error('Error in form validation:', error)
+        return {
+          ...prev,
+          data: newData,
+          errors: ['Terjadi kesalahan saat validasi data'],
+          isValid: false,
+        }
       }
     })
   }, [])
