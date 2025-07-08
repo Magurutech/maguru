@@ -102,6 +102,11 @@ interface UseCourseReturn {
   deleteCourse: (id: string) => Promise<boolean>
   updateCourseStatus: (id: string, status: string) => Promise<Course | null>
 
+  // Thumbnail utilities
+  getDisplayThumbnail: (thumbnail: string | null) => string
+  isDefaultThumbnail: (thumbnail: string | null) => boolean
+  getDefaultThumbnailUrl: () => string
+
   // Utility functions
   clearError: () => void
   resetState: () => void
@@ -150,6 +155,19 @@ export function useCourse(): UseCourseReturn {
     setIsDeleting(initialState.isDeleting)
     setError(initialState.error)
     setPagination(initialState.pagination)
+  }, [])
+
+  // Thumbnail utility functions
+  const getDisplayThumbnail = useCallback((thumbnail: string | null): string => {
+    return CourseAdapter.getDisplayThumbnail(thumbnail)
+  }, [])
+
+  const isDefaultThumbnail = useCallback((thumbnail: string | null): boolean => {
+    return CourseAdapter.isDefaultThumbnail(thumbnail)
+  }, [])
+
+  const getDefaultThumbnailUrl = useCallback((): string => {
+    return CourseAdapter.getDefaultThumbnailUrl()
   }, [])
 
   // Fetch courses (public) dengan retry dan fallback
@@ -254,6 +272,7 @@ export function useCourse(): UseCourseReturn {
         setIsCreating(true)
         setError(null)
 
+        // courseData.thumbnail bisa berupa File atau string
         const response = await retryWithBackoff(() => CourseAdapter.createCourse(courseData))
 
         if (response.success && response.data) {
@@ -282,7 +301,7 @@ export function useCourse(): UseCourseReturn {
         setIsUpdating(true)
         setError(null)
 
-        // Optimistic update
+        // courseData.thumbnail bisa berupa File atau string
         const optimisticCourse = { ...currentCourse, ...courseData } as Course
         setCourses((prev) => prev.map((course) => (course.id === id ? optimisticCourse : course)))
 
@@ -292,20 +311,17 @@ export function useCourse(): UseCourseReturn {
           const updatedCourse = response.data
           setCourses((prev) => prev.map((course) => (course.id === id ? updatedCourse : course)))
 
-          // Update current course if it's the one being updated
           if (currentCourse?.id === id) {
             setCurrentCourse(updatedCourse)
           }
 
           return updatedCourse
         } else {
-          // Revert optimistic update on failure
           setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
           setError(response.error || 'Failed to update course')
           return null
         }
       } catch (err) {
-        // Revert optimistic update on error
         setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
         const errorMessage = err instanceof Error ? err.message : 'Failed to update course'
         setError(errorMessage)
@@ -427,6 +443,11 @@ export function useCourse(): UseCourseReturn {
     updateCourse,
     deleteCourse,
     updateCourseStatus,
+
+    // Thumbnail utilities
+    getDisplayThumbnail,
+    isDefaultThumbnail,
+    getDefaultThumbnailUrl,
 
     // Utility functions
     clearError,

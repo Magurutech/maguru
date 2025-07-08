@@ -1,0 +1,1210 @@
+2025-07-06T15:47:48.970Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751816868970,
+    "memory": {
+      "rss": 1041489920,
+      "heapTotal": 201547776,
+      "heapUsed": 179397216,
+      "external": 11679851,
+      "arrayBuffers": 7750179
+    }
+  }
+}
+2025-07-06T15:47:48.977Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751816868976,
+    "memory": {
+      "rss": 1041498112,
+      "heapTotal": 201547776,
+      "heapUsed": 179413896,
+      "external": 11679851,
+      "arrayBuffers": 7750179
+    }
+  }
+}
+2025-07-06T15:47:49.015Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T15:47:49.024Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751816869024,
+    "memory": {
+      "rss": 1041936384,
+      "heapTotal": 201547776,
+      "heapUsed": 179567392,
+      "external": 22447163,
+      "arrayBuffers": 22105985
+    }
+  }
+}
+2025-07-06T15:47:49.035Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T15:47:49.040Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T15:47:53.015Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751816873015,
+    "memory": {
+      "rss": 1038118912,
+      "heapTotal": 201547776,
+      "heapUsed": 180216776,
+      "external": 36808805,
+      "arrayBuffers": 36464235
+    }
+  }
+}
+2025-07-06T15:55:43.495Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-06T15:55:45.115Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751817345115,
+    "memory": {
+      "rss": 1088266240,
+      "heapTotal": 239943680,
+      "heapUsed": 217669912,
+      "external": 20937346,
+      "arrayBuffers": 15824995
+    }
+  }
+}
+2025-07-06T15:55:45.125Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751817345125,
+    "memory": {
+      "rss": 1088266240,
+      "heapTotal": 239943680,
+      "heapUsed": 217680672,
+      "external": 20937346,
+      "arrayBuffers": 15824995
+    }
+  }
+}
+2025-07-06T15:55:45.146Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T15:55:45.155Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751817345155,
+    "memory": {
+      "rss": 1102667776,
+      "heapTotal": 239943680,
+      "heapUsed": 217870432,
+      "external": 31704706,
+      "arrayBuffers": 30180849
+    }
+  }
+}
+2025-07-06T15:55:45.181Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T15:55:45.190Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T15:55:48.674Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817348673,
+    "memory": {
+      "rss": 1099079680,
+      "heapTotal": 225787904,
+      "heapUsed": 207829984,
+      "external": 23539776,
+      "arrayBuffers": 22015911
+    }
+  }
+}
+2025-07-06T15:59:38.601Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751817578601,
+    "memory": {
+      "rss": 947929088,
+      "heapTotal": 147251200,
+      "heapUsed": 127906512,
+      "external": 7895576,
+      "arrayBuffers": 3973695
+    }
+  }
+}
+2025-07-06T15:59:38.606Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751817578606,
+    "memory": {
+      "rss": 947933184,
+      "heapTotal": 147251200,
+      "heapUsed": 127919992,
+      "external": 7895576,
+      "arrayBuffers": 3973695
+    }
+  }
+}
+2025-07-06T15:59:38.621Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T15:59:38.626Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751817578626,
+    "memory": {
+      "rss": 962351104,
+      "heapTotal": 147251200,
+      "heapUsed": 128041184,
+      "external": 18662969,
+      "arrayBuffers": 18329582
+    }
+  }
+}
+2025-07-06T15:59:38.631Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T15:59:38.635Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T15:59:41.603Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817581603,
+    "memory": {
+      "rss": 984080384,
+      "heapTotal": 147513344,
+      "heapUsed": 128556824,
+      "external": 36621302,
+      "arrayBuffers": 36284523
+    }
+  }
+}
+2025-07-06T16:20:51.121Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751818851121,
+    "memory": {
+      "rss": 935997440,
+      "heapTotal": 151707648,
+      "heapUsed": 129168584,
+      "external": 4380927,
+      "arrayBuffers": 459046
+    }
+  }
+}
+2025-07-06T16:20:51.134Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751818851134,
+    "memory": {
+      "rss": 936005632,
+      "heapTotal": 151707648,
+      "heapUsed": 129183504,
+      "external": 4380927,
+      "arrayBuffers": 459046
+    }
+  }
+}
+2025-07-06T16:20:51.148Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:920:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751818851148,
+    "memory": {
+      "rss": 936038400,
+      "heapTotal": 151707648,
+      "heapUsed": 129269256,
+      "external": 4381032,
+      "arrayBuffers": 459151
+    }
+  }
+}
+2025-07-06T16:22:26.709Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-06T16:22:28.217Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751818948217,
+    "memory": {
+      "rss": 936423424,
+      "heapTotal": 134930432,
+      "heapUsed": 128481864,
+      "external": 11417330,
+      "arrayBuffers": 7495449
+    }
+  }
+}
+2025-07-06T16:22:28.220Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751818948220,
+    "memory": {
+      "rss": 936423424,
+      "heapTotal": 134930432,
+      "heapUsed": 128489888,
+      "external": 11417330,
+      "arrayBuffers": 7495449
+    }
+  }
+}
+2025-07-06T16:22:28.235Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T16:22:28.239Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751818948238,
+    "memory": {
+      "rss": 950849536,
+      "heapTotal": 134930432,
+      "heapUsed": 128601832,
+      "external": 22184651,
+      "arrayBuffers": 21851264
+    }
+  }
+}
+2025-07-06T16:22:28.249Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T16:22:28.253Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T16:22:31.783Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751818951783,
+    "memory": {
+      "rss": 955670528,
+      "heapTotal": 135454720,
+      "heapUsed": 126354640,
+      "external": 22166655,
+      "arrayBuffers": 21833260
+    }
+  }
+}
+2025-07-06T16:50:56.343Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751820656343,
+    "memory": {
+      "rss": 941445120,
+      "heapTotal": 150073344,
+      "heapUsed": 132088120,
+      "external": 7972134,
+      "arrayBuffers": 4039803
+    }
+  }
+}
+2025-07-06T16:50:56.355Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751820656355,
+    "memory": {
+      "rss": 941465600,
+      "heapTotal": 150073344,
+      "heapUsed": 132102264,
+      "external": 7972134,
+      "arrayBuffers": 4039803
+    }
+  }
+}
+2025-07-06T16:50:56.400Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T16:50:56.408Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751820656408,
+    "memory": {
+      "rss": 955944960,
+      "heapTotal": 150073344,
+      "heapUsed": 132226440,
+      "external": 18739455,
+      "arrayBuffers": 18395618
+    }
+  }
+}
+2025-07-06T16:50:56.417Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T16:50:56.423Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T16:50:59.566Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751820659565,
+    "memory": {
+      "rss": 978866176,
+      "heapTotal": 150073344,
+      "heapUsed": 133704696,
+      "external": 36772738,
+      "arrayBuffers": 36425509
+    }
+  }
+}
+2025-07-06T23:00:35.859Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751842835859,
+    "memory": {
+      "rss": 1067028480,
+      "heapTotal": 144908288,
+      "heapUsed": 125532584,
+      "external": 8021134,
+      "arrayBuffers": 4091462
+    }
+  }
+}
+2025-07-06T23:00:35.864Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751842835864,
+    "memory": {
+      "rss": 1067036672,
+      "heapTotal": 144908288,
+      "heapUsed": 125547320,
+      "external": 8021134,
+      "arrayBuffers": 4091462
+    }
+  }
+}
+2025-07-06T23:00:35.873Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "Error",
+  "message": "aborted",
+  "stack": "Error: aborted\n    at abortIncoming (node:_http_server:805:17)\n    at socketOnClose (node:_http_server:799:3)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:343:12)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
+  "performance": {
+    "timestamp": 1751842835873,
+    "memory": {
+      "rss": 1067044864,
+      "heapTotal": 144908288,
+      "heapUsed": 125600888,
+      "external": 8021134,
+      "arrayBuffers": 4091462
+    }
+  }
+}
+2025-07-06T23:01:05.386Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-06T23:01:05.970Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751842865970,
+    "memory": {
+      "rss": 1114095616,
+      "heapTotal": 145268736,
+      "heapUsed": 136702616,
+      "external": 15144421,
+      "arrayBuffers": 11214749
+    }
+  }
+}
+2025-07-06T23:01:05.975Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751842865975,
+    "memory": {
+      "rss": 1114095616,
+      "heapTotal": 145268736,
+      "heapUsed": 136710152,
+      "external": 15144421,
+      "arrayBuffers": 11214749
+    }
+  }
+}
+2025-07-06T23:01:06.003Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T23:01:06.009Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751842866009,
+    "memory": {
+      "rss": 1128562688,
+      "heapTotal": 145268736,
+      "heapUsed": 136828600,
+      "external": 25911766,
+      "arrayBuffers": 25570588
+    }
+  }
+}
+2025-07-06T23:01:06.022Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T23:01:06.025Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T23:01:09.203Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751842869203,
+    "memory": {
+      "rss": 1136726016,
+      "heapTotal": 145530880,
+      "heapUsed": 136265600,
+      "external": 29492388,
+      "arrayBuffers": 29151202
+    }
+  }
+}
+2025-07-06T23:04:11.530Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-06T23:04:11.913Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751843051912,
+    "memory": {
+      "rss": 1121034240,
+      "heapTotal": 146579456,
+      "heapUsed": 136964152,
+      "external": 15086583,
+      "arrayBuffers": 11160295
+    }
+  }
+}
+2025-07-06T23:04:11.916Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751843051916,
+    "memory": {
+      "rss": 1121034240,
+      "heapTotal": 146579456,
+      "heapUsed": 136971296,
+      "external": 15086583,
+      "arrayBuffers": 11160295
+    }
+  }
+}
+2025-07-06T23:04:11.944Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-06T23:04:11.950Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751843051950,
+    "memory": {
+      "rss": 1135423488,
+      "heapTotal": 146579456,
+      "heapUsed": 137069920,
+      "external": 25853928,
+      "arrayBuffers": 25516134
+    }
+  }
+}
+2025-07-06T23:04:11.958Z [INFO] [API_Courses][POST] Validation successful
+2025-07-06T23:04:11.962Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-06T23:04:14.795Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751843054795,
+    "memory": {
+      "rss": 1139490816,
+      "heapTotal": 148152320,
+      "heapUsed": 136267984,
+      "external": 25809281,
+      "arrayBuffers": 25468095
+    }
+  }
+}
+2025-07-07T12:24:14.998Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751891054998,
+    "memory": {
+      "rss": 915361792,
+      "heapTotal": 140767232,
+      "heapUsed": 115940800,
+      "external": 4219588,
+      "arrayBuffers": 301091
+    }
+  }
+}
+2025-07-07T12:27:49.241Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751891269241,
+    "memory": {
+      "rss": 987803648,
+      "heapTotal": 145367040,
+      "heapUsed": 129744224,
+      "external": 4328261,
+      "arrayBuffers": 401973
+    }
+  }
+}
+2025-07-07T12:42:58.141Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751892178141,
+    "memory": {
+      "rss": 1042411520,
+      "heapTotal": 146677760,
+      "heapUsed": 124408968,
+      "external": 4404268,
+      "arrayBuffers": 478337
+    }
+  }
+}
+2025-07-07T12:42:58.161Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751892178161,
+    "memory": {
+      "rss": 1042415616,
+      "heapTotal": 146677760,
+      "heapUsed": 124423592,
+      "external": 4404268,
+      "arrayBuffers": 478337
+    }
+  }
+}
+2025-07-07T12:42:58.178Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:968:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751892178178,
+    "memory": {
+      "rss": 1042427904,
+      "heapTotal": 146677760,
+      "heapUsed": 124507728,
+      "external": 4404370,
+      "arrayBuffers": 478439
+    }
+  }
+}
+2025-07-07T13:27:33.995Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751894853995,
+    "memory": {
+      "rss": 384380928,
+      "heapTotal": 232116224,
+      "heapUsed": 213062824,
+      "external": 9377818,
+      "arrayBuffers": 4276642
+    }
+  }
+}
+2025-07-07T13:27:59.795Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:27:59.853Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751894879853,
+    "memory": {
+      "rss": 369954816,
+      "heapTotal": 207294464,
+      "heapUsed": 199047088,
+      "external": 7600754,
+      "arrayBuffers": 2499578
+    }
+  }
+}
+2025-07-07T13:28:50.213Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:28:51.598Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751894931597,
+    "memory": {
+      "rss": 374853632,
+      "heapTotal": 220663808,
+      "heapUsed": 200427080,
+      "external": 7680891,
+      "arrayBuffers": 2576331
+    }
+  }
+}
+2025-07-07T13:28:51.603Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751894931603,
+    "memory": {
+      "rss": 374857728,
+      "heapTotal": 220663808,
+      "heapUsed": 200444400,
+      "external": 7680891,
+      "arrayBuffers": 2576331
+    }
+  }
+}
+2025-07-07T13:28:51.617Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-07T13:28:51.624Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751894931624,
+    "memory": {
+      "rss": 374919168,
+      "heapTotal": 220663808,
+      "heapUsed": 200641768,
+      "external": 7681609,
+      "arrayBuffers": 2577049
+    }
+  }
+}
+2025-07-07T13:28:51.637Z [INFO] [API_Courses][POST] Validation successful
+2025-07-07T13:28:51.644Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-07T13:28:52.672Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751894932672,
+    "memory": {
+      "rss": 375283712,
+      "heapTotal": 221188096,
+      "heapUsed": 201748680,
+      "external": 7689281,
+      "arrayBuffers": 2581329
+    }
+  }
+}
+2025-07-07T13:40:03.897Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:40:03.908Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895603908,
+    "memory": {
+      "rss": 392781824,
+      "heapTotal": 217518080,
+      "heapUsed": 198237656,
+      "external": 7834729,
+      "arrayBuffers": 2733553
+    }
+  }
+}
+2025-07-07T13:40:58.773Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:40:58.814Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895658814,
+    "memory": {
+      "rss": 398573568,
+      "heapTotal": 217518080,
+      "heapUsed": 204713256,
+      "external": 9809974,
+      "arrayBuffers": 4708798
+    }
+  }
+}
+2025-07-07T13:41:05.987Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:41:06.013Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895666012,
+    "memory": {
+      "rss": 398688256,
+      "heapTotal": 217518080,
+      "heapUsed": 205428760,
+      "external": 9828022,
+      "arrayBuffers": 4726846
+    }
+  }
+}
+2025-07-07T13:42:05.930Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895725930,
+    "memory": {
+      "rss": 1029488640,
+      "heapTotal": 186863616,
+      "heapUsed": 158295384,
+      "external": 13363500,
+      "arrayBuffers": 9426762
+    }
+  }
+}
+2025-07-07T13:49:17.379Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:49:17.391Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751896157391,
+    "memory": {
+      "rss": 968654848,
+      "heapTotal": 139337728,
+      "heapUsed": 133112432,
+      "external": 4274787,
+      "arrayBuffers": 344449
+    }
+  }
+}
+2025-07-07T13:50:06.532Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:50:06.539Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751896206539,
+    "memory": {
+      "rss": 990408704,
+      "heapTotal": 144277504,
+      "heapUsed": 136409576,
+      "external": 6695217,
+      "arrayBuffers": 2768929
+    }
+  }
+}
+2025-07-07T23:41:26.568Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751931686568,
+    "memory": {
+      "rss": 1244516352,
+      "heapTotal": 153845760,
+      "heapUsed": 140741840,
+      "external": 5615813,
+      "arrayBuffers": 503462
+    }
+  }
+}
+2025-07-07T23:41:26.584Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751931686583,
+    "memory": {
+      "rss": 1244524544,
+      "heapTotal": 153845760,
+      "heapUsed": 140753336,
+      "external": 5615813,
+      "arrayBuffers": 503462
+    }
+  }
+}
+2025-07-07T23:41:26.618Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-07T23:41:26.628Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751931686627,
+    "memory": {
+      "rss": 1244557312,
+      "heapTotal": 153845760,
+      "heapUsed": 140876592,
+      "external": 5616531,
+      "arrayBuffers": 504180
+    }
+  }
+}
+2025-07-07T23:41:26.638Z [INFO] [API_Courses][POST] Validation successful
+2025-07-07T23:41:26.645Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-07T23:41:27.654Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751931687654,
+    "memory": {
+      "rss": 1244663808,
+      "heapTotal": 154107904,
+      "heapUsed": 141357880,
+      "external": 5624203,
+      "arrayBuffers": 508460
+    }
+  }
+}
+2025-07-08T00:35:58.972Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751934958972,
+    "memory": {
+      "rss": 974991360,
+      "heapTotal": 150937600,
+      "heapUsed": 129186936,
+      "external": 4381528,
+      "arrayBuffers": 459647
+    }
+  }
+}
+2025-07-08T00:35:58.979Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751934958979,
+    "memory": {
+      "rss": 975007744,
+      "heapTotal": 150937600,
+      "heapUsed": 129203920,
+      "external": 4381528,
+      "arrayBuffers": 459647
+    }
+  }
+}
+2025-07-08T00:35:58.996Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T00:35:59.005Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751934959005,
+    "memory": {
+      "rss": 975060992,
+      "heapTotal": 150937600,
+      "heapUsed": 129316544,
+      "external": 4382126,
+      "arrayBuffers": 460245
+    }
+  }
+}
+2025-07-08T00:35:59.016Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T00:35:59.021Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1751934959021,
+    "memory": {
+      "rss": 975212544,
+      "heapTotal": 150937600,
+      "heapUsed": 129402560,
+      "external": 4382126,
+      "arrayBuffers": 460245
+    }
+  }
+}
+2025-07-08T00:35:59.024Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751934959024,
+    "memory": {
+      "rss": 975212544,
+      "heapTotal": 150937600,
+      "heapUsed": 129409552,
+      "external": 4382126,
+      "arrayBuffers": 460245
+    }
+  }
+}
+2025-07-08T00:36:01.101Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2819ms"
+  }
+}
+2025-07-08T00:36:01.118Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "2552cb99-c8b0-4d6e-828a-0db7a66ea60e",
+  "duration": "2819ms",
+  "performance": {
+    "timestamp": 1751934961118,
+    "memory": {
+      "rss": 980930560,
+      "heapTotal": 150937600,
+      "heapUsed": 129630152,
+      "external": 4382183,
+      "arrayBuffers": 460302
+    }
+  }
+}
+2025-07-08T00:43:58.388Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751935438388,
+    "memory": {
+      "rss": 996270080,
+      "heapTotal": 159105024,
+      "heapUsed": 138362176,
+      "external": 5575011,
+      "arrayBuffers": 470451
+    }
+  }
+}
+2025-07-08T00:43:58.408Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751935438407,
+    "memory": {
+      "rss": 996274176,
+      "heapTotal": 159105024,
+      "heapUsed": 138379344,
+      "external": 5575011,
+      "arrayBuffers": 470451
+    }
+  }
+}
+2025-07-08T00:43:58.429Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T00:43:58.443Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751935438443,
+    "memory": {
+      "rss": 996274176,
+      "heapTotal": 159105024,
+      "heapUsed": 138453824,
+      "external": 5575610,
+      "arrayBuffers": 471050
+    }
+  }
+}
+2025-07-08T00:43:58.453Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T00:43:58.461Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1751935438461,
+    "memory": {
+      "rss": 996278272,
+      "heapTotal": 159105024,
+      "heapUsed": 138481624,
+      "external": 5575610,
+      "arrayBuffers": 471050
+    }
+  }
+}
+2025-07-08T00:43:58.471Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751935438471,
+    "memory": {
+      "rss": 996282368,
+      "heapTotal": 159105024,
+      "heapUsed": 138488568,
+      "external": 5575610,
+      "arrayBuffers": 471050
+    }
+  }
+}
+2025-07-08T00:44:00.389Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2644ms"
+  }
+}
+2025-07-08T00:44:00.405Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "702fa7c2-ea5b-48c8-b1a4-3431187d3692",
+  "duration": "2644ms",
+  "performance": {
+    "timestamp": 1751935440405,
+    "memory": {
+      "rss": 996585472,
+      "heapTotal": 159105024,
+      "heapUsed": 138615968,
+      "external": 5575667,
+      "arrayBuffers": 471107
+    }
+  }
+}
+2025-07-08T00:47:39.224Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-08T00:47:40.245Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751935660245,
+    "memory": {
+      "rss": 1007718400,
+      "heapTotal": 146784256,
+      "heapUsed": 136768864,
+      "external": 9329581,
+      "arrayBuffers": 4228405
+    }
+  }
+}
+2025-07-08T00:47:40.264Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751935660264,
+    "memory": {
+      "rss": 1007718400,
+      "heapTotal": 146784256,
+      "heapUsed": 136776120,
+      "external": 9329581,
+      "arrayBuffers": 4228405
+    }
+  }
+}
+2025-07-08T00:47:40.309Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T00:47:40.315Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751935660315,
+    "memory": {
+      "rss": 1023361024,
+      "heapTotal": 146784256,
+      "heapUsed": 136875560,
+      "external": 21031135,
+      "arrayBuffers": 19829731
+    }
+  }
+}
+2025-07-08T00:47:40.326Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T00:47:40.330Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-08T00:47:45.244Z [INFO] [API_Courses][POST] Thumbnail upload successful
+{
+  "fileName": "course-1751935660333.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-1751935660333.jpg",
+  "performance": {
+    "timestamp": 1751935665243,
+    "memory": {
+      "rss": 1019080704,
+      "heapTotal": 143900672,
+      "heapUsed": 136368080,
+      "external": 17135837,
+      "arrayBuffers": 15931041
+    }
+  }
+}
+2025-07-08T00:47:45.263Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751935665263,
+    "memory": {
+      "rss": 1019080704,
+      "heapTotal": 143900672,
+      "heapUsed": 136376360,
+      "external": 17135837,
+      "arrayBuffers": 15931041
+    }
+  }
+}
+2025-07-08T00:47:46.134Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "6910ms"
+  }
+}
+2025-07-08T00:47:46.138Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "6b57c7cc-ef33-4f0f-8dc6-d34c1b7ae236",
+  "duration": "6910ms",
+  "performance": {
+    "timestamp": 1751935666138,
+    "memory": {
+      "rss": 1019105280,
+      "heapTotal": 143900672,
+      "heapUsed": 136506096,
+      "external": 17135894,
+      "arrayBuffers": 15931098
+    }
+  }
+}

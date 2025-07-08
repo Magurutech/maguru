@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import type { Course, CreateCourseRequest, PaginationInfo } from '../types'
-import { CourseStatus } from '@prisma/client'
+import { CourseStatus, DEFAULT_COURSE_THUMBNAIL } from '../types'
 
 /**
  * Service class untuk mengelola operasi CRUD kursus
@@ -24,13 +24,18 @@ export class CourseService {
    * @throws {Error} Jika terjadi error saat menyimpan ke database
    */
   async createCourse(data: CreateCourseRequest, creatorId: string): Promise<Course> {
+    // Handle thumbnail fallback ke default jika tidak ada
+    // Service layer hanya menerima string URL, bukan File
+    const thumbnailUrl =
+      typeof data.thumbnail === 'string' ? data.thumbnail : DEFAULT_COURSE_THUMBNAIL.URL
+
     const course = await prisma.course.create({
       data: {
         title: data.title,
         description: data.description,
-        thumbnail: data.thumbnail,
+        thumbnail: thumbnailUrl, // Selalu string di database
         category: data.category,
-        status: CourseStatus.DRAFT,
+        status: data.status || CourseStatus.DRAFT, // Use provided status or default to DRAFT
         students: 0,
         lessons: 0, // Akan di-update saat ada modules/lessons
         duration: '0 jam', // Akan di-update saat ada content
@@ -40,6 +45,35 @@ export class CourseService {
     })
 
     return course
+  }
+
+  /**
+   * Get default thumbnail URL
+   *
+   * @returns string - URL default thumbnail
+   */
+  getDefaultThumbnailUrl(): string {
+    return DEFAULT_COURSE_THUMBNAIL.URL
+  }
+
+  /**
+   * Check if thumbnail is default
+   *
+   * @param thumbnail - Thumbnail URL to check
+   * @returns boolean - True if thumbnail is default
+   */
+  isDefaultThumbnail(thumbnail: string | null): boolean {
+    return !thumbnail || thumbnail === DEFAULT_COURSE_THUMBNAIL.URL
+  }
+
+  /**
+   * Get display thumbnail URL dengan fallback ke default
+   *
+   * @param thumbnail - Thumbnail URL
+   * @returns string - Display thumbnail URL
+   */
+  getDisplayThumbnail(thumbnail: string | null): string {
+    return thumbnail || DEFAULT_COURSE_THUMBNAIL.URL
   }
 
   /**
@@ -124,13 +158,17 @@ export class CourseService {
       throw new Error('Course not found or access denied')
     }
 
+    // Handle thumbnail - service layer hanya menerima string URL
+    const thumbnailUrl =
+      typeof data.thumbnail === 'string' ? data.thumbnail : existingCourse.thumbnail // Keep existing if not string
+
     // Update course
     const course = await prisma.course.update({
       where: { id },
       data: {
         title: data.title,
         description: data.description,
-        thumbnail: data.thumbnail,
+        thumbnail: thumbnailUrl, // Selalu string di database
         category: data.category,
       },
     })

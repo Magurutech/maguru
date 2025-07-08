@@ -21,6 +21,13 @@
 
 Implementasi backend CRUD untuk metadata kursus telah berhasil diselesaikan dengan mengikuti arsitektur 4-layer Maguru: Database → Service → API → Adapter. Sistem ini menyediakan operasi lengkap untuk mengelola metadata kursus dengan validasi Zod, error handling yang robust, dan integrasi dengan Clerk untuk authentication.
 
+**Update Terbaru:**
+
+- Fitur upload dan update thumbnail kursus kini sepenuhnya terintegrasi dengan Supabase Storage.
+- Pada update kursus (PUT), thumbnail lama akan dihapus dari storage jika diganti.
+- Error handling dan logging untuk proses upload/delete thumbnail diperkuat.
+- Utility dan service layer sudah konsisten hanya menerima string URL untuk thumbnail.
+
 ### Ruang Lingkup
 
 Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata kursus:
@@ -29,6 +36,7 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 - Service layer dengan business logic untuk metadata
 - API routes dengan validasi dan error handling
 - Adapter layer untuk client-side communication
+- **Integrasi penuh upload thumbnail ke Supabase Storage (POST & PUT)**
 
 #### 1. Database Layer
 
@@ -46,7 +54,7 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 - `createCourse()` - Membuat kursus baru dengan metadata
 - `getCourses()` - Mengambil daftar kursus dengan pagination
 - `getCourseById()` - Mengambil detail kursus
-- `updateCourse()` - Update metadata kursus
+- `updateCourse()` - Update metadata kursus (hanya menerima string URL untuk thumbnail)
 - `deleteCourse()` - Hard delete kursus
 - `updateCourseStatus()` - Update status kursus
 - `getCoursesByCreator()` - Filter berdasarkan creator
@@ -56,10 +64,10 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 **API Endpoints**:
 
 - `GET /api/courses` - Public endpoint untuk list kursus
-- `POST /api/courses` - Membuat kursus baru (akan di-protect di TSK-48)
+- `POST /api/courses` - Membuat kursus baru (upload thumbnail ke Supabase Storage)
 - `GET /api/courses/[id]` - Public endpoint untuk detail kursus
-- `PUT /api/courses/[id]` - Update kursus (akan di-protect di TSK-48)
-- `DELETE /api/courses/[id]` - Hapus kursus (akan di-protect di TSK-48)
+- `PUT /api/courses/[id]` - Update kursus (upload thumbnail baru, hapus thumbnail lama di Supabase Storage)
+- `DELETE /api/courses/[id]` - Hapus kursus (hapus thumbnail di Supabase Storage)
 
 #### 4. Adapter Layer
 
@@ -85,22 +93,23 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 
 - Status color dan text helpers
 - Filtering dan formatting functions
-- Supabase Storage URL generation
+- Supabase Storage URL generation (update: bucket 'course-thumbnails')
 - Data validation helpers
 
 ## Perubahan dari Rencana Awal
 
 ### Perubahan Desain
 
-| Komponen/Fitur      | Rencana Awal     | Implementasi Aktual           | Justifikasi                                |
-| ------------------- | ---------------- | ----------------------------- | ------------------------------------------ |
-| Model User          | Relasi ke Course | Dihapus                       | Menggunakan Clerk metadata untuk user data |
-| Model Module/Lesson | Relasi ke Course | Dihapus                       | Fokus pada metadata course untuk TSK-47    |
-| CreatorId Field     | String relasi    | String untuk Clerk User ID    | Integrasi dengan Clerk authentication      |
-| Duration Field      | String format    | String dengan default "0 jam" | Konsistensi dengan metadata yang diminta   |
-| Thumbnail Storage   | Path relatif     | Supabase Storage integration  | Best practice untuk file storage           |
-| Status Enum         | Draft/Published  | DRAFT/PUBLISHED               | Konsistensi dengan Prisma enum naming      |
-| Pagination          | Offset-based     | Offset-based dengan limit 50  | Sesuai batasan yang ditentukan             |
+| Komponen/Fitur       | Rencana Awal     | Implementasi Aktual           | Justifikasi                                |
+| -------------------- | ---------------- | ----------------------------- | ------------------------------------------ |
+| Model User           | Relasi ke Course | Dihapus                       | Menggunakan Clerk metadata untuk user data |
+| Model Module/Lesson  | Relasi ke Course | Dihapus                       | Fokus pada metadata course untuk TSK-47    |
+| CreatorId Field      | String relasi    | String untuk Clerk User ID    | Integrasi dengan Clerk authentication      |
+| Duration Field       | String format    | String dengan default "0 jam" | Konsistensi dengan metadata yang diminta   |
+| Thumbnail Storage    | Path relatif     | Supabase Storage integration  | Best practice untuk file storage           |
+| Status Enum          | Draft/Published  | DRAFT/PUBLISHED               | Konsistensi dengan Prisma enum naming      |
+| Pagination           | Offset-based     | Offset-based dengan limit 50  | Sesuai batasan yang ditentukan             |
+| **Thumbnail Update** | Tidak diatur     | Hapus thumbnail lama di PUT   | Efisiensi storage, mencegah file menumpuk  |
 
 ### Perubahan Teknis
 
@@ -112,6 +121,7 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 | Data Validation      | Zod schemas                  | Zod + custom validation utils       | Fleksibilitas untuk complex validation |
 | Supabase Integration | Manual URL                   | Utility function dengan env vars    | Scalability dan maintainability        |
 | Clerk Integration    | Tidak ada                    | creatorId field untuk Clerk User ID | Integrasi dengan authentication system |
+| **Thumbnail PUT**    | Tidak ada                    | PUT: upload baru, hapus lama        | Storage efisien, konsisten dengan POST |
 
 ## Status Acceptance Criteria
 
@@ -127,6 +137,7 @@ Implementasi mencakup semua layer yang diperlukan untuk operasi CRUD metadata ku
 | TypeScript interfaces                    | ✅     | Complete type definitions                     |
 | Supabase Storage integration             | ✅     | Utility function untuk thumbnail URLs         |
 | Clerk integration preparation            | ✅     | creatorId field untuk Clerk User ID           |
+| **PUT update thumbnail**                 | ✅     | Hapus thumbnail lama, upload baru di Supabase |
 
 ## Detail Implementasi
 
@@ -167,11 +178,12 @@ Implementasi mengikuti struktur folder standar arsitektur Maguru:
 - Ownership validation menggunakan creatorId
 - Comprehensive error handling
 - Pagination support
+- **Update: Service layer hanya menerima string URL untuk thumbnail**
 
 **Key Methods**:
 
 - `createCourse()` - Simple creation dengan metadata
-- `updateCourse()` - Update metadata fields
+- `updateCourse()` - Update metadata fields, thumbnail hanya string URL
 - `getCourses()` - Pagination dengan filtering support
 
 #### API Layer (app/api/courses/)
@@ -182,6 +194,7 @@ Implementasi mengikuti struktur folder standar arsitektur Maguru:
 - Consistent response format
 - Proper status codes
 - Input validation dengan Zod
+- **Update: PUT kini menghapus thumbnail lama di Supabase Storage jika diganti**
 
 **Error Handling**:
 
@@ -198,20 +211,22 @@ Implementasi mengikuti struktur folder standar arsitektur Maguru:
 - Response transformation utilities
 - Supabase Storage integration
 
+#### Utility Layer (courseUtils.ts)
+
+- **Update:** Fungsi `getThumbnailUrl` kini menggunakan bucket 'course-thumbnails' dan env var Supabase
+- Validasi dan formatting helper untuk data kursus
+
 ### Alur Data
 
-#### Create Course Flow:
+#### Create/Update Course Flow (dengan thumbnail):
 
-1. Client → Adapter → API Route
+1. Client → Adapter → API Route (POST/PUT, form-data)
 2. API Route → Zod Validation → Service
-3. Service → Prisma → Database
-4. Response → Adapter → Client
-
-#### Read Course Flow:
-
-1. Client → Adapter → API Route
-2. API Route → Service → Database
-3. Database → Service → API Route → Adapter → Client
+3. Jika ada file thumbnail:
+   - Upload ke Supabase Storage (bucket 'course-thumbnails')
+   - Jika update (PUT), hapus thumbnail lama sebelum upload baru
+4. Service → Prisma → Database (simpan URL thumbnail)
+5. Response → Adapter → Client
 
 ### Database Schema
 
@@ -250,51 +265,56 @@ model Course {
 - **Method**: POST
 - **Authentication**: Placeholder (akan di-protect di TSK-48)
 - **Error Handling**: Zod validation, business logic errors
+- **Upload thumbnail ke Supabase Storage**
 
-## Kendala dan Solusi
+#### PUT /api/courses/[id]
 
-### Kendala 1: Integrasi dengan Clerk Authentication
+- **File**: `app/api/courses/[id]/route.ts`
+- **Method**: PUT
+- **Authentication**: Placeholder (akan di-protect di TSK-48)
+- **Error Handling**: Zod validation, business logic errors
+- **Update thumbnail:**
+  - Jika ada file baru, hapus thumbnail lama dari Supabase Storage
+  - Upload file baru ke bucket 'course-thumbnails'
+  - Simpan URL baru ke database
 
-**Deskripsi**:
-Awalnya menggunakan model User lokal yang tidak sesuai dengan arsitektur Clerk.
+## Kendala dan Solusi (Update)
 
-**Solusi**:
+### Kendala: File Thumbnail Lama Tidak Terhapus Saat Update
 
-- Menghapus model User dari Prisma schema
-- Menggunakan field creatorId untuk menyimpan Clerk User ID
-- Menyiapkan integrasi dengan Clerk metadata untuk role management
+**Deskripsi:**
+Sebelumnya, file thumbnail lama tidak dihapus dari storage saat update, menyebabkan storage membengkak.
 
-**Pembelajaran**:
-Integrasi dengan external authentication service memerlukan arsitektur yang berbeda.
+**Solusi:**
 
-### Kendala 2: Kompleksitas Model yang Tidak Diperlukan
+- Implementasi helper `removeSupabaseFile` untuk menghapus file dari bucket Supabase.
+- Update API route PUT untuk menghapus file lama sebelum upload baru.
+- Logging dan error handling diperkuat agar proses update tetap robust meski penghapusan gagal.
 
-**Deskripsi**:
-Model Module dan Lesson terlalu kompleks untuk TSK-47 yang fokus pada metadata.
+### Kendala: Error TypeScript pada formidable
 
-**Solusi**:
+**Deskripsi:**
+TypeScript error karena tidak ada type declaration untuk formidable.
 
-- Menghapus model Module dan Lesson
-- Fokus hanya pada metadata Course
-- Menyiapkan struktur untuk implementasi modules/lessons di task berikutnya
+**Solusi:**
 
-**Pembelajaran**:
-Scope creep dapat menyebabkan kompleksitas yang tidak diperlukan.
+- Install @types/formidable untuk menghilangkan error type.
 
-### Kendala 3: Type Safety dalam Utility Functions
+### Kendala: Linter Error Unused Variable dan Function
 
-**Deskripsi**:
-Awalnya menggunakan `any` types dalam utility functions yang menyebabkan TypeScript errors.
+**Deskripsi:**
+Fungsi bufferToStream tidak digunakan, dan variabel data pada upload Supabase tidak digunakan.
 
-**Solusi**:
-Menggunakan proper TypeScript interfaces dan generic types:
+**Solusi:**
 
-- `Partial<CreateCourseRequest>` untuk validation
-- Proper type definitions untuk course parameters
-- Union types untuk status handling
+- Hapus fungsi bufferToStream.
+- Ubah destructuring upload Supabase menjadi hanya { error }.
 
-**Pembelajaran**:
-Type safety penting untuk maintainability dan developer experience.
+## Catatan
+
+- Implementasi backend kini robust, efisien, dan siap untuk integrasi frontend upload file.
+- Semua perubahan sudah diuji dan berjalan baik.
+- **Update:** Proses update thumbnail kini lebih efisien dan storage-friendly.
 
 ## Rekomendasi Selanjutnya
 

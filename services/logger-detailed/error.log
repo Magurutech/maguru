@@ -1,0 +1,192 @@
+2025-07-06T15:47:53.015Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751816873015,
+    "memory": {
+      "rss": 1038118912,
+      "heapTotal": 201547776,
+      "heapUsed": 180216776,
+      "external": 36808805,
+      "arrayBuffers": 36464235
+    }
+  }
+}
+2025-07-06T15:55:48.674Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817348673,
+    "memory": {
+      "rss": 1099079680,
+      "heapTotal": 225787904,
+      "heapUsed": 207829984,
+      "external": 23539776,
+      "arrayBuffers": 22015911
+    }
+  }
+}
+2025-07-06T15:59:41.603Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817581603,
+    "memory": {
+      "rss": 984080384,
+      "heapTotal": 147513344,
+      "heapUsed": 128556824,
+      "external": 36621302,
+      "arrayBuffers": 36284523
+    }
+  }
+}
+2025-07-06T16:20:51.148Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:920:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751818851148,
+    "memory": {
+      "rss": 936038400,
+      "heapTotal": 151707648,
+      "heapUsed": 129269256,
+      "external": 4381032,
+      "arrayBuffers": 459151
+    }
+  }
+}
+2025-07-06T16:22:31.783Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751818951783,
+    "memory": {
+      "rss": 955670528,
+      "heapTotal": 135454720,
+      "heapUsed": 126354640,
+      "external": 22166655,
+      "arrayBuffers": 21833260
+    }
+  }
+}
+2025-07-06T16:50:59.566Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751820659565,
+    "memory": {
+      "rss": 978866176,
+      "heapTotal": 150073344,
+      "heapUsed": 133704696,
+      "external": 36772738,
+      "arrayBuffers": 36425509
+    }
+  }
+}
+2025-07-06T23:00:35.873Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "Error",
+  "message": "aborted",
+  "stack": "Error: aborted\n    at abortIncoming (node:_http_server:805:17)\n    at socketOnClose (node:_http_server:799:3)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:343:12)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
+  "performance": {
+    "timestamp": 1751842835873,
+    "memory": {
+      "rss": 1067044864,
+      "heapTotal": 144908288,
+      "heapUsed": 125600888,
+      "external": 8021134,
+      "arrayBuffers": 4091462
+    }
+  }
+}
+2025-07-06T23:01:09.203Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751842869203,
+    "memory": {
+      "rss": 1136726016,
+      "heapTotal": 145530880,
+      "heapUsed": 136265600,
+      "external": 29492388,
+      "arrayBuffers": 29151202
+    }
+  }
+}
+2025-07-06T23:04:14.795Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751843054795,
+    "memory": {
+      "rss": 1139490816,
+      "heapTotal": 148152320,
+      "heapUsed": 136267984,
+      "external": 25809281,
+      "arrayBuffers": 25468095
+    }
+  }
+}
+2025-07-07T12:42:58.178Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:968:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751892178178,
+    "memory": {
+      "rss": 1042427904,
+      "heapTotal": 146677760,
+      "heapUsed": 124507728,
+      "external": 4404370,
+      "arrayBuffers": 478439
+    }
+  }
+}
+2025-07-07T13:28:52.672Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751894932672,
+    "memory": {
+      "rss": 375283712,
+      "heapTotal": 221188096,
+      "heapUsed": 201748680,
+      "external": 7689281,
+      "arrayBuffers": 2581329
+    }
+  }
+}
+2025-07-07T23:41:27.654Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751931687654,
+    "memory": {
+      "rss": 1244663808,
+      "heapTotal": 154107904,
+      "heapUsed": 141357880,
+      "external": 5624203,
+      "arrayBuffers": 508460
+    }
+  }
+}

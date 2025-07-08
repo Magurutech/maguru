@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { CourseService } from '@/features/course/services/courseService'
-import { CourseSchema } from '@/features/course/types'
+import { CourseSchema, DEFAULT_COURSE_THUMBNAIL } from '@/features/course/types'
 import { requireAuth, requireRole } from '@/lib/auth-middleware'
+import { storageUtils } from '@/lib/supabase'
+import { logger } from '@/services/logger'
 
 const courseService = new CourseService()
 
@@ -74,13 +76,17 @@ export async function GET(request: NextRequest) {
       const authResult = await requireAuth()
       if (authResult.error) {
         // Jika tidak ada auth, tetap bisa akses public courses
-        console.log('No authentication for GET /api/courses - public access')
+        logger.info('API_Courses', 'GET', 'No authentication for GET /api/courses - public access')
       } else {
         authenticatedUser = authResult.user
       }
     } catch {
       // Continue without authentication for public access
-      console.log('Authentication failed for GET /api/courses - continuing with public access')
+      logger.info(
+        'API_Courses',
+        'GET',
+        'Authentication failed for GET /api/courses - continuing with public access',
+      )
     }
 
     // Role-based filtering
@@ -111,7 +117,7 @@ export async function GET(request: NextRequest) {
       { status: 200 },
     )
   } catch (error) {
-    console.error('Error fetching courses:', error)
+    logger.error('API_Courses', 'GET', 'Error fetching courses', error as Error)
     return NextResponse.json(
       {
         success: false,
@@ -160,24 +166,74 @@ export async function GET(request: NextRequest) {
  * @throws {500} Jika terjadi error internal server
  */
 export async function POST(request: NextRequest) {
+  const timer = logger.startTimer('API_Courses', 'POST', 'Course creation')
+
   try {
+    logger.info('API_Courses', 'POST', 'Starting course creation process')
+
     // Authentication check
     const authResult = await requireAuth()
     if (authResult.error) {
+      logger.warn('API_Courses', 'POST', 'Authentication failed', { error: authResult.error })
       return authResult.error
     }
+
+    logger.info('API_Courses', 'POST', 'Authentication successful', {
+      userId: authResult.user.clerkId,
+    })
 
     // Role authorization check
     const roleCheck = requireRole(['creator', 'admin'], authResult.user)
     if (roleCheck) {
+      logger.warn('API_Courses', 'POST', 'Role authorization failed', {
+        role: authResult.user.role,
+      })
       return roleCheck
     }
 
-    const body = await request.json()
+    logger.info('API_Courses', 'POST', 'Role authorization successful', {
+      role: authResult.user.role,
+    })
+
+    // Parse FormData (kompatibel dengan Next.js App Router)
+    let formData: FormData
+    try {
+      formData = await request.formData()
+      logger.info('API_Courses', 'POST', 'FormData parsed successfully')
+    } catch (parseError) {
+      logger.error('API_Courses', 'POST', 'Failed to parse FormData', parseError as Error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to parse form data',
+        },
+        { status: 400 },
+      )
+    }
+
+    // Extract fields dari FormData
+    const fields: Record<string, string> = {}
+    const files: Record<string, File> = {}
+
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        files[key] = value
+      } else {
+        fields[key] = value as string
+      }
+    }
+
+    logger.info('API_Courses', 'POST', 'FormData extracted', {
+      fields: Object.keys(fields),
+      files: Object.keys(files),
+    })
 
     // Validasi input menggunakan Zod
-    const validationResult = CourseSchema.safeParse(body)
+    const validationResult = CourseSchema.safeParse(fields)
     if (!validationResult.success) {
+      logger.warn('API_Courses', 'POST', 'Validation failed', {
+        errors: validationResult.error.errors,
+      })
       return NextResponse.json(
         {
           success: false,
@@ -191,10 +247,56 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    logger.info('API_Courses', 'POST', 'Validation successful')
+
+    // Handle thumbnail upload dengan fallback ke default
+    let thumbnailUrl = fields.thumbnail || ''
+    if (files.thumbnail) {
+      logger.info('API_Courses', 'POST', 'Starting thumbnail upload')
+
+      try {
+        const file = files.thumbnail
+        const fileExt = file.name.split('.').pop()
+        const fileName = `course-${Date.now()}.${fileExt}`
+
+        // Upload ke bucket 'course-thumbnails' sesuai dengan arsitektur
+        // Menggunakan storageUtils yang sudah diimplementasi untuk Supabase
+        thumbnailUrl = await storageUtils.uploadThumbnail(file, fileName)
+
+        logger.info('API_Courses', 'POST', 'Thumbnail upload successful', {
+          fileName,
+          bucket: 'course-thumbnails',
+          url: thumbnailUrl,
+        })
+      } catch (uploadError) {
+        logger.error('API_Courses', 'POST', 'Thumbnail upload error', uploadError as Error)
+        return NextResponse.json(
+          { success: false, error: 'Gagal upload thumbnail' },
+          { status: 500 },
+        )
+      }
+    } else {
+      // Jika tidak ada thumbnail upload, gunakan default
+      thumbnailUrl = DEFAULT_COURSE_THUMBNAIL.URL
+      logger.info('API_Courses', 'POST', 'Using default thumbnail', { thumbnailUrl })
+    }
+
     // Extract creatorId dari authenticated user
     const creatorId = authResult.user.clerkId
 
-    const course = await courseService.createCourse(validationResult.data, creatorId)
+    logger.info('API_Courses', 'POST', 'Creating course in database', { creatorId })
+
+    // Service layer hanya menerima string URL, bukan File
+    const course = await courseService.createCourse(
+      { ...validationResult.data, thumbnail: thumbnailUrl },
+      creatorId,
+    )
+
+    const duration = timer.end('Course created successfully')
+    logger.info('API_Courses', 'POST', 'Course creation completed', {
+      courseId: course.id,
+      duration: `${duration}ms`,
+    })
 
     return NextResponse.json(
       {
@@ -204,7 +306,8 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     )
   } catch (error) {
-    console.error('Error creating course:', error)
+    timer.end('Course creation failed')
+    logger.error('API_Courses', 'POST', 'Error creating course', error as Error)
 
     if (error instanceof Error) {
       return NextResponse.json(

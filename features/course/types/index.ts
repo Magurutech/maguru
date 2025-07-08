@@ -1,6 +1,15 @@
 import { z } from 'zod'
 import { CourseStatus as PrismaCourseStatus } from '@prisma/client'
 
+// Default thumbnail constants
+export const DEFAULT_COURSE_THUMBNAIL = {
+  URL:
+    process.env.NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL || '/images/default-course-thumbnail.svg',
+  WIDTH: 640,
+  HEIGHT: 360,
+  FORMAT: 'svg',
+}
+
 // Database Models (sesuai dengan Prisma schema)
 export interface Course {
   id: string
@@ -26,8 +35,8 @@ export interface CreateCourseRequest {
   title: string
   description: string
   category: string
-  thumbnail?: string
-  status?: PrismaCourseStatus
+  thumbnail?: string | File
+  status: PrismaCourseStatus // Wajib dengan default DRAFT
 }
 
 export interface UpdateCourseRequest extends CreateCourseRequest {
@@ -39,7 +48,7 @@ export interface CreateCourseFormData {
   title: string
   description: string
   category: string
-  thumbnail: string
+  thumbnail: string | File
   status: PrismaCourseStatus
 }
 
@@ -47,7 +56,7 @@ export interface EditCourseFormData {
   title: string
   description: string
   category: string
-  thumbnail: string
+  thumbnail: string | File
   status: PrismaCourseStatus
 }
 
@@ -79,7 +88,7 @@ export const CourseSchema = z.object({
   description: z.string().min(1, 'Deskripsi harus diisi').max(500, 'Deskripsi terlalu panjang'),
   category: z.string().min(1, 'Kategori harus diisi').max(50, 'Kategori terlalu panjang'),
   thumbnail: z.string().optional(),
-  status: z.nativeEnum(PrismaCourseStatus).optional(),
+  status: z.nativeEnum(PrismaCourseStatus).default(PrismaCourseStatus.DRAFT),
 })
 
 // Utility Types
@@ -98,4 +107,28 @@ export interface CourseMetadata {
   rating: number
   category: string
   createdAt: string
+}
+
+// Utility functions untuk thumbnail handling
+export const courseThumbnailUtils = {
+  /**
+   * Get display thumbnail URL dengan fallback ke default
+   */
+  getDisplayThumbnail: (thumbnail: string | null): string => {
+    return thumbnail || DEFAULT_COURSE_THUMBNAIL.URL
+  },
+
+  /**
+   * Check if thumbnail is default
+   */
+  isDefaultThumbnail: (thumbnail: string | null): boolean => {
+    return !thumbnail || thumbnail === DEFAULT_COURSE_THUMBNAIL.URL
+  },
+
+  /**
+   * Get default thumbnail URL
+   */
+  getDefaultThumbnail: (): string => {
+    return DEFAULT_COURSE_THUMBNAIL.URL
+  },
 }

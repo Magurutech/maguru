@@ -26,7 +26,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Upload, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
-import { CreateCourseRequest, CreateCourseFormData } from '../../types'
+import { CreateCourseFormData, CreateCourseRequest, courseThumbnailUtils } from '../../types'
 import Image from 'next/image'
 
 export function CreateCourseDialog() {
@@ -45,6 +45,9 @@ export function CreateCourseDialog() {
     resetForm,
     closeDialog,
   } = useCourseContext()
+
+  // Tambahkan state untuk file
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
 
   // Handle input change dengan proper error handling
   const handleInputChange = useCallback(
@@ -72,7 +75,14 @@ export function CreateCourseDialog() {
       setFormSubmitting(true)
 
       try {
-        const success = await createCourseWithValidation(formState.data as CreateCourseRequest)
+        const dataToSend: CreateCourseRequest = {
+          title: formState.data.title,
+          description: formState.data.description,
+          category: formState.data.category,
+          thumbnail: thumbnailFile || formState.data.thumbnail,
+          status: formState.data.status || 'DRAFT', // Default to DRAFT if not specified
+        }
+        const success = await createCourseWithValidation(dataToSend)
 
         if (success) {
           resetForm()
@@ -92,6 +102,7 @@ export function CreateCourseDialog() {
       setFormErrors,
       setFormValid,
       setFormSubmitting,
+      thumbnailFile,
     ],
   )
 
@@ -115,33 +126,8 @@ export function CreateCourseDialog() {
             return
           }
 
-          // TODO: Implement actual file upload to Supabase Storage
-          // For now, use a temporary solution with base64 or placeholder
-
-          // Option 1: Convert to base64 (temporary solution)
-          const reader = new FileReader()
-          reader.onload = (event) => {
-            const base64String = event.target?.result as string
-            updateFormData({ thumbnail: base64String })
-          }
-          reader.readAsDataURL(file)
-
-          // Option 2: Use placeholder image (fallback)
-          // updateFormData({ thumbnail: '/globe.svg' })
-
-          // Option 3: Upload to server (recommended for production)
-          // const formData = new FormData()
-          // formData.append('file', file)
-          // const response = await fetch('/api/upload', {
-          //   method: 'POST',
-          //   body: formData,
-          // })
-          // const result = await response.json()
-          // if (result.success) {
-          //   updateFormData({ thumbnail: result.data.url })
-          // } else {
-          //   setFormErrors([result.error || 'Upload failed'])
-          // }
+          setThumbnailFile(file)
+          updateFormData({ thumbnail: file })
         } catch (error) {
           console.error('File upload failed:', error)
           setFormErrors(['File upload failed. Please try again.'])
@@ -151,8 +137,19 @@ export function CreateCourseDialog() {
     [updateFormData, setFormErrors],
   )
 
+  // Saat reset form, reset file
+  const handleReset = useCallback(() => {
+    setThumbnailFile(null)
+    resetForm()
+  }, [resetForm])
+
   // Check if form is valid
   const isFormValid = formState.data.title && formState.data.description && formState.data.category
+
+  // Get display thumbnail untuk preview
+  const displayThumbnail = thumbnailFile
+    ? URL.createObjectURL(thumbnailFile)
+    : courseThumbnailUtils.getDefaultThumbnail()
 
   return (
     <Dialog open={activeDialog === 'create'} onOpenChange={(open) => !open && closeDialog()}>
@@ -243,7 +240,7 @@ export function CreateCourseDialog() {
 
             <div className="space-y-2">
               <Label htmlFor="status" className="text-beige-900 font-medium">
-                Status
+                Status *
               </Label>
               <Select
                 value={formState.data.status || 'DRAFT'}
@@ -264,7 +261,9 @@ export function CreateCourseDialog() {
 
           {/* Thumbnail Upload */}
           <div className="space-y-2">
-            <Label className="text-beige-900 font-medium">Thumbnail Kursus</Label>
+            <Label className="text-beige-900 font-medium">
+              Thumbnail Kursus <span className="text-beige-600 text-sm">(Opsional)</span>
+            </Label>
             <Card
               className={`relative border-2 border-dashed transition-all duration-300 aspect-[4/2] w-full max-w-2xl mx-auto overflow-hidden p-0 ${
                 isUploadHovered
@@ -276,10 +275,10 @@ export function CreateCourseDialog() {
             >
               <CardContent className="p-0 h-full w-full flex items-center justify-center">
                 <div className="relative w-full h-full min-h-[96px]">
-                  {formState.data.thumbnail ? (
+                  {thumbnailFile ? (
                     <>
                       <Image
-                        src={formState.data.thumbnail}
+                        src={URL.createObjectURL(thumbnailFile)}
                         alt="Course thumbnail"
                         className="w-full h-full object-cover rounded-lg"
                         fill
@@ -290,7 +289,7 @@ export function CreateCourseDialog() {
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => handleInputChange('thumbnail', '')}
+                        onClick={() => handleReset()}
                         disabled={formState.isSubmitting}
                         className="absolute top-2 right-2 text-2xl bg-white border-red-300 text-red-600 hover:bg-red-50 z-10"
                       >
@@ -298,17 +297,27 @@ export function CreateCourseDialog() {
                       </Button>
                     </>
                   ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-full py-8">
-                      <Upload
-                        className={`h-12 w-12 transition-colors duration-300 ${
-                          isUploadHovered ? 'text-secondary-600' : 'text-beige-600'
-                        }`}
+                    <>
+                      <Image
+                        src={displayThumbnail}
+                        alt="Default course thumbnail"
+                        className="w-full h-full object-cover rounded-lg"
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 640px"
                       />
-                      <div className="text-center">
-                        <p className="text-sm text-beige-700">Klik untuk upload atau drag & drop</p>
-                        <p className="text-xs text-beige-600 mt-1">PNG, JPG, WebP (max 5MB)</p>
+                      <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center">
+                        <Upload
+                          className={`h-12 w-12 transition-colors duration-300 ${
+                            isUploadHovered ? 'text-secondary-600' : 'text-white'
+                          }`}
+                        />
+                        <div className="text-center text-white">
+                          <p className="text-sm">Klik untuk upload atau drag & drop</p>
+                          <p className="text-xs mt-1">PNG, JPG, WebP (max 5MB)</p>
+                        </div>
                       </div>
-                    </div>
+                    </>
                   )}
                   <input
                     type="file"
@@ -320,6 +329,9 @@ export function CreateCourseDialog() {
                 </div>
               </CardContent>
             </Card>
+            <p className="text-xs text-beige-600 text-center">
+              Jika tidak diupload, akan menggunakan thumbnail default
+            </p>
           </div>
 
           <DialogFooter>
@@ -367,6 +379,11 @@ function validateCourseData(data: CreateCourseFormData): { isValid: boolean; err
 
   if (!data.category?.trim()) {
     errors.push('Kategori kursus wajib dipilih')
+  }
+
+  // Status validation - wajib dengan default DRAFT
+  if (!data.status) {
+    errors.push('Status kursus wajib dipilih')
   }
 
   return {

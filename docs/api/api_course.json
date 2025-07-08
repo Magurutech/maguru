@@ -1,0 +1,285 @@
+{
+  "info": {
+    "name": "Maguru Course API",
+    "description": "API collection untuk testing Course Management di Maguru",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "",
+      "type": "string",
+      "description": "ID course yang akan diupdate/delete (akan diisi otomatis setelah create)"
+    }
+  ],
+  "cookie": [
+    {
+      "domain": "localhost",
+      "expires": "2025-12-31T23:59:59.000Z",
+      "maxAge": "",
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "__session",
+      "path": "/",
+      "secure": false,
+      "session": true,
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "item": [
+    {
+      "name": "1. Get All Courses (Public)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "Mengambil daftar kursus publik tanpa authentication"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Create Course (Authenticated)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Test Course dengan Default Thumbnail",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Kursus test untuk memverifikasi default thumbnail dan status wajib",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "teknologi",
+              "type": "text"
+            },
+            {
+              "key": "status",
+              "value": "DRAFT",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"]
+        },
+        "description": "Membuat kursus baru dengan default thumbnail (tidak upload file)"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Create Course dengan Thumbnail Upload",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Test Course dengan Custom Thumbnail",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Kursus test dengan thumbnail custom upload",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "matematika",
+              "type": "text"
+            },
+            {
+              "key": "status",
+              "value": "PUBLISHED",
+              "type": "text"
+            },
+            {
+              "key": "thumbnail",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses"]
+        },
+        "description": "Membuat kursus dengan upload thumbnail custom"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Get Course by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Mengambil detail kursus berdasarkan ID"
+      },
+      "response": []
+    },
+    {
+      "name": "5. Update Course Status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"PUBLISHED\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}/status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}", "status"]
+        },
+        "description": "Update status kursus menjadi PUBLISHED"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Delete Course",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Menghapus kursus berdasarkan ID"
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pre-request script untuk setup environment",
+          "console.log('Testing Maguru Course API - Success Cases...');",
+          "console.log('Base URL:', pm.collectionVariables.get('baseUrl'));",
+          "console.log('Course ID:', pm.collectionVariables.get('courseId'));",
+          "",
+          "// Check if __session cookie exists",
+          "const sessionCookie = pm.cookies.get('__session');",
+          "if (sessionCookie) {",
+          "    console.log('__session cookie found:', sessionCookie.substring(0, 20) + '...');",
+          "} else {",
+          "    console.log('⚠️ __session cookie not found - auth requests may fail');",
+          "    console.log('💡 Copy __session value from browser DevTools > Application > Cookies');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Test script untuk validasi response",
+          "pm.test('Status code is 200, 201, or 204', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+          "});",
+          "",
+          "pm.test('Response has success property', function () {",
+          "    const jsonData = pm.response.json();",
+          "    pm.expect(jsonData).to.have.property('success');",
+          "    pm.expect(jsonData.success).to.be.true;",
+          "});",
+          "",
+          "// Special test for DELETE endpoint (returns message, not data)",
+          "if (pm.request.method === 'DELETE') {",
+          "    pm.test('DELETE response has message property', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('message');",
+          "        pm.expect(jsonData.message).to.include('deleted successfully');",
+          "    });",
+          "} else {",
+          "    pm.test('Response has data property', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('data');",
+          "    });",
+          "}",
+          "",
+          "pm.test('Response time is less than 2000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});",
+          "",
+          "// Log response untuk debugging",
+          "console.log('Response Status:', pm.response.status);",
+          "console.log('Response Time:', pm.response.responseTime + 'ms');"
+        ]
+      }
+    }
+  ]
+}

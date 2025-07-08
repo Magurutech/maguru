@@ -22,6 +22,7 @@
 
 import { useState, useCallback } from 'react'
 import { useUserRole } from '@/features/auth/hooks/useUserRole'
+import { useAuth } from '@clerk/nextjs'
 import { useCourse } from './useCourse'
 import type { CreateCourseRequest, UpdateCourseRequest, Course } from '../types'
 
@@ -66,6 +67,7 @@ interface UseCourseManagementReturn {
 export function useCourseManagement(): UseCourseManagementReturn {
   // Auth hook untuk role validation
   const { role } = useUserRole()
+  const { userId } = useAuth()
 
   // Local state management
   const [searchQuery, setSearchQuery] = useState('')
@@ -120,14 +122,18 @@ export function useCourseManagement(): UseCourseManagementReturn {
       }
 
       try {
-        // TODO: Get creatorId from auth context
-        const creatorId = 'current-user-id' // Placeholder
+        // Get creatorId from auth context
+        if (!userId) {
+          console.error('No user ID available for loading creator courses')
+          return
+        }
+        const creatorId = userId
         await fetchCoursesByCreator(creatorId, page, limit)
       } catch (error) {
         console.error('Failed to load creator courses:', error)
       }
     },
-    [hasPermission, fetchCoursesByCreator],
+    [hasPermission, fetchCoursesByCreator, userId],
   )
 
   // Load public courses

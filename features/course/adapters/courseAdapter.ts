@@ -5,7 +5,7 @@ import type {
   CourseListResponse,
   CourseResponse,
 } from '../types'
-import { getAuthHeader } from '@/lib/getAuthHeader'
+import { DEFAULT_COURSE_THUMBNAIL, courseThumbnailUtils } from '../types'
 
 const API_BASE_URL = '/api/courses'
 
@@ -22,7 +22,7 @@ const API_TIMEOUT = 10000 // 10 seconds
  * - Type safety dengan TypeScript
  * - Transformasi data untuk frontend consumption
  * - Retry logic dan fallback mechanisms
- * - Clerk authentication integration
+ * - Clerk authentication integration (via middleware)
  * - Timeout handling dan graceful degradation
  *
  * Semua method mengembalikan response yang konsisten dengan format:
@@ -59,6 +59,27 @@ export class CourseAdapter {
   }
 
   /**
+   * Get default thumbnail URL
+   */
+  static getDefaultThumbnailUrl(): string {
+    return DEFAULT_COURSE_THUMBNAIL.URL
+  }
+
+  /**
+   * Check if thumbnail is default
+   */
+  static isDefaultThumbnail(thumbnail: string | null): boolean {
+    return courseThumbnailUtils.isDefaultThumbnail(thumbnail)
+  }
+
+  /**
+   * Get display thumbnail URL dengan fallback ke default
+   */
+  static getDisplayThumbnail(thumbnail: string | null): string {
+    return courseThumbnailUtils.getDisplayThumbnail(thumbnail)
+  }
+
+  /**
    * Mengambil daftar kursus dengan pagination dan filter opsional
    *
    * @description
@@ -80,12 +101,6 @@ export class CourseAdapter {
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-      }
-
-      // Add auth header if available
-      const authHeader = await getAuthHeader()
-      if (authHeader) {
-        headers['Authorization'] = authHeader
       }
 
       const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
@@ -146,12 +161,6 @@ export class CourseAdapter {
         'Content-Type': 'application/json',
       }
 
-      // Add auth header if available
-      const authHeader = await getAuthHeader()
-      if (authHeader) {
-        headers['Authorization'] = authHeader
-      }
-
       const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'GET',
         headers,
@@ -203,9 +212,9 @@ export class CourseAdapter {
    * Kursus yang dibuat akan memiliki status DRAFT secara default.
    *
    * Authentication & Authorization:
-   * - ✅ Authorization header dengan Clerk token
-   * - ✅ Handle 401/403 errors untuk unauthorized access
-   * - ✅ Role validation: creator, admin only
+   * - ✅ Authentication handled by Clerk middleware
+   * - ✅ Role validation: creator, admin only (server-side)
+   * - ✅ No manual auth header needed
    *
    * @param courseData - Data kursus yang akan dibuat (title, description, thumbnail, category)
    * @returns Promise<CourseResponse> - Response dengan kursus yang berhasil dibuat
@@ -214,21 +223,30 @@ export class CourseAdapter {
    */
   static async createCourse(courseData: CreateCourseRequest): Promise<CourseResponse> {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      }
+      const headers: Record<string, string> = {}
+      let body: BodyInit
 
-      // Add auth header (required for create)
-      const authHeader = await getAuthHeader()
-      if (!authHeader) {
-        throw new Error('Authentication required. Please sign in to create a course.')
+      // Jika thumbnail adalah File, gunakan FormData
+      if (courseData.thumbnail && typeof courseData.thumbnail !== 'string') {
+        const formData = new FormData()
+        Object.entries(courseData).forEach(([key, value]) => {
+          if (key === 'thumbnail' && value instanceof File) {
+            formData.append('thumbnail', value)
+          } else if (typeof value === 'string') {
+            formData.append(key, value)
+          }
+        })
+        body = formData
+        // Jangan set Content-Type, browser akan handle
+      } else {
+        headers['Content-Type'] = 'application/json'
+        body = JSON.stringify(courseData)
       }
-      headers['Authorization'] = authHeader
 
       const response = await this.fetchWithTimeout(API_BASE_URL, {
         method: 'POST',
         headers,
-        body: JSON.stringify(courseData),
+        body,
       })
 
       const data = await response.json()
@@ -277,7 +295,7 @@ export class CourseAdapter {
    * Hanya pemilik kursus yang dapat mengupdate (akan divalidasi di backend).
    *
    * Authentication & Authorization:
-   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Authentication handled by Clerk middleware
    * - ✅ Handle 401/403 errors untuk unauthorized access
    * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate
    *
@@ -289,21 +307,30 @@ export class CourseAdapter {
    */
   static async updateCourse(id: string, courseData: UpdateCourseRequest): Promise<CourseResponse> {
     try {
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      }
+      const headers: Record<string, string> = {}
+      let body: BodyInit
 
-      // Add auth header (required for update)
-      const authHeader = await getAuthHeader()
-      if (!authHeader) {
-        throw new Error('Authentication required. Please sign in to update a course.')
+      // Jika thumbnail adalah File, gunakan FormData
+      if (courseData.thumbnail && typeof courseData.thumbnail !== 'string') {
+        const formData = new FormData()
+        Object.entries(courseData).forEach(([key, value]) => {
+          if (key === 'thumbnail' && value instanceof File) {
+            formData.append('thumbnail', value)
+          } else if (typeof value === 'string') {
+            formData.append(key, value)
+          }
+        })
+        body = formData
+        // Jangan set Content-Type, browser akan handle
+      } else {
+        headers['Content-Type'] = 'application/json'
+        body = JSON.stringify(courseData)
       }
-      headers['Authorization'] = authHeader
 
       const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers,
-        body: JSON.stringify(courseData),
+        body,
       })
 
       const data = await response.json()
@@ -356,7 +383,7 @@ export class CourseAdapter {
    * Penghapusan bersifat permanen (hard delete).
    *
    * Authentication & Authorization:
-   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Authentication handled by Clerk middleware
    * - ✅ Handle 401/403 errors untuk unauthorized access
    * - ✅ Ownership validation: hanya pemilik kursus yang dapat menghapus
    *
@@ -372,13 +399,6 @@ export class CourseAdapter {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       }
-
-      // Add auth header (required for delete)
-      const authHeader = await getAuthHeader()
-      if (!authHeader) {
-        throw new Error('Authentication required. Please sign in to delete a course.')
-      }
-      headers['Authorization'] = authHeader
 
       const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
@@ -431,7 +451,7 @@ export class CourseAdapter {
    * Digunakan untuk menampilkan dashboard creator dengan kursus miliknya sendiri.
    *
    * Authentication & Authorization:
-   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Authentication handled by Clerk middleware
    * - ✅ Extract creatorId dari Clerk session otomatis
    * - ✅ Handle 401/403 errors untuk unauthorized access
    *
@@ -457,13 +477,6 @@ export class CourseAdapter {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       }
-
-      // Add auth header (required for creator-specific data)
-      const authHeader = await getAuthHeader()
-      if (!authHeader) {
-        throw new Error('Authentication required. Please sign in to view your courses.')
-      }
-      headers['Authorization'] = authHeader
 
       const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
         method: 'GET',
@@ -513,7 +526,7 @@ export class CourseAdapter {
    * Hanya pemilik kursus yang dapat mengupdate status (akan divalidasi di backend).
    *
    * Authentication & Authorization:
-   * - ✅ Authorization header dengan Clerk token
+   * - ✅ Authentication handled by Clerk middleware
    * - ✅ Handle 401/403 errors untuk unauthorized access
    * - ✅ Ownership validation: hanya pemilik kursus yang dapat mengupdate status
    *
@@ -528,13 +541,6 @@ export class CourseAdapter {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       }
-
-      // Add auth header (required for status update)
-      const authHeader = await getAuthHeader()
-      if (!authHeader) {
-        throw new Error('Authentication required. Please sign in to update course status.')
-      }
-      headers['Authorization'] = authHeader
 
       const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}/status`, {
         method: 'PATCH',

@@ -21,15 +21,21 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardContent } from '@/components/ui/card'
-import { Upload, ImageIcon, AlertCircle } from 'lucide-react'
+import { Upload, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
-import { UpdateCourseRequest, CreateCourseFormData } from '../../types'
+import {
+  UpdateCourseRequest,
+  CreateCourseFormData,
+  CourseStatus,
+  courseThumbnailUtils,
+} from '../../types'
 import Image from 'next/image'
 
 export function EditCourseDialog() {
   // Component state untuk UI interactions
   const [isUploadHovered, setIsUploadHovered] = useState(false)
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null)
 
   // Feature state dari hooks dan context
   const { updateCourseWithValidation, error: managementError, clearError } = useCourseManagement()
@@ -48,6 +54,40 @@ export function EditCourseDialog() {
   const handleInputChange = (field: string, value: string) => {
     clearError() // Clear previous errors when user starts typing
     updateFormData({ [field]: value })
+  }
+
+  // Handle file selection dengan error handling
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      try {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+        if (!allowedTypes.includes(file.type)) {
+          setFormErrors(['File type not supported. Please upload JPEG, PNG, or WebP image.'])
+          return
+        }
+
+        // Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024 // 5MB
+        if (file.size > maxSize) {
+          setFormErrors(['File size too large. Please upload an image smaller than 5MB.'])
+          return
+        }
+
+        setThumbnailFile(file)
+        updateFormData({ thumbnail: file })
+      } catch (error) {
+        console.error('File upload failed:', error)
+        setFormErrors(['File upload failed. Please try again.'])
+      }
+    }
+  }
+
+  // Saat reset form, reset file
+  const handleReset = () => {
+    setThumbnailFile(null)
+    updateFormData({ thumbnail: '' })
   }
 
   // Handle form submission dengan proper error handling
@@ -70,11 +110,18 @@ export function EditCourseDialog() {
     setFormSubmitting(true)
 
     try {
+      const dataToSend: { [key: string]: string | File } = { ...formState.data }
+      if (thumbnailFile) {
+        dataToSend.thumbnail = thumbnailFile
+      }
       const updatedCourse: UpdateCourseRequest = {
         id: selectedCourse.id,
-        ...formState.data,
+        title: dataToSend.title as string,
+        description: dataToSend.description as string,
+        category: dataToSend.category as string,
+        thumbnail: dataToSend.thumbnail,
+        status: dataToSend.status as CourseStatus,
       }
-
       const success = await updateCourseWithValidation(selectedCourse.id, updatedCourse)
 
       if (success) {
@@ -87,61 +134,19 @@ export function EditCourseDialog() {
     }
   }
 
-  // Handle file selection dengan error handling
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      try {
-        // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
-        if (!allowedTypes.includes(file.type)) {
-          setFormErrors(['File type not supported. Please upload JPEG, PNG, or WebP image.'])
-          return
-        }
-
-        // Validate file size (max 5MB)
-        const maxSize = 5 * 1024 * 1024 // 5MB
-        if (file.size > maxSize) {
-          setFormErrors(['File size too large. Please upload an image smaller than 5MB.'])
-          return
-        }
-
-        // TODO: Implement actual file upload to Supabase Storage
-        // For now, use a temporary solution with base64 or placeholder
-
-        // Option 1: Convert to base64 (temporary solution)
-        const reader = new FileReader()
-        reader.onload = (event) => {
-          const base64String = event.target?.result as string
-          updateFormData({ thumbnail: base64String })
-        }
-        reader.readAsDataURL(file)
-
-        // Option 2: Use placeholder image (fallback)
-        // updateFormData({ thumbnail: '/globe.svg' })
-
-        // Option 3: Upload to server (recommended for production)
-        // const formData = new FormData()
-        // formData.append('file', file)
-        // const response = await fetch('/api/upload', {
-        //   method: 'POST',
-        //   body: formData,
-        // })
-        // const result = await response.json()
-        // if (result.success) {
-        //   updateFormData({ thumbnail: result.data.url })
-        // } else {
-        //   setFormErrors([result.error || 'Upload failed'])
-        // }
-      } catch (error) {
-        console.error('File upload failed:', error)
-        setFormErrors(['File upload failed. Please try again.'])
-      }
-    }
-  }
-
   // Check if form is valid
   const isFormValid = formState.data.title && formState.data.description && formState.data.category
+
+  // Get display thumbnail untuk preview dengan fallback
+  const getDisplayThumbnail = () => {
+    if (thumbnailFile) {
+      return URL.createObjectURL(thumbnailFile)
+    }
+    if (formState.data.thumbnail && typeof formState.data.thumbnail === 'string') {
+      return formState.data.thumbnail
+    }
+    return courseThumbnailUtils.getDefaultThumbnail()
+  }
 
   if (!selectedCourse) return null
 
@@ -234,7 +239,7 @@ export function EditCourseDialog() {
 
             <div className="space-y-2">
               <Label htmlFor="status" className="text-beige-900 font-medium">
-                Status
+                Status *
               </Label>
               <Select
                 value={formState.data.status || 'DRAFT'}
@@ -279,7 +284,9 @@ export function EditCourseDialog() {
 
           {/* Thumbnail Upload */}
           <div className="space-y-2">
-            <Label className="text-beige-900 font-medium">Thumbnail Kursus</Label>
+            <Label className="text-beige-900 font-medium">
+              Thumbnail Kursus <span className="text-beige-600 text-sm">(Opsional)</span>
+            </Label>
             <Card
               className={`relative border-2 border-dashed transition-all duration-300 aspect-[4/2] w-full max-w-2xl mx-auto overflow-hidden p-0 ${
                 isUploadHovered ? 'scale-[1.02] shadow-lg' : ''
@@ -289,10 +296,10 @@ export function EditCourseDialog() {
             >
               <CardContent className="p-0 h-full w-full flex items-center justify-center">
                 <div className="relative w-full h-full min-h-[96px]">
-                  {formState.data.thumbnail ? (
+                  {thumbnailFile ? (
                     <>
                       <Image
-                        src={formState.data.thumbnail}
+                        src={URL.createObjectURL(thumbnailFile)}
                         alt="Course thumbnail"
                         className="w-full h-full object-cover rounded-lg"
                         fill
@@ -303,7 +310,7 @@ export function EditCourseDialog() {
                         type="button"
                         variant="outline"
                         size="sm"
-                        onClick={() => updateFormData({ thumbnail: '' })}
+                        onClick={handleReset}
                         disabled={formState.isSubmitting}
                         className="absolute -top-2 -right-2 bg-white border-red-300 text-red-600 hover:bg-red-50"
                       >
@@ -312,40 +319,39 @@ export function EditCourseDialog() {
                     </>
                   ) : (
                     <>
-                      <div
-                        className={`mx-auto w-16 h-16 bg-secondary-200 rounded-full flex items-center justify-center mb-4 transition-all duration-300 ${
-                          isUploadHovered ? 'scale-110' : ''
-                        }`}
-                      >
-                        <ImageIcon className="h-8 w-8 text-secondary-600" />
+                      <Image
+                        src={getDisplayThumbnail()}
+                        alt="Course thumbnail"
+                        className="w-full h-full object-cover rounded-lg"
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, 640px"
+                      />
+                      <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center">
+                        <Upload
+                          className={`h-8 w-8 transition-colors duration-300 ${
+                            isUploadHovered ? 'text-secondary-600' : 'text-white'
+                          }`}
+                        />
+                        <div className="text-center text-white">
+                          <p className="text-sm">Klik untuk ganti thumbnail</p>
+                          <p className="text-xs mt-1">PNG, JPG, WebP (max 5MB)</p>
+                        </div>
                       </div>
-                      <h3 className="text-lg font-medium text-beige-900 mb-2">Update Thumbnail</h3>
-                      <p className="text-beige-700 text-sm mb-4">
-                        Pilih gambar baru untuk kursus Anda
-                      </p>
                     </>
                   )}
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleFileSelect}
-                    className="hidden"
-                    id="thumbnail-upload-edit"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
                   />
-                  <label htmlFor="thumbnail-upload-edit">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="btn-secondary hover-glow cursor-pointer"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Ganti File
-                    </Button>
-                  </label>
-                  <p className="text-xs text-beige-600 mt-2">PNG, JPG hingga 2MB</p>
                 </div>
               </CardContent>
             </Card>
+            <p className="text-xs text-beige-600 text-center">
+              Jika tidak diupload, akan menggunakan thumbnail default
+            </p>
           </div>
 
           <DialogFooter className="gap-2">
@@ -385,6 +391,11 @@ function validateCourseData(data: CreateCourseFormData): { isValid: boolean; err
 
   if (!data.category?.trim()) {
     errors.push('Kategori kursus wajib dipilih')
+  }
+
+  // Status validation - wajib dengan default DRAFT
+  if (!data.status) {
+    errors.push('Status kursus wajib dipilih')
   }
 
   return {
