@@ -26,7 +26,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Upload, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
-import { CreateCourseFormData, CreateCourseRequest, courseThumbnailUtils } from '../../types'
+import { CreateCourseFormData, CreateCourseRequest } from '../../types'
 import Image from 'next/image'
 
 export function CreateCourseDialog() {
@@ -85,6 +85,7 @@ export function CreateCourseDialog() {
         const success = await createCourseWithValidation(dataToSend)
 
         if (success) {
+          window.alert('Kursus berhasil dibuat!')
           resetForm()
           closeDialog()
         }
@@ -145,11 +146,6 @@ export function CreateCourseDialog() {
 
   // Check if form is valid
   const isFormValid = formState.data.title && formState.data.description && formState.data.category
-
-  // Get display thumbnail untuk preview
-  const displayThumbnail = thumbnailFile
-    ? URL.createObjectURL(thumbnailFile)
-    : courseThumbnailUtils.getDefaultThumbnail()
 
   return (
     <Dialog open={activeDialog === 'create'} onOpenChange={(open) => !open && closeDialog()}>
@@ -298,23 +294,17 @@ export function CreateCourseDialog() {
                     </>
                   ) : (
                     <>
-                      <Image
-                        src={displayThumbnail}
-                        alt="Default course thumbnail"
-                        className="w-full h-full object-cover rounded-lg"
-                        fill
-                        priority
-                        sizes="(max-width: 768px) 100vw, 640px"
-                      />
                       <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center">
                         <Upload
                           className={`h-12 w-12 transition-colors duration-300 ${
-                            isUploadHovered ? 'text-secondary-600' : 'text-white'
+                            isUploadHovered ? 'text-secondary-600' : 'text-beige-600'
                           }`}
                         />
-                        <div className="text-center text-white">
-                          <p className="text-sm">Klik untuk upload atau drag & drop</p>
-                          <p className="text-xs mt-1">PNG, JPG, WebP (max 5MB)</p>
+                        <div className="text-center ">
+                          <p className="text-sm  text-beige-700">
+                            Klik untuk upload atau drag & drop
+                          </p>
+                          <p className="text-xs  text-beige-700 mt-1">PNG, JPG, WebP (max 5MB)</p>
                         </div>
                       </div>
                     </>

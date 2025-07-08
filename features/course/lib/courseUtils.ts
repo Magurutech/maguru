@@ -335,12 +335,12 @@ export function validateCourseData(data: Partial<CreateCourseRequest>): {
       // Handle base64 images (temporary solution)
       if (data.thumbnail.startsWith('data:image/')) {
         // Base64 is valid, no need to validate further
-        return
+        return { isValid: true, errors: [] }
       }
 
       // Handle relative paths
       if (data.thumbnail.startsWith('/') || data.thumbnail.startsWith('./')) {
-        return
+        return { isValid: true, errors: [] }
       }
 
       // Handle full URLs
@@ -463,4 +463,3 @@ export const safeArrayUtils = {
     }
   },
 }
-

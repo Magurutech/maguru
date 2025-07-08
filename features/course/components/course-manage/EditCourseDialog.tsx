@@ -258,30 +258,6 @@ export function EditCourseDialog() {
             </div>
           </div>
 
-          {/* Course Stats (Read-only) */}
-          <div className="grid grid-cols-3 gap-4">
-            <Card className="bg-white/60 border-[#5AC88A]/20">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">{selectedCourse.students}</div>
-                <div className="text-sm text-[#997F58]">Siswa</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/60 border-[#FFB148]/20">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">{selectedCourse.lessons}</div>
-                <div className="text-sm text-[#997F58]">Pelajaran</div>
-              </CardContent>
-            </Card>
-            <Card className="bg-white/60 border-[#FF4D4D]/20">
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-[#7B5B2C]">
-                  {selectedCourse.rating || 'N/A'}
-                </div>
-                <div className="text-sm text-[#997F58]">Rating</div>
-              </CardContent>
-            </Card>
-          </div>
-
           {/* Thumbnail Upload */}
           <div className="space-y-2">
             <Label className="text-beige-900 font-medium">

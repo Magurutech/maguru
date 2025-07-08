@@ -25,6 +25,7 @@ import { useUserRole } from '@/features/auth/hooks/useUserRole'
 import { useAuth } from '@clerk/nextjs'
 import { useCourse } from './useCourse'
 import type { CreateCourseRequest, UpdateCourseRequest, Course } from '../types'
+import { logger } from '@/services/logger'
 
 // Hook return type
 interface UseCourseManagementReturn {
@@ -117,20 +118,38 @@ export function useCourseManagement(): UseCourseManagementReturn {
   const loadCreatorCourses = useCallback(
     async (page: number = 1, limit: number = 10) => {
       if (!hasPermission('view')) {
-        console.error('Access denied. You do not have permission to view courses.')
+        logger.warn(
+          'useCourseManagement',
+          'loadCreatorCourses',
+          'Access denied. You do not have permission to view courses.',
+        )
         return
       }
 
       try {
         // Get creatorId from auth context
         if (!userId) {
-          console.error('No user ID available for loading creator courses')
+          logger.error(
+            'useCourseManagement',
+            'loadCreatorCourses',
+            'No user ID available for loading creator courses',
+          )
           return
         }
+        logger.info('useCourseManagement', 'loadCreatorCourses', 'Fetching courses by creatorId', {
+          userId,
+          page,
+          limit,
+        })
         const creatorId = userId
         await fetchCoursesByCreator(creatorId, page, limit)
       } catch (error) {
-        console.error('Failed to load creator courses:', error)
+        logger.error(
+          'useCourseManagement',
+          'loadCreatorCourses',
+          'Failed to load creator courses',
+          error as Error,
+        )
       }
     },
     [hasPermission, fetchCoursesByCreator, userId],
@@ -192,13 +211,17 @@ export function useCourseManagement(): UseCourseManagementReturn {
 
       try {
         const updatedCourse = await updateCourse(id, courseData)
-        return !!updatedCourse
+        if (updatedCourse) {
+          await refreshCourses()
+          return true
+        }
+        return false
       } catch (error) {
         console.error('Failed to update course:', error)
         return false
       }
     },
-    [hasPermission, updateCourse],
+    [hasPermission, updateCourse, refreshCourses],
   )
 
   // Delete course dengan confirmation logic

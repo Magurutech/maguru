@@ -224,24 +224,17 @@ export class CourseAdapter {
   static async createCourse(courseData: CreateCourseRequest): Promise<CourseResponse> {
     try {
       const headers: Record<string, string> = {}
-      let body: BodyInit
-
-      // Jika thumbnail adalah File, gunakan FormData
-      if (courseData.thumbnail && typeof courseData.thumbnail !== 'string') {
-        const formData = new FormData()
-        Object.entries(courseData).forEach(([key, value]) => {
-          if (key === 'thumbnail' && value instanceof File) {
-            formData.append('thumbnail', value)
-          } else if (typeof value === 'string') {
-            formData.append(key, value)
-          }
-        })
-        body = formData
-        // Jangan set Content-Type, browser akan handle
-      } else {
-        headers['Content-Type'] = 'application/json'
-        body = JSON.stringify(courseData)
-      }
+      // Selalu gunakan FormData untuk POST, agar Content-Type multipart/form-data
+      const formData = new FormData()
+      Object.entries(courseData).forEach(([key, value]) => {
+        if (key === 'thumbnail' && value instanceof File) {
+          formData.append('thumbnail', value)
+        } else if (typeof value === 'string') {
+          formData.append(key, value)
+        }
+      })
+      const body = formData
+      // Jangan set Content-Type, browser akan handle
 
       const response = await this.fetchWithTimeout(API_BASE_URL, {
         method: 'POST',
@@ -270,8 +263,10 @@ export class CourseAdapter {
 
       return data
     } catch (error) {
-      console.error('Error in createCourse:', error)
-
+      // Ganti console.error dengan logger
+      import('@/services/logger').then(({ logger }) => {
+        logger.error('CourseAdapter', 'createCourse', 'Error in createCourse', error as Error)
+      })
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {
         return {

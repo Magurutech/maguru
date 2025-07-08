@@ -138,7 +138,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
 
   return (
     <Card
-      className={`card-ancient transition-all duration-300 max-w-md flex flex-col h-full ${
+      className={`card-ancient transition-all duration-300 max-w-md flex flex-col h-full p-1 pb-2 ${
         isHovered ? 'hover-lift scale-[1.02] shadow-xl' : ''
       }`}
       style={{ animationDelay: `${index * 0.1}s` }}
@@ -176,7 +176,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
         ></div>
       </div>
 
-      <CardContent className="px-4 flex-grow mx-auto flex flex-col h-full justify-between">
+      <CardContent className="px-4 flex-grow mx-auto w-full flex flex-col h-full justify-between">
         {/* Error Display */}
         {managementError && (
           <div className="mb-3 bg-red-50 border border-red-200 rounded-lg p-2">

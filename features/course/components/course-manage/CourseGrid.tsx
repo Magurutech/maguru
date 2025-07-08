@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { CheckSquare, Square, Trash2, Settings } from 'lucide-react'
 import { CourseCard } from './CourseCard'
 import { useCourseSearch } from '../../hooks/useCourseSearch'
@@ -14,11 +14,16 @@ export function CourseGrid() {
   const [isSelectMode, setIsSelectMode] = useState(false)
 
   // Feature state dari hooks dan context
-  const { courses, isLoading, deleteMultipleCourses } = useCourseManagement()
+  const { courses, isLoading, deleteMultipleCourses, loadCreatorCourses } = useCourseManagement()
   const { hasActiveFilters } = useCourseContext()
 
   // Use hook untuk filtering dengan internal state
   const { filteredCourses } = useCourseSearch(courses)
+
+  // Fetch data otomatis saat komponen mount
+  useEffect(() => {
+    loadCreatorCourses()
+  }, [loadCreatorCourses])
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourses((prev) => {

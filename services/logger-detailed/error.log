@@ -190,3 +190,35 @@
     }
   }
 }
+2025-07-08T01:17:51.769Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:1024:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751937471769,
+    "memory": {
+      "rss": 639885312,
+      "heapTotal": 170135552,
+      "heapUsed": 163213208,
+      "external": 5498736,
+      "arrayBuffers": 386385
+    }
+  }
+}
+2025-07-08T01:26:46.800Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:1024:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751938006800,
+    "memory": {
+      "rss": 582279168,
+      "heapTotal": 174383104,
+      "heapUsed": 168371832,
+      "external": 7152251,
+      "arrayBuffers": 2043284
+    }
+  }
+}
