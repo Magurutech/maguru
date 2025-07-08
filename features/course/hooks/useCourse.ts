@@ -57,7 +57,13 @@ interface UseCourseReturn {
   }
 
   // CRUD operations
-  fetchCourses: (page?: number, limit?: number) => Promise<void>
+  fetchCourses: (searchParams?: {
+    searchQuery?: string
+    selectedStatus?: string
+    selectedCategory?: string
+    page?: number
+    limit?: number
+  }) => Promise<void>
   fetchCourseById: (id: string) => Promise<void>
   fetchCoursesByCreator: (creatorId: string, page?: number, limit?: number) => Promise<void>
   createCourse: (courseData: CreateCourseRequest) => Promise<Course | null>
@@ -78,7 +84,7 @@ interface UseCourseReturn {
 export function useCourse(): UseCourseReturn {
   const queryClient = useQueryClient()
 
-  // Fetch all courses
+  // Fetch all courses dengan search/filter parameters
   const {
     data: coursesData,
     isLoading,
@@ -156,14 +162,56 @@ export function useCourse(): UseCourseReturn {
   const getDefaultThumbnailUrl = CourseAdapter.getDefaultThumbnailUrl
 
   // CRUD operations dengan proper error handling dan debouncing
-  const fetchCourses = async () => {
+  const fetchCourses = async (searchParams?: {
+    searchQuery?: string
+    selectedStatus?: string
+    selectedCategory?: string
+    page?: number
+    limit?: number
+  }) => {
     try {
+      logger.info('useCourse', 'fetchCourses', 'Fetching courses with parameters', {
+        searchParams,
+        hasSearchQuery: !!searchParams?.searchQuery,
+        hasStatusFilter: !!searchParams?.selectedStatus,
+        hasCategoryFilter: !!searchParams?.selectedCategory,
+      })
+
       // Tambahkan debouncing untuk mencegah multiple rapid calls
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 1000) // 1 detik timeout
 
-      await refetchCourses()
+      // Jika ada search/filter parameters, panggil adapter dengan parameters
+      if (
+        searchParams?.searchQuery ||
+        searchParams?.selectedStatus ||
+        searchParams?.selectedCategory
+      ) {
+        logger.info('useCourse', 'fetchCourses', 'Calling adapter with search parameters', {
+          searchParams,
+        })
+
+        // Panggil adapter langsung dengan search parameters
+        const response = await CourseAdapter.getCourses(
+          searchParams.page || 1,
+          searchParams.limit || 10,
+          {
+            searchQuery: searchParams.searchQuery,
+            selectedStatus: searchParams.selectedStatus,
+            selectedCategory: searchParams.selectedCategory,
+          },
+        )
+
+        // Update query cache dengan hasil search
+        queryClient.setQueryData(['courses'], response)
+        logger.info('useCourse', 'fetchCourses', 'Search results updated in cache')
+      } else {
+        // Jika tidak ada search parameters, gunakan refetch normal
+        await refetchCourses()
+      }
       clearTimeout(timeoutId)
+
+      logger.info('useCourse', 'fetchCourses', 'Courses fetched successfully')
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         logger.warn('useCourse', 'fetchCourses', 'Fetch courses aborted due to rapid calls')

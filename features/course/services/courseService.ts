@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import type { Course, CreateCourseRequest, PaginationInfo } from '../types'
 import { CourseStatus, DEFAULT_COURSE_THUMBNAIL } from '../types'
+import type { Prisma } from '@prisma/client'
 
 /**
  * Service class untuk mengelola operasi CRUD kursus
@@ -82,6 +83,7 @@ export class CourseService {
    * @param page - Nomor halaman (default: 1)
    * @param limit - Jumlah item per halaman (default: 10, max: 50)
    * @param creatorId - Filter opsional untuk mengambil kursus berdasarkan creator ID
+   * @param filters - Filter opsional untuk search, status, dan category
    * @returns Promise<{courses: Course[], pagination: PaginationInfo}> - Daftar kursus dan info pagination
    *
    * @throws {Error} Jika terjadi error saat query database
@@ -90,12 +92,50 @@ export class CourseService {
     page: number = 1,
     limit: number = 10,
     creatorId?: string,
+    filters?: {
+      searchQuery?: string
+      statusFilter?: string
+      categoryFilter?: string
+    },
   ): Promise<{ courses: Course[]; pagination: PaginationInfo }> {
     const skip = (page - 1) * limit
     const take = Math.min(limit, 50) // Max 50 items per page
 
-    // Build where clause
-    const where = creatorId ? { creatorId } : {}
+    // 🔥 TAMBAHAN: Build comprehensive where clause
+    const where: Prisma.CourseWhereInput = {}
+
+    // Creator filter
+    if (creatorId) {
+      where.creatorId = creatorId
+    }
+
+    // Status filter
+    if (filters?.statusFilter && filters.statusFilter !== 'all') {
+      where.status = filters.statusFilter as CourseStatus
+    }
+
+    // Category filter
+    if (filters?.categoryFilter && filters.categoryFilter !== 'all') {
+      where.category = filters.categoryFilter
+    }
+
+    // Search filter (title dan description)
+    if (filters?.searchQuery) {
+      where.OR = [
+        {
+          title: {
+            contains: filters.searchQuery,
+            mode: 'insensitive', // Case insensitive search
+          },
+        },
+        {
+          description: {
+            contains: filters.searchQuery,
+            mode: 'insensitive',
+          },
+        },
+      ]
+    }
 
     // Get courses with pagination
     const [courses, total] = await Promise.all([
@@ -109,6 +149,15 @@ export class CourseService {
     ])
 
     const totalPages = Math.ceil(total / take)
+
+    // 🔥 TAMBAHAN: Logging untuk debugging
+    console.log('CourseService.getCourses - Query executed:', {
+      where,
+      filters,
+      coursesCount: courses.length,
+      total,
+      totalPages,
+    })
 
     return {
       courses,

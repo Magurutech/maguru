@@ -104,12 +104,37 @@ export class CourseAdapter {
    *
    * @throws {Error} Jika terjadi network error atau API error
    */
-  static async getCourses(page: number = 1, limit: number = 10): Promise<CourseListResponse> {
+  static async getCourses(
+    page: number = 1,
+    limit: number = 10,
+    searchParams?: {
+      searchQuery?: string
+      selectedStatus?: string
+      selectedCategory?: string
+    },
+  ): Promise<CourseListResponse> {
     try {
+      logger.info('CourseAdapter', 'getCourses', 'Fetching courses with parameters', {
+        page,
+        limit,
+        searchParams,
+      })
+
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
       })
+
+      // Add search parameters if provided
+      if (searchParams?.searchQuery) {
+        params.append('search', searchParams.searchQuery)
+      }
+      if (searchParams?.selectedStatus && searchParams.selectedStatus !== 'all') {
+        params.append('status', searchParams.selectedStatus)
+      }
+      if (searchParams?.selectedCategory && searchParams.selectedCategory !== 'all') {
+        params.append('category', searchParams.selectedCategory)
+      }
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',

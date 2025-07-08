@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Plus, Search, Filter, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,8 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useCourseContext } from '../../contexts/courseContext'
-import { useCourseSearch } from '../../hooks/useCourseSearch'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { logger } from '@/services/logger'
 
 export function CourseSearchFilter() {
   // Component state untuk UI interactions
@@ -31,9 +31,41 @@ export function CourseSearchFilter() {
     openCreateDialog,
   } = useCourseContext()
 
-  // Get courses dan fetchCourses untuk search submit
-  const { courses, fetchCourses } = useCourseManagement()
-  const { handleSearchSubmit } = useCourseSearch(courses, fetchCourses)
+  // Get searchCourses untuk search submit dengan logger
+  const { searchCourses, clearFilters: clearFiltersFromHook } = useCourseManagement()
+
+  // Custom search submit handler yang mengintegrasikan context dengan API
+  const handleSearchSubmit = async () => {
+    logger.info('CourseSearchFilter', 'handleSearchSubmit', 'Search submit triggered', {
+      searchQuery,
+      selectedStatus,
+    })
+
+    try {
+      await searchCourses({
+        searchQuery,
+        selectedStatus,
+      })
+      logger.info('CourseSearchFilter', 'handleSearchSubmit', 'Search completed successfully')
+    } catch (error) {
+      logger.error('CourseSearchFilter', 'handleSearchSubmit', 'Search failed', error as Error)
+    }
+  }
+
+  // Auto-search effect dengan debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (searchQuery || selectedStatus !== 'all') {
+        logger.debug('CourseSearchFilter', 'useEffect', 'Auto-search triggered', {
+          searchQuery,
+          selectedStatus,
+        })
+        handleSearchSubmit()
+      }
+    }, 500) // 500ms debounce
+
+    return () => clearTimeout(timeoutId)
+  }, [searchQuery, selectedStatus])
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true)
@@ -48,15 +80,37 @@ export function CourseSearchFilter() {
   }
 
   const handleCreateCourse = () => {
+    logger.info('CourseSearchFilter', 'handleCreateCourse', 'Create course dialog opened')
     openCreateDialog()
   }
 
-  const handleClearFilters = () => {
-    clearFilters()
+  const handleClearFilters = async () => {
+    logger.info('CourseSearchFilter', 'handleClearFilters', 'Clearing all filters')
+
+    try {
+      // Clear context state
+      clearFilters()
+
+      // 🔥 PERBAIKAN: Gunakan clearFilters dari hook untuk memastikan API call
+      await clearFiltersFromHook()
+
+      logger.info('CourseSearchFilter', 'handleClearFilters', 'Filters cleared and data refreshed')
+    } catch (error) {
+      logger.error(
+        'CourseSearchFilter',
+        'handleClearFilters',
+        'Failed to clear filters',
+        error as Error,
+      )
+    }
   }
 
   const handleSearchKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      logger.info('CourseSearchFilter', 'handleSearchKeyDown', 'Search submitted via Enter key', {
+        searchQuery,
+        selectedStatus,
+      })
       await handleSearchSubmit()
     }
   }
@@ -94,7 +148,14 @@ export function CourseSearchFilter() {
               <Input
                 placeholder="Cari kursus..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value
+                  logger.debug('CourseSearchFilter', 'searchInput', 'Search query changed', {
+                    value,
+                    previousValue: searchQuery,
+                  })
+                  setSearchQuery(value)
+                }}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
                 onKeyDown={handleSearchKeyDown}
@@ -117,16 +178,52 @@ export function CourseSearchFilter() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setSelectedStatus('all')}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logger.info(
+                      'CourseSearchFilter',
+                      'filterStatus',
+                      'Status filter changed to all',
+                    )
+                    setSelectedStatus('all')
+                  }}
+                >
                   Semua Status
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedStatus('PUBLISHED')}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logger.info(
+                      'CourseSearchFilter',
+                      'filterStatus',
+                      'Status filter changed to PUBLISHED',
+                    )
+                    setSelectedStatus('PUBLISHED')
+                  }}
+                >
                   Diterbitkan
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedStatus('DRAFT')}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logger.info(
+                      'CourseSearchFilter',
+                      'filterStatus',
+                      'Status filter changed to DRAFT',
+                    )
+                    setSelectedStatus('DRAFT')
+                  }}
+                >
                   Draft
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSelectedStatus('ARCHIVED')}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logger.info(
+                      'CourseSearchFilter',
+                      'filterStatus',
+                      'Status filter changed to ARCHIVED',
+                    )
+                    setSelectedStatus('ARCHIVED')
+                  }}
+                >
                   Diarsipkan
                 </DropdownMenuItem>
               </DropdownMenuContent>

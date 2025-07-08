@@ -34,7 +34,7 @@ export function useCourseManagement() {
   // React Query client untuk error handling (tidak digunakan lagi setelah fix)
   // const queryClient = useQueryClient()
 
-  // Local state management (UI only)
+  // Local state management (UI only) - akan diintegrasikan dengan context
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
 
@@ -163,6 +163,7 @@ export function useCourseManagement() {
       return
     }
     try {
+      logger.info('useCourseManagement', 'loadCreatorCourses', 'Loading creator courses')
       // For now, just fetch all courses since we don't have creatorId
       // In the future, this should fetch courses by specific creator
       await fetchCourses()
@@ -173,6 +174,63 @@ export function useCourseManagement() {
         'Failed to load creator courses',
         error as Error,
       )
+    }
+  }, [hasPermission, fetchCourses])
+
+  // Search and filter functions
+  const searchCourses = useCallback(
+    async (searchParams: {
+      searchQuery?: string
+      selectedStatus?: string
+      selectedCategory?: string
+    }) => {
+      if (!hasPermission('view')) {
+        logger.warn('useCourseManagement', 'searchCourses', 'Access denied for search')
+        return
+      }
+
+      try {
+        logger.info('useCourseManagement', 'searchCourses', 'Searching courses with parameters', {
+          searchParams,
+        })
+
+        await fetchCourses(searchParams)
+      } catch (error) {
+        logger.error(
+          'useCourseManagement',
+          'searchCourses',
+          'Failed to search courses',
+          error as Error,
+        )
+      }
+    },
+    [hasPermission, fetchCourses],
+  )
+
+  // 🔥 TAMBAHAN: Clear filters function
+  const clearFilters = useCallback(async () => {
+    if (!hasPermission('view')) {
+      logger.warn('useCourseManagement', 'clearFilters', 'Access denied for clear filters')
+      return
+    }
+
+    try {
+      logger.info(
+        'useCourseManagement',
+        'clearFilters',
+        'Clearing all filters and fetching all courses',
+      )
+
+      // Fetch semua courses tanpa filter
+      await fetchCourses({
+        searchQuery: '',
+        selectedStatus: 'all',
+        selectedCategory: 'all',
+      })
+
+      logger.info('useCourseManagement', 'clearFilters', 'Filters cleared successfully')
+    } catch (error) {
+      logger.error('useCourseManagement', 'clearFilters', 'Failed to clear filters', error as Error)
     }
   }, [hasPermission, fetchCourses])
 
@@ -196,6 +254,7 @@ export function useCourseManagement() {
     deleteCourseWithConfirmation,
     loadCreatorCourses,
     fetchCourses, // Tambahkan fetchCourses ke return object
+    searchCourses, // Tambahkan searchCourses ke return object
     getDisplayThumbnail,
     isDefaultThumbnail,
     getDefaultThumbnailUrl,
@@ -206,5 +265,6 @@ export function useCourseManagement() {
     setSearchQuery,
     selectedStatus,
     setSelectedStatus,
+    clearFilters,
   }
 }

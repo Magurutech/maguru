@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { CheckSquare, Square, Trash2, Settings } from 'lucide-react'
 import { CourseCard } from './CourseCard'
-import { useCourseSearch } from '../../hooks/useCourseSearch'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
 import { Button } from '@/components/ui/button'
+import type { Course } from '../../types'
 
 export function CourseGrid() {
   // Component state untuk UI interactions
@@ -14,11 +14,12 @@ export function CourseGrid() {
   const [isSelectMode, setIsSelectMode] = useState(false)
 
   // Feature state dari hooks dan context
-  const { courses, isLoading, deleteCourseWithConfirmation, fetchCourses } = useCourseManagement()
+  const { courses, isLoading, deleteCourseWithConfirmation } = useCourseManagement()
   const { hasActiveFilters } = useCourseContext()
 
-  // Use hook untuk filtering dengan internal state dan manual refetch
-  const { filteredCourses } = useCourseSearch(courses, fetchCourses)
+  // 🔥 PERBAIKAN: Gunakan courses langsung dari useCourseManagement
+  // Search dan filter sudah dihandle oleh server-side di useCourseManagement
+  const filteredCourses: Course[] = courses
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourses((prev) => {
@@ -36,7 +37,7 @@ export function CourseGrid() {
     if (selectedCourses.size === filteredCourses.length) {
       setSelectedCourses(new Set())
     } else {
-      setSelectedCourses(new Set(filteredCourses.map((course) => course.id)))
+      setSelectedCourses(new Set(filteredCourses.map((course: Course) => course.id)))
     }
   }
 
@@ -163,7 +164,7 @@ export function CourseGrid() {
 
       {/* Grid */}
       <div className="grid gap-6 grid-cols-[repeat(auto-fill,minmax(340px,1fr))] auto-rows-max">
-        {filteredCourses.map((course, index) => (
+        {filteredCourses.map((course: Course, index: number) => (
           <div key={course.id} className="relative">
             {isSelectMode && (
               <div className="absolute top-4 left-4 z-10">

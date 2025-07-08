@@ -59,6 +59,20 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10')
     const creatorId = searchParams.get('creatorId') || undefined
 
+    // 🔥 TAMBAHAN: Extract search parameters
+    const searchQuery = searchParams.get('search') || undefined
+    const statusFilter = searchParams.get('status') || undefined
+    const categoryFilter = searchParams.get('category') || undefined
+
+    logger.info('API_Courses', 'GET', 'Processing request with filters', {
+      page,
+      limit,
+      creatorId,
+      searchQuery,
+      statusFilter,
+      categoryFilter,
+    })
+
     // Validasi pagination parameters
     if (page < 1 || limit < 1 || limit > 50) {
       return NextResponse.json(
@@ -107,7 +121,12 @@ export async function GET(request: NextRequest) {
       finalCreatorId = undefined
     }
 
-    const result = await courseService.getCourses(page, limit, finalCreatorId)
+    // 🔥 TAMBAHAN: Pass search parameters ke service
+    const result = await courseService.getCourses(page, limit, finalCreatorId, {
+      searchQuery,
+      statusFilter,
+      categoryFilter,
+    })
 
     return NextResponse.json(
       {
