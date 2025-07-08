@@ -57,6 +57,9 @@ interface UseCourseSearchReturn {
   clearSearchHistory: () => void
   removeFromSearchHistory: (query: string) => void
 
+  // Manual search actions
+  handleSearchSubmit: () => Promise<void>
+
   // Utility functions
   getUniqueCategories: () => string[]
   getUniqueStatuses: () => string[]
@@ -69,7 +72,10 @@ const SEARCH_DEBOUNCE_DELAY = 300
 // Maximum search history items
 const MAX_SEARCH_HISTORY = 10
 
-export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
+export function useCourseSearch(
+  courses: Course[],
+  onSearchSubmit?: () => Promise<void>,
+): UseCourseSearchReturn {
   // Local search state
   const [searchQuery, setSearchQueryState] = useState('')
   const [selectedStatus, setSelectedStatusState] = useState('all')
@@ -100,10 +106,10 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
     let filteredBySearchAndStatus = filterCourses(courses, debouncedSearchQuery, selectedStatus)
     if (!filteredBySearchAndStatus) filteredBySearchAndStatus = []
 
-      // Additional category filter
-      if (selectedCategory !== 'all') {
+    // Additional category filter
+    if (selectedCategory !== 'all') {
       return filteredBySearchAndStatus.filter((course) => course.category === selectedCategory)
-      }
+    }
 
     return filteredBySearchAndStatus
   }, [courses, debouncedSearchQuery, selectedStatus, selectedCategory])
@@ -148,16 +154,16 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
 
       // Add suggestions from course titles (safe handling)
       if (courses && Array.isArray(courses)) {
-      courses
+        courses
           .filter((course) => course.title?.toLowerCase().includes(partialQuery.toLowerCase()))
-        .forEach((course) => suggestions.add(course.title))
+          .forEach((course) => suggestions.add(course.title))
 
-      // Add suggestions from course descriptions
-      courses
+        // Add suggestions from course descriptions
+        courses
           .filter((course) =>
             course.description?.toLowerCase().includes(partialQuery.toLowerCase()),
           )
-        .forEach((course) => suggestions.add(course.description.substring(0, 50) + '...'))
+          .forEach((course) => suggestions.add(course.description.substring(0, 50) + '...'))
       }
 
       return Array.from(suggestions).slice(0, 5) // Limit to 5 suggestions
@@ -217,6 +223,18 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
     setSearchHistory((prev) => prev.filter((item) => item.query !== query))
   }, [])
 
+  // Manual search submit handler
+  const handleSearchSubmit = useCallback(async () => {
+    if (searchQuery.trim() && onSearchSubmit) {
+      try {
+        await onSearchSubmit()
+        addToSearchHistory(searchQuery, filteredCount)
+      } catch (error) {
+        console.error('Search submit failed:', error)
+      }
+    }
+  }, [searchQuery, filteredCount, addToSearchHistory, onSearchSubmit])
+
   // Auto-add to search history when search is performed
   useEffect(() => {
     if (debouncedSearchQuery && debouncedSearchQuery === searchQuery) {
@@ -248,6 +266,9 @@ export function useCourseSearch(courses: Course[]): UseCourseSearchReturn {
     addToSearchHistory,
     clearSearchHistory,
     removeFromSearchHistory,
+
+    // Manual search actions
+    handleSearchSubmit,
 
     // Utility functions
     getUniqueCategories,

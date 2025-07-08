@@ -22,53 +22,16 @@
 
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { CourseAdapter } from '../adapters/courseAdapter'
-import type { Course, CreateCourseRequest, UpdateCourseRequest } from '../types'
-
-// Retry configuration untuk designing for failure
-const RETRY_CONFIG = {
-  maxRetries: 3,
-  retryDelay: 1000,
-  timeout: 10000, // 10 seconds
-}
-
-// Retry utility function dengan exponential backoff
-const retryWithBackoff = async <T>(
-  operation: () => Promise<T>,
-  maxRetries: number = RETRY_CONFIG.maxRetries,
-  delay: number = RETRY_CONFIG.retryDelay,
-): Promise<T> => {
-  let lastError: Error
-
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), RETRY_CONFIG.timeout)
-
-      const result = await Promise.race([
-        operation(),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Request timeout')), RETRY_CONFIG.timeout),
-        ),
-      ])
-
-      clearTimeout(timeoutId)
-      return result
-    } catch (error) {
-      lastError = error as Error
-
-      if (attempt === maxRetries) {
-        throw lastError
-      }
-
-      // Exponential backoff
-      await new Promise((resolve) => setTimeout(resolve, delay * Math.pow(2, attempt)))
-    }
-  }
-
-  throw lastError!
-}
+import type {
+  Course,
+  CreateCourseRequest,
+  UpdateCourseRequest,
+  CourseListResponse,
+  CourseResponse,
+} from '../types'
+import { logger } from '@/services/logger'
 
 // Hook return type
 interface UseCourseReturn {
@@ -112,328 +75,220 @@ interface UseCourseReturn {
   resetState: () => void
 }
 
-// Initial state
-const initialState = {
-  courses: [],
-  currentCourse: null,
-  isLoading: false,
-  isCreating: false,
-  isUpdating: false,
-  isDeleting: false,
-  error: null,
-  pagination: {
-    page: 1,
-    limit: 10,
-    total: 0,
-    totalPages: 0,
-  },
-}
-
 export function useCourse(): UseCourseReturn {
-  // State management
-  const [courses, setCourses] = useState<Course[]>(initialState.courses)
-  const [currentCourse, setCurrentCourse] = useState<Course | null>(initialState.currentCourse)
-  const [isLoading, setIsLoading] = useState(initialState.isLoading)
-  const [isCreating, setIsCreating] = useState(initialState.isCreating)
-  const [isUpdating, setIsUpdating] = useState(initialState.isUpdating)
-  const [isDeleting, setIsDeleting] = useState(initialState.isDeleting)
-  const [error, setError] = useState<string | null>(initialState.error)
-  const [pagination, setPagination] = useState(initialState.pagination)
+  const queryClient = useQueryClient()
 
-  // Cache untuk graceful fallback
-  const cachedCourses = useRef<Course[]>([])
+  // Fetch all courses
+  const {
+    data: coursesData,
+    isLoading,
+    error: queryError,
+    refetch: refetchCourses,
+  } = useQuery<CourseListResponse>({
+    queryKey: ['courses'],
+    queryFn: () => CourseAdapter.getCourses(),
+    gcTime: 10 * 60 * 1000, // 10 menit cache
+    staleTime: 5 * 60 * 1000, // 5 menit stale (lebih konservatif)
+    retry: 1,
+    refetchOnWindowFocus: false, // Matikan refetch otomatis saat window focus
+    refetchOnReconnect: false, // Matikan refetch otomatis saat reconnect
+    refetchOnMount: true, // Hanya refetch saat mount pertama
+  })
+
+  // Fetch course by ID
+  const {
+    data: currentCourseData,
+    isLoading: isLoadingCourse,
+    error: courseError,
+  } = useQuery<CourseResponse>({
+    queryKey: ['course'],
+    queryFn: () => CourseAdapter.getCourseById(''), // Will be overridden
+    enabled: false, // Disabled by default
+    gcTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000,
+    retry: 2,
+  })
+
+  // Create course mutation
+  const createCourseMutation = useMutation({
+    mutationFn: (courseData: CreateCourseRequest) => CourseAdapter.createCourse(courseData),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      return data
+    },
+  })
+
+  // Update course mutation
+  const updateCourseMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateCourseRequest }) =>
+      CourseAdapter.updateCourse(id, data),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      queryClient.invalidateQueries({ queryKey: ['course'] })
+      return data
+    },
+  })
+
+  // Delete course mutation
+  const deleteCourseMutation = useMutation({
+    mutationFn: CourseAdapter.deleteCourse,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      queryClient.invalidateQueries({ queryKey: ['course'] })
+      return data
+    },
+  })
+
+  // Update course status mutation
+  const updateCourseStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      CourseAdapter.updateCourseStatus(id, status),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      queryClient.invalidateQueries({ queryKey: ['course'] })
+      return data
+    },
+  })
 
   // Utility functions
-  const clearError = useCallback(() => setError(null), [])
+  const getDisplayThumbnail = CourseAdapter.getDisplayThumbnail
+  const isDefaultThumbnail = CourseAdapter.isDefaultThumbnail
+  const getDefaultThumbnailUrl = CourseAdapter.getDefaultThumbnailUrl
 
-  const resetState = useCallback(() => {
-    setCourses(initialState.courses)
-    setCurrentCourse(initialState.currentCourse)
-    setIsLoading(initialState.isLoading)
-    setIsCreating(initialState.isCreating)
-    setIsUpdating(initialState.isUpdating)
-    setIsDeleting(initialState.isDeleting)
-    setError(initialState.error)
-    setPagination(initialState.pagination)
-  }, [])
-
-  // Thumbnail utility functions
-  const getDisplayThumbnail = useCallback((thumbnail: string | null): string => {
-    return CourseAdapter.getDisplayThumbnail(thumbnail)
-  }, [])
-
-  const isDefaultThumbnail = useCallback((thumbnail: string | null): boolean => {
-    return CourseAdapter.isDefaultThumbnail(thumbnail)
-  }, [])
-
-  const getDefaultThumbnailUrl = useCallback((): string => {
-    return CourseAdapter.getDefaultThumbnailUrl()
-  }, [])
-
-  // Fetch courses (public) dengan retry dan fallback
-  const fetchCourses = useCallback(async (page: number = 1, limit: number = 10) => {
+  // CRUD operations dengan proper error handling dan debouncing
+  const fetchCourses = async () => {
     try {
-      setIsLoading(true)
-      setError(null)
+      // Tambahkan debouncing untuk mencegah multiple rapid calls
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 1000) // 1 detik timeout
 
-      const response = await retryWithBackoff(() => CourseAdapter.getCourses(page, limit))
-
-      if (response.success && response.data) {
-        setCourses(response.data.courses)
-        setPagination(response.data.pagination)
-        // Cache successful response untuk fallback
-        cachedCourses.current = response.data.courses
+      await refetchCourses()
+      clearTimeout(timeoutId)
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        logger.warn('useCourse', 'fetchCourses', 'Fetch courses aborted due to rapid calls')
       } else {
-        setError(response.error || 'Failed to fetch courses')
-        // Graceful fallback ke cached data
-        if (cachedCourses.current.length > 0) {
-          console.warn('Using cached data due to fetch failure')
-          setCourses(cachedCourses.current)
-        }
+        logger.error('useCourse', 'fetchCourses', 'Failed to fetch courses', error as Error)
       }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch courses'
-      setError(errorMessage)
-
-      // Graceful fallback ke cached data
-      if (cachedCourses.current.length > 0) {
-        console.warn('Using cached data due to network failure')
-        setCourses(cachedCourses.current)
-      }
-    } finally {
-      setIsLoading(false)
     }
-  }, [])
+  }
 
-  // Fetch course by ID dengan retry
-  const fetchCourseById = useCallback(async (id: string) => {
+  const fetchCourseById = async (id: string) => {
     try {
-      setIsLoading(true)
-      setError(null)
-
-      const response = await retryWithBackoff(() => CourseAdapter.getCourseById(id))
-
+      // Update query key dan fetch
+      queryClient.setQueryData(['course'], null)
+      const response = await CourseAdapter.getCourseById(id)
       if (response.success && response.data) {
-        setCurrentCourse(response.data)
-      } else {
-        setError(response.error || 'Failed to fetch course')
-        setCurrentCourse(null)
+        queryClient.setQueryData(['course'], response)
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch course')
-      setCurrentCourse(null)
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      console.error('Failed to fetch course by ID:', error)
     }
-  }, [])
+  }
 
-  // Fetch courses by creator dengan retry dan fallback
-  const fetchCoursesByCreator = useCallback(
-    async (creatorId: string, page: number = 1, limit: number = 10) => {
-      try {
-        setIsLoading(true)
-        setError(null)
-
-        const response = await retryWithBackoff(() =>
-          CourseAdapter.getCoursesByCreator(creatorId, page, limit),
-        )
-
-        if (response.success && response.data) {
-          setCourses(response.data.courses)
-          setPagination(response.data.pagination)
-          // Cache successful response untuk fallback
-          cachedCourses.current = response.data.courses
-        } else {
-          setError(response.error || 'Failed to fetch creator courses')
-          // Graceful fallback ke cached data
-          if (cachedCourses.current.length > 0) {
-            console.warn('Using cached data due to fetch failure')
-            setCourses(cachedCourses.current)
-          }
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch creator courses')
-        // Graceful fallback ke cached data
-        if (cachedCourses.current.length > 0) {
-          console.warn('Using cached data due to network failure')
-          setCourses(cachedCourses.current)
-        }
-      } finally {
-        setIsLoading(false)
+  const fetchCoursesByCreator = async (creatorId: string, page: number = 1, limit: number = 10) => {
+    try {
+      const response = await CourseAdapter.getCoursesByCreator(creatorId, page, limit)
+      if (response.success && response.data) {
+        queryClient.setQueryData(['courses'], response.data)
       }
-    },
-    [],
-  )
+    } catch (error) {
+      console.error('Failed to fetch courses by creator:', error)
+    }
+  }
 
-  // Create course dengan retry
-  const createCourse = useCallback(
-    async (courseData: CreateCourseRequest): Promise<Course | null> => {
-      try {
-        setIsCreating(true)
-        setError(null)
-
-        // courseData.thumbnail bisa berupa File atau string
-        const response = await retryWithBackoff(() => CourseAdapter.createCourse(courseData))
-
-        if (response.success && response.data) {
-          const newCourse = response.data
-          setCourses((prev) => [newCourse, ...prev])
-          return newCourse
-        } else {
-          setError(response.error || 'Failed to create course')
-          return null
-        }
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Failed to create course'
-        setError(errorMessage)
-        return null
-      } finally {
-        setIsCreating(false)
+  const createCourse = async (courseData: CreateCourseRequest): Promise<Course | null> => {
+    try {
+      const response = await createCourseMutation.mutateAsync(courseData)
+      if (response.success && response.data) {
+        return response.data
       }
-    },
-    [],
-  )
+      // Log error jika response tidak success
+      logger.error('useCourse', 'createCourse', 'Create course failed', {
+        error: response.error,
+      })
+      return null
+    } catch (error) {
+      logger.error('useCourse', 'createCourse', 'Exception during course creation', error as Error)
+      return null
+    }
+  }
 
-  // Update course dengan retry dan optimistic update
-  const updateCourse = useCallback(
-    async (id: string, courseData: UpdateCourseRequest): Promise<Course | null> => {
-      try {
-        setIsUpdating(true)
-        setError(null)
-
-        // courseData.thumbnail bisa berupa File atau string
-        const optimisticCourse = { ...currentCourse, ...courseData } as Course
-        setCourses((prev) => prev.map((course) => (course.id === id ? optimisticCourse : course)))
-
-        const response = await retryWithBackoff(() => CourseAdapter.updateCourse(id, courseData))
-
-        if (response.success && response.data) {
-          const updatedCourse = response.data
-          setCourses((prev) => prev.map((course) => (course.id === id ? updatedCourse : course)))
-
-          if (currentCourse?.id === id) {
-            setCurrentCourse(updatedCourse)
-          }
-
-          return updatedCourse
-        } else {
-          setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
-          setError(response.error || 'Failed to update course')
-          return null
-        }
-      } catch (err) {
-        setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
-        const errorMessage = err instanceof Error ? err.message : 'Failed to update course'
-        setError(errorMessage)
-        return null
-      } finally {
-        setIsUpdating(false)
+  const updateCourse = async (
+    id: string,
+    courseData: UpdateCourseRequest,
+  ): Promise<Course | null> => {
+    try {
+      // Perbaiki parameter yang dikirim ke mutation
+      const response = await updateCourseMutation.mutateAsync({
+        id,
+        data: courseData,
+      })
+      if (response.success && response.data) {
+        return response.data
       }
-    },
-    [currentCourse],
-  )
 
-  // Delete course dengan retry dan optimistic delete
-  const deleteCourse = useCallback(
-    async (id: string): Promise<boolean> => {
-      try {
-        setIsDeleting(true)
-        setError(null)
+      return null
+    } catch (error) {
+      logger.error('useCourse', 'updateCourse', 'Exception during course update', error as Error)
+      return null
+    }
+  }
 
-        // Optimistic delete
-        const courseToDelete = courses.find((course) => course.id === id)
-        setCourses((prev) => prev.filter((course) => course.id !== id))
-
-        const response = await retryWithBackoff(() => CourseAdapter.deleteCourse(id))
-
-        if (response.success) {
-          // Clear current course if it's the one being deleted
-          if (currentCourse?.id === id) {
-            setCurrentCourse(null)
-          }
-          return true
-        } else {
-          // Revert optimistic delete on failure
-          if (courseToDelete) {
-            setCourses((prev) => [...prev, courseToDelete])
-          }
-          setError(response.error || 'Failed to delete course')
-          return false
-        }
-      } catch (err) {
-        // Revert optimistic delete on error
-        const courseToDelete = courses.find((course) => course.id === id)
-        if (courseToDelete) {
-          setCourses((prev) => [...prev, courseToDelete])
-        }
-        const errorMessage = err instanceof Error ? err.message : 'Failed to delete course'
-        setError(errorMessage)
-        return false
-      } finally {
-        setIsDeleting(false)
+  const deleteCourse = async (id: string): Promise<boolean> => {
+    try {
+      const response = await deleteCourseMutation.mutateAsync(id)
+      if (response.success) {
+        return true
       }
-    },
-    [currentCourse?.id, courses],
-  )
 
-  // Update course status dengan retry dan optimistic update
-  const updateCourseStatus = useCallback(
-    async (id: string, status: string): Promise<Course | null> => {
-      try {
-        setIsUpdating(true)
-        setError(null)
+      return false
+    } catch (error) {
+      console.error('Failed to delete course:', error)
+      return false
+    }
+  }
 
-        // Optimistic update
-        const optimisticCourse = { ...currentCourse, status } as Course
-        setCourses((prev) => prev.map((course) => (course.id === id ? optimisticCourse : course)))
+  const updateCourseStatus = async (id: string, status: string): Promise<Course | null> => {
+    try {
+      const response = await updateCourseStatusMutation.mutateAsync({ id, status })
+      return response.success && response.data ? response.data : null
+    } catch (error) {
+      console.error('Failed to update course status:', error)
+      return null
+    }
+  }
 
-        const response = await retryWithBackoff(() => CourseAdapter.updateCourseStatus(id, status))
+  // Utility functions
+  const clearError = () => {
+    queryClient.clear()
+  }
 
-        if (response.success && response.data) {
-          const updatedCourse = response.data
-          setCourses((prev) => prev.map((course) => (course.id === id ? updatedCourse : course)))
-
-          // Update current course if it's the one being updated
-          if (currentCourse?.id === id) {
-            setCurrentCourse(updatedCourse)
-          }
-
-          return updatedCourse
-        } else {
-          // Revert optimistic update on failure
-          setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
-          setError(response.error || 'Failed to update course status')
-          return null
-        }
-      } catch (err) {
-        // Revert optimistic update on error
-        setCourses((prev) => prev.map((course) => (course.id === id ? currentCourse! : course)))
-        const errorMessage = err instanceof Error ? err.message : 'Failed to update course status'
-        setError(errorMessage)
-        return null
-      } finally {
-        setIsUpdating(false)
-      }
-    },
-    [currentCourse],
-  )
+  const resetState = () => {
+    queryClient.clear()
+  }
 
   return {
     // Data states
-    courses,
-    currentCourse,
+    courses: coursesData?.data?.courses || [],
+    currentCourse: currentCourseData?.data || null,
 
     // Loading states
-    isLoading,
-    isCreating,
-    isUpdating,
-    isDeleting,
+    isLoading: isLoading || isLoadingCourse,
+    isCreating: createCourseMutation.isPending,
+    isUpdating: updateCourseMutation.isPending || updateCourseStatusMutation.isPending,
+    isDeleting: deleteCourseMutation.isPending,
 
     // Error state
-    error,
+    error: queryError?.message || courseError?.message || null,
 
     // Pagination
-    pagination,
+    pagination: coursesData?.data?.pagination || {
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 0,
+    },
 
     // CRUD operations
     fetchCourses,

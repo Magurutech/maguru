@@ -6,6 +6,7 @@ import type {
   CourseResponse,
 } from '../types'
 import { DEFAULT_COURSE_THUMBNAIL, courseThumbnailUtils } from '../types'
+import { logger } from '@/services/logger'
 
 const API_BASE_URL = '/api/courses'
 
@@ -59,6 +60,17 @@ export class CourseAdapter {
   }
 
   /**
+   * Static wrapper untuk fetchWithTimeout agar dapat diakses dari React Query
+   */
+  static async fetchWithTimeoutWrapper(
+    url: string,
+    options: RequestInit,
+    timeout: number = API_TIMEOUT,
+  ): Promise<Response> {
+    return CourseAdapter.fetchWithTimeout(url, options, timeout)
+  }
+
+  /**
    * Get default thumbnail URL
    */
   static getDefaultThumbnailUrl(): string {
@@ -103,7 +115,7 @@ export class CourseAdapter {
         'Content-Type': 'application/json',
       }
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
         method: 'GET',
         headers,
       })
@@ -161,7 +173,7 @@ export class CourseAdapter {
         'Content-Type': 'application/json',
       }
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'GET',
         headers,
       })
@@ -226,20 +238,21 @@ export class CourseAdapter {
       const headers: Record<string, string> = {}
       // Selalu gunakan FormData untuk POST, agar Content-Type multipart/form-data
       const formData = new FormData()
+
       Object.entries(courseData).forEach(([key, value]) => {
         if (key === 'thumbnail' && value instanceof File) {
           formData.append('thumbnail', value)
-        } else if (typeof value === 'string') {
+        } else if (typeof value === 'string' && value !== undefined && value !== '') {
           formData.append(key, value)
         }
       })
-      const body = formData
+
       // Jangan set Content-Type, browser akan handle
 
-      const response = await this.fetchWithTimeout(API_BASE_URL, {
+      const response = await CourseAdapter.fetchWithTimeout(API_BASE_URL, {
         method: 'POST',
         headers,
-        body,
+        body: formData,
       })
 
       const data = await response.json()
@@ -260,13 +273,9 @@ export class CourseAdapter {
         }
         throw new Error(data.error || 'Failed to create course')
       }
-
       return data
     } catch (error) {
-      // Ganti console.error dengan logger
-      import('@/services/logger').then(({ logger }) => {
-        logger.error('CourseAdapter', 'createCourse', 'Error in createCourse', error as Error)
-      })
+      logger.error('CourseAdapter', 'createCourse', 'Error in createCourse', error as Error)
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {
         return {
@@ -303,29 +312,25 @@ export class CourseAdapter {
   static async updateCourse(id: string, courseData: UpdateCourseRequest): Promise<CourseResponse> {
     try {
       const headers: Record<string, string> = {}
-      let body: BodyInit
 
-      // Jika thumbnail adalah File, gunakan FormData
-      if (courseData.thumbnail && typeof courseData.thumbnail !== 'string') {
-        const formData = new FormData()
-        Object.entries(courseData).forEach(([key, value]) => {
-          if (key === 'thumbnail' && value instanceof File) {
-            formData.append('thumbnail', value)
-          } else if (typeof value === 'string') {
-            formData.append(key, value)
-          }
-        })
-        body = formData
-        // Jangan set Content-Type, browser akan handle
-      } else {
-        headers['Content-Type'] = 'application/json'
-        body = JSON.stringify(courseData)
-      }
+      // Selalu gunakan FormData untuk konsistensi dengan backend
+      const formData = new FormData()
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
+      // Tambahkan semua field ke FormData
+      Object.entries(courseData).forEach(([key, value]) => {
+        if (key === 'id') return // Skip id karena sudah di URL
+
+        if (key === 'thumbnail' && value instanceof File) {
+          formData.append('thumbnail', value)
+        } else if (typeof value === 'string' && value !== undefined && value !== '') {
+          formData.append(key, value)
+        }
+      })
+
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers,
-        body,
+        body: formData,
       })
 
       const data = await response.json()
@@ -352,7 +357,7 @@ export class CourseAdapter {
 
       return data
     } catch (error) {
-      console.error('Error in updateCourse:', error)
+      logger.error('CourseAdapter', 'updateCourse', 'Error in updateCourse', error as Error)
 
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {
@@ -387,15 +392,15 @@ export class CourseAdapter {
    *
    * @throws {Error} Jika terjadi network error atau API error
    */
-  static async deleteCourse(
-    id: string,
-  ): Promise<{ success: boolean; message?: string; error?: string }> {
+  static async deleteCourse(id: string): Promise<CourseResponse> {
     try {
+      console.log('CourseAdapter: Starting deleteCourse', { courseId: id })
+
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       }
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
         headers,
       })
@@ -419,9 +424,13 @@ export class CourseAdapter {
         throw new Error(data.error || 'Failed to delete course')
       }
 
-      return data
+      return {
+        success: data.success,
+        data: data.success ? ({ id } as Course) : undefined, // Minimal course data untuk success
+        error: data.error,
+      }
     } catch (error) {
-      console.error('Error in deleteCourse:', error)
+      console.error('CourseAdapter: Error in deleteCourse:', error)
 
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {
@@ -473,7 +482,7 @@ export class CourseAdapter {
         'Content-Type': 'application/json',
       }
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}?${params}`, {
         method: 'GET',
         headers,
       })
@@ -537,7 +546,7 @@ export class CourseAdapter {
         'Content-Type': 'application/json',
       }
 
-      const response = await this.fetchWithTimeout(`${API_BASE_URL}/${id}/status`, {
+      const response = await CourseAdapter.fetchWithTimeout(`${API_BASE_URL}/${id}/status`, {
         method: 'PATCH',
         headers,
         body: JSON.stringify({ status }),

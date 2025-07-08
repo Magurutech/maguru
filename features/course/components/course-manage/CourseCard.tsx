@@ -1,17 +1,12 @@
 'use client'
 
 import { useState, useCallback, memo } from 'react'
-import { Edit, Trash2, Eye, Users, Clock, Star, AlertCircle, Play, Pause } from 'lucide-react'
+import { Edit, Trash2, Eye, Users, Clock, Star, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import type { Course, CourseStatus } from '../../types'
+
+import type { Course } from '../../types'
 import { getStatusColor, getStatusText } from '../../lib/courseUtils'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
@@ -30,7 +25,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
   const [imageError, setImageError] = useState(false)
 
   // Feature state dari hooks dan context
-  const { updateCourseStatusWithValidation, error: managementError } = useCourseManagement()
+  const { error: managementError } = useCourseManagement()
   const { openEditDialog, openDeleteDialog } = useCourseContext()
 
   // Memoized event handlers untuk performance
@@ -56,29 +51,6 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
     }
   }, [openDeleteDialog, course])
 
-  // Quick status update actions
-  const handleQuickPublish = useCallback(async () => {
-    setIsActionLoading(true)
-    try {
-      await updateCourseStatusWithValidation(course.id, 'PUBLISHED' as CourseStatus)
-    } catch (error) {
-      console.error('Failed to publish course:', error)
-    } finally {
-      setIsActionLoading(false)
-    }
-  }, [updateCourseStatusWithValidation, course.id])
-
-  const handleQuickDraft = useCallback(async () => {
-    setIsActionLoading(true)
-    try {
-      await updateCourseStatusWithValidation(course.id, 'DRAFT' as CourseStatus)
-    } catch (error) {
-      console.error('Failed to set course to draft:', error)
-    } finally {
-      setIsActionLoading(false)
-    }
-  }, [updateCourseStatusWithValidation, course.id])
-
   const handleImageLoad = useCallback(() => {
     setIsImageLoaded(true)
     setImageError(false)
@@ -101,40 +73,6 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
   const statusColor = getStatusColor(course.status)
   const statusText = getStatusText(course.status)
   const imageSrc = imageError ? '/globe.svg' : course.thumbnail || '/globe.svg'
-
-  // Quick action button based on current status
-  const getQuickActionButton = () => {
-    switch (course.status) {
-      case 'DRAFT':
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleQuickPublish}
-            disabled={isActionLoading}
-            className="bg-green-100 border-green-400 text-green-600 hover:bg-green-500 hover:text-white transition-all duration-300"
-          >
-            <Play className="h-3 w-3 mr-1" />
-            Publish
-          </Button>
-        )
-      case 'PUBLISHED':
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleQuickDraft}
-            disabled={isActionLoading}
-            className="bg-yellow-100 border-yellow-400 text-yellow-600 hover:bg-yellow-500 hover:text-white transition-all duration-300"
-          >
-            <Pause className="h-3 w-3 mr-1" />
-            Set to Draft
-          </Button>
-        )
-      default:
-        return null
-    }
-  }
 
   return (
     <Card
@@ -220,9 +158,6 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
           )}
         </div>
 
-        {/* Quick Action Button */}
-        <div className="mb-3">{getQuickActionButton()}</div>
-
         {/* Action Buttons */}
         <div className="flex gap-2">
           <Button
@@ -236,24 +171,16 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             {isActionLoading ? 'Loading...' : 'Edit'}
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isActionLoading}
-                className="bg-primary-100 border-primary-400 text-primary-600 hover:bg-primary-500 hover:text-white neu-button transition-all duration-300"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={handleDelete} className="text-red-600">
-                <Trash2 className="h-4 w-4 mr-2" />
-                Hapus Kursus
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDelete}
+            disabled={isActionLoading}
+            className="flex-1 bg-red-50 border-red-300 text-red-600 hover:bg-red-100 hover:border-red-400 neu-button transition-all duration-300"
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            {isActionLoading ? 'Loading...' : 'Hapus'}
+          </Button>
         </div>
       </CardContent>
     </Card>

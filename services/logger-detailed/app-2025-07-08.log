@@ -1499,3 +1499,2185 @@
     }
   }
 }
+2025-07-08T06:31:38.075Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T06:31:38.792Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751956298792,
+    "memory": {
+      "rss": 1266642944,
+      "heapTotal": 456253440,
+      "heapUsed": 439186584,
+      "external": 6072405,
+      "arrayBuffers": 960054
+    }
+  }
+}
+2025-07-08T06:31:38.799Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751956298799,
+    "memory": {
+      "rss": 1266659328,
+      "heapTotal": 456253440,
+      "heapUsed": 439201752,
+      "external": 6072405,
+      "arrayBuffers": 960054
+    }
+  }
+}
+2025-07-08T06:31:38.805Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751956298805,
+    "memory": {
+      "rss": 1266683904,
+      "heapTotal": 456253440,
+      "heapUsed": 439229200,
+      "external": 6072405,
+      "arrayBuffers": 960054
+    }
+  }
+}
+2025-07-08T06:31:39.659Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751956299659,
+    "memory": {
+      "rss": 1267146752,
+      "heapTotal": 456253440,
+      "heapUsed": 439610392,
+      "external": 6072462,
+      "arrayBuffers": 960111
+    }
+  }
+}
+2025-07-08T06:31:39.676Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T06:31:39.685Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751956299685,
+    "memory": {
+      "rss": 1267494912,
+      "heapTotal": 456253440,
+      "heapUsed": 439930632,
+      "external": 6103108,
+      "arrayBuffers": 1005340
+    }
+  }
+}
+2025-07-08T06:31:39.694Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T06:31:39.700Z [INFO] [API_Courses_Detail][PUT] Removing old thumbnail
+2025-07-08T06:31:40.465Z [INFO] [API_Courses_Detail][PUT] Old thumbnail removed successfully
+{
+  "oldThumbnailPath": "course-1751942881208.jpg",
+  "performance": {
+    "timestamp": 1751956300465,
+    "memory": {
+      "rss": 1268604928,
+      "heapTotal": 456777728,
+      "heapUsed": 438439936,
+      "external": 6012209,
+      "arrayBuffers": 914433
+    }
+  }
+}
+2025-07-08T06:31:40.475Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T06:31:41.305Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751956300488.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751956300488.jpg",
+  "performance": {
+    "timestamp": 1751956301305,
+    "memory": {
+      "rss": 1268682752,
+      "heapTotal": 456777728,
+      "heapUsed": 440000424,
+      "external": 6105350,
+      "arrayBuffers": 1007574
+    }
+  }
+}
+2025-07-08T06:31:41.312Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751956301312,
+    "memory": {
+      "rss": 1268682752,
+      "heapTotal": 456777728,
+      "heapUsed": 440016088,
+      "external": 6105350,
+      "arrayBuffers": 1007574
+    }
+  }
+}
+2025-07-08T06:31:42.764Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "4689ms"
+  }
+}
+2025-07-08T06:31:42.785Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "duration": "4689ms",
+  "performance": {
+    "timestamp": 1751956302785,
+    "memory": {
+      "rss": 1269223424,
+      "heapTotal": 457302016,
+      "heapUsed": 437789168,
+      "external": 6105407,
+      "arrayBuffers": 960275
+    }
+  }
+}
+2025-07-08T06:46:21.405Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T06:46:21.930Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957181930,
+    "memory": {
+      "rss": 1289158656,
+      "heapTotal": 480563200,
+      "heapUsed": 462332576,
+      "external": 7576136,
+      "arrayBuffers": 2460501
+    }
+  }
+}
+2025-07-08T06:46:21.932Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751957181932,
+    "memory": {
+      "rss": 1289158656,
+      "heapTotal": 480563200,
+      "heapUsed": 462347056,
+      "external": 7576136,
+      "arrayBuffers": 2460501
+    }
+  }
+}
+2025-07-08T06:46:21.936Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957181936,
+    "memory": {
+      "rss": 1289158656,
+      "heapTotal": 480563200,
+      "heapUsed": 462374112,
+      "external": 7576136,
+      "arrayBuffers": 2460501
+    }
+  }
+}
+2025-07-08T06:46:22.638Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957182638,
+    "memory": {
+      "rss": 1289179136,
+      "heapTotal": 480563200,
+      "heapUsed": 462741096,
+      "external": 7576193,
+      "arrayBuffers": 2460558
+    }
+  }
+}
+2025-07-08T06:46:22.649Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T06:46:22.653Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751957182653,
+    "memory": {
+      "rss": 1291972608,
+      "heapTotal": 480563200,
+      "heapUsed": 463037008,
+      "external": 9661190,
+      "arrayBuffers": 5239814
+    }
+  }
+}
+2025-07-08T06:46:22.664Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T06:46:22.667Z [INFO] [API_Courses_Detail][PUT] Removing old thumbnail
+2025-07-08T06:46:23.304Z [INFO] [API_Courses_Detail][PUT] Old thumbnail removed successfully
+{
+  "oldThumbnailPath": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751956300488.jpg",
+  "performance": {
+    "timestamp": 1751957183303,
+    "memory": {
+      "rss": 1292005376,
+      "heapTotal": 480563200,
+      "heapUsed": 464888560,
+      "external": 9682514,
+      "arrayBuffers": 5261138
+    }
+  }
+}
+2025-07-08T06:46:23.315Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T06:46:25.339Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957183323.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957183323.jpg",
+  "performance": {
+    "timestamp": 1751957185339,
+    "memory": {
+      "rss": 1295257600,
+      "heapTotal": 481087488,
+      "heapUsed": 463186536,
+      "external": 9691390,
+      "arrayBuffers": 5270014
+    }
+  }
+}
+2025-07-08T06:46:25.351Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957185351,
+    "memory": {
+      "rss": 1295257600,
+      "heapTotal": 481087488,
+      "heapUsed": 463202704,
+      "external": 9691390,
+      "arrayBuffers": 5270014
+    }
+  }
+}
+2025-07-08T06:46:26.804Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "5399ms"
+  }
+}
+2025-07-08T06:46:26.817Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "duration": "5399ms",
+  "performance": {
+    "timestamp": 1751957186817,
+    "memory": {
+      "rss": 1295265792,
+      "heapTotal": 481087488,
+      "heapUsed": 463784112,
+      "external": 9691447,
+      "arrayBuffers": 5270071
+    }
+  }
+}
+2025-07-08T06:49:04.097Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T06:49:05.161Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957345161,
+    "memory": {
+      "rss": 1313050624,
+      "heapTotal": 487903232,
+      "heapUsed": 470030896,
+      "external": 12724502,
+      "arrayBuffers": 7604710
+    }
+  }
+}
+2025-07-08T06:49:05.164Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751957345164,
+    "memory": {
+      "rss": 1313050624,
+      "heapTotal": 487903232,
+      "heapUsed": 470045176,
+      "external": 12724502,
+      "arrayBuffers": 7604710
+    }
+  }
+}
+2025-07-08T06:49:05.168Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957345168,
+    "memory": {
+      "rss": 1313050624,
+      "heapTotal": 487903232,
+      "heapUsed": 470071928,
+      "external": 12724502,
+      "arrayBuffers": 7604710
+    }
+  }
+}
+2025-07-08T06:49:06.022Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957346021,
+    "memory": {
+      "rss": 1313062912,
+      "heapTotal": 487903232,
+      "heapUsed": 470746440,
+      "external": 12724771,
+      "arrayBuffers": 7604979
+    }
+  }
+}
+2025-07-08T06:49:06.028Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T06:49:06.031Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751957346031,
+    "memory": {
+      "rss": 1314459648,
+      "heapTotal": 487903232,
+      "heapUsed": 471017224,
+      "external": 14809780,
+      "arrayBuffers": 10384247
+    }
+  }
+}
+2025-07-08T06:49:06.039Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T06:49:06.048Z [INFO] [API_Courses_Detail][PUT] Removing old thumbnail
+2025-07-08T06:49:07.541Z [INFO] [API_Courses_Detail][PUT] Old thumbnail removed successfully
+{
+  "oldThumbnailPath": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957183323.jpg",
+  "performance": {
+    "timestamp": 1751957347541,
+    "memory": {
+      "rss": 1314480128,
+      "heapTotal": 487903232,
+      "heapUsed": 472551728,
+      "external": 14830890,
+      "arrayBuffers": 10405357
+    }
+  }
+}
+2025-07-08T06:49:07.546Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T06:49:09.709Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957347549.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957347549.jpg",
+  "performance": {
+    "timestamp": 1751957349709,
+    "memory": {
+      "rss": 1317482496,
+      "heapTotal": 489213952,
+      "heapUsed": 470904920,
+      "external": 14839745,
+      "arrayBuffers": 10414212
+    }
+  }
+}
+2025-07-08T06:49:09.713Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957349713,
+    "memory": {
+      "rss": 1317482496,
+      "heapTotal": 489213952,
+      "heapUsed": 470920136,
+      "external": 14839745,
+      "arrayBuffers": 10414212
+    }
+  }
+}
+2025-07-08T06:49:11.121Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "7024ms"
+  }
+}
+2025-07-08T06:49:11.127Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "duration": "7024ms",
+  "performance": {
+    "timestamp": 1751957351127,
+    "memory": {
+      "rss": 1317486592,
+      "heapTotal": 489213952,
+      "heapUsed": 471472936,
+      "external": 14839802,
+      "arrayBuffers": 10414269
+    }
+  }
+}
+2025-07-08T06:49:18.823Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T06:49:19.869Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957359869,
+    "memory": {
+      "rss": 1319845888,
+      "heapTotal": 499699712,
+      "heapUsed": 472678128,
+      "external": 17709654,
+      "arrayBuffers": 12585705
+    }
+  }
+}
+2025-07-08T06:49:19.872Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751957359872,
+    "memory": {
+      "rss": 1319845888,
+      "heapTotal": 499699712,
+      "heapUsed": 472692296,
+      "external": 17709654,
+      "arrayBuffers": 12585705
+    }
+  }
+}
+2025-07-08T06:49:19.876Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957359876,
+    "memory": {
+      "rss": 1319845888,
+      "heapTotal": 499699712,
+      "heapUsed": 472719048,
+      "external": 17709654,
+      "arrayBuffers": 12585705
+    }
+  }
+}
+2025-07-08T06:49:20.614Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751957360614,
+    "memory": {
+      "rss": 1319858176,
+      "heapTotal": 499699712,
+      "heapUsed": 473378880,
+      "external": 17709923,
+      "arrayBuffers": 12585974
+    }
+  }
+}
+2025-07-08T06:49:20.645Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T06:49:20.660Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "id",
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751957360660,
+    "memory": {
+      "rss": 1322344448,
+      "heapTotal": 499699712,
+      "heapUsed": 473643168,
+      "external": 19794920,
+      "arrayBuffers": 15365230
+    }
+  }
+}
+2025-07-08T06:49:20.671Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T06:49:20.676Z [INFO] [API_Courses_Detail][PUT] Removing old thumbnail
+2025-07-08T06:49:21.819Z [INFO] [API_Courses_Detail][PUT] Old thumbnail removed successfully
+{
+  "oldThumbnailPath": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957347549.jpg",
+  "performance": {
+    "timestamp": 1751957361819,
+    "memory": {
+      "rss": 1323638784,
+      "heapTotal": 499699712,
+      "heapUsed": 475184968,
+      "external": 19816030,
+      "arrayBuffers": 15386340
+    }
+  }
+}
+2025-07-08T06:49:21.833Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T06:49:23.493Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957361851.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-bf8fe714-b342-4db4-885c-b1a3682fc396-1751957361851.jpg",
+  "performance": {
+    "timestamp": 1751957363493,
+    "memory": {
+      "rss": 1328508928,
+      "heapTotal": 499699712,
+      "heapUsed": 476705184,
+      "external": 23307554,
+      "arrayBuffers": 18877864
+    }
+  }
+}
+2025-07-08T06:49:23.498Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751957363497,
+    "memory": {
+      "rss": 1328508928,
+      "heapTotal": 499699712,
+      "heapUsed": 476720400,
+      "external": 23307554,
+      "arrayBuffers": 18877864
+    }
+  }
+}
+2025-07-08T06:49:24.924Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "6100ms"
+  }
+}
+2025-07-08T06:49:24.939Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "duration": "6100ms",
+  "performance": {
+    "timestamp": 1751957364939,
+    "memory": {
+      "rss": 1328508928,
+      "heapTotal": 499699712,
+      "heapUsed": 477274592,
+      "external": 23307611,
+      "arrayBuffers": 18877921
+    }
+  }
+}
+2025-07-08T09:00:21.628Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T09:00:22.296Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965222296,
+    "memory": {
+      "rss": 774873088,
+      "heapTotal": 213798912,
+      "heapUsed": 201455368,
+      "external": 5695558,
+      "arrayBuffers": 583207
+    }
+  }
+}
+2025-07-08T09:00:22.301Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751965222301,
+    "memory": {
+      "rss": 774885376,
+      "heapTotal": 213798912,
+      "heapUsed": 201469408,
+      "external": 5695558,
+      "arrayBuffers": 583207
+    }
+  }
+}
+2025-07-08T09:00:22.309Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965222309,
+    "memory": {
+      "rss": 774897664,
+      "heapTotal": 213798912,
+      "heapUsed": 201481408,
+      "external": 5695558,
+      "arrayBuffers": 583207
+    }
+  }
+}
+2025-07-08T09:00:24.276Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965224276,
+    "memory": {
+      "rss": 775188480,
+      "heapTotal": 213798912,
+      "heapUsed": 201633992,
+      "external": 5695615,
+      "arrayBuffers": 583264
+    }
+  }
+}
+2025-07-08T09:00:24.301Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965224301,
+    "memory": {
+      "rss": 775589888,
+      "heapTotal": 213798912,
+      "heapUsed": 201747360,
+      "external": 5695918,
+      "arrayBuffers": 583567
+    }
+  }
+}
+2025-07-08T09:00:35.497Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T09:00:36.074Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965236074,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 208818176,
+      "heapUsed": 201670288,
+      "external": 5671057,
+      "arrayBuffers": 562090
+    }
+  }
+}
+2025-07-08T09:00:36.077Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751965236077,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 208818176,
+      "heapUsed": 201679992,
+      "external": 5671057,
+      "arrayBuffers": 562090
+    }
+  }
+}
+2025-07-08T09:00:36.080Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965236080,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 208818176,
+      "heapUsed": 201697248,
+      "external": 5671057,
+      "arrayBuffers": 562090
+    }
+  }
+}
+2025-07-08T09:00:36.803Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965236803,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 211439616,
+      "heapUsed": 201480192,
+      "external": 5671325,
+      "arrayBuffers": 554525
+    }
+  }
+}
+2025-07-08T09:00:36.823Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965236823,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 211439616,
+      "heapUsed": 201573448,
+      "external": 5663804,
+      "arrayBuffers": 554837
+    }
+  }
+}
+2025-07-08T09:00:44.317Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T09:00:45.402Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965245402,
+    "memory": {
+      "rss": 779857920,
+      "heapTotal": 212226048,
+      "heapUsed": 204379648,
+      "external": 5817144,
+      "arrayBuffers": 708177
+    }
+  }
+}
+2025-07-08T09:00:45.408Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751965245408,
+    "memory": {
+      "rss": 779857920,
+      "heapTotal": 212226048,
+      "heapUsed": 204389288,
+      "external": 5817144,
+      "arrayBuffers": 708177
+    }
+  }
+}
+2025-07-08T09:00:45.412Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965245412,
+    "memory": {
+      "rss": 779857920,
+      "heapTotal": 212226048,
+      "heapUsed": 204400320,
+      "external": 5817144,
+      "arrayBuffers": 708177
+    }
+  }
+}
+2025-07-08T09:00:46.296Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965246296,
+    "memory": {
+      "rss": 779857920,
+      "heapTotal": 212750336,
+      "heapUsed": 203333928,
+      "external": 5726260,
+      "arrayBuffers": 617293
+    }
+  }
+}
+2025-07-08T09:00:46.313Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965246313,
+    "memory": {
+      "rss": 779862016,
+      "heapTotal": 212750336,
+      "heapUsed": 203426472,
+      "external": 5726566,
+      "arrayBuffers": 617599
+    }
+  }
+}
+2025-07-08T09:08:55.601Z [ERROR] [API_Courses][GET] Error fetching courses
+{
+  "name": "PrismaClientKnownRequestError",
+  "message": "\nInvalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany()` invocation in\nD:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:225:142\n\n  222 } : {};\n  223 // Get courses with pagination\n  224 const [courses, total] = await Promise.all([\n→ 225     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany(\nTimed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany()` invocation in\nD:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:225:142\n\n  222 } : {};\n  223 // Get courses with pagination\n  224 const [courses, total] = await Promise.all([\n→ 225     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany(\nTimed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)\n    at Zn.handleRequestError (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:7459)\n    at Zn.handleAndLogRequestError (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:6784)\n    at Zn.request (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:6491)\n    at async l (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:130:9778)\n    at async Promise.all (index 0)\n    at async CourseService.getCourses (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:224:34)\n    at async GET (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:973:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965735601,
+    "memory": {
+      "rss": 1029984256,
+      "heapTotal": 205271040,
+      "heapUsed": 173085056,
+      "external": 4827019,
+      "arrayBuffers": 901088
+    }
+  }
+}
+2025-07-08T09:09:23.169Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T09:09:23.928Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965763928,
+    "memory": {
+      "rss": 1092325376,
+      "heapTotal": 184659968,
+      "heapUsed": 177156824,
+      "external": 5265062,
+      "arrayBuffers": 1334724
+    }
+  }
+}
+2025-07-08T09:09:23.932Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751965763932,
+    "memory": {
+      "rss": 1092325376,
+      "heapTotal": 184659968,
+      "heapUsed": 177165008,
+      "external": 5265062,
+      "arrayBuffers": 1334724
+    }
+  }
+}
+2025-07-08T09:09:23.936Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965763936,
+    "memory": {
+      "rss": 1092325376,
+      "heapTotal": 184659968,
+      "heapUsed": 177177080,
+      "external": 5265062,
+      "arrayBuffers": 1334724
+    }
+  }
+}
+2025-07-08T09:09:24.806Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "bf8fe714-b342-4db4-885c-b1a3682fc396",
+  "performance": {
+    "timestamp": 1751965764806,
+    "memory": {
+      "rss": 1092403200,
+      "heapTotal": 184659968,
+      "heapUsed": 177300920,
+      "external": 5265119,
+      "arrayBuffers": 1334781
+    }
+  }
+}
+2025-07-08T09:09:24.812Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965764812,
+    "memory": {
+      "rss": 1092403200,
+      "heapTotal": 184659968,
+      "heapUsed": 177400584,
+      "external": 5265430,
+      "arrayBuffers": 1335092
+    }
+  }
+}
+2025-07-08T09:12:03.941Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-08T09:12:05.077Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965925076,
+    "memory": {
+      "rss": 1042198528,
+      "heapTotal": 177168384,
+      "heapUsed": 147336152,
+      "external": 6337806,
+      "arrayBuffers": 1225435
+    }
+  }
+}
+2025-07-08T09:12:05.080Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751965925080,
+    "memory": {
+      "rss": 1042206720,
+      "heapTotal": 177168384,
+      "heapUsed": 147344248,
+      "external": 6337806,
+      "arrayBuffers": 1225435
+    }
+  }
+}
+2025-07-08T09:12:05.096Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T09:12:05.101Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751965925101,
+    "memory": {
+      "rss": 1042268160,
+      "heapTotal": 177168384,
+      "heapUsed": 147443360,
+      "external": 6338405,
+      "arrayBuffers": 1226034
+    }
+  }
+}
+2025-07-08T09:12:05.112Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T09:12:05.118Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1751965925118,
+    "memory": {
+      "rss": 1042333696,
+      "heapTotal": 177430528,
+      "heapUsed": 147526400,
+      "external": 6338405,
+      "arrayBuffers": 1226034
+    }
+  }
+}
+2025-07-08T09:12:05.123Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751965925123,
+    "memory": {
+      "rss": 1042341888,
+      "heapTotal": 177430528,
+      "heapUsed": 147533272,
+      "external": 6338405,
+      "arrayBuffers": 1226034
+    }
+  }
+}
+2025-07-08T09:12:06.007Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2066ms"
+  }
+}
+2025-07-08T09:12:06.011Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "5c932355-4c09-482c-a139-33d7d195be86",
+  "duration": "2066ms",
+  "performance": {
+    "timestamp": 1751965926011,
+    "memory": {
+      "rss": 1042587648,
+      "heapTotal": 177430528,
+      "heapUsed": 147626008,
+      "external": 6338462,
+      "arrayBuffers": 1226091
+    }
+  }
+}
+2025-07-08T09:42:31.550Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-08T09:42:32.645Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751967752645,
+    "memory": {
+      "rss": 634081280,
+      "heapTotal": 246702080,
+      "heapUsed": 210746112,
+      "external": 9148598,
+      "arrayBuffers": 4039631
+    }
+  }
+}
+2025-07-08T09:42:32.659Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751967752659,
+    "memory": {
+      "rss": 634093568,
+      "heapTotal": 246702080,
+      "heapUsed": 210769776,
+      "external": 9148598,
+      "arrayBuffers": 4039631
+    }
+  }
+}
+2025-07-08T09:42:32.683Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T09:42:32.691Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751967752691,
+    "memory": {
+      "rss": 634122240,
+      "heapTotal": 246702080,
+      "heapUsed": 210889216,
+      "external": 9149069,
+      "arrayBuffers": 4040102
+    }
+  }
+}
+2025-07-08T09:42:32.704Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T09:42:32.712Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1751967752712,
+    "memory": {
+      "rss": 634216448,
+      "heapTotal": 246702080,
+      "heapUsed": 210926728,
+      "external": 9149069,
+      "arrayBuffers": 4040102
+    }
+  }
+}
+2025-07-08T09:42:32.718Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751967752718,
+    "memory": {
+      "rss": 634216448,
+      "heapTotal": 246702080,
+      "heapUsed": 210933608,
+      "external": 9149069,
+      "arrayBuffers": 4040102
+    }
+  }
+}
+2025-07-08T09:42:33.602Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2052ms"
+  }
+}
+2025-07-08T09:42:33.610Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "duration": "2052ms",
+  "performance": {
+    "timestamp": 1751967753610,
+    "memory": {
+      "rss": 634245120,
+      "heapTotal": 246702080,
+      "heapUsed": 211048608,
+      "external": 9149126,
+      "arrayBuffers": 4040159
+    }
+  }
+}
+2025-07-08T09:42:54.949Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T09:42:56.074Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751967776074,
+    "memory": {
+      "rss": 751742976,
+      "heapTotal": 202268672,
+      "heapUsed": 194574112,
+      "external": 5596849,
+      "arrayBuffers": 487882
+    }
+  }
+}
+2025-07-08T09:42:56.083Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751967776083,
+    "memory": {
+      "rss": 751742976,
+      "heapTotal": 202268672,
+      "heapUsed": 194584152,
+      "external": 5596849,
+      "arrayBuffers": 487882
+    }
+  }
+}
+2025-07-08T09:42:56.092Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751967776092,
+    "memory": {
+      "rss": 751742976,
+      "heapTotal": 202268672,
+      "heapUsed": 194596104,
+      "external": 5596849,
+      "arrayBuffers": 487882
+    }
+  }
+}
+2025-07-08T09:42:58.109Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751967778109,
+    "memory": {
+      "rss": 751996928,
+      "heapTotal": 202268672,
+      "heapUsed": 194717384,
+      "external": 5596906,
+      "arrayBuffers": 487939
+    }
+  }
+}
+2025-07-08T09:42:58.121Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751967778120,
+    "memory": {
+      "rss": 752295936,
+      "heapTotal": 202268672,
+      "heapUsed": 194821288,
+      "external": 5597106,
+      "arrayBuffers": 488139
+    }
+  }
+}
+2025-07-08T12:07:34.041Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:07:35.134Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751976455134,
+    "memory": {
+      "rss": 509390848,
+      "heapTotal": 282132480,
+      "heapUsed": 235283656,
+      "external": 10199683,
+      "arrayBuffers": 5087332
+    }
+  }
+}
+2025-07-08T12:07:35.141Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751976455141,
+    "memory": {
+      "rss": 509394944,
+      "heapTotal": 282132480,
+      "heapUsed": 235294480,
+      "external": 10199683,
+      "arrayBuffers": 5087332
+    }
+  }
+}
+2025-07-08T12:07:35.148Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751976455147,
+    "memory": {
+      "rss": 509394944,
+      "heapTotal": 282132480,
+      "heapUsed": 235310896,
+      "external": 10199683,
+      "arrayBuffers": 5087332
+    }
+  }
+}
+2025-07-08T12:07:35.898Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751976455898,
+    "memory": {
+      "rss": 509403136,
+      "heapTotal": 282132480,
+      "heapUsed": 235662112,
+      "external": 10199952,
+      "arrayBuffers": 5087601
+    }
+  }
+}
+2025-07-08T12:07:35.928Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T12:07:35.943Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751976455943,
+    "memory": {
+      "rss": 509464576,
+      "heapTotal": 282132480,
+      "heapUsed": 235828056,
+      "external": 10200393,
+      "arrayBuffers": 5088042
+    }
+  }
+}
+2025-07-08T12:07:35.974Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T12:07:35.981Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751976455981,
+    "memory": {
+      "rss": 509562880,
+      "heapTotal": 282132480,
+      "heapUsed": 235865760,
+      "external": 10200393,
+      "arrayBuffers": 5088042
+    }
+  }
+}
+2025-07-08T12:07:37.620Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "3580ms"
+  }
+}
+2025-07-08T12:07:37.636Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "duration": "3580ms",
+  "performance": {
+    "timestamp": 1751976457636,
+    "memory": {
+      "rss": 509800448,
+      "heapTotal": 282132480,
+      "heapUsed": 236132128,
+      "external": 10200450,
+      "arrayBuffers": 5088099
+    }
+  }
+}
+2025-07-08T12:08:21.318Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:08:22.789Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751976502789,
+    "memory": {
+      "rss": 521035776,
+      "heapTotal": 253034496,
+      "heapUsed": 240346840,
+      "external": 17796802,
+      "arrayBuffers": 12687835
+    }
+  }
+}
+2025-07-08T12:08:22.794Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751976502794,
+    "memory": {
+      "rss": 521035776,
+      "heapTotal": 253034496,
+      "heapUsed": 240356760,
+      "external": 17796802,
+      "arrayBuffers": 12687835
+    }
+  }
+}
+2025-07-08T12:08:22.804Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751976502804,
+    "memory": {
+      "rss": 521035776,
+      "heapTotal": 253034496,
+      "heapUsed": 240372976,
+      "external": 17796802,
+      "arrayBuffers": 12687835
+    }
+  }
+}
+2025-07-08T12:08:23.706Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751976503706,
+    "memory": {
+      "rss": 521035776,
+      "heapTotal": 253034496,
+      "heapUsed": 240541240,
+      "external": 17796859,
+      "arrayBuffers": 12687892
+    }
+  }
+}
+2025-07-08T12:08:23.726Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T12:08:23.743Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751976503743,
+    "memory": {
+      "rss": 533159936,
+      "heapTotal": 253034496,
+      "heapUsed": 240712560,
+      "external": 26852560,
+      "arrayBuffers": 24761438
+    }
+  }
+}
+2025-07-08T12:08:23.758Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T12:08:23.782Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T12:08:27.831Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-811214e2-6136-4297-9f5a-8e5837f152b4-1751976503791.png",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-811214e2-6136-4297-9f5a-8e5837f152b4-1751976503791.png",
+  "performance": {
+    "timestamp": 1751976507831,
+    "memory": {
+      "rss": 521568256,
+      "heapTotal": 249364480,
+      "heapUsed": 233082704,
+      "external": 14809903,
+      "arrayBuffers": 12715389
+    }
+  }
+}
+2025-07-08T12:08:27.847Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751976507847,
+    "memory": {
+      "rss": 521568256,
+      "heapTotal": 249364480,
+      "heapUsed": 233094272,
+      "external": 14809903,
+      "arrayBuffers": 12715389
+    }
+  }
+}
+2025-07-08T12:08:29.451Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "8133ms"
+  }
+}
+2025-07-08T12:08:29.456Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "duration": "8133ms",
+  "performance": {
+    "timestamp": 1751976509456,
+    "memory": {
+      "rss": 521580544,
+      "heapTotal": 249364480,
+      "heapUsed": 233369512,
+      "external": 14809960,
+      "arrayBuffers": 12715446
+    }
+  }
+}
+2025-07-08T12:21:49.738Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:21:50.821Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977310821,
+    "memory": {
+      "rss": 599564288,
+      "heapTotal": 287150080,
+      "heapUsed": 277180344,
+      "external": 9267508,
+      "arrayBuffers": 4134928
+    }
+  }
+}
+2025-07-08T12:21:50.827Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977310827,
+    "memory": {
+      "rss": 599564288,
+      "heapTotal": 287150080,
+      "heapUsed": 277190704,
+      "external": 9267508,
+      "arrayBuffers": 4134928
+    }
+  }
+}
+2025-07-08T12:21:50.832Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977310832,
+    "memory": {
+      "rss": 599564288,
+      "heapTotal": 287150080,
+      "heapUsed": 277207456,
+      "external": 9267508,
+      "arrayBuffers": 4134928
+    }
+  }
+}
+2025-07-08T12:21:51.696Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977311696,
+    "memory": {
+      "rss": 599609344,
+      "heapTotal": 287150080,
+      "heapUsed": 276073512,
+      "external": 9186670,
+      "arrayBuffers": 4054090
+    }
+  }
+}
+2025-07-08T12:21:51.705Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751977311705,
+    "memory": {
+      "rss": 599621632,
+      "heapTotal": 287150080,
+      "heapUsed": 276210416,
+      "external": 9186844,
+      "arrayBuffers": 4054264
+    }
+  }
+}
+2025-07-08T12:29:27.812Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:29:28.876Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977768876,
+    "memory": {
+      "rss": 659136512,
+      "heapTotal": 332115968,
+      "heapUsed": 319788344,
+      "external": 14245348,
+      "arrayBuffers": 9136381
+    }
+  }
+}
+2025-07-08T12:29:28.879Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977768879,
+    "memory": {
+      "rss": 659136512,
+      "heapTotal": 332115968,
+      "heapUsed": 319798824,
+      "external": 14245348,
+      "arrayBuffers": 9136381
+    }
+  }
+}
+2025-07-08T12:29:28.884Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977768884,
+    "memory": {
+      "rss": 659136512,
+      "heapTotal": 332115968,
+      "heapUsed": 319815752,
+      "external": 14245348,
+      "arrayBuffers": 9136381
+    }
+  }
+}
+2025-07-08T12:29:29.758Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977769758,
+    "memory": {
+      "rss": 659148800,
+      "heapTotal": 332115968,
+      "heapUsed": 320166144,
+      "external": 14245617,
+      "arrayBuffers": 9136650
+    }
+  }
+}
+2025-07-08T12:29:29.780Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T12:29:29.797Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "thumbnail",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751977769797,
+    "memory": {
+      "rss": 659152896,
+      "heapTotal": 332115968,
+      "heapUsed": 320322080,
+      "external": 14246354,
+      "arrayBuffers": 9137387
+    }
+  }
+}
+2025-07-08T12:29:29.815Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T12:29:29.825Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977769825,
+    "memory": {
+      "rss": 659161088,
+      "heapTotal": 332115968,
+      "heapUsed": 320357344,
+      "external": 14246354,
+      "arrayBuffers": 9137387
+    }
+  }
+}
+2025-07-08T12:29:31.365Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "3553ms"
+  }
+}
+2025-07-08T12:29:31.371Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "duration": "3553ms",
+  "performance": {
+    "timestamp": 1751977771371,
+    "memory": {
+      "rss": 659173376,
+      "heapTotal": 332115968,
+      "heapUsed": 320618800,
+      "external": 14246411,
+      "arrayBuffers": 9137444
+    }
+  }
+}
+2025-07-08T12:29:46.367Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:29:47.472Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977787472,
+    "memory": {
+      "rss": 651677696,
+      "heapTotal": 339980288,
+      "heapUsed": 325326080,
+      "external": 15705566,
+      "arrayBuffers": 10596599
+    }
+  }
+}
+2025-07-08T12:29:47.477Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977787477,
+    "memory": {
+      "rss": 651677696,
+      "heapTotal": 339980288,
+      "heapUsed": 325336200,
+      "external": 15705566,
+      "arrayBuffers": 10596599
+    }
+  }
+}
+2025-07-08T12:29:47.480Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977787480,
+    "memory": {
+      "rss": 651677696,
+      "heapTotal": 339980288,
+      "heapUsed": 325352648,
+      "external": 15705566,
+      "arrayBuffers": 10596599
+    }
+  }
+}
+2025-07-08T12:29:48.362Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "performance": {
+    "timestamp": 1751977788362,
+    "memory": {
+      "rss": 651681792,
+      "heapTotal": 339980288,
+      "heapUsed": 325682448,
+      "external": 15705835,
+      "arrayBuffers": 10596868
+    }
+  }
+}
+2025-07-08T12:29:48.377Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T12:29:48.386Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751977788385,
+    "memory": {
+      "rss": 651984896,
+      "heapTotal": 339980288,
+      "heapUsed": 325856744,
+      "external": 17512588,
+      "arrayBuffers": 13005191
+    }
+  }
+}
+2025-07-08T12:29:48.397Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T12:29:48.410Z [INFO] [API_Courses_Detail][PUT] Removing old thumbnail
+2025-07-08T12:29:49.129Z [INFO] [API_Courses_Detail][PUT] Old thumbnail removed successfully
+{
+  "oldThumbnailPath": "course-811214e2-6136-4297-9f5a-8e5837f152b4-1751976503791.png",
+  "performance": {
+    "timestamp": 1751977789129,
+    "memory": {
+      "rss": 652029952,
+      "heapTotal": 339980288,
+      "heapUsed": 322690608,
+      "external": 15562198,
+      "arrayBuffers": 11054801
+    }
+  }
+}
+2025-07-08T12:29:49.138Z [INFO] [API_Courses_Detail][PUT] Starting thumbnail upload
+2025-07-08T12:29:51.309Z [INFO] [API_Courses_Detail][PUT] Thumbnail upload successful
+{
+  "fileName": "course-811214e2-6136-4297-9f5a-8e5837f152b4-1751977789145.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-811214e2-6136-4297-9f5a-8e5837f152b4-1751977789145.jpg",
+  "performance": {
+    "timestamp": 1751977791309,
+    "memory": {
+      "rss": 652906496,
+      "heapTotal": 339980288,
+      "heapUsed": 323547176,
+      "external": 18590267,
+      "arrayBuffers": 14082870
+    }
+  }
+}
+2025-07-08T12:29:51.313Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977791313,
+    "memory": {
+      "rss": 652906496,
+      "heapTotal": 339980288,
+      "heapUsed": 323558688,
+      "external": 18590267,
+      "arrayBuffers": 14082870
+    }
+  }
+}
+2025-07-08T12:29:52.806Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "6439ms"
+  }
+}
+2025-07-08T12:29:52.821Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "811214e2-6136-4297-9f5a-8e5837f152b4",
+  "duration": "6439ms",
+  "performance": {
+    "timestamp": 1751977792821,
+    "memory": {
+      "rss": 652918784,
+      "heapTotal": 339980288,
+      "heapUsed": 323822000,
+      "external": 18590324,
+      "arrayBuffers": 14082927
+    }
+  }
+}
+2025-07-08T12:30:21.241Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-08T12:30:22.743Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977822743,
+    "memory": {
+      "rss": 627544064,
+      "heapTotal": 307400704,
+      "heapUsed": 295515816,
+      "external": 5865191,
+      "arrayBuffers": 756224
+    }
+  }
+}
+2025-07-08T12:30:22.751Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977822751,
+    "memory": {
+      "rss": 627544064,
+      "heapTotal": 307400704,
+      "heapUsed": 295526440,
+      "external": 5865191,
+      "arrayBuffers": 756224
+    }
+  }
+}
+2025-07-08T12:30:22.755Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T12:30:22.759Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751977822758,
+    "memory": {
+      "rss": 627548160,
+      "heapTotal": 307400704,
+      "heapUsed": 295677480,
+      "external": 5865702,
+      "arrayBuffers": 756735
+    }
+  }
+}
+2025-07-08T12:30:22.770Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T12:30:22.773Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1751977822773,
+    "memory": {
+      "rss": 627552256,
+      "heapTotal": 307400704,
+      "heapUsed": 295698800,
+      "external": 5865702,
+      "arrayBuffers": 756735
+    }
+  }
+}
+2025-07-08T12:30:22.778Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977822777,
+    "memory": {
+      "rss": 627552256,
+      "heapTotal": 307400704,
+      "heapUsed": 295706272,
+      "external": 5865702,
+      "arrayBuffers": 756735
+    }
+  }
+}
+2025-07-08T12:30:23.670Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2428ms"
+  }
+}
+2025-07-08T12:30:23.683Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "de7e06b4-4eb9-4f4b-a686-95f7b066489a",
+  "duration": "2428ms",
+  "performance": {
+    "timestamp": 1751977823683,
+    "memory": {
+      "rss": 627666944,
+      "heapTotal": 307400704,
+      "heapUsed": 295883392,
+      "external": 5865759,
+      "arrayBuffers": 756792
+    }
+  }
+}
+2025-07-08T12:30:35.713Z [INFO] [API_Courses_Detail][DELETE] Starting course deletion process
+2025-07-08T12:30:36.300Z [INFO] [API_Courses_Detail][DELETE] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977836300,
+    "memory": {
+      "rss": 634818560,
+      "heapTotal": 310022144,
+      "heapUsed": 298481848,
+      "external": 5964144,
+      "arrayBuffers": 855177
+    }
+  }
+}
+2025-07-08T12:30:36.305Z [INFO] [API_Courses_Detail][DELETE] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977836305,
+    "memory": {
+      "rss": 634818560,
+      "heapTotal": 310022144,
+      "heapUsed": 298492080,
+      "external": 5964144,
+      "arrayBuffers": 855177
+    }
+  }
+}
+2025-07-08T12:30:36.309Z [INFO] [API_Courses_Detail][DELETE] Course ID validated
+{
+  "courseId": "de7e06b4-4eb9-4f4b-a686-95f7b066489a",
+  "performance": {
+    "timestamp": 1751977836309,
+    "memory": {
+      "rss": 634818560,
+      "heapTotal": 310022144,
+      "heapUsed": 298508640,
+      "external": 5964144,
+      "arrayBuffers": 855177
+    }
+  }
+}
+2025-07-08T12:30:37.082Z [INFO] [API_Courses_Detail][DELETE] Removing course thumbnail
+2025-07-08T12:30:37.091Z [INFO] [API_Courses_Detail][DELETE] Deleting course from database
+{
+  "courseId": "de7e06b4-4eb9-4f4b-a686-95f7b066489a",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977837091,
+    "memory": {
+      "rss": 634822656,
+      "heapTotal": 310022144,
+      "heapUsed": 298862520,
+      "external": 5964413,
+      "arrayBuffers": 855446
+    }
+  }
+}
+2025-07-08T12:30:38.614Z [INFO] [API_Courses_Detail][DELETE] Course deleted successfully
+{
+  "performance": {
+    "label": "Course deletion",
+    "duration": "2901ms"
+  }
+}
+2025-07-08T12:30:38.624Z [INFO] [API_Courses_Detail][DELETE] Course deletion completed
+{
+  "courseId": "de7e06b4-4eb9-4f4b-a686-95f7b066489a",
+  "duration": "2901ms",
+  "performance": {
+    "timestamp": 1751977838624,
+    "memory": {
+      "rss": 634847232,
+      "heapTotal": 310022144,
+      "heapUsed": 299120856,
+      "external": 5964470,
+      "arrayBuffers": 855503
+    }
+  }
+}
+2025-07-08T12:31:04.462Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-08T12:31:05.550Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977865550,
+    "memory": {
+      "rss": 638369792,
+      "heapTotal": 312643584,
+      "heapUsed": 300729336,
+      "external": 6294525,
+      "arrayBuffers": 1185558
+    }
+  }
+}
+2025-07-08T12:31:05.558Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751977865558,
+    "memory": {
+      "rss": 638369792,
+      "heapTotal": 312643584,
+      "heapUsed": 300739760,
+      "external": 6294525,
+      "arrayBuffers": 1185558
+    }
+  }
+}
+2025-07-08T12:31:05.567Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-08T12:31:05.572Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751977865572,
+    "memory": {
+      "rss": 638373888,
+      "heapTotal": 312643584,
+      "heapUsed": 300894008,
+      "external": 6609906,
+      "arrayBuffers": 1605406
+    }
+  }
+}
+2025-07-08T12:31:05.579Z [INFO] [API_Courses][POST] Validation successful
+2025-07-08T12:31:05.586Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-08T12:31:07.449Z [INFO] [API_Courses][POST] Thumbnail upload successful
+{
+  "fileName": "course-1751977865590.jpg",
+  "bucket": "course-thumbnails",
+  "url": "https://fxtkilqjzsncefjpfnlb.supabase.co/storage/v1/object/public/course-thumbnails/course-1751977865590.jpg",
+  "performance": {
+    "timestamp": 1751977867449,
+    "memory": {
+      "rss": 638377984,
+      "heapTotal": 312643584,
+      "heapUsed": 301775536,
+      "external": 7156322,
+      "arrayBuffers": 2148430
+    }
+  }
+}
+2025-07-08T12:31:07.459Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751977867459,
+    "memory": {
+      "rss": 638377984,
+      "heapTotal": 312643584,
+      "heapUsed": 301786856,
+      "external": 7156322,
+      "arrayBuffers": 2148430
+    }
+  }
+}
+2025-07-08T12:31:08.379Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "3917ms"
+  }
+}
+2025-07-08T12:31:08.396Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "b228e661-c1bf-439c-919e-a30648203efd",
+  "duration": "3917ms",
+  "performance": {
+    "timestamp": 1751977868395,
+    "memory": {
+      "rss": 638398464,
+      "heapTotal": 312905728,
+      "heapUsed": 300690600,
+      "external": 6515680,
+      "arrayBuffers": 1511180
+    }
+  }
+}
+2025-07-08T12:50:16.723Z [INFO] [API_Courses_Detail][PUT] Starting course update process
+2025-07-08T12:50:17.836Z [INFO] [API_Courses_Detail][PUT] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751979017836,
+    "memory": {
+      "rss": 942256128,
+      "heapTotal": 359137280,
+      "heapUsed": 345222088,
+      "external": 7480107,
+      "arrayBuffers": 2346344
+    }
+  }
+}
+2025-07-08T12:50:17.839Z [INFO] [API_Courses_Detail][PUT] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751979017839,
+    "memory": {
+      "rss": 942256128,
+      "heapTotal": 359137280,
+      "heapUsed": 345232992,
+      "external": 7480107,
+      "arrayBuffers": 2346344
+    }
+  }
+}
+2025-07-08T12:50:17.846Z [INFO] [API_Courses_Detail][PUT] Course ID validated
+{
+  "courseId": "b228e661-c1bf-439c-919e-a30648203efd",
+  "performance": {
+    "timestamp": 1751979017846,
+    "memory": {
+      "rss": 942256128,
+      "heapTotal": 359137280,
+      "heapUsed": 345250976,
+      "external": 7480107,
+      "arrayBuffers": 2346344
+    }
+  }
+}
+2025-07-08T12:50:18.772Z [INFO] [API_Courses_Detail][PUT] Old course data retrieved
+{
+  "courseId": "b228e661-c1bf-439c-919e-a30648203efd",
+  "performance": {
+    "timestamp": 1751979018772,
+    "memory": {
+      "rss": 942288896,
+      "heapTotal": 359137280,
+      "heapUsed": 345620040,
+      "external": 7480375,
+      "arrayBuffers": 2346612
+    }
+  }
+}
+2025-07-08T12:50:18.787Z [INFO] [API_Courses_Detail][PUT] FormData parsed successfully
+2025-07-08T12:50:18.801Z [INFO] [API_Courses_Detail][PUT] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "thumbnail",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1751979018801,
+    "memory": {
+      "rss": 942288896,
+      "heapTotal": 359137280,
+      "heapUsed": 345767608,
+      "external": 7481054,
+      "arrayBuffers": 2347291
+    }
+  }
+}
+2025-07-08T12:50:18.816Z [INFO] [API_Courses_Detail][PUT] Validation successful
+2025-07-08T12:50:18.824Z [INFO] [API_Courses_Detail][PUT] Updating course in database
+{
+  "courseId": "b228e661-c1bf-439c-919e-a30648203efd",
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751979018824,
+    "memory": {
+      "rss": 942317568,
+      "heapTotal": 359137280,
+      "heapUsed": 345808568,
+      "external": 7481054,
+      "arrayBuffers": 2347291
+    }
+  }
+}
+2025-07-08T12:50:20.339Z [INFO] [API_Courses_Detail][PUT] Course updated successfully
+{
+  "performance": {
+    "label": "Course update",
+    "duration": "3616ms"
+  }
+}
+2025-07-08T12:50:20.346Z [INFO] [API_Courses_Detail][PUT] Course update completed
+{
+  "courseId": "b228e661-c1bf-439c-919e-a30648203efd",
+  "duration": "3616ms",
+  "performance": {
+    "timestamp": 1751979020346,
+    "memory": {
+      "rss": 942325760,
+      "heapTotal": 359137280,
+      "heapUsed": 344830040,
+      "external": 7472552,
+      "arrayBuffers": 2338789
+    }
+  }
+}

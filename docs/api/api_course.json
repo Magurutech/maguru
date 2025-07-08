@@ -177,7 +177,100 @@
       "response": []
     },
     {
-      "name": "5. Update Course Status",
+      "name": "5. Update Course Metadata",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Updated Course Title",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Updated course description with new content",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "sains",
+              "type": "text"
+            },
+            {
+              "key": "status",
+              "value": "PUBLISHED",
+              "type": "text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Update metadata kursus (title, description, category, status) tanpa thumbnail"
+      },
+      "response": []
+    },
+    {
+      "name": "6. Update Course Metadata dengan Thumbnail",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "multipart/form-data"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Updated Course dengan Thumbnail Baru",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "Kursus yang diupdate dengan thumbnail baru",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "seni",
+              "type": "text"
+            },
+            {
+              "key": "status",
+              "value": "DRAFT",
+              "type": "text"
+            },
+            {
+              "key": "thumbnail",
+              "type": "file",
+              "src": []
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}"]
+        },
+        "description": "Update metadata kursus dengan upload thumbnail baru"
+      },
+      "response": []
+    },
+    {
+      "name": "7. Update Course Status",
       "request": {
         "method": "PATCH",
         "header": [
@@ -200,7 +293,7 @@
       "response": []
     },
     {
-      "name": "6. Delete Course",
+      "name": "8. Delete Course",
       "request": {
         "method": "DELETE",
         "header": [
@@ -263,6 +356,14 @@
           "        const jsonData = pm.response.json();",
           "        pm.expect(jsonData).to.have.property('message');",
           "        pm.expect(jsonData.message).to.include('deleted successfully');",
+          "    });",
+          "} else if (pm.request.method === 'PUT') {",
+          "    pm.test('PUT response has updated course data', function () {",
+          "        const jsonData = pm.response.json();",
+          "        pm.expect(jsonData).to.have.property('data');",
+          "        pm.expect(jsonData.data).to.have.property('id');",
+          "        pm.expect(jsonData.data).to.have.property('title');",
+          "        pm.expect(jsonData.data).to.have.property('updatedAt');",
           "    });",
           "} else {",
           "    pm.test('Response has data property', function () {",

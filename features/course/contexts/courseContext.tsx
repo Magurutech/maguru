@@ -15,8 +15,16 @@
 
 'use client'
 
-import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  ReactNode,
+  useMemo,
+} from 'react'
 import type { Course, CreateCourseFormData, CourseStatus } from '../types'
+// import { logger } from '@/services/logger'
 
 // Dialog types
 type DialogType = 'create' | 'edit' | 'delete' | null
@@ -227,6 +235,7 @@ interface CourseContextValue extends CourseContextState {
   // Utility functions
   getFormErrors: () => string[]
   hasFormChanges: (originalData?: Partial<Course>) => boolean
+  isSelectedCourseValid: () => boolean
 }
 
 // Create context
@@ -313,33 +322,58 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
     [state.formState.data],
   )
 
-  // Context value
-  const contextValue: CourseContextValue = {
-    // State
-    ...state,
+  const isSelectedCourseValid = useCallback((): boolean => {
+    return state.selectedCourse !== null && state.selectedCourse.id !== undefined
+  }, [state.selectedCourse])
 
-    // Dialog actions
-    openCreateDialog,
-    openEditDialog,
-    openDeleteDialog,
-    closeDialog,
+  // Context value dengan memoization untuk mencegah re-render berlebihan
+  const contextValue: CourseContextValue = useMemo(
+    () => ({
+      // State
+      ...state,
 
-    // Form actions
-    updateFormData,
-    setFormErrors,
-    setFormValid,
-    setFormSubmitting,
-    resetForm,
+      // Dialog actions
+      openCreateDialog,
+      openEditDialog,
+      openDeleteDialog,
+      closeDialog,
 
-    // Search/filter actions
-    setSearchQuery,
-    setSelectedStatus,
-    clearFilters,
+      // Form actions
+      updateFormData,
+      setFormErrors,
+      setFormValid,
+      setFormSubmitting,
+      resetForm,
 
-    // Utility functions
-    getFormErrors,
-    hasFormChanges,
-  }
+      // Search/filter actions
+      setSearchQuery,
+      setSelectedStatus,
+      clearFilters,
+
+      // Utility functions
+      getFormErrors,
+      hasFormChanges,
+      isSelectedCourseValid,
+    }),
+    [
+      state,
+      openCreateDialog,
+      openEditDialog,
+      openDeleteDialog,
+      closeDialog,
+      updateFormData,
+      setFormErrors,
+      setFormValid,
+      setFormSubmitting,
+      resetForm,
+      setSearchQuery,
+      setSelectedStatus,
+      clearFilters,
+      getFormErrors,
+      hasFormChanges,
+      isSelectedCourseValid,
+    ],
+  )
 
   return <CourseContext.Provider value={contextValue}>{children}</CourseContext.Provider>
 }

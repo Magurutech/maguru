@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useCourseContext } from '../../contexts/courseContext'
+import { useCourseSearch } from '../../hooks/useCourseSearch'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
 
 export function CourseSearchFilter() {
   // Component state untuk UI interactions
@@ -28,6 +30,10 @@ export function CourseSearchFilter() {
     hasActiveFilters,
     openCreateDialog,
   } = useCourseContext()
+
+  // Get courses dan fetchCourses untuk search submit
+  const { courses, fetchCourses } = useCourseManagement()
+  const { handleSearchSubmit } = useCourseSearch(courses, fetchCourses)
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true)
@@ -47,6 +53,12 @@ export function CourseSearchFilter() {
 
   const handleClearFilters = () => {
     clearFilters()
+  }
+
+  const handleSearchKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      await handleSearchSubmit()
+    }
   }
 
   const getStatusDisplayText = (status: string) => {
@@ -85,6 +97,7 @@ export function CourseSearchFilter() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={handleSearchFocus}
                 onBlur={handleSearchBlur}
+                onKeyDown={handleSearchKeyDown}
                 className="pl-10 neu-input border-transparent focus:border-transparent focus:ring-0 bg-transparent"
               />
             </div>

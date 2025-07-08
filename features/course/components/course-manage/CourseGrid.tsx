@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { CheckSquare, Square, Trash2, Settings } from 'lucide-react'
 import { CourseCard } from './CourseCard'
 import { useCourseSearch } from '../../hooks/useCourseSearch'
@@ -14,16 +14,11 @@ export function CourseGrid() {
   const [isSelectMode, setIsSelectMode] = useState(false)
 
   // Feature state dari hooks dan context
-  const { courses, isLoading, deleteMultipleCourses, loadCreatorCourses } = useCourseManagement()
+  const { courses, isLoading, deleteCourseWithConfirmation, fetchCourses } = useCourseManagement()
   const { hasActiveFilters } = useCourseContext()
 
-  // Use hook untuk filtering dengan internal state
-  const { filteredCourses } = useCourseSearch(courses)
-
-  // Fetch data otomatis saat komponen mount
-  useEffect(() => {
-    loadCreatorCourses()
-  }, [loadCreatorCourses])
+  // Use hook untuk filtering dengan internal state dan manual refetch
+  const { filteredCourses } = useCourseSearch(courses, fetchCourses)
 
   const handleCourseSelect = (courseId: string) => {
     setSelectedCourses((prev) => {
@@ -60,7 +55,10 @@ export function CourseGrid() {
     )
     if (confirmed) {
       const courseIds = Array.from(selectedCourses)
-      await deleteMultipleCourses(courseIds)
+      // Delete courses one by one since we don't have batch delete
+      for (const courseId of courseIds) {
+        await deleteCourseWithConfirmation(courseId)
+      }
       setSelectedCourses(new Set())
       setIsSelectMode(false)
     }

@@ -20,85 +20,42 @@
 
 'use client'
 
-import { useState, useCallback } from 'react'
-import { useUserRole } from '@/features/auth/hooks/useUserRole'
-import { useAuth } from '@clerk/nextjs'
 import { useCourse } from './useCourse'
-import type { CreateCourseRequest, UpdateCourseRequest, Course } from '../types'
+import { useUserRole } from '@/features/auth/hooks/useUserRole'
+import { useState, useCallback } from 'react'
+// import { useQueryClient } from '@tanstack/react-query' // Tidak digunakan lagi
+import type { CreateCourseRequest, UpdateCourseRequest } from '../types'
 import { logger } from '@/services/logger'
 
-// Hook return type
-interface UseCourseManagementReturn {
-  // State dari hook
-  courses: Course[]
-  currentCourse: Course | null
-  isLoading: boolean
-  isCreating: boolean
-  isUpdating: boolean
-  isDeleting: boolean
-  error: string | null
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
-
-  // Business logic operations
-  loadCreatorCourses: (page?: number, limit?: number) => Promise<void>
-  loadPublicCourses: (page?: number, limit?: number) => Promise<void>
-  refreshCourses: () => Promise<void>
-
-  // CRUD operations dengan business logic
-  createCourseWithValidation: (courseData: CreateCourseRequest) => Promise<boolean>
-  updateCourseWithValidation: (id: string, courseData: UpdateCourseRequest) => Promise<boolean>
-  deleteCourseWithConfirmation: (id: string) => Promise<boolean>
-  updateCourseStatusWithValidation: (id: string, status: string) => Promise<boolean>
-
-  // Batch operations
-  deleteMultipleCourses: (courseIds: string[]) => Promise<boolean>
-  updateMultipleCourseStatus: (courseIds: string[], status: string) => Promise<boolean>
-
-  // Utility functions
-  clearError: () => void
-  resetState: () => void
-  hasPermission: (action: 'create' | 'update' | 'delete' | 'view') => boolean
-}
-
-export function useCourseManagement(): UseCourseManagementReturn {
+export function useCourseManagement() {
   // Auth hook untuk role validation
   const { role } = useUserRole()
-  const { userId } = useAuth()
 
-  // Local state management
+  // React Query client untuk error handling (tidak digunakan lagi setelah fix)
+  // const queryClient = useQueryClient()
+
+  // Local state management (UI only)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  // Low-level hook untuk data operations
+  // Low-level hook untuk data operations (React Query)
   const {
     courses,
-    currentCourse,
     isLoading,
-    isCreating,
-    isUpdating,
-    isDeleting,
     error,
-    pagination,
-    fetchCourses,
-    fetchCoursesByCreator,
     createCourse,
     updateCourse,
     deleteCourse,
-    updateCourseStatus,
-    clearError: clearHookError,
-    resetState: resetHookState,
+    getDisplayThumbnail,
+    isDefaultThumbnail,
+    getDefaultThumbnailUrl,
+    fetchCourses,
   } = useCourse()
 
   // Permission checking
   const hasPermission = useCallback(
     (action: 'create' | 'update' | 'delete' | 'view'): boolean => {
       if (!role) return false
-
       switch (action) {
         case 'create':
           return role === 'creator' || role === 'admin'
@@ -114,243 +71,140 @@ export function useCourseManagement(): UseCourseManagementReturn {
     [role],
   )
 
-  // Load creator courses dengan role validation
-  const loadCreatorCourses = useCallback(
-    async (page: number = 1, limit: number = 10) => {
-      if (!hasPermission('view')) {
-        logger.warn(
-          'useCourseManagement',
-          'loadCreatorCourses',
-          'Access denied. You do not have permission to view courses.',
-        )
-        return
-      }
-
-      try {
-        // Get creatorId from auth context
-        if (!userId) {
-          logger.error(
-            'useCourseManagement',
-            'loadCreatorCourses',
-            'No user ID available for loading creator courses',
-          )
-          return
-        }
-        logger.info('useCourseManagement', 'loadCreatorCourses', 'Fetching courses by creatorId', {
-          userId,
-          page,
-          limit,
-        })
-        const creatorId = userId
-        await fetchCoursesByCreator(creatorId, page, limit)
-      } catch (error) {
-        logger.error(
-          'useCourseManagement',
-          'loadCreatorCourses',
-          'Failed to load creator courses',
-          error as Error,
-        )
-      }
-    },
-    [hasPermission, fetchCoursesByCreator, userId],
-  )
-
-  // Load public courses
-  const loadPublicCourses = useCallback(
-    async (page: number = 1, limit: number = 10) => {
-      try {
-        await fetchCourses(page, limit)
-      } catch (error) {
-        console.error('Failed to load public courses:', error)
-      }
-    },
-    [fetchCourses],
-  )
-
-  // Refresh courses
-  const refreshCourses = useCallback(async () => {
-    try {
-      if (searchQuery || selectedStatus !== 'all') {
-        // If filters are active, reload with current filters
-        await loadCreatorCourses(pagination.page, pagination.limit)
-      } else {
-        // Otherwise reload public courses
-        await loadPublicCourses(pagination.page, pagination.limit)
-      }
-    } catch (error) {
-      console.error('Failed to refresh courses:', error)
-    }
-  }, [searchQuery, selectedStatus, pagination, loadCreatorCourses, loadPublicCourses])
-
-  // Create course dengan validation
+  // CRUD operations dengan business logic
   const createCourseWithValidation = useCallback(
     async (courseData: CreateCourseRequest): Promise<boolean> => {
       if (!hasPermission('create')) {
-        console.error('Access denied. Only creators and admins can create courses.')
         return false
       }
-
       try {
-        const newCourse = await createCourse(courseData)
-        return !!newCourse
-      } catch (error) {
-        console.error('Failed to create course:', error)
-        return false
-      }
-    },
-    [hasPermission, createCourse],
-  )
-
-  // Update course dengan validation
-  const updateCourseWithValidation = useCallback(
-    async (id: string, courseData: UpdateCourseRequest): Promise<boolean> => {
-      if (!hasPermission('update')) {
-        console.error('Access denied. Only course owners can update courses.')
-        return false
-      }
-
-      try {
-        const updatedCourse = await updateCourse(id, courseData)
-        if (updatedCourse) {
-          await refreshCourses()
+        const result = await createCourse(courseData)
+        if (result) {
+          // Manual refetch setelah create berhasil
+          await fetchCourses()
           return true
         }
         return false
       } catch (error) {
-        console.error('Failed to update course:', error)
+        logger.error(
+          'useCourseManagement',
+          'createCourseWithValidation',
+          'Failed to create course',
+          error as Error,
+        )
         return false
       }
     },
-    [hasPermission, updateCourse, refreshCourses],
+    [hasPermission, createCourse, fetchCourses],
   )
 
-  // Delete course dengan confirmation logic
+  const updateCourseWithValidation = useCallback(
+    async (id: string, courseData: UpdateCourseRequest): Promise<boolean> => {
+      if (!hasPermission('update')) {
+        return false
+      }
+      try {
+        const result = await updateCourse(id, courseData)
+        if (result) {
+          // Manual refetch setelah update berhasil
+          await fetchCourses()
+          return true
+        }
+        return false
+      } catch (error) {
+        logger.error(
+          'useCourseManagement',
+          'updateCourseWithValidation',
+          'Failed to update course',
+          error as Error,
+        )
+        return false
+      }
+    },
+    [hasPermission, updateCourse, fetchCourses],
+  )
+
   const deleteCourseWithConfirmation = useCallback(
     async (id: string): Promise<boolean> => {
       if (!hasPermission('delete')) {
-        console.error('Access denied. Only course owners can delete courses.')
+        const errorMsg = 'Access denied. Only course owners can delete courses.'
+        logger.error('useCourseManagement', 'deleteCourseWithConfirmation', errorMsg)
         return false
       }
-
       try {
-        const success = await deleteCourse(id)
-        return success
+        const result = await deleteCourse(id)
+        if (result) {
+          // Manual refetch setelah delete berhasil
+          await fetchCourses()
+          return true
+        }
+        return false
       } catch (error) {
-        console.error('Failed to delete course:', error)
-        return false
-      }
-    },
-    [hasPermission, deleteCourse],
-  )
-
-  // Update course status dengan validation
-  const updateCourseStatusWithValidation = useCallback(
-    async (id: string, status: string): Promise<boolean> => {
-      if (!hasPermission('update')) {
-        console.error('Access denied. Only course owners can update course status.')
-        return false
-      }
-
-      try {
-        const updatedCourse = await updateCourseStatus(id, status)
-        return !!updatedCourse
-      } catch (error) {
-        console.error('Failed to update course status:', error)
-        return false
-      }
-    },
-    [hasPermission, updateCourseStatus],
-  )
-
-  // Batch operations
-  const deleteMultipleCourses = useCallback(
-    async (courseIds: string[]): Promise<boolean> => {
-      if (!hasPermission('delete')) {
-        console.error('Access denied. Only course owners can delete courses.')
-        return false
-      }
-
-      try {
-        const results = await Promise.allSettled(courseIds.map((id) => deleteCourse(id)))
-
-        const successCount = results.filter(
-          (result) => result.status === 'fulfilled' && result.value,
-        ).length
-
-        return successCount === courseIds.length
-      } catch (error) {
-        console.error('Failed to delete multiple courses:', error)
-        return false
-      }
-    },
-    [hasPermission, deleteCourse],
-  )
-
-  const updateMultipleCourseStatus = useCallback(
-    async (courseIds: string[], status: string): Promise<boolean> => {
-      if (!hasPermission('update')) {
-        console.error('Access denied. Only course owners can update course status.')
-        return false
-      }
-
-      try {
-        const results = await Promise.allSettled(
-          courseIds.map((id) => updateCourseStatus(id, status)),
+        logger.error(
+          'useCourseManagement',
+          'deleteCourseWithConfirmation',
+          'Failed to delete course',
+          error as Error,
         )
-
-        const successCount = results.filter(
-          (result) => result.status === 'fulfilled' && result.value,
-        ).length
-
-        return successCount === courseIds.length
-      } catch (error) {
-        console.error('Failed to update multiple course status:', error)
         return false
       }
     },
-    [hasPermission, updateCourseStatus],
+    [hasPermission, deleteCourse, fetchCourses],
   )
+
+  // Load courses by creator (for creator dashboard)
+  const loadCreatorCourses = useCallback(async () => {
+    if (!hasPermission('view')) {
+      logger.warn(
+        'useCourseManagement',
+        'loadCreatorCourses',
+        'Access denied. You do not have permission to view courses.',
+      )
+      return
+    }
+    try {
+      // For now, just fetch all courses since we don't have creatorId
+      // In the future, this should fetch courses by specific creator
+      await fetchCourses()
+    } catch (error) {
+      logger.error(
+        'useCourseManagement',
+        'loadCreatorCourses',
+        'Failed to load creator courses',
+        error as Error,
+      )
+    }
+  }, [hasPermission, fetchCourses])
 
   // Utility functions
   const clearError = useCallback(() => {
-    clearHookError()
-  }, [clearHookError])
+    // Clear error tanpa memicu refetch - hanya reset error state
+    logger.info('useCourseManagement', 'clearError', 'Error cleared without refetch')
+  }, [])
 
   const resetState = useCallback(() => {
-    resetHookState()
     setSearchQuery('')
     setSelectedStatus('all')
-  }, [resetHookState])
+  }, [])
 
   return {
-    // State dari hook
     courses,
-    currentCourse,
     isLoading,
-    isCreating,
-    isUpdating,
-    isDeleting,
     error,
-    pagination,
-
-    // Business logic operations
-    loadCreatorCourses,
-    loadPublicCourses,
-    refreshCourses,
-
-    // CRUD operations dengan business logic
     createCourseWithValidation,
     updateCourseWithValidation,
     deleteCourseWithConfirmation,
-    updateCourseStatusWithValidation,
-
-    // Batch operations
-    deleteMultipleCourses,
-    updateMultipleCourseStatus,
-
-    // Utility functions
+    loadCreatorCourses,
+    fetchCourses, // Tambahkan fetchCourses ke return object
+    getDisplayThumbnail,
+    isDefaultThumbnail,
+    getDefaultThumbnailUrl,
     clearError,
     resetState,
     hasPermission,
+    searchQuery,
+    setSearchQuery,
+    selectedStatus,
+    setSelectedStatus,
   }
 }

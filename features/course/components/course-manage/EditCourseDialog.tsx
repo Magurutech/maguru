@@ -24,13 +24,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Upload, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
-import {
-  UpdateCourseRequest,
-  CreateCourseFormData,
-  CourseStatus,
-  courseThumbnailUtils,
-} from '../../types'
+import { UpdateCourseRequest, CreateCourseFormData, courseThumbnailUtils } from '../../types'
 import Image from 'next/image'
+import { logger } from '@/services/logger'
 
 export function EditCourseDialog() {
   // Component state untuk UI interactions
@@ -48,6 +44,7 @@ export function EditCourseDialog() {
     setFormValid,
     setFormSubmitting,
     closeDialog,
+    isSelectedCourseValid,
   } = useCourseContext()
 
   // Handle input change dengan proper error handling
@@ -94,41 +91,46 @@ export function EditCourseDialog() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!selectedCourse) {
-      return
-    }
-
     // Validate form
     const validation = validateCourseData(formState.data)
     setFormErrors(validation.errors)
     setFormValid(validation.isValid)
 
-    if (!validation.isValid) {
+    // Early return jika tidak ada selectedCourse
+    if (!isSelectedCourseValid()) {
+      console.error('EditCourseDialog: No valid selected course found')
       return
     }
+
+    // Setelah validasi, selectedCourse pasti tidak null
+    const course = selectedCourse!
 
     setFormSubmitting(true)
 
     try {
-      const dataToSend: { [key: string]: string | File } = { ...formState.data }
-      if (thumbnailFile) {
-        dataToSend.thumbnail = thumbnailFile
+      // Prepare data dengan validasi yang lebih ketat
+      const dataToSend: UpdateCourseRequest = {
+        id: course.id,
+        title: formState.data.title.trim(),
+        description: formState.data.description.trim(),
+        category: formState.data.category.trim(),
+        thumbnail: thumbnailFile || formState.data.thumbnail || '', // Gunakan existing thumbnail atau empty string
+        status: formState.data.status || 'DRAFT',
       }
-      const updatedCourse: UpdateCourseRequest = {
-        id: selectedCourse.id,
-        title: dataToSend.title as string,
-        description: dataToSend.description as string,
-        category: dataToSend.category as string,
-        thumbnail: dataToSend.thumbnail,
-        status: dataToSend.status as CourseStatus,
-      }
-      const success = await updateCourseWithValidation(selectedCourse.id, updatedCourse)
+
+      const success = await updateCourseWithValidation(course.id, dataToSend)
 
       if (success) {
         closeDialog()
+      } else {
       }
     } catch (error) {
-      console.error('Failed to update course:', error)
+      logger.error(
+        'EditCourseDialog',
+        'handleSubmit',
+        'Exception during course update',
+        error as Error,
+      )
     } finally {
       setFormSubmitting(false)
     }

@@ -52,10 +52,13 @@ export function CreateCourseDialog() {
   // Handle input change dengan proper error handling
   const handleInputChange = useCallback(
     (field: string, value: string) => {
-      clearError() // Clear previous errors when user starts typing
+      // Hanya clear error jika ada error sebelumnya
+      if (managementError || formState.errors.length > 0) {
+        clearError()
+      }
       updateFormData({ [field]: value })
     },
-    [updateFormData, clearError],
+    [updateFormData, clearError, managementError, formState.errors.length],
   )
 
   // Handle form submission dengan proper error handling
@@ -75,22 +78,25 @@ export function CreateCourseDialog() {
       setFormSubmitting(true)
 
       try {
+        // Prepare data dengan validasi yang lebih ketat
         const dataToSend: CreateCourseRequest = {
-          title: formState.data.title,
-          description: formState.data.description,
-          category: formState.data.category,
-          thumbnail: thumbnailFile || formState.data.thumbnail,
-          status: formState.data.status || 'DRAFT', // Default to DRAFT if not specified
+          title: formState.data.title.trim(),
+          description: formState.data.description.trim(),
+          category: formState.data.category.trim(),
+          thumbnail: thumbnailFile || formState.data.thumbnail || '',
+          status: formState.data.status || 'DRAFT',
         }
+
         const success = await createCourseWithValidation(dataToSend)
 
         if (success) {
-          window.alert('Kursus berhasil dibuat!')
           resetForm()
           closeDialog()
+        } else {
+          setFormErrors(['Gagal membuat kursus. Silakan coba lagi.'])
         }
-      } catch (error) {
-        console.error('Failed to create course:', error)
+      } catch {
+        setFormErrors(['Terjadi kesalahan saat membuat kursus. Silakan coba lagi.'])
       } finally {
         setFormSubmitting(false)
       }
@@ -129,8 +135,7 @@ export function CreateCourseDialog() {
 
           setThumbnailFile(file)
           updateFormData({ thumbnail: file })
-        } catch (error) {
-          console.error('File upload failed:', error)
+        } catch {
           setFormErrors(['File upload failed. Please try again.'])
         }
       }
