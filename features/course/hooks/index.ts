@@ -11,5 +11,4 @@ export { useCourse } from './useCourse'
 
 // High-level hooks
 export { useCourseManagement } from './useCourseManagement'
-export { useCourseSearch } from './useCourseSearch'
 export { useCourseDialog } from './useCourseDialog'

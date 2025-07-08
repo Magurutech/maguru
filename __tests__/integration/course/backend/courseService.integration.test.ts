@@ -137,17 +137,17 @@ describe('CourseService ↔ Database Integration', () => {
       const updatePromises = [
         courseService.updateCourse(
           courseId,
-          { title: 'Update 1', description: 'Update 1', category: 'Programming' },
+          { title: 'Update 1', description: 'Update 1', category: 'Programming', status: 'DRAFT' },
           'user-1',
         ),
         courseService.updateCourse(
           courseId,
-          { title: 'Update 2', description: 'Update 2', category: 'Programming' },
+          { title: 'Update 2', description: 'Update 2', category: 'Programming', status: 'DRAFT' },
           'user-1',
         ),
         courseService.updateCourse(
           courseId,
-          { title: 'Update 3', description: 'Update 3', category: 'Programming' },
+          { title: 'Update 3', description: 'Update 3', category: 'Programming', status: 'DRAFT' },
           'user-1',
         ),
       ]
@@ -262,7 +262,12 @@ describe('CourseService ↔ Database Integration', () => {
       const read = await courseService.getCourseById('course-1')
       const updated = await courseService.updateCourse(
         'course-1',
-        { title: 'Updated Title', description: 'Updated Description', category: 'Programming' },
+        {
+          title: 'Updated Title',
+          description: 'Updated Description',
+          category: 'Programming',
+          status: 'DRAFT',
+        },
         'user-1',
       )
 

@@ -47,6 +47,7 @@ const mockCourseData: CreateCourseRequest = {
   description: 'Test Description',
   category: 'Test Category',
   thumbnail: '/test-thumbnail.jpg',
+  status: CourseStatus.DRAFT,
 }
 
 const mockCourse = {
@@ -189,6 +190,131 @@ describe('CourseService', () => {
       expect(result.courses).toEqual(mockCourses)
     })
 
+    it('should filter by status correctly', async () => {
+      // Arrange
+      const mockCourses = [mockCourse]
+      const mockCount = 1
+      mockPrisma.course.findMany.mockResolvedValue(mockCourses)
+      mockPrisma.course.count.mockResolvedValue(mockCount)
+
+      // Act
+      const result = await courseService.getCourses(1, 10, undefined, {
+        statusFilter: 'PUBLISHED',
+      })
+
+      // Assert
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
+        where: { status: 'PUBLISHED' },
+        orderBy: { createdAt: 'desc' },
+        skip: 0,
+        take: 10,
+      })
+      expect(mockPrisma.course.count).toHaveBeenCalledWith({ where: { status: 'PUBLISHED' } })
+      expect(result.courses).toEqual(mockCourses)
+    })
+
+    it('should filter by category correctly', async () => {
+      // Arrange
+      const mockCourses = [mockCourse]
+      const mockCount = 1
+      mockPrisma.course.findMany.mockResolvedValue(mockCourses)
+      mockPrisma.course.count.mockResolvedValue(mockCount)
+
+      // Act
+      const result = await courseService.getCourses(1, 10, undefined, {
+        categoryFilter: 'Programming',
+      })
+
+      // Assert
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
+        where: { category: 'Programming' },
+        orderBy: { createdAt: 'desc' },
+        skip: 0,
+        take: 10,
+      })
+      expect(mockPrisma.course.count).toHaveBeenCalledWith({ where: { category: 'Programming' } })
+      expect(result.courses).toEqual(mockCourses)
+    })
+
+    it('should search by title and description correctly', async () => {
+      // Arrange
+      const mockCourses = [mockCourse]
+      const mockCount = 1
+      mockPrisma.course.findMany.mockResolvedValue(mockCourses)
+      mockPrisma.course.count.mockResolvedValue(mockCount)
+
+      // Act
+      const result = await courseService.getCourses(1, 10, undefined, {
+        searchQuery: 'react',
+      })
+
+      // Assert
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: 'react',
+                mode: 'insensitive',
+              },
+            },
+            {
+              description: {
+                contains: 'react',
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: 0,
+        take: 10,
+      })
+      expect(result.courses).toEqual(mockCourses)
+    })
+
+    it('should combine multiple filters correctly', async () => {
+      // Arrange
+      const mockCourses = [mockCourse]
+      const mockCount = 1
+      mockPrisma.course.findMany.mockResolvedValue(mockCourses)
+      mockPrisma.course.count.mockResolvedValue(mockCount)
+
+      // Act
+      const result = await courseService.getCourses(1, 10, 'creator-1', {
+        searchQuery: 'react',
+        statusFilter: 'PUBLISHED',
+        categoryFilter: 'Programming',
+      })
+
+      // Assert
+      expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
+        where: {
+          creatorId: 'creator-1',
+          status: 'PUBLISHED',
+          category: 'Programming',
+          OR: [
+            {
+              title: {
+                contains: 'react',
+                mode: 'insensitive',
+              },
+            },
+            {
+              description: {
+                contains: 'react',
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: 0,
+        take: 10,
+      })
+      expect(result.courses).toEqual(mockCourses)
+    })
+
     it('should handle invalid pagination parameters', async () => {
       // Arrange
       const mockCourses = [mockCourse]
@@ -196,15 +322,15 @@ describe('CourseService', () => {
       mockPrisma.course.findMany.mockResolvedValue(mockCourses)
       mockPrisma.course.count.mockResolvedValue(mockCount)
 
-      // Act - Test dengan page 0 (akan menjadi skip -50)
-      const result = await courseService.getCourses(0, 50)
+      // Act
+      const result = await courseService.getCourses(0, 100) // Invalid page and limit
 
       // Assert
       expect(mockPrisma.course.findMany).toHaveBeenCalledWith({
         where: {},
         orderBy: { createdAt: 'desc' },
-        skip: -50, // ✅ PERBAIKAN: (0-1) * 50 = -50
-        take: 50,
+        skip: -100, // ✅ PERBAIKAN: (0-1) * 100 = -100
+        take: 50, // Max limit is 50
       })
       expect(result.courses).toEqual(mockCourses)
     })
@@ -253,6 +379,7 @@ describe('CourseService', () => {
         description: 'Updated Description',
         category: 'Updated Category',
         thumbnail: '/updated-thumbnail.jpg',
+        status: CourseStatus.DRAFT,
       }
       const updatedCourse = { ...mockCourse, ...updateData }
 
@@ -268,7 +395,13 @@ describe('CourseService', () => {
       })
       expect(mockPrisma.course.update).toHaveBeenCalledWith({
         where: { id: 'course-1' },
-        data: updateData,
+        data: {
+          title: updateData.title,
+          description: updateData.description,
+          category: updateData.category,
+          thumbnail: updateData.thumbnail,
+          status: updateData.status,
+        },
       })
       expect(result).toEqual(updatedCourse)
     })
@@ -389,6 +522,63 @@ describe('CourseService', () => {
       })
       expect(result.courses).toEqual(mockCourses)
       expect(result.pagination.total).toBe(1)
+    })
+  })
+
+  // 🔥 TAMBAHAN: Test untuk utility functions
+  describe('Utility Functions', () => {
+    describe('getDefaultThumbnailUrl', () => {
+      it('should return default thumbnail URL', () => {
+        // Act
+        const result = courseService.getDefaultThumbnailUrl()
+
+        // Assert
+        expect(result).toBe('/images/default-course-thumbnail.svg')
+      })
+    })
+
+    describe('isDefaultThumbnail', () => {
+      it('should return true for null thumbnail', () => {
+        // Act
+        const result = courseService.isDefaultThumbnail(null)
+
+        // Assert
+        expect(result).toBe(true)
+      })
+
+      it('should return true for default thumbnail URL', () => {
+        // Act
+        const result = courseService.isDefaultThumbnail('/images/default-course-thumbnail.svg')
+
+        // Assert
+        expect(result).toBe(true)
+      })
+
+      it('should return false for custom thumbnail', () => {
+        // Act
+        const result = courseService.isDefaultThumbnail('/custom-thumbnail.jpg')
+
+        // Assert
+        expect(result).toBe(false)
+      })
+    })
+
+    describe('getDisplayThumbnail', () => {
+      it('should return custom thumbnail when provided', () => {
+        // Act
+        const result = courseService.getDisplayThumbnail('/custom-thumbnail.jpg')
+
+        // Assert
+        expect(result).toBe('/custom-thumbnail.jpg')
+      })
+
+      it('should return default thumbnail when null provided', () => {
+        // Act
+        const result = courseService.getDisplayThumbnail(null)
+
+        // Assert
+        expect(result).toBe('/images/default-course-thumbnail.svg')
+      })
     })
   })
 })

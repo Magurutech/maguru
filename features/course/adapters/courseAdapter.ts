@@ -6,7 +6,6 @@ import type {
   CourseResponse,
 } from '../types'
 import { DEFAULT_COURSE_THUMBNAIL, courseThumbnailUtils } from '../types'
-import { logger } from '@/services/logger'
 
 const API_BASE_URL = '/api/courses'
 
@@ -114,12 +113,6 @@ export class CourseAdapter {
     },
   ): Promise<CourseListResponse> {
     try {
-      logger.info('CourseAdapter', 'getCourses', 'Fetching courses with parameters', {
-        page,
-        limit,
-        searchParams,
-      })
-
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
@@ -300,7 +293,7 @@ export class CourseAdapter {
       }
       return data
     } catch (error) {
-      logger.error('CourseAdapter', 'createCourse', 'Error in createCourse', error as Error)
+      console.error('CourseAdapter', 'createCourse', 'Error in createCourse', error as Error)
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {
         return {
@@ -382,7 +375,7 @@ export class CourseAdapter {
 
       return data
     } catch (error) {
-      logger.error('CourseAdapter', 'updateCourse', 'Error in updateCourse', error as Error)
+      console.error('CourseAdapter', 'updateCourse', 'Error in updateCourse', error as Error)
 
       // Graceful fallback untuk network errors
       if (error instanceof Error && error.message.includes('timeout')) {

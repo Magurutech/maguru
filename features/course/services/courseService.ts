@@ -150,15 +150,6 @@ export class CourseService {
 
     const totalPages = Math.ceil(total / take)
 
-    // 🔥 TAMBAHAN: Logging untuk debugging
-    console.log('CourseService.getCourses - Query executed:', {
-      where,
-      filters,
-      coursesCount: courses.length,
-      total,
-      totalPages,
-    })
-
     return {
       courses,
       pagination: {
@@ -219,6 +210,7 @@ export class CourseService {
         description: data.description,
         thumbnail: thumbnailUrl, // Selalu string di database
         category: data.category,
+        status: data.status, // 🔥 TAMBAHAN: Update status juga
       },
     })
 

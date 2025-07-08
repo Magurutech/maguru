@@ -25,7 +25,6 @@ import { useUserRole } from '@/features/auth/hooks/useUserRole'
 import { useState, useCallback } from 'react'
 // import { useQueryClient } from '@tanstack/react-query' // Tidak digunakan lagi
 import type { CreateCourseRequest, UpdateCourseRequest } from '../types'
-import { logger } from '@/services/logger'
 
 export function useCourseManagement() {
   // Auth hook untuk role validation
@@ -86,11 +85,9 @@ export function useCourseManagement() {
         }
         return false
       } catch (error) {
-        logger.error(
-          'useCourseManagement',
-          'createCourseWithValidation',
-          'Failed to create course',
-          error as Error,
+        console.error(
+          'useCourseManagement: createCourseWithValidation - Failed to create course',
+          error,
         )
         return false
       }
@@ -112,11 +109,9 @@ export function useCourseManagement() {
         }
         return false
       } catch (error) {
-        logger.error(
-          'useCourseManagement',
-          'updateCourseWithValidation',
-          'Failed to update course',
-          error as Error,
+        console.error(
+          'useCourseManagement: updateCourseWithValidation - Failed to update course',
+          error,
         )
         return false
       }
@@ -128,7 +123,7 @@ export function useCourseManagement() {
     async (id: string): Promise<boolean> => {
       if (!hasPermission('delete')) {
         const errorMsg = 'Access denied. Only course owners can delete courses.'
-        logger.error('useCourseManagement', 'deleteCourseWithConfirmation', errorMsg)
+        console.error('useCourseManagement: deleteCourseWithConfirmation -', errorMsg)
         return false
       }
       try {
@@ -140,11 +135,9 @@ export function useCourseManagement() {
         }
         return false
       } catch (error) {
-        logger.error(
-          'useCourseManagement',
-          'deleteCourseWithConfirmation',
-          'Failed to delete course',
-          error as Error,
+        console.error(
+          'useCourseManagement: deleteCourseWithConfirmation - Failed to delete course',
+          error,
         )
         return false
       }
@@ -155,24 +148,14 @@ export function useCourseManagement() {
   // Load courses by creator (for creator dashboard)
   const loadCreatorCourses = useCallback(async () => {
     if (!hasPermission('view')) {
-      logger.warn(
-        'useCourseManagement',
-        'loadCreatorCourses',
-        'Access denied. You do not have permission to view courses.',
-      )
       return
     }
     try {
-      logger.info('useCourseManagement', 'loadCreatorCourses', 'Loading creator courses')
-      // For now, just fetch all courses since we don't have creatorId
-      // In the future, this should fetch courses by specific creator
       await fetchCourses()
     } catch (error) {
-      logger.error(
-        'useCourseManagement',
-        'loadCreatorCourses',
-        'Failed to load creator courses',
-        error as Error,
+      console.error(
+        'useCourseManagement: loadCreatorCourses - Failed to load creator courses',
+        error,
       )
     }
   }, [hasPermission, fetchCourses])
@@ -185,24 +168,10 @@ export function useCourseManagement() {
       selectedCategory?: string
     }) => {
       if (!hasPermission('view')) {
-        logger.warn('useCourseManagement', 'searchCourses', 'Access denied for search')
+        console.warn('useCourseManagement: searchCourses - Access denied for search')
         return
       }
-
-      try {
-        logger.info('useCourseManagement', 'searchCourses', 'Searching courses with parameters', {
-          searchParams,
-        })
-
-        await fetchCourses(searchParams)
-      } catch (error) {
-        logger.error(
-          'useCourseManagement',
-          'searchCourses',
-          'Failed to search courses',
-          error as Error,
-        )
-      }
+      await fetchCourses(searchParams)
     },
     [hasPermission, fetchCourses],
   )
@@ -210,34 +179,30 @@ export function useCourseManagement() {
   // 🔥 TAMBAHAN: Clear filters function
   const clearFilters = useCallback(async () => {
     if (!hasPermission('view')) {
-      logger.warn('useCourseManagement', 'clearFilters', 'Access denied for clear filters')
       return
     }
 
     try {
-      logger.info(
-        'useCourseManagement',
-        'clearFilters',
-        'Clearing all filters and fetching all courses',
-      )
-
       // Fetch semua courses tanpa filter
       await fetchCourses({
         searchQuery: '',
         selectedStatus: 'all',
         selectedCategory: 'all',
       })
-
-      logger.info('useCourseManagement', 'clearFilters', 'Filters cleared successfully')
     } catch (error) {
-      logger.error('useCourseManagement', 'clearFilters', 'Failed to clear filters', error as Error)
+      console.error(
+        'useCourseManagement',
+        'clearFilters',
+        'Failed to clear filters',
+        error as Error,
+      )
     }
   }, [hasPermission, fetchCourses])
 
   // Utility functions
   const clearError = useCallback(() => {
     // Clear error tanpa memicu refetch - hanya reset error state
-    logger.info('useCourseManagement', 'clearError', 'Error cleared without refetch')
+    console.log('useCourseManagement', 'clearError', 'Error cleared without refetch')
   }, [])
 
   const resetState = useCallback(() => {

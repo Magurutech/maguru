@@ -305,8 +305,9 @@ describe('useCourseDialog Hook', () => {
         uploadResult = await result.current.handleFileUpload(mockFile)
       })
 
-      expect(uploadResult).toMatch(/\/uploads\/\d+-test\.jpg/)
-      expect(result.current.formState.data.thumbnail).toMatch(/\/uploads\/\d+-test\.jpg/)
+      // Sekarang menggunakan base64, bukan file path
+      expect(uploadResult).toMatch(/^data:image\/jpeg;base64,/)
+      expect(result.current.formState.data.thumbnail).toMatch(/^data:image\/jpeg;base64,/)
     })
 
     test('should reject invalid file types', async () => {
@@ -507,4 +508,3 @@ describe('useCourseDialog Hook', () => {
     })
   })
 })
- 

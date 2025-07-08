@@ -31,7 +31,6 @@ import type {
   CourseListResponse,
   CourseResponse,
 } from '../types'
-import { logger } from '@/services/logger'
 
 // Hook return type
 interface UseCourseReturn {
@@ -170,12 +169,7 @@ export function useCourse(): UseCourseReturn {
     limit?: number
   }) => {
     try {
-      logger.info('useCourse', 'fetchCourses', 'Fetching courses with parameters', {
-        searchParams,
-        hasSearchQuery: !!searchParams?.searchQuery,
-        hasStatusFilter: !!searchParams?.selectedStatus,
-        hasCategoryFilter: !!searchParams?.selectedCategory,
-      })
+
 
       // Tambahkan debouncing untuk mencegah multiple rapid calls
       const controller = new AbortController()
@@ -187,9 +181,6 @@ export function useCourse(): UseCourseReturn {
         searchParams?.selectedStatus ||
         searchParams?.selectedCategory
       ) {
-        logger.info('useCourse', 'fetchCourses', 'Calling adapter with search parameters', {
-          searchParams,
-        })
 
         // Panggil adapter langsung dengan search parameters
         const response = await CourseAdapter.getCourses(
@@ -204,19 +195,18 @@ export function useCourse(): UseCourseReturn {
 
         // Update query cache dengan hasil search
         queryClient.setQueryData(['courses'], response)
-        logger.info('useCourse', 'fetchCourses', 'Search results updated in cache')
+      
       } else {
         // Jika tidak ada search parameters, gunakan refetch normal
         await refetchCourses()
       }
       clearTimeout(timeoutId)
 
-      logger.info('useCourse', 'fetchCourses', 'Courses fetched successfully')
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        logger.warn('useCourse', 'fetchCourses', 'Fetch courses aborted due to rapid calls')
+        console.warn('useCourse', 'fetchCourses', 'Fetch courses aborted due to rapid calls')
       } else {
-        logger.error('useCourse', 'fetchCourses', 'Failed to fetch courses', error as Error)
+        console.error('useCourse', 'fetchCourses', 'Failed to fetch courses', error as Error)
       }
     }
   }
@@ -252,12 +242,12 @@ export function useCourse(): UseCourseReturn {
         return response.data
       }
       // Log error jika response tidak success
-      logger.error('useCourse', 'createCourse', 'Create course failed', {
+      console.error('useCourse', 'createCourse', 'Create course failed', {
         error: response.error,
       })
       return null
     } catch (error) {
-      logger.error('useCourse', 'createCourse', 'Exception during course creation', error as Error)
+      console.error('useCourse', 'createCourse', 'Exception during course creation', error as Error)
       return null
     }
   }
@@ -278,7 +268,7 @@ export function useCourse(): UseCourseReturn {
 
       return null
     } catch (error) {
-      logger.error('useCourse', 'updateCourse', 'Exception during course update', error as Error)
+      console.error('useCourse', 'updateCourse', 'Exception during course update', error as Error)
       return null
     }
   }

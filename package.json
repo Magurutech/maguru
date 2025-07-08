@@ -38,6 +38,7 @@
     "@supabase/supabase-js": "^2.50.3",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
+    "@testing-library/react-hooks": "^8.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
@@ -47,6 +48,7 @@
     "prisma": "^6.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-test-renderer": "^19.1.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.25.67"
