@@ -9,6 +9,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -23,6 +24,22 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "services/unitIntegrationDetailed.js"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.integration.test.ts",
+    "**/*.integration.test.tsx",
+    "**/*.int.test.ts",
+    "**/*.int.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "__tests__/playwright/**/*",
+    "__tests__/__mocks__/**/*",
+    "playwright.config.ts"
+  ]
 }

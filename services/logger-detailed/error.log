@@ -1,0 +1,448 @@
+2025-07-06T15:47:53.015Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751816873015,
+    "memory": {
+      "rss": 1038118912,
+      "heapTotal": 201547776,
+      "heapUsed": 180216776,
+      "external": 36808805,
+      "arrayBuffers": 36464235
+    }
+  }
+}
+2025-07-06T15:55:48.674Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817348673,
+    "memory": {
+      "rss": 1099079680,
+      "heapTotal": 225787904,
+      "heapUsed": 207829984,
+      "external": 23539776,
+      "arrayBuffers": 22015911
+    }
+  }
+}
+2025-07-06T15:59:41.603Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751817581603,
+    "memory": {
+      "rss": 984080384,
+      "heapTotal": 147513344,
+      "heapUsed": 128556824,
+      "external": 36621302,
+      "arrayBuffers": 36284523
+    }
+  }
+}
+2025-07-06T16:20:51.148Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:920:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751818851148,
+    "memory": {
+      "rss": 936038400,
+      "heapTotal": 151707648,
+      "heapUsed": 129269256,
+      "external": 4381032,
+      "arrayBuffers": 459151
+    }
+  }
+}
+2025-07-06T16:22:31.783Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "new row violates row-level security policy",
+  "performance": {
+    "timestamp": 1751818951783,
+    "memory": {
+      "rss": 955670528,
+      "heapTotal": 135454720,
+      "heapUsed": 126354640,
+      "external": 22166655,
+      "arrayBuffers": 21833260
+    }
+  }
+}
+2025-07-06T16:50:59.566Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751820659565,
+    "memory": {
+      "rss": 978866176,
+      "heapTotal": 150073344,
+      "heapUsed": 133704696,
+      "external": 36772738,
+      "arrayBuffers": 36425509
+    }
+  }
+}
+2025-07-06T23:00:35.873Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "Error",
+  "message": "aborted",
+  "stack": "Error: aborted\n    at abortIncoming (node:_http_server:805:17)\n    at socketOnClose (node:_http_server:799:3)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:343:12)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
+  "performance": {
+    "timestamp": 1751842835873,
+    "memory": {
+      "rss": 1067044864,
+      "heapTotal": 144908288,
+      "heapUsed": 125600888,
+      "external": 8021134,
+      "arrayBuffers": 4091462
+    }
+  }
+}
+2025-07-06T23:01:09.203Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751842869203,
+    "memory": {
+      "rss": 1136726016,
+      "heapTotal": 145530880,
+      "heapUsed": 136265600,
+      "external": 29492388,
+      "arrayBuffers": 29151202
+    }
+  }
+}
+2025-07-06T23:04:14.795Z [ERROR] [API_Courses][POST] Thumbnail upload failed
+{
+  "statusCode": "403",
+  "error": "Unauthorized",
+  "message": "\"alg\" (Algorithm) Header Parameter value not allowed",
+  "performance": {
+    "timestamp": 1751843054795,
+    "memory": {
+      "rss": 1139490816,
+      "heapTotal": 148152320,
+      "heapUsed": 136267984,
+      "external": 25809281,
+      "arrayBuffers": 25468095
+    }
+  }
+}
+2025-07-07T12:42:58.178Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:968:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751892178178,
+    "memory": {
+      "rss": 1042427904,
+      "heapTotal": 146677760,
+      "heapUsed": 124507728,
+      "external": 4404370,
+      "arrayBuffers": 478439
+    }
+  }
+}
+2025-07-07T13:28:52.672Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751894932672,
+    "memory": {
+      "rss": 375283712,
+      "heapTotal": 221188096,
+      "heapUsed": 201748680,
+      "external": 7689281,
+      "arrayBuffers": 2581329
+    }
+  }
+}
+2025-07-07T23:41:27.654Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751931687654,
+    "memory": {
+      "rss": 1244663808,
+      "heapTotal": 154107904,
+      "heapUsed": 141357880,
+      "external": 5624203,
+      "arrayBuffers": 508460
+    }
+  }
+}
+2025-07-08T01:17:51.769Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:1024:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751937471769,
+    "memory": {
+      "rss": 639885312,
+      "heapTotal": 170135552,
+      "heapUsed": 163213208,
+      "external": 5498736,
+      "arrayBuffers": 386385
+    }
+  }
+}
+2025-07-08T01:26:46.800Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:1024:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751938006800,
+    "memory": {
+      "rss": 582279168,
+      "heapTotal": 174383104,
+      "heapUsed": 168371832,
+      "external": 7152251,
+      "arrayBuffers": 2043284
+    }
+  }
+}
+2025-07-08T09:00:24.301Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965224301,
+    "memory": {
+      "rss": 775589888,
+      "heapTotal": 213798912,
+      "heapUsed": 201747360,
+      "external": 5695918,
+      "arrayBuffers": 583567
+    }
+  }
+}
+2025-07-08T09:00:36.823Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965236823,
+    "memory": {
+      "rss": 779546624,
+      "heapTotal": 211439616,
+      "heapUsed": 201573448,
+      "external": 5663804,
+      "arrayBuffers": 554837
+    }
+  }
+}
+2025-07-08T09:00:46.313Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1033:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965246313,
+    "memory": {
+      "rss": 779862016,
+      "heapTotal": 212750336,
+      "heapUsed": 203426472,
+      "external": 5726566,
+      "arrayBuffers": 617599
+    }
+  }
+}
+2025-07-08T09:08:55.601Z [ERROR] [API_Courses][GET] Error fetching courses
+{
+  "name": "PrismaClientKnownRequestError",
+  "message": "\nInvalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany()` invocation in\nD:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:225:142\n\n  222 } : {};\n  223 // Get courses with pagination\n  224 const [courses, total] = await Promise.all([\n→ 225     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany(\nTimed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)",
+  "stack": "PrismaClientKnownRequestError: \nInvalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany()` invocation in\nD:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:225:142\n\n  222 } : {};\n  223 // Get courses with pagination\n  224 const [courses, total] = await Promise.all([\n→ 225     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$prisma$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__[\"prisma\"].course.findMany(\nTimed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)\n    at Zn.handleRequestError (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:7459)\n    at Zn.handleAndLogRequestError (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:6784)\n    at Zn.request (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:121:6491)\n    at async l (D:\\2-Maguru\\maguru\\node_modules\\@prisma\\client\\runtime\\library.js:130:9778)\n    at async Promise.all (index 0)\n    at async CourseService.getCourses (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:224:34)\n    at async GET (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:973:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965735601,
+    "memory": {
+      "rss": 1029984256,
+      "heapTotal": 205271040,
+      "heapUsed": 173085056,
+      "external": 4827019,
+      "arrayBuffers": 901088
+    }
+  }
+}
+2025-07-08T09:09:24.812Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751965764812,
+    "memory": {
+      "rss": 1092403200,
+      "heapTotal": 184659968,
+      "heapUsed": 177400584,
+      "external": 5265430,
+      "arrayBuffers": 1335092
+    }
+  }
+}
+2025-07-08T09:42:58.121Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751967778120,
+    "memory": {
+      "rss": 752295936,
+      "heapTotal": 202268672,
+      "heapUsed": 194821288,
+      "external": 5597106,
+      "arrayBuffers": 488139
+    }
+  }
+}
+2025-07-08T12:21:51.705Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1031:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751977311705,
+    "memory": {
+      "rss": 599621632,
+      "heapTotal": 287150080,
+      "heapUsed": 276210416,
+      "external": 9186844,
+      "arrayBuffers": 4054264
+    }
+  }
+}
+2025-07-09T08:19:46.778Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752049186778,
+    "memory": {
+      "rss": 1268576256,
+      "heapTotal": 216064000,
+      "heapUsed": 189472800,
+      "external": 8418948,
+      "arrayBuffers": 4492640
+    }
+  }
+}
+2025-07-09T09:16:17.255Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752052577255,
+    "memory": {
+      "rss": 1312997376,
+      "heapTotal": 285405184,
+      "heapUsed": 258803648,
+      "external": 25104588,
+      "arrayBuffers": 21178280
+    }
+  }
+}
+2025-07-09T12:23:40.410Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752063820410,
+    "memory": {
+      "rss": 1201426432,
+      "heapTotal": 196001792,
+      "heapUsed": 160388072,
+      "external": 5379991,
+      "arrayBuffers": 1453703
+    }
+  }
+}
+2025-07-09T12:26:42.794Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752064002794,
+    "memory": {
+      "rss": 1188081664,
+      "heapTotal": 196640768,
+      "heapUsed": 164938960,
+      "external": 7302590,
+      "arrayBuffers": 3376302
+    }
+  }
+}
+2025-07-09T12:31:42.433Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "Error",
+  "message": "aborted",
+  "stack": "Error: aborted\n    at abortIncoming (node:_http_server:805:17)\n    at socketOnClose (node:_http_server:799:3)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:343:12)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
+  "performance": {
+    "timestamp": 1752064302433,
+    "memory": {
+      "rss": 1122799616,
+      "heapTotal": 214872064,
+      "heapUsed": 183158616,
+      "external": 8135033,
+      "arrayBuffers": 4208725
+    }
+  }
+}
+2025-07-09T14:19:24.759Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Failed to parse body as FormData.",
+  "stack": "TypeError: Failed to parse body as FormData.\n    at node:internal/deps/undici/undici:5426:27\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at consumeBody (node:internal/deps/undici/undici:5476:9)\n    at NextRequest.formData (node:internal/deps/undici/undici:5419:18)\n    at PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1060:38)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752070764759,
+    "memory": {
+      "rss": 1267982336,
+      "heapTotal": 219066368,
+      "heapUsed": 184886032,
+      "external": 7068719,
+      "arrayBuffers": 3142431
+    }
+  }
+}
+2025-07-09T15:08:20.431Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Failed to parse body as FormData.",
+  "stack": "TypeError: Failed to parse body as FormData.\n    at node:internal/deps/undici/undici:5426:27\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at consumeBody (node:internal/deps/undici/undici:5476:9)\n    at NextRequest.formData (node:internal/deps/undici/undici:5419:18)\n    at PUT (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1060:38)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752073700431,
+    "memory": {
+      "rss": 1245548544,
+      "heapTotal": 222351360,
+      "heapUsed": 186987024,
+      "external": 6689890,
+      "arrayBuffers": 2763582
+    }
+  }
+}
