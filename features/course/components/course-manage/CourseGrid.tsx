@@ -84,7 +84,7 @@ export function CourseGrid() {
 
   if (filteredCourses.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div className="text-center py-12" data-testid="empty-state">
         <div className="text-6xl mb-4">🔍</div>
         <h3 className="text-xl font-semibold text-beige-900 mb-2">
           {hasActiveFilters ? 'Tidak ada kursus ditemukan' : 'Belum ada kursus'}
@@ -99,7 +99,7 @@ export function CourseGrid() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="course-list">
       {/* Selection Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -110,6 +110,7 @@ export function CourseGrid() {
             className={`btn-secondary transition-all duration-300 ${
               isSelectMode ? 'bg-secondary-100 border-secondary-400' : ''
             }`}
+            data-testid="select-mode-toggle"
           >
             {isSelectMode ? (
               <CheckSquare className="h-4 w-4 mr-2" />
@@ -126,6 +127,7 @@ export function CourseGrid() {
                 size="sm"
                 onClick={handleSelectAll}
                 className="btn-secondary"
+                data-testid="select-all-button"
               >
                 {selectedCourses.size === filteredCourses.length ? (
                   <>
@@ -146,6 +148,7 @@ export function CourseGrid() {
                   size="sm"
                   onClick={handleDeleteSelected}
                   className="bg-red-100 border-red-300 text-red-600 hover:bg-red-200"
+                  data-testid="delete-selected-button"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Hapus {selectedCourses.size} Kursus
@@ -156,7 +159,7 @@ export function CourseGrid() {
         </div>
 
         {isSelectMode && (
-          <span className="text-sm text-beige-700">
+          <span className="text-sm text-beige-700" data-testid="selection-count">
             {selectedCourses.size} dari {filteredCourses.length} kursus dipilih
           </span>
         )}
@@ -177,6 +180,7 @@ export function CourseGrid() {
                       ? 'bg-secondary-500 border-secondary-500 text-white'
                       : 'bg-white/80 border-beige-300 hover:border-secondary-400'
                   }`}
+                  data-testid={`course-select-${course.id}`}
                 >
                   {selectedCourses.has(course.id) ? (
                     <CheckSquare className="h-4 w-4" />

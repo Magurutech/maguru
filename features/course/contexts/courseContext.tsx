@@ -329,30 +329,30 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
   // Context value dengan memoization untuk mencegah re-render berlebihan
   const contextValue: CourseContextValue = useMemo(
     () => ({
-      // State
-      ...state,
+    // State
+    ...state,
 
-      // Dialog actions
-      openCreateDialog,
-      openEditDialog,
-      openDeleteDialog,
-      closeDialog,
+    // Dialog actions
+    openCreateDialog,
+    openEditDialog,
+    openDeleteDialog,
+    closeDialog,
 
-      // Form actions
-      updateFormData,
-      setFormErrors,
-      setFormValid,
-      setFormSubmitting,
-      resetForm,
+    // Form actions
+    updateFormData,
+    setFormErrors,
+    setFormValid,
+    setFormSubmitting,
+    resetForm,
 
-      // Search/filter actions
-      setSearchQuery,
-      setSelectedStatus,
-      clearFilters,
+    // Search/filter actions
+    setSearchQuery,
+    setSelectedStatus,
+    clearFilters,
 
-      // Utility functions
-      getFormErrors,
-      hasFormChanges,
+    // Utility functions
+    getFormErrors,
+    hasFormChanges,
       isSelectedCourseValid,
     }),
     [

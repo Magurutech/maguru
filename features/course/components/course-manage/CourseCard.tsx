@@ -82,6 +82,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
       style={{ animationDelay: `${index * 0.1}s` }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-testid="course-card"
     >
       <div className="relative">
         <Image
@@ -117,7 +118,10 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
       <CardContent className="px-4 flex-grow mx-auto w-full flex flex-col h-full justify-between">
         {/* Error Display */}
         {managementError && (
-          <div className="mb-3 bg-red-50 border border-red-200 rounded-lg p-2">
+          <div
+            className="mb-3 bg-red-50 border border-red-200 rounded-lg p-2"
+            data-testid="error-message"
+          >
             <div className="flex items-center gap-1 text-red-800 text-xs">
               <AlertCircle className="h-3 w-3" />
               <span>Error: {managementError}</span>
@@ -130,12 +134,15 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             className={`font-bold text-lg text-beige-900 line-clamp-2 transition-colors duration-300 ${
               isHovered ? 'text-gradient-primary' : ''
             }`}
+            data-testid="course-title"
           >
             {course.title}
           </h3>
         </div>
 
-        <p className="text-beige-700 text-sm mb-4 line-clamp-2">{course.description}</p>
+        <p className="text-beige-700 text-sm mb-4 line-clamp-2" data-testid="course-description">
+          {course.description}
+        </p>
 
         <div className="grid grid-cols-2 gap-4 mb-4 text-sm">
           <div className="flex items-center gap-2 text-beige-700">
@@ -166,6 +173,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             onClick={handleEdit}
             disabled={isActionLoading}
             className="flex-1 btn-secondary hover-glow transition-all duration-300"
+            data-testid={`edit-course-button-${course.id}`}
           >
             <Edit className="h-4 w-4 mr-1" />
             {isActionLoading ? 'Loading...' : 'Edit'}
@@ -177,6 +185,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             onClick={handleDelete}
             disabled={isActionLoading}
             className="flex-1 bg-red-50 border-red-300 text-red-600 hover:bg-red-100 hover:border-red-400 neu-button transition-all duration-300"
+            data-testid={`delete-course-button-${course.id}`}
           >
             <Trash2 className="h-4 w-4 mr-1" />
             {isActionLoading ? 'Loading...' : 'Hapus'}

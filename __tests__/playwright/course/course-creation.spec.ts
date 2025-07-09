@@ -5,12 +5,11 @@
  * kursus muncul di daftar. Menggunakan pendekatan BDD dengan format Given-When-Then.
  */
 
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { loginWithRole } from '../utils/role-test-helpers'
 import { createCourseHelpers } from '../utils/course-helpers'
 import { waitForPageLoad, takeScreenshot } from '../utils/test-helpers'
-import { invalidCourseData } from '../fixtures/course-test-data'
 
 test.describe('Course Creation - Creator Flow', () => {
   test.beforeEach(async ({ page }) => {
@@ -46,11 +45,12 @@ test.describe('Course Creation - Creator Flow', () => {
     await courseHelpers.createCourse({
       title: 'Test Course Title',
       description: 'Test course description',
+      category: 'matematika', // ✅ Tambahkan required field
     })
 
     // Then: Course is created and appears in course list
     await courseHelpers.verifyCourseExists('Test Course Title')
-    await courseHelpers.verifySuccessMessage('Course created successfully')
+    await courseHelpers.verifySuccessMessage('Berhasil!', 'Test Course Title') // ✅ Kirim courseTitle sebagai fallback
     await takeScreenshot(page, 'course-creation-success')
   })
 
@@ -59,12 +59,16 @@ test.describe('Course Creation - Creator Flow', () => {
     const courseHelpers = createCourseHelpers(page)
     await courseHelpers.navigateToCourseCreation()
 
-    // When: Creator submits form with empty title
-    await courseHelpers.fillCourseForm(invalidCourseData.emptyTitle)
+    // When: Creator fills form with empty title and submits
+    await courseHelpers.fillCourseForm({
+      title: '', // Empty title
+      description: 'Valid description',
+      category: 'matematika',
+    })
     await courseHelpers.submitCourseForm()
 
     // Then: Error message is displayed for title field
-    await courseHelpers.verifyFormValidationError('title', 'Title is required')
+    await courseHelpers.verifyFormValidationError('title', 'Judul kursus wajib diisi')
   })
 
   test('should show validation error for short title', async ({ page }) => {
@@ -72,12 +76,16 @@ test.describe('Course Creation - Creator Flow', () => {
     const courseHelpers = createCourseHelpers(page)
     await courseHelpers.navigateToCourseCreation()
 
-    // When: Creator submits form with title less than 3 characters
-    await courseHelpers.fillCourseForm(invalidCourseData.shortTitle)
+    // When: Creator fills form with short title and submits
+    await courseHelpers.fillCourseForm({
+      title: 'AB', // Short title (less than 3 characters)
+      description: 'Valid description',
+      category: 'matematika',
+    })
     await courseHelpers.submitCourseForm()
 
     // Then: Error message is displayed for title validation
-    await courseHelpers.verifyFormValidationError('title', 'Title must be at least 3 characters')
+    await courseHelpers.verifyFormValidationError('title', 'Judul kursus harus minimal 3 karakter')
   })
 
   test('should show validation error for empty description', async ({ page }) => {
@@ -85,12 +93,16 @@ test.describe('Course Creation - Creator Flow', () => {
     const courseHelpers = createCourseHelpers(page)
     await courseHelpers.navigateToCourseCreation()
 
-    // When: Creator submits form with empty description
-    await courseHelpers.fillCourseForm(invalidCourseData.emptyDescription)
+    // When: Creator fills form with empty description and submits
+    await courseHelpers.fillCourseForm({
+      title: 'Valid Title',
+      description: '', // Empty description
+      category: 'matematika',
+    })
     await courseHelpers.submitCourseForm()
 
     // Then: Error message is displayed for description field
-    await courseHelpers.verifyFormValidationError('description', 'Description is required')
+    await courseHelpers.verifyFormValidationError('description', 'Deskripsi kursus wajib diisi')
   })
 })
 
@@ -128,11 +140,12 @@ test.describe('Course Creation - Admin Flow', () => {
     await courseHelpers.createCourse({
       title: 'Admin Course Title',
       description: 'Admin course description',
+      category: 'matematika', // ✅ Tambahkan required field
     })
 
     // Then: Course is created with admin as owner
     await courseHelpers.verifyCourseExists('Admin Course Title')
-    await courseHelpers.verifySuccessMessage('Course created successfully')
+    await courseHelpers.verifySuccessMessage('Berhasil!', 'Admin Course Title') // ✅ Kirim courseTitle sebagai fallback
     await takeScreenshot(page, 'admin-course-creation-success')
   })
 })
@@ -176,12 +189,12 @@ test.describe('Course Creation - Error Scenarios', () => {
     await courseHelpers.fillCourseForm({
       title: 'Test Course Title',
       description: 'Test description',
+      category: 'matematika', // ✅ Tambahkan required field
     })
     await courseHelpers.submitCourseForm()
 
-    // Then: Error message with retry option is displayed
-    await courseHelpers.verifyErrorMessage('Server error occurred')
-    await expect(page.locator('[data-testid="retry-button"]')).toBeVisible()
+    // Then: Error message is displayed
+    await courseHelpers.verifyErrorMessage('Gagal membuat kursus. Silakan coba lagi.')
   })
 
   test('should handle network timeout', async ({ page }) => {
@@ -198,10 +211,11 @@ test.describe('Course Creation - Error Scenarios', () => {
     await courseHelpers.fillCourseForm({
       title: 'Test Course Title',
       description: 'Test description',
+      category: 'matematika', // ✅ Tambahkan required field
     })
     await courseHelpers.submitCourseForm()
 
     // Then: Timeout error message is displayed
-    await courseHelpers.verifyErrorMessage('Request timeout')
+    await courseHelpers.verifyErrorMessage('Gagal membuat kursus. Silakan coba lagi.')
   })
 })

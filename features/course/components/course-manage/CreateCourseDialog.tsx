@@ -28,6 +28,7 @@ import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
 import { CreateCourseFormData, CreateCourseRequest } from '../../types'
 import Image from 'next/image'
+import { toast } from 'sonner'
 
 export function CreateCourseDialog() {
   // Component state untuk UI interactions ONLY
@@ -90,6 +91,12 @@ export function CreateCourseDialog() {
         const success = await createCourseWithValidation(dataToSend)
 
         if (success) {
+          // ✅ Tampilkan toast success
+          toast.success('Berhasil!', {
+            description: `Kursus "${formState.data.title}" berhasil dibuat dan akan segera muncul di daftar kursus Anda.`,
+            duration: 5000,
+            id: 'success-message',
+          })
           resetForm()
           closeDialog()
         } else {
@@ -149,12 +156,12 @@ export function CreateCourseDialog() {
     resetForm()
   }, [resetForm])
 
-  // Check if form is valid
-  const isFormValid = formState.data.title && formState.data.description && formState.data.category
-
   return (
     <Dialog open={activeDialog === 'create'} onOpenChange={(open) => !open && closeDialog()}>
-      <DialogContent className="max-w-2xl bg-ancient-fantasy border-secondary-300 glass-panel">
+      <DialogContent
+        className="max-w-2xl bg-ancient-fantasy border-secondary-300 glass-panel"
+        data-testid="course-creation-form"
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-beige-900 flex items-center gap-2 font-serif">
             ✨ Buat Kursus Baru
@@ -165,9 +172,15 @@ export function CreateCourseDialog() {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Success Message */}
+          {/* Success message dihapus, diganti dengan toast */}
+
           {/* Error Display */}
           {(managementError || formState.errors.length > 0) && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <div
+              className="bg-red-50 border border-red-200 rounded-lg p-4"
+              data-testid="error-message"
+            >
               <div className="flex items-center gap-2 text-red-800">
                 <AlertCircle className="h-4 w-4" />
                 <span className="font-medium">Terjadi kesalahan:</span>
@@ -188,13 +201,24 @@ export function CreateCourseDialog() {
             </Label>
             <Input
               id="title"
+              data-testid="course-title-input"
               value={formState.data.title || ''}
               onChange={(e) => handleInputChange('title', e.target.value)}
               placeholder="Contoh: Petualangan Matematika Nusantara"
-              required
               disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200"
             />
+            {/* Custom error message for title */}
+            {formState.errors.includes('Judul kursus wajib diisi') && (
+              <div className="text-red-700 text-xs mt-1" data-testid="title-error">
+                Judul kursus wajib diisi
+              </div>
+            )}
+            {formState.errors.includes('Judul kursus harus minimal 3 karakter') && (
+              <div className="text-red-700 text-xs mt-1" data-testid="title-error">
+                Judul kursus harus minimal 3 karakter
+              </div>
+            )}
           </div>
 
           {/* Course Description */}
@@ -204,14 +228,20 @@ export function CreateCourseDialog() {
             </Label>
             <Textarea
               id="description"
+              data-testid="course-description-input"
               value={formState.data.description || ''}
               onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Jelaskan tentang kursus Anda dan apa yang akan dipelajari siswa..."
-              required
               rows={4}
               disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200 resize-none"
             />
+            {/* Custom error message for description */}
+            {formState.errors.includes('Deskripsi kursus wajib diisi') && (
+              <div className="text-red-700 text-xs mt-1" data-testid="description-error">
+                Deskripsi kursus wajib diisi
+              </div>
+            )}
           </div>
 
           {/* Category and Status */}
@@ -225,16 +255,31 @@ export function CreateCourseDialog() {
                 onValueChange={(value) => handleInputChange('category', value)}
                 disabled={formState.isSubmitting}
               >
-                <SelectTrigger className="neu-input border-beige-100 focus:border-secondary-400 focus:ring-secondary-200">
+                <SelectTrigger
+                  className="neu-input border-beige-100 focus:border-secondary-400 focus:ring-secondary-200"
+                  data-testid="category-select"
+                >
                   <SelectValue placeholder="Pilih kategori" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="matematika">📊 Matematika</SelectItem>
-                  <SelectItem value="bahasa">📚 Bahasa Indonesia</SelectItem>
-                  <SelectItem value="sains">🔬 Sains</SelectItem>
-                  <SelectItem value="sejarah">🏛️ Sejarah</SelectItem>
-                  <SelectItem value="seni">🎨 Seni & Budaya</SelectItem>
-                  <SelectItem value="teknologi">💻 Teknologi</SelectItem>
+                  <SelectItem value="matematika" data-testid="category-matematika">
+                    📊 Matematika
+                  </SelectItem>
+                  <SelectItem value="bahasa" data-testid="category-bahasa">
+                    📚 Bahasa Indonesia
+                  </SelectItem>
+                  <SelectItem value="sains" data-testid="category-sains">
+                    🔬 Sains
+                  </SelectItem>
+                  <SelectItem value="sejarah" data-testid="category-sejarah">
+                    🏛️ Sejarah
+                  </SelectItem>
+                  <SelectItem value="seni" data-testid="category-seni">
+                    🎨 Seni & Budaya
+                  </SelectItem>
+                  <SelectItem value="teknologi" data-testid="category-teknologi">
+                    💻 Teknologi
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -248,13 +293,22 @@ export function CreateCourseDialog() {
                 onValueChange={(value) => handleInputChange('status', value)}
                 disabled={formState.isSubmitting}
               >
-                <SelectTrigger className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200">
+                <SelectTrigger
+                  className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200"
+                  data-testid="status-select"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DRAFT">📝 Draft</SelectItem>
-                  <SelectItem value="PUBLISHED">✅ Dipublikasi</SelectItem>
-                  <SelectItem value="ARCHIVED">📦 Diarsipkan</SelectItem>
+                  <SelectItem value="DRAFT" data-testid="status-draft">
+                    📝 Draft
+                  </SelectItem>
+                  <SelectItem value="PUBLISHED" data-testid="status-published">
+                    ✅ Dipublikasi
+                  </SelectItem>
+                  <SelectItem value="ARCHIVED" data-testid="status-archived">
+                    📦 Diarsipkan
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -341,7 +395,8 @@ export function CreateCourseDialog() {
             </Button>
             <Button
               type="submit"
-              disabled={!isFormValid || formState.isSubmitting}
+              data-testid="submit-course-button"
+              disabled={formState.isSubmitting}
               className="btn-primary magical-glow"
             >
               {formState.isSubmitting ? (
@@ -366,6 +421,8 @@ function validateCourseData(data: CreateCourseFormData): { isValid: boolean; err
 
   if (!data.title?.trim()) {
     errors.push('Judul kursus wajib diisi')
+  } else if (data.title.trim().length < 3) {
+    errors.push('Judul kursus harus minimal 3 karakter')
   }
 
   if (!data.description?.trim()) {

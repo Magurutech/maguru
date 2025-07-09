@@ -58,7 +58,6 @@ export const courseTestData: Course[] = [
     category: 'programming',
   },
   {
-
     id: '3',
     title: 'Advanced React Patterns',
     description: 'Advanced patterns and best practices in React development',
@@ -159,18 +158,28 @@ export const invalidCourseData = {
   emptyTitle: {
     title: '',
     description: 'Valid description',
+    category: 'matematika', // ✅ Tambahkan required field
   },
   shortTitle: {
     title: 'AB',
     description: 'Valid description',
+    category: 'matematika', // ✅ Tambahkan required field
   },
   emptyDescription: {
     title: 'Valid Title',
     description: '',
+    category: 'matematika', // ✅ Tambahkan required field
   },
   longTitle: {
     title: 'A'.repeat(101), // Assuming max 100 characters
     description: 'Valid description',
+    category: 'matematika', // ✅ Tambahkan required field
+  },
+  // ✅ Tambahkan valid test data
+  validCourse: {
+    title: 'Test Course Title',
+    description: 'Test course description',
+    category: 'matematika',
   },
 }
 

@@ -232,7 +232,7 @@ describe('useCourseManagement Hook', () => {
 
       await act(async () => {
         await result.current.loadCreatorCourses()
-      })
+    })
 
       // Hook sekarang masih memanggil fetchCourses meskipun permission ditolak
       // Ini adalah behavior yang diharapkan karena fetchCourses akan menangani permission di level adapter
@@ -631,3 +631,4 @@ describe('useCourseManagement Hook', () => {
     })
   })
 })
+ 

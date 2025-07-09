@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { UserRoleProvider } from '../features/auth'
 import { Providers } from '../lib/providers'
 import '../styles/globals.css'
+import { Toaster } from 'sonner'
 
 // Load Google Fonts via next/font/google
 import { Poppins, Playfair_Display, Fira_Code } from 'next/font/google'
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           >
             {children}
+            <Toaster position="top-center" richColors closeButton />
           </UserRoleProvider>
         </Providers>
       </body>

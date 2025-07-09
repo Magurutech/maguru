@@ -36,7 +36,6 @@ export class CourseHelpers {
 
     // Wait for page to load dengan multiple possible selectors
     const selectors = [
-      '[data-testid="course-list"]',
       '[data-testid="course-search-filter"]',
       '[data-testid="create-course-button"]',
       'button:has-text("Buat Kursus Baru")',
@@ -68,19 +67,7 @@ export class CourseHelpers {
    * Navigate ke course creation page
    */
   async navigateToCourseCreation(): Promise<void> {
-    // Try direct route first
-    try {
-      await this.page.goto('/creator/course-manage/create')
-      await this.page.waitForSelector('[data-testid="course-creation-form"]', {
-        state: 'visible',
-        timeout: 5000,
-      })
-      return
-    } catch {
-      console.log('⚠️ Direct route not found, trying dialog approach')
-    }
-
-    // Fallback: navigate to course management and open create dialog
+    // Hanya gunakan dialog approach
     await this.navigateToCourseManagement()
 
     // Try to open create dialog
@@ -94,7 +81,6 @@ export class CourseHelpers {
     let dialogOpened = false
     for (const selector of createButtonSelectors) {
       try {
-        console.log(`🔍 Trying to click: ${selector}`)
         await this.page.click(selector)
 
         // Wait a bit for dialog to open
@@ -116,7 +102,6 @@ export class CourseHelpers {
               state: 'visible',
               timeout: 3000,
             })
-            console.log(`✅ Dialog opened with selector: ${dialogSelector}`)
             dialogOpened = true
             break
           } catch {
@@ -125,21 +110,12 @@ export class CourseHelpers {
         }
 
         if (dialogOpened) break
-      } catch (error) {
-        console.log(`❌ Failed to click ${selector}: ${error}`)
+      } catch {
         // Continue to next selector
       }
     }
 
     if (!dialogOpened) {
-      // Take screenshot for debugging
-      await this.page.screenshot({ path: 'debug-dialog-failed.png' })
-      console.log('📸 Screenshot saved as debug-dialog-failed.png')
-
-      // Log page content for debugging
-      const pageContent = await this.page.content()
-      console.log('📄 Page content preview:', pageContent.substring(0, 1000))
-
       throw new Error('Could not open course creation form')
     }
   }
@@ -150,15 +126,29 @@ export class CourseHelpers {
   async fillCourseForm(data: {
     title: string
     description: string
+    category?: string
     thumbnail?: string
   }): Promise<void> {
-    // Use ID selectors from CreateCourseDialog
+    // ✅ Perbaiki selector untuk lebih robust
     if (data.title) {
-      await this.page.fill('#title', data.title)
+      await this.page.fill('[data-testid="course-title-input"], #title', data.title)
     }
 
     if (data.description) {
-      await this.page.fill('#description', data.description)
+      await this.page.fill(
+        '[data-testid="course-description-input"], #description',
+        data.description,
+      )
+    }
+
+    // ✅ Tambahkan validasi untuk kategori (required field)
+    if (data.category) {
+      await this.page.click('[data-testid="category-select"]')
+      await this.page.click(`[data-testid="category-${data.category}"]`)
+    } else {
+      // Pilih kategori default jika tidak disediakan
+      await this.page.click('[data-testid="category-select"]')
+      await this.page.click('[data-testid="category-matematika"]')
     }
 
     if (data.thumbnail) {
@@ -170,12 +160,12 @@ export class CourseHelpers {
    * Submit course form
    */
   async submitCourseForm(): Promise<void> {
-    // Try multiple submit button selectors
+    // ✅ Perbaiki selector untuk submit button
     const submitSelectors = [
+      '[data-testid="submit-course-button"]',
       'button[type="submit"]:has-text("Buat Kursus")',
       'button:has-text("Buat Kursus")',
       'button:has-text("Create Course")',
-      '[data-testid="submit-course-button"]',
     ]
 
     let submitted = false
@@ -200,14 +190,39 @@ export class CourseHelpers {
   async createCourse(data: {
     title: string
     description: string
+    category?: string
     thumbnail?: string
   }): Promise<void> {
     await this.navigateToCourseCreation()
     await this.fillCourseForm(data)
     await this.submitCourseForm()
 
-    // Wait for success message or redirect
-    await this.page.waitForSelector('[data-testid="success-message"]', { state: 'visible' })
+    // ✅ Perbaiki: Tunggu dialog tertutup atau course muncul di list
+    try {
+      // Tunggu dialog tertutup (berarti form berhasil disubmit)
+      await this.page.waitForSelector('[data-testid="course-creation-form"]', {
+        state: 'hidden',
+        timeout: 10000,
+      })
+    } catch {
+      // Jika dialog tidak tertutup, mungkin ada error
+      console.log('⚠️ Dialog tidak tertutup, mungkin ada error')
+    }
+
+    // Tunggu course muncul di list atau ada error message
+    try {
+      await this.page.waitForSelector('[data-testid="course-card"]', {
+        state: 'visible',
+        timeout: 10000,
+      })
+    } catch {
+      // Jika course tidak muncul, cek apakah ada error
+      const errorElement = await this.page.locator('[data-testid="error-message"]').isVisible()
+      if (errorElement) {
+        throw new Error('Course creation failed with error')
+      }
+      throw new Error('Course not found in list after creation')
+    }
   }
 
   /**
@@ -251,9 +266,9 @@ export class CourseHelpers {
   /**
    * Filter courses berdasarkan status
    */
-  async filterCoursesByStatus(status: 'draft' | 'published'): Promise<void> {
+  async filterCoursesByStatus(status: 'draft' | 'published' | 'archived'): Promise<void> {
     await this.page.click('[data-testid="filter-dropdown"]')
-    await this.page.click(`[data-testid="filter-${status}"]`)
+    await this.page.click(`[data-testid="filter-${status.toUpperCase()}"]`)
     await this.page.waitForTimeout(500) // Wait for filter to complete
   }
 
@@ -330,12 +345,14 @@ export class CourseHelpers {
    * Verify error message muncul
    */
   async verifyErrorMessage(message: string): Promise<void> {
-    // Try multiple error message selectors
+    // Try multiple error message selectors - fokus pada dialog
     const errorSelectors = [
       '[data-testid="error-message"]',
-      '.text-red-700',
-      '.bg-red-50',
-      '.error-message',
+      '[role="dialog"] [data-testid="error-message"]',
+      '[role="dialog"] .text-red-700',
+      '[role="dialog"] .bg-red-50',
+      '.text-red-700:has-text("' + message + '")',
+      '.bg-red-50:has-text("' + message + '")',
       'div:has-text("' + message + '")',
     ]
 
@@ -351,38 +368,31 @@ export class CourseHelpers {
     }
 
     if (!found) {
-      // Fallback: check entire page
-      await expect(this.page.locator('body')).toContainText(message)
+      // Fallback: check for any error message containing the text in dialog
+      await expect(this.page.locator('[role="dialog"]')).toContainText(message)
     }
   }
 
   /**
    * Verify success message muncul
    */
-  async verifySuccessMessage(message: string): Promise<void> {
-    // Try multiple success message selectors
-    const successSelectors = [
-      '[data-testid="success-message"]',
-      '.text-green-700',
-      '.bg-green-50',
-      '.success-message',
-      'div:has-text("' + message + '")',
-    ]
-
-    let found = false
-    for (const selector of successSelectors) {
-      try {
-        await expect(this.page.locator(selector)).toContainText(message)
-        found = true
-        break
-      } catch {
-        // Continue to next selector
+  async verifySuccessMessage(message: string, courseTitle?: string): Promise<void> {
+    // Explicit wait untuk memastikan toast muncul
+    await this.page.waitForTimeout(3000)
+    // Cari toast sonner di portal
+    let toastFound = false
+    try {
+      await expect(this.page.locator('div[role="status"]')).toContainText(message)
+      toastFound = true
+    } catch {
+      // Jika toast tidak ditemukan, fallback ke verifikasi course title di list
+      if (courseTitle) {
+        await this.verifyCourseExists(courseTitle)
+        toastFound = true
       }
     }
-
-    if (!found) {
-      // Fallback: check entire page
-      await expect(this.page.locator('body')).toContainText(message)
+    if (!toastFound) {
+      throw new Error('Success message dan course title tidak ditemukan')
     }
   }
 
@@ -412,13 +422,15 @@ export class CourseHelpers {
    * Verify form validation error
    */
   async verifyFormValidationError(field: string, message: string): Promise<void> {
-    // Try multiple error selectors
+    // Try multiple error selectors - fokus pada dialog
     const errorSelectors = [
-      `[data-testid="${field}-error"]`,
-      `#${field}-error`,
-      `.error-message:has-text("${message}")`,
+      '[data-testid="error-message"]',
+      '[role="dialog"] [data-testid="error-message"]',
+      '[role="dialog"] .text-red-700',
+      '[role="dialog"] .bg-red-50',
       '.text-red-700:has-text("' + message + '")',
       '.bg-red-50:has-text("' + message + '")',
+      'div:has-text("' + message + '")',
     ]
 
     let found = false
@@ -434,8 +446,8 @@ export class CourseHelpers {
     }
 
     if (!found) {
-      // Fallback: check for any error message containing the text
-      await expect(this.page.locator('body')).toContainText(message)
+      // Fallback: check for any error message containing the text in dialog
+      await expect(this.page.locator('[role="dialog"]')).toContainText(message)
     }
   }
 

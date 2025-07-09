@@ -370,14 +370,14 @@ describe('CourseAdapter', () => {
   })
 
   describe('updateCourse', () => {
-    const courseData = {
-      id: 'course-1',
-      title: 'Updated Course',
-      description: 'Updated Description',
-      thumbnail: '/updated-thumbnail.jpg',
-      category: 'Updated Category',
+      const courseData = {
+        id: 'course-1',
+        title: 'Updated Course',
+        description: 'Updated Description',
+        thumbnail: '/updated-thumbnail.jpg',
+        category: 'Updated Category',
       status: CourseStatus.PUBLISHED,
-    }
+      }
 
     test('should make successful PUT request with FormData', async () => {
       // Arrange

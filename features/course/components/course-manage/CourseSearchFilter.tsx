@@ -131,7 +131,7 @@ export function CourseSearchFilter() {
   }
 
   return (
-    <Card className="mb-8 glass-panel border-secondary-300">
+    <Card className="mb-8 glass-panel border-secondary-300" data-testid="course-search-filter">
       <CardContent className="p-6">
         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="flex flex-1 gap-4 w-full md:w-auto">
@@ -160,6 +160,7 @@ export function CourseSearchFilter() {
                 onBlur={handleSearchBlur}
                 onKeyDown={handleSearchKeyDown}
                 className="pl-10 neu-input border-transparent focus:border-transparent focus:ring-0 bg-transparent"
+                data-testid="search-input"
               />
             </div>
             <DropdownMenu onOpenChange={setIsFilterOpen}>
@@ -172,6 +173,7 @@ export function CourseSearchFilter() {
                       : 'border-beige-300 hover:border-secondary-400'
                   } hover-glow`}
                   onClick={handleFilterToggle}
+                  data-testid="filter-dropdown"
                 >
                   <Filter className="h-4 w-4 mr-2" />
                   {getStatusDisplayText(selectedStatus)}
@@ -187,6 +189,7 @@ export function CourseSearchFilter() {
                     )
                     setSelectedStatus('all')
                   }}
+                  data-testid="filter-all"
                 >
                   Semua Status
                 </DropdownMenuItem>
@@ -199,6 +202,7 @@ export function CourseSearchFilter() {
                     )
                     setSelectedStatus('PUBLISHED')
                   }}
+                  data-testid="filter-published"
                 >
                   Diterbitkan
                 </DropdownMenuItem>
@@ -211,6 +215,7 @@ export function CourseSearchFilter() {
                     )
                     setSelectedStatus('DRAFT')
                   }}
+                  data-testid="filter-draft"
                 >
                   Draft
                 </DropdownMenuItem>
@@ -223,6 +228,7 @@ export function CourseSearchFilter() {
                     )
                     setSelectedStatus('ARCHIVED')
                   }}
+                  data-testid="filter-archived"
                 >
                   Diarsipkan
                 </DropdownMenuItem>
@@ -236,6 +242,7 @@ export function CourseSearchFilter() {
                 size="sm"
                 onClick={handleClearFilters}
                 className="btn-secondary hover-glow transition-all duration-300"
+                data-testid="clear-filter-button"
               >
                 <X className="h-4 w-4 mr-1" />
                 Bersihkan
@@ -245,6 +252,7 @@ export function CourseSearchFilter() {
           <Button
             onClick={handleCreateCourse}
             className="btn-primary magical-glow transition-all duration-300 hover:scale-105"
+            data-testid="create-course-button"
           >
             <Plus className="h-4 w-4 mr-2" />
             Buat Kursus Baru
