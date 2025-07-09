@@ -3,191 +3,9 @@
   "numPassedTests": 67,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-09T14:15:19.464Z",
-  "endTime": "2025-07-09T14:15:25.501Z",
+  "startTime": "2025-07-09T15:11:53.287Z",
+  "endTime": "2025-07-09T15:11:58.702Z",
   "testResults": [
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAPI.integration.test.ts",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service layer errors properly",
-          "status": "passed",
-          "title": "should handle service layer errors properly",
-          "failureMessages": [],
-          "duration": 21
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service timeout scenarios",
-          "status": "passed",
-          "title": "should handle service timeout scenarios",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service returning null/undefined",
-          "status": "passed",
-          "title": "should handle service returning null/undefined",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should validate input before calling service",
-          "status": "passed",
-          "title": "should validate input before calling service",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should handle invalid course ID format",
-          "status": "passed",
-          "title": "should handle invalid course ID format",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should require valid user ID for course operations",
-          "status": "passed",
-          "title": "should require valid user ID for course operations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should handle authorization failures gracefully",
-          "status": "passed",
-          "title": "should handle authorization failures gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform request data before service call",
-          "status": "passed",
-          "title": "should transform request data before service call",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform service response for API",
-          "status": "passed",
-          "title": "should transform service response for API",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should propagate database errors with meaningful messages",
-          "status": "passed",
-          "title": "should propagate database errors with meaningful messages",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should handle unknown database errors gracefully",
-          "status": "passed",
-          "title": "should handle unknown database errors gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle GET requests properly",
-          "status": "passed",
-          "title": "should handle GET requests properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle POST requests properly",
-          "status": "passed",
-          "title": "should handle POST requests properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PUT requests properly",
-          "status": "passed",
-          "title": "should handle PUT requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle DELETE requests properly",
-          "status": "passed",
-          "title": "should handle DELETE requests properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PATCH requests for status updates",
-          "status": "passed",
-          "title": "should handle PATCH requests for status updates",
-          "failureMessages": [],
-          "duration": 0
-        }
-      ],
-      "failureMessage": null
-    },
     {
       "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseService.integration.test.ts",
       "testFileResults": [
@@ -200,7 +18,7 @@
           "status": "passed",
           "title": "should handle database connection failure gracefully",
           "failureMessages": [],
-          "duration": 25
+          "duration": 23
         },
         {
           "ancestorTitles": [
@@ -233,7 +51,7 @@
           "status": "passed",
           "title": "should handle successful transaction completion",
           "failureMessages": [],
-          "duration": 3
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -244,7 +62,7 @@
           "status": "passed",
           "title": "should handle concurrent access to same course",
           "failureMessages": [],
-          "duration": 14
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -255,7 +73,7 @@
           "status": "passed",
           "title": "should handle concurrent creation conflicts",
           "failureMessages": [],
-          "duration": 2
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -266,7 +84,7 @@
           "status": "passed",
           "title": "should handle foreign key constraint violations",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -277,7 +95,7 @@
           "status": "passed",
           "title": "should handle not null constraint violations",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -288,7 +106,7 @@
           "status": "passed",
           "title": "should handle check constraint violations",
           "failureMessages": [],
-          "duration": 1
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -299,7 +117,7 @@
           "status": "passed",
           "title": "should maintain data consistency across operations",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -310,7 +128,7 @@
           "status": "passed",
           "title": "should handle data inconsistency gracefully",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -321,7 +139,7 @@
           "status": "passed",
           "title": "should propagate database errors with meaningful messages",
           "failureMessages": [],
-          "duration": 4
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -332,7 +150,189 @@
           "status": "passed",
           "title": "should handle unknown database errors gracefully",
           "failureMessages": [],
+          "duration": 1
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAPI.integration.test.ts",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Service Layer Error Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service layer errors properly",
+          "status": "passed",
+          "title": "should handle service layer errors properly",
+          "failureMessages": [],
+          "duration": 18
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Service Layer Error Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service timeout scenarios",
+          "status": "passed",
+          "title": "should handle service timeout scenarios",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Service Layer Error Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service returning null/undefined",
+          "status": "passed",
+          "title": "should handle service returning null/undefined",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Input Validation"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Input Validation should validate input before calling service",
+          "status": "passed",
+          "title": "should validate input before calling service",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Input Validation"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Input Validation should handle invalid course ID format",
+          "status": "passed",
+          "title": "should handle invalid course ID format",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Authentication and Authorization"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should require valid user ID for course operations",
+          "status": "passed",
+          "title": "should require valid user ID for course operations",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Authentication and Authorization"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should handle authorization failures gracefully",
+          "status": "passed",
+          "title": "should handle authorization failures gracefully",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Data Transformation"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform request data before service call",
+          "status": "passed",
+          "title": "should transform request data before service call",
+          "failureMessages": [],
           "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Data Transformation"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform service response for API",
+          "status": "passed",
+          "title": "should transform service response for API",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Error Response Format"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Error Response Format should propagate database errors with meaningful messages",
+          "status": "passed",
+          "title": "should propagate database errors with meaningful messages",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "Error Response Format"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration Error Response Format should handle unknown database errors gracefully",
+          "status": "passed",
+          "title": "should handle unknown database errors gracefully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "HTTP Method Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle GET requests properly",
+          "status": "passed",
+          "title": "should handle GET requests properly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "HTTP Method Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle POST requests properly",
+          "status": "passed",
+          "title": "should handle POST requests properly",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "HTTP Method Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PUT requests properly",
+          "status": "passed",
+          "title": "should handle PUT requests properly",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "HTTP Method Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle DELETE requests properly",
+          "status": "passed",
+          "title": "should handle DELETE requests properly",
+          "failureMessages": [],
+          "duration": 0
+        },
+        {
+          "ancestorTitles": [
+            "CourseAPI ↔ Service Integration",
+            "HTTP Method Handling"
+          ],
+          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PATCH requests for status updates",
+          "status": "passed",
+          "title": "should handle PATCH requests for status updates",
+          "failureMessages": [],
+          "duration": 1
         }
       ],
       "failureMessage": null
@@ -349,7 +349,7 @@
           "status": "passed",
           "title": "should propagate network errors from adapter to hook",
           "failureMessages": [],
-          "duration": 53
+          "duration": 34
         },
         {
           "ancestorTitles": [
@@ -360,7 +360,7 @@
           "status": "passed",
           "title": "should handle network timeout gracefully",
           "failureMessages": [],
-          "duration": 126
+          "duration": 112
         },
         {
           "ancestorTitles": [
@@ -371,7 +371,7 @@
           "status": "passed",
           "title": "should handle connection refused errors",
           "failureMessages": [],
-          "duration": 10
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -382,7 +382,7 @@
           "status": "passed",
           "title": "should handle 401 errors properly",
           "failureMessages": [],
-          "duration": 5
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -393,7 +393,7 @@
           "status": "passed",
           "title": "should handle 403 errors properly",
           "failureMessages": [],
-          "duration": 4
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -415,7 +415,7 @@
           "status": "passed",
           "title": "should handle 500 errors properly",
           "failureMessages": [],
-          "duration": 3
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -426,7 +426,7 @@
           "status": "passed",
           "title": "should handle 422 validation errors properly",
           "failureMessages": [],
-          "duration": 3
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -437,7 +437,7 @@
           "status": "passed",
           "title": "should provide meaningful error messages",
           "failureMessages": [],
-          "duration": 18
+          "duration": 16
         },
         {
           "ancestorTitles": [
@@ -448,7 +448,7 @@
           "status": "passed",
           "title": "should handle malformed error responses",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -459,7 +459,7 @@
           "status": "passed",
           "title": "should handle non-JSON error responses",
           "failureMessages": [],
-          "duration": 5
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -470,7 +470,7 @@
           "status": "passed",
           "title": "should handle temporary network failures gracefully",
           "failureMessages": [],
-          "duration": 2
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -481,7 +481,7 @@
           "status": "passed",
           "title": "should not retry on permanent errors",
           "failureMessages": [],
-          "duration": 2
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -492,7 +492,7 @@
           "status": "passed",
           "title": "should handle CORS errors",
           "failureMessages": [],
-          "duration": 2
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -503,7 +503,7 @@
           "status": "passed",
           "title": "should handle SSL/TLS errors",
           "failureMessages": [],
-          "duration": 4
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -514,7 +514,7 @@
           "status": "passed",
           "title": "should transform API response data correctly",
           "failureMessages": [],
-          "duration": 3
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -536,7 +536,7 @@
           "status": "passed",
           "title": "should handle null response data",
           "failureMessages": [],
-          "duration": 4
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -547,7 +547,7 @@
           "status": "passed",
           "title": "should handle FormData for createCourse",
           "failureMessages": [],
-          "duration": 5
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -558,7 +558,7 @@
           "status": "passed",
           "title": "should handle FormData for updateCourse",
           "failureMessages": [],
-          "duration": 5
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -591,7 +591,7 @@
           "status": "passed",
           "title": "should respect retry-after header",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -602,7 +602,7 @@
           "status": "passed",
           "title": "should handle successful GET courses",
           "failureMessages": [],
-          "duration": 4
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -613,7 +613,7 @@
           "status": "passed",
           "title": "should handle successful GET course by ID",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         }
       ],
       "failureMessage": null
@@ -630,7 +630,7 @@
           "status": "passed",
           "title": "should handle successful adapter calls",
           "failureMessages": [],
-          "duration": 106
+          "duration": 127
         },
         {
           "ancestorTitles": [
@@ -641,7 +641,7 @@
           "status": "passed",
           "title": "should manage loading states correctly",
           "failureMessages": [],
-          "duration": 176
+          "duration": 170
         },
         {
           "ancestorTitles": [
@@ -652,7 +652,7 @@
           "status": "passed",
           "title": "should handle course creation workflow",
           "failureMessages": [],
-          "duration": 6
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -663,7 +663,7 @@
           "status": "passed",
           "title": "should handle course update workflow",
           "failureMessages": [],
-          "duration": 4
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -674,7 +674,7 @@
           "status": "passed",
           "title": "should handle course deletion workflow",
           "failureMessages": [],
-          "duration": 6
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -685,7 +685,7 @@
           "status": "passed",
           "title": "should handle permission errors",
           "failureMessages": [],
-          "duration": 6
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -696,7 +696,7 @@
           "status": "passed",
           "title": "should handle form data updates",
           "failureMessages": [],
-          "duration": 15
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -718,7 +718,7 @@
           "status": "passed",
           "title": "should handle file upload with adapter",
           "failureMessages": [],
-          "duration": 11
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -729,7 +729,7 @@
           "status": "passed",
           "title": "should handle file upload errors",
           "failureMessages": [],
-          "duration": 6
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -740,7 +740,7 @@
           "status": "passed",
           "title": "should allow retry after network failure",
           "failureMessages": [],
-          "duration": 34
+          "duration": 20
         },
         {
           "ancestorTitles": [
@@ -751,7 +751,7 @@
           "status": "passed",
           "title": "should clear errors on successful retry",
           "failureMessages": [],
-          "duration": 10
+          "duration": 8
         },
         {
           "ancestorTitles": [
@@ -762,7 +762,7 @@
           "status": "passed",
           "title": "should maintain data consistency across operations",
           "failureMessages": [],
-          "duration": 85
+          "duration": 79
         }
       ],
       "failureMessage": null
