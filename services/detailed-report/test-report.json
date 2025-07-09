@@ -3,8 +3,8 @@
   "numPassedTests": 67,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-08T23:14:41.116Z",
-  "endTime": "2025-07-08T23:14:47.458Z",
+  "startTime": "2025-07-09T14:15:19.464Z",
+  "endTime": "2025-07-09T14:15:25.501Z",
   "testResults": [
     {
       "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAPI.integration.test.ts",
@@ -18,7 +18,7 @@
           "status": "passed",
           "title": "should handle service layer errors properly",
           "failureMessages": [],
-          "duration": 24
+          "duration": 21
         },
         {
           "ancestorTitles": [
@@ -29,7 +29,7 @@
           "status": "passed",
           "title": "should handle service timeout scenarios",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -40,7 +40,7 @@
           "status": "passed",
           "title": "should handle service returning null/undefined",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -51,7 +51,7 @@
           "status": "passed",
           "title": "should validate input before calling service",
           "failureMessages": [],
-          "duration": 0
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -73,7 +73,7 @@
           "status": "passed",
           "title": "should require valid user ID for course operations",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -95,7 +95,7 @@
           "status": "passed",
           "title": "should transform request data before service call",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -106,7 +106,7 @@
           "status": "passed",
           "title": "should transform service response for API",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -117,7 +117,7 @@
           "status": "passed",
           "title": "should propagate database errors with meaningful messages",
           "failureMessages": [],
-          "duration": 9
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -150,7 +150,7 @@
           "status": "passed",
           "title": "should handle POST requests properly",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -161,7 +161,7 @@
           "status": "passed",
           "title": "should handle PUT requests properly",
           "failureMessages": [],
-          "duration": 1
+          "duration": 0
         },
         {
           "ancestorTitles": [
@@ -200,7 +200,7 @@
           "status": "passed",
           "title": "should handle database connection failure gracefully",
           "failureMessages": [],
-          "duration": 26
+          "duration": 25
         },
         {
           "ancestorTitles": [
@@ -211,7 +211,7 @@
           "status": "passed",
           "title": "should handle database disconnection gracefully",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -233,7 +233,7 @@
           "status": "passed",
           "title": "should handle successful transaction completion",
           "failureMessages": [],
-          "duration": 6
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -244,7 +244,7 @@
           "status": "passed",
           "title": "should handle concurrent access to same course",
           "failureMessages": [],
-          "duration": 2
+          "duration": 14
         },
         {
           "ancestorTitles": [
@@ -255,7 +255,7 @@
           "status": "passed",
           "title": "should handle concurrent creation conflicts",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -266,7 +266,7 @@
           "status": "passed",
           "title": "should handle foreign key constraint violations",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -277,7 +277,7 @@
           "status": "passed",
           "title": "should handle not null constraint violations",
           "failureMessages": [],
-          "duration": 1
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -288,7 +288,7 @@
           "status": "passed",
           "title": "should handle check constraint violations",
           "failureMessages": [],
-          "duration": 0
+          "duration": 1
         },
         {
           "ancestorTitles": [
@@ -310,7 +310,7 @@
           "status": "passed",
           "title": "should handle data inconsistency gracefully",
           "failureMessages": [],
-          "duration": 0
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -321,7 +321,7 @@
           "status": "passed",
           "title": "should propagate database errors with meaningful messages",
           "failureMessages": [],
-          "duration": 2
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -349,7 +349,7 @@
           "status": "passed",
           "title": "should propagate network errors from adapter to hook",
           "failureMessages": [],
-          "duration": 59
+          "duration": 53
         },
         {
           "ancestorTitles": [
@@ -360,7 +360,7 @@
           "status": "passed",
           "title": "should handle network timeout gracefully",
           "failureMessages": [],
-          "duration": 119
+          "duration": 126
         },
         {
           "ancestorTitles": [
@@ -371,7 +371,7 @@
           "status": "passed",
           "title": "should handle connection refused errors",
           "failureMessages": [],
-          "duration": 8
+          "duration": 10
         },
         {
           "ancestorTitles": [
@@ -382,7 +382,7 @@
           "status": "passed",
           "title": "should handle 401 errors properly",
           "failureMessages": [],
-          "duration": 7
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -393,7 +393,7 @@
           "status": "passed",
           "title": "should handle 403 errors properly",
           "failureMessages": [],
-          "duration": 6
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -404,7 +404,7 @@
           "status": "passed",
           "title": "should handle 404 errors properly",
           "failureMessages": [],
-          "duration": 7
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -426,7 +426,7 @@
           "status": "passed",
           "title": "should handle 422 validation errors properly",
           "failureMessages": [],
-          "duration": 9
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -437,7 +437,7 @@
           "status": "passed",
           "title": "should provide meaningful error messages",
           "failureMessages": [],
-          "duration": 19
+          "duration": 18
         },
         {
           "ancestorTitles": [
@@ -459,7 +459,7 @@
           "status": "passed",
           "title": "should handle non-JSON error responses",
           "failureMessages": [],
-          "duration": 2
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -470,7 +470,7 @@
           "status": "passed",
           "title": "should handle temporary network failures gracefully",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -481,7 +481,7 @@
           "status": "passed",
           "title": "should not retry on permanent errors",
           "failureMessages": [],
-          "duration": 6
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -492,7 +492,7 @@
           "status": "passed",
           "title": "should handle CORS errors",
           "failureMessages": [],
-          "duration": 3
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -503,7 +503,7 @@
           "status": "passed",
           "title": "should handle SSL/TLS errors",
           "failureMessages": [],
-          "duration": 3
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -525,7 +525,7 @@
           "status": "passed",
           "title": "should handle empty response data",
           "failureMessages": [],
-          "duration": 4
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -536,7 +536,7 @@
           "status": "passed",
           "title": "should handle null response data",
           "failureMessages": [],
-          "duration": 3
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -547,7 +547,7 @@
           "status": "passed",
           "title": "should handle FormData for createCourse",
           "failureMessages": [],
-          "duration": 3
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -558,7 +558,7 @@
           "status": "passed",
           "title": "should handle FormData for updateCourse",
           "failureMessages": [],
-          "duration": 2
+          "duration": 5
         },
         {
           "ancestorTitles": [
@@ -569,7 +569,7 @@
           "status": "passed",
           "title": "should handle successful POST create course",
           "failureMessages": [],
-          "duration": 4
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -580,7 +580,7 @@
           "status": "passed",
           "title": "should handle rate limiting errors",
           "failureMessages": [],
-          "duration": 4
+          "duration": 2
         },
         {
           "ancestorTitles": [
@@ -602,7 +602,7 @@
           "status": "passed",
           "title": "should handle successful GET courses",
           "failureMessages": [],
-          "duration": 6
+          "duration": 4
         },
         {
           "ancestorTitles": [
@@ -613,7 +613,7 @@
           "status": "passed",
           "title": "should handle successful GET course by ID",
           "failureMessages": [],
-          "duration": 11
+          "duration": 3
         }
       ],
       "failureMessage": null
@@ -630,7 +630,7 @@
           "status": "passed",
           "title": "should handle successful adapter calls",
           "failureMessages": [],
-          "duration": 128
+          "duration": 106
         },
         {
           "ancestorTitles": [
@@ -641,7 +641,7 @@
           "status": "passed",
           "title": "should manage loading states correctly",
           "failureMessages": [],
-          "duration": 171
+          "duration": 176
         },
         {
           "ancestorTitles": [
@@ -652,7 +652,7 @@
           "status": "passed",
           "title": "should handle course creation workflow",
           "failureMessages": [],
-          "duration": 8
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -674,7 +674,7 @@
           "status": "passed",
           "title": "should handle course deletion workflow",
           "failureMessages": [],
-          "duration": 5
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -685,7 +685,7 @@
           "status": "passed",
           "title": "should handle permission errors",
           "failureMessages": [],
-          "duration": 4
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -696,7 +696,7 @@
           "status": "passed",
           "title": "should handle form data updates",
           "failureMessages": [],
-          "duration": 5
+          "duration": 15
         },
         {
           "ancestorTitles": [
@@ -707,7 +707,7 @@
           "status": "passed",
           "title": "should handle form validation errors",
           "failureMessages": [],
-          "duration": 6
+          "duration": 3
         },
         {
           "ancestorTitles": [
@@ -718,7 +718,7 @@
           "status": "passed",
           "title": "should handle file upload with adapter",
           "failureMessages": [],
-          "duration": 5
+          "duration": 11
         },
         {
           "ancestorTitles": [
@@ -729,7 +729,7 @@
           "status": "passed",
           "title": "should handle file upload errors",
           "failureMessages": [],
-          "duration": 2
+          "duration": 6
         },
         {
           "ancestorTitles": [
@@ -740,7 +740,7 @@
           "status": "passed",
           "title": "should allow retry after network failure",
           "failureMessages": [],
-          "duration": 44
+          "duration": 34
         },
         {
           "ancestorTitles": [
@@ -751,7 +751,7 @@
           "status": "passed",
           "title": "should clear errors on successful retry",
           "failureMessages": [],
-          "duration": 14
+          "duration": 10
         },
         {
           "ancestorTitles": [
@@ -762,7 +762,7 @@
           "status": "passed",
           "title": "should maintain data consistency across operations",
           "failureMessages": [],
-          "duration": 86
+          "duration": 85
         }
       ],
       "failureMessage": null

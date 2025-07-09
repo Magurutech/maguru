@@ -364,6 +364,8 @@ export class CourseHelpers {
       'main',
       '[role="main"]',
     ]
+    
+    await this.page.waitForTimeout(5000)
 
     let checked = false
     for (const selector of listSelectors) {
@@ -421,9 +423,9 @@ export class CourseHelpers {
     // Explicit wait untuk memastikan toast muncul
     // await this.page.waitForTimeout(3000)
     try {
-      const toast = this.page.getByRole('status', { name: 'success-message' });
-      await this.page.getByRole('button', { name: 'Close' }).click();
-      await expect(toast).not.toBeVisible();
+      const toast = this.page.getByRole('status', { name: 'success-message' })
+      await this.page.getByRole('button', { name: 'Close' }).click()
+      await expect(toast).not.toBeVisible()
     } catch {
       // Jika toast tidak ditemukan, fallback ke verifikasi course title di list
       if (courseTitle) {
@@ -433,7 +435,6 @@ export class CourseHelpers {
         )
       }
     }
-
   }
 
   /**

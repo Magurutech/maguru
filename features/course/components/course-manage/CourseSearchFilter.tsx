@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Search, Filter, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -35,7 +35,7 @@ export function CourseSearchFilter() {
   const { searchCourses, clearFilters: clearFiltersFromHook } = useCourseManagement()
 
   // Custom search submit handler yang mengintegrasikan context dengan API
-  const handleSearchSubmit = async () => {
+  const handleSearchSubmit = useCallback(async () => {
     logger.info('CourseSearchFilter', 'handleSearchSubmit', 'Search submit triggered', {
       searchQuery,
       selectedStatus,
@@ -50,7 +50,7 @@ export function CourseSearchFilter() {
     } catch (error) {
       logger.error('CourseSearchFilter', 'handleSearchSubmit', 'Search failed', error as Error)
     }
-  }
+  }, [searchQuery, selectedStatus, searchCourses])
 
   // Auto-search effect dengan debouncing
   useEffect(() => {
@@ -65,7 +65,7 @@ export function CourseSearchFilter() {
     }, 500) // 500ms debounce
 
     return () => clearTimeout(timeoutId)
-  }, [searchQuery, selectedStatus])
+  }, [handleSearchSubmit, searchQuery, selectedStatus])
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true)
