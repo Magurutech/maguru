@@ -1,8 +1,0 @@
-export { CourseHeader } from './CourseHeader'
-export { CourseStats } from './CourseStats'
-export { CourseSearchFilter } from './CourseSearchFilter'
-export { CourseCard } from './CourseCard'
-export { CourseGrid } from './CourseGrid'
-export { CreateCourseDialog } from './CreateCourseDialog'
-export { EditCourseDialog } from './EditCourseDialog'
-export { DeleteCourseDialog } from './DeleteCourseDialog'

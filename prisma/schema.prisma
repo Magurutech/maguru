@@ -8,25 +8,8 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Course {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(100)
-  description String   @db.Text
-  thumbnail   String?  @db.VarChar(255)
-  status      CourseStatus @default(DRAFT)
-  students    Int      @default(0)
-  lessons     Int      @default(0)
-  duration    String   @default("0 jam")
-  rating      Float    @default(0.0)
-  category    String   @db.VarChar(50)
-  creatorId   String   @db.VarChar(255) // Clerk User ID
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("courses")
-}
-
-enum CourseStatus {
-  DRAFT
-  PUBLISHED
+model User {
+  id    String @id @default(cuid())
+  name  String
+  email String @unique
 }
