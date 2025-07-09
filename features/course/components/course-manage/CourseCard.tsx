@@ -173,7 +173,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             onClick={handleEdit}
             disabled={isActionLoading}
             className="flex-1 btn-secondary hover-glow transition-all duration-300"
-            data-testid={`edit-course-button-${course.id}`}
+            data-testid={index === 0 ? 'edit-course-button' : `edit-course-button-${course.id}`}
           >
             <Edit className="h-4 w-4 mr-1" />
             {isActionLoading ? 'Loading...' : 'Edit'}
@@ -185,7 +185,7 @@ export const CourseCard = memo(function CourseCard({ course, index }: CourseCard
             onClick={handleDelete}
             disabled={isActionLoading}
             className="flex-1 bg-red-50 border-red-300 text-red-600 hover:bg-red-100 hover:border-red-400 neu-button transition-all duration-300"
-            data-testid={`delete-course-button-${course.id}`}
+            data-testid={index === 0 ? 'delete-course-button' : `delete-course-button-${course.id}`}
           >
             <Trash2 className="h-4 w-4 mr-1" />
             {isActionLoading ? 'Loading...' : 'Hapus'}

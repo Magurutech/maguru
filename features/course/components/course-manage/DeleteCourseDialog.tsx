@@ -13,6 +13,7 @@ import {
 import { AlertTriangle, Trash2, AlertCircle } from 'lucide-react'
 import { useCourseManagement } from '../../hooks/useCourseManagement'
 import { useCourseContext } from '../../contexts/courseContext'
+import { toast } from 'sonner'
 
 export function DeleteCourseDialog() {
   // Component state untuk UI interactions
@@ -32,10 +33,25 @@ export function DeleteCourseDialog() {
     try {
       const success = await deleteCourseWithConfirmation(selectedCourse.id)
       if (success) {
+        // ✅ Tampilkan toast success
+        toast.success('Course deleted successfully', {
+          description: `Kursus "${selectedCourse.title}" berhasil dihapus.`,
+          duration: 5000,
+          id: 'success-message',
+        })
         closeDialog()
+      } else {
+        toast.error('Gagal menghapus kursus', {
+          description: 'Terjadi kesalahan saat menghapus kursus. Silakan coba lagi.',
+          duration: 5000,
+        })
       }
     } catch (error) {
       console.error('Failed to delete course:', error)
+      toast.error('Gagal menghapus kursus', {
+        description: 'Terjadi kesalahan saat menghapus kursus. Silakan coba lagi.',
+        duration: 5000,
+      })
     } finally {
       setIsDeleting(false)
     }
@@ -51,7 +67,10 @@ export function DeleteCourseDialog() {
 
   return (
     <Dialog open={activeDialog === 'delete'} onOpenChange={(open) => !open && handleCancel()}>
-      <DialogContent className="max-w-md bg-ancient-fantasy border-secondary-300 glass-panel">
+      <DialogContent
+        className="max-w-md bg-ancient-fantasy border-secondary-300 glass-panel"
+        data-testid="delete-confirmation-dialog"
+      >
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-beige-900 flex items-center gap-2 font-serif">
             <AlertTriangle className="h-5 w-5 text-red-500" />
@@ -117,6 +136,7 @@ export function DeleteCourseDialog() {
             onClick={handleCancel}
             disabled={isDeleting}
             className="btn-secondary"
+            data-testid="cancel-delete-button"
           >
             Batal
           </Button>
@@ -125,6 +145,7 @@ export function DeleteCourseDialog() {
             onClick={handleDeleteConfirm}
             disabled={isDeleting}
             className="bg-red-600 hover:bg-red-700 text-white border-red-600 hover:border-red-700"
+            data-testid="confirm-delete-button"
           >
             {isDeleting ? (
               <>

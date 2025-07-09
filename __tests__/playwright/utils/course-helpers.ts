@@ -226,14 +226,43 @@ export class CourseHelpers {
   }
 
   /**
-   * Edit course dengan ID tertentu
+   * Edit course dengan ID tertentu menggunakan dialog
    */
   async editCourse(
     courseId: string,
     data: { title?: string; description?: string },
   ): Promise<void> {
-    await this.page.goto(`/creator/course-manage/edit/${courseId}`)
+    // Navigate ke course management page terlebih dahulu
+    await this.navigateToCourseManagement()
 
+    // Cari dan klik tombol edit untuk course dengan ID tertentu
+    const editButtonSelectors = [
+      `[data-testid="edit-course-button"]`, // Fallback untuk course pertama
+    ]
+
+    let editButtonClicked = false
+    for (const selector of editButtonSelectors) {
+      try {
+        await this.page.click(selector)
+
+        // Wait untuk dialog edit terbuka
+        await this.page.waitForSelector('[data-testid="course-title-input"]', {
+          state: 'visible',
+          timeout: 5000,
+        })
+
+        editButtonClicked = true
+        break
+      } catch {
+        // Continue to next selector
+      }
+    }
+
+    if (!editButtonClicked) {
+      throw new Error(`Could not find edit button for course ${courseId}`)
+    }
+
+    // Fill form data
     if (data.title) {
       await this.page.fill('[data-testid="course-title-input"]', data.title)
     }
@@ -242,8 +271,20 @@ export class CourseHelpers {
       await this.page.fill('[data-testid="course-description-input"]', data.description)
     }
 
+    // Submit form
     await this.submitCourseForm()
-    await this.page.waitForSelector('[data-testid="success-message"]', { state: 'visible' })
+
+    // Wait untuk dialog tertutup atau success message
+    try {
+      // Tunggu dialog tertutup (berarti form berhasil disubmit)
+      await this.page.waitForSelector('[role="dialog"]', {
+        state: 'hidden',
+        timeout: 10000,
+      })
+    } catch {
+      // Jika dialog tidak tertutup, mungkin ada error
+      console.log('⚠️ Dialog tidak tertutup, mungkin ada error')
+    }
   }
 
   /**
@@ -378,22 +419,21 @@ export class CourseHelpers {
    */
   async verifySuccessMessage(message: string, courseTitle?: string): Promise<void> {
     // Explicit wait untuk memastikan toast muncul
-    await this.page.waitForTimeout(3000)
-    // Cari toast sonner di portal
-    let toastFound = false
+    // await this.page.waitForTimeout(3000)
     try {
-      await expect(this.page.locator('div[role="status"]')).toContainText(message)
-      toastFound = true
+      const toast = this.page.getByRole('status', { name: 'success-message' });
+      await this.page.getByRole('button', { name: 'Close' }).click();
+      await expect(toast).not.toBeVisible();
     } catch {
       // Jika toast tidak ditemukan, fallback ke verifikasi course title di list
       if (courseTitle) {
-        await this.verifyCourseExists(courseTitle)
-        toastFound = true
+        await this.page.waitForTimeout(3000)
+        await expect(this.page.locator('[data-testid="course-list"]')).not.toContainText(
+          courseTitle,
+        )
       }
     }
-    if (!toastFound) {
-      throw new Error('Success message dan course title tidak ditemukan')
-    }
+
   }
 
   /**

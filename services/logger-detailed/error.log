@@ -334,3 +334,83 @@
     }
   }
 }
+2025-07-09T08:19:46.778Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752049186778,
+    "memory": {
+      "rss": 1268576256,
+      "heapTotal": 216064000,
+      "heapUsed": 189472800,
+      "external": 8418948,
+      "arrayBuffers": 4492640
+    }
+  }
+}
+2025-07-09T09:16:17.255Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752052577255,
+    "memory": {
+      "rss": 1312997376,
+      "heapTotal": 285405184,
+      "heapUsed": 258803648,
+      "external": 25104588,
+      "arrayBuffers": 21178280
+    }
+  }
+}
+2025-07-09T12:23:40.410Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752063820410,
+    "memory": {
+      "rss": 1201426432,
+      "heapTotal": 196001792,
+      "heapUsed": 160388072,
+      "external": 5379991,
+      "arrayBuffers": 1453703
+    }
+  }
+}
+2025-07-09T12:26:42.794Z [ERROR] [API_Courses_Detail][DELETE] Error deleting course
+{
+  "name": "Error",
+  "message": "Course not found or access denied",
+  "stack": "Error: Course not found or access denied\n    at CourseService.deleteCourse (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__d629cdcf._.js:350:19)\n    at async DELETE (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__e03dee8c._.js:1265:9)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1752064002794,
+    "memory": {
+      "rss": 1188081664,
+      "heapTotal": 196640768,
+      "heapUsed": 164938960,
+      "external": 7302590,
+      "arrayBuffers": 3376302
+    }
+  }
+}
+2025-07-09T12:31:42.433Z [ERROR] [API_Courses_Detail][PUT] Failed to parse FormData
+{
+  "name": "Error",
+  "message": "aborted",
+  "stack": "Error: aborted\n    at abortIncoming (node:_http_server:805:17)\n    at socketOnClose (node:_http_server:799:3)\n    at Socket.emit (node:events:531:35)\n    at TCP.<anonymous> (node:net:343:12)\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
+  "performance": {
+    "timestamp": 1752064302433,
+    "memory": {
+      "rss": 1122799616,
+      "heapTotal": 214872064,
+      "heapUsed": 183158616,
+      "external": 8135033,
+      "arrayBuffers": 4208725
+    }
+  }
+}

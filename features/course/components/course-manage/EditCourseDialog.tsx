@@ -27,6 +27,7 @@ import { useCourseContext } from '../../contexts/courseContext'
 import { UpdateCourseRequest, CreateCourseFormData, courseThumbnailUtils } from '../../types'
 import Image from 'next/image'
 import { logger } from '@/services/logger'
+import { toast } from 'sonner'
 
 export function EditCourseDialog() {
   // Component state untuk UI interactions
@@ -121,8 +122,15 @@ export function EditCourseDialog() {
       const success = await updateCourseWithValidation(course.id, dataToSend)
 
       if (success) {
+        // ✅ Tampilkan toast success
+        toast.success('Course updated successfully', {
+          description: `Kursus "${formState.data.title}" berhasil diperbarui.`,
+          duration: 5000,
+          id: 'success-message',
+        })
         closeDialog()
       } else {
+        setFormErrors(['Gagal memperbarui kursus. Silakan coba lagi.'])
       }
     } catch (error) {
       logger.error(
@@ -175,7 +183,9 @@ export function EditCourseDialog() {
               <ul className="mt-2 text-red-700 text-sm space-y-1">
                 {managementError && <li>{managementError}</li>}
                 {formState.errors.map((error, index) => (
-                  <li key={index}>{error}</li>
+                  <li key={index} data-testid={`error-${index}`}>
+                    {error}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -188,13 +198,19 @@ export function EditCourseDialog() {
             </Label>
             <Input
               id="title"
+              data-testid="course-title-input"
               value={formState.data.title || ''}
               onChange={(e) => handleInputChange('title', e.target.value)}
               placeholder="Contoh: Petualangan Matematika Nusantara"
-              required
               disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200"
             />
+            {/* Custom error message for title */}
+            {formState.errors.includes('Judul kursus wajib diisi') && (
+              <div className="text-red-700 text-xs mt-1" data-testid="title-error">
+                Judul kursus wajib diisi
+              </div>
+            )}
           </div>
 
           {/* Course Description */}
@@ -204,14 +220,20 @@ export function EditCourseDialog() {
             </Label>
             <Textarea
               id="description"
+              data-testid="course-description-input"
               value={formState.data.description || ''}
               onChange={(e) => handleInputChange('description', e.target.value)}
               placeholder="Jelaskan tentang kursus Anda dan apa yang akan dipelajari siswa..."
-              required
               rows={4}
               disabled={formState.isSubmitting}
               className="neu-input border-beige-300 focus:border-secondary-400 focus:ring-secondary-200 resize-none"
             />
+            {/* Custom error message for description */}
+            {formState.errors.includes('Deskripsi kursus wajib diisi') && (
+              <div className="text-red-700 text-xs mt-1" data-testid="description-error">
+                Deskripsi kursus wajib diisi
+              </div>
+            )}
           </div>
 
           {/* Category and Status */}
@@ -344,6 +366,7 @@ export function EditCourseDialog() {
             <Button
               type="submit"
               className="btn-primary magical-glow"
+              data-testid="submit-course-button"
               disabled={!isFormValid || formState.isSubmitting}
             >
               {formState.isSubmitting ? 'Menyimpan...' : '💾 Simpan Perubahan'}
