@@ -1,9 +1,9 @@
 import type React from 'react'
 import type { Metadata } from 'next'
-import { ThemeProvider } from 'next-themes'
-import { ClerkProvider } from '@clerk/nextjs'
 import { UserRoleProvider } from '../features/auth'
+import { Providers } from '../lib/providers'
 import '../styles/globals.css'
+import { Toaster } from 'sonner'
 
 // Load Google Fonts via next/font/google
 import { Poppins, Playfair_Display, Fira_Code } from 'next/font/google'
@@ -41,27 +41,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`${poppins.variable} ${playfair.variable} ${firaCode.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ClerkProvider>
-            <UserRoleProvider
-              devMode={{
-                enabled: process.env.NODE_ENV === 'development',
-                allowRoleSwitching: process.env.NODE_ENV === 'development',
-              }}
-              cacheConfig={{
-                ttl: parseInt(process.env.NEXT_PUBLIC_ROLE_CACHE_TTL || '300000'),
-                enableSessionStorage: process.env.NEXT_PUBLIC_ENABLE_ROLE_CACHE !== 'false',
-              }}
-            >
-              {children}
-            </UserRoleProvider>
-          </ClerkProvider>
-        </ThemeProvider>
+        <Providers>
+          <UserRoleProvider
+            devMode={{
+              enabled: process.env.NODE_ENV === 'development',
+              allowRoleSwitching: process.env.NODE_ENV === 'development',
+            }}
+            cacheConfig={{
+              ttl: parseInt(process.env.NEXT_PUBLIC_ROLE_CACHE_TTL || '300000'),
+              enableSessionStorage: process.env.NEXT_PUBLIC_ENABLE_ROLE_CACHE !== 'false',
+            }}
+          >
+            {children}
+            <Toaster position="top-center" richColors closeButton />
+          </UserRoleProvider>
+        </Providers>
       </body>
     </html>
   )

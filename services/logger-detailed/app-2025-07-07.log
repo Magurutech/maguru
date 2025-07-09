@@ -1,0 +1,329 @@
+2025-07-07T12:24:14.998Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751891054998,
+    "memory": {
+      "rss": 915361792,
+      "heapTotal": 140767232,
+      "heapUsed": 115940800,
+      "external": 4219588,
+      "arrayBuffers": 301091
+    }
+  }
+}
+2025-07-07T12:27:49.241Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751891269241,
+    "memory": {
+      "rss": 987803648,
+      "heapTotal": 145367040,
+      "heapUsed": 129744224,
+      "external": 4328261,
+      "arrayBuffers": 401973
+    }
+  }
+}
+2025-07-07T12:42:58.141Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751892178141,
+    "memory": {
+      "rss": 1042411520,
+      "heapTotal": 146677760,
+      "heapUsed": 124408968,
+      "external": 4404268,
+      "arrayBuffers": 478337
+    }
+  }
+}
+2025-07-07T12:42:58.161Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751892178161,
+    "memory": {
+      "rss": 1042415616,
+      "heapTotal": 146677760,
+      "heapUsed": 124423592,
+      "external": 4404268,
+      "arrayBuffers": 478337
+    }
+  }
+}
+2025-07-07T12:42:58.178Z [ERROR] [API_Courses][POST] Failed to parse FormData
+{
+  "name": "TypeError",
+  "message": "Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".",
+  "stack": "TypeError: Content-Type was not one of \"multipart/form-data\" or \"application/x-www-form-urlencoded\".\n    at node:internal/deps/undici/undici:5442:19\n    at successSteps (node:internal/deps/undici/undici:5470:27)\n    at fullyReadBody (node:internal/deps/undici/undici:4381:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async consumeBody (node:internal/deps/undici/undici:5479:7)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:968:24)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751892178178,
+    "memory": {
+      "rss": 1042427904,
+      "heapTotal": 146677760,
+      "heapUsed": 124507728,
+      "external": 4404370,
+      "arrayBuffers": 478439
+    }
+  }
+}
+2025-07-07T13:27:33.995Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751894853995,
+    "memory": {
+      "rss": 384380928,
+      "heapTotal": 232116224,
+      "heapUsed": 213062824,
+      "external": 9377818,
+      "arrayBuffers": 4276642
+    }
+  }
+}
+2025-07-07T13:27:59.795Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:27:59.853Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751894879853,
+    "memory": {
+      "rss": 369954816,
+      "heapTotal": 207294464,
+      "heapUsed": 199047088,
+      "external": 7600754,
+      "arrayBuffers": 2499578
+    }
+  }
+}
+2025-07-07T13:28:50.213Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:28:51.598Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751894931597,
+    "memory": {
+      "rss": 374853632,
+      "heapTotal": 220663808,
+      "heapUsed": 200427080,
+      "external": 7680891,
+      "arrayBuffers": 2576331
+    }
+  }
+}
+2025-07-07T13:28:51.603Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751894931603,
+    "memory": {
+      "rss": 374857728,
+      "heapTotal": 220663808,
+      "heapUsed": 200444400,
+      "external": 7680891,
+      "arrayBuffers": 2576331
+    }
+  }
+}
+2025-07-07T13:28:51.617Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-07T13:28:51.624Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751894931624,
+    "memory": {
+      "rss": 374919168,
+      "heapTotal": 220663808,
+      "heapUsed": 200641768,
+      "external": 7681609,
+      "arrayBuffers": 2577049
+    }
+  }
+}
+2025-07-07T13:28:51.637Z [INFO] [API_Courses][POST] Validation successful
+2025-07-07T13:28:51.644Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-07T13:28:52.672Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751894932672,
+    "memory": {
+      "rss": 375283712,
+      "heapTotal": 221188096,
+      "heapUsed": 201748680,
+      "external": 7689281,
+      "arrayBuffers": 2581329
+    }
+  }
+}
+2025-07-07T13:40:03.897Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:40:03.908Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895603908,
+    "memory": {
+      "rss": 392781824,
+      "heapTotal": 217518080,
+      "heapUsed": 198237656,
+      "external": 7834729,
+      "arrayBuffers": 2733553
+    }
+  }
+}
+2025-07-07T13:40:58.773Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:40:58.814Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895658814,
+    "memory": {
+      "rss": 398573568,
+      "heapTotal": 217518080,
+      "heapUsed": 204713256,
+      "external": 9809974,
+      "arrayBuffers": 4708798
+    }
+  }
+}
+2025-07-07T13:41:05.987Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:41:06.013Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895666012,
+    "memory": {
+      "rss": 398688256,
+      "heapTotal": 217518080,
+      "heapUsed": 205428760,
+      "external": 9828022,
+      "arrayBuffers": 4726846
+    }
+  }
+}
+2025-07-07T13:42:05.930Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751895725930,
+    "memory": {
+      "rss": 1029488640,
+      "heapTotal": 186863616,
+      "heapUsed": 158295384,
+      "external": 13363500,
+      "arrayBuffers": 9426762
+    }
+  }
+}
+2025-07-07T13:49:17.379Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:49:17.391Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751896157391,
+    "memory": {
+      "rss": 968654848,
+      "heapTotal": 139337728,
+      "heapUsed": 133112432,
+      "external": 4274787,
+      "arrayBuffers": 344449
+    }
+  }
+}
+2025-07-07T13:50:06.532Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-07T13:50:06.539Z [WARN] [API_Courses][POST] Authentication failed
+{
+  "error": {},
+  "performance": {
+    "timestamp": 1751896206539,
+    "memory": {
+      "rss": 990408704,
+      "heapTotal": 144277504,
+      "heapUsed": 136409576,
+      "external": 6695217,
+      "arrayBuffers": 2768929
+    }
+  }
+}
+2025-07-07T23:41:26.568Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1751931686568,
+    "memory": {
+      "rss": 1244516352,
+      "heapTotal": 153845760,
+      "heapUsed": 140741840,
+      "external": 5615813,
+      "arrayBuffers": 503462
+    }
+  }
+}
+2025-07-07T23:41:26.584Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1751931686583,
+    "memory": {
+      "rss": 1244524544,
+      "heapTotal": 153845760,
+      "heapUsed": 140753336,
+      "external": 5615813,
+      "arrayBuffers": 503462
+    }
+  }
+}
+2025-07-07T23:41:26.618Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-07T23:41:26.628Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [
+    "thumbnail"
+  ],
+  "performance": {
+    "timestamp": 1751931686627,
+    "memory": {
+      "rss": 1244557312,
+      "heapTotal": 153845760,
+      "heapUsed": 140876592,
+      "external": 5616531,
+      "arrayBuffers": 504180
+    }
+  }
+}
+2025-07-07T23:41:26.638Z [INFO] [API_Courses][POST] Validation successful
+2025-07-07T23:41:26.645Z [INFO] [API_Courses][POST] Starting thumbnail upload
+2025-07-07T23:41:27.654Z [ERROR] [API_Courses][POST] Thumbnail upload error
+{
+  "name": "Error",
+  "message": "Upload failed: new row violates row-level security policy",
+  "stack": "Error: Upload failed: new row violates row-level security policy\n    at Object.uploadThumbnail (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:543:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async POST (D:\\2-Maguru\\maguru\\.next\\server\\chunks\\[root-of-the-server]__47ff2e15._.js:1020:32)\n    at async AppRouteRouteModule.do (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:34112)\n    at async AppRouteRouteModule.handle (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\compiled\\next-server\\app-route-turbo.runtime.dev.js:26:41338)\n    at async doRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1518:42)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1920:28)\n    at async DevServer.renderPageComponent (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2408:24)\n    at async DevServer.renderToResponseImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:2445:32)\n    at async DevServer.pipeImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:1008:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\next-server.js:305:17)\n    at async DevServer.handleRequestImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\base-server.js:900:17)\n    at async D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:371:20\n    at async Span.traceAsyncFn (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\trace\\trace.js:157:20)\n    at async DevServer.handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:368:24)\n    at async invokeRender (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:237:21)\n    at async handleRequest (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:428:24)\n    at async requestHandlerImpl (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\router-server.js:452:13)\n    at async Server.requestListener (D:\\2-Maguru\\maguru\\node_modules\\next\\dist\\server\\lib\\start-server.js:158:13)",
+  "performance": {
+    "timestamp": 1751931687654,
+    "memory": {
+      "rss": 1244663808,
+      "heapTotal": 154107904,
+      "heapUsed": 141357880,
+      "external": 5624203,
+      "arrayBuffers": 508460
+    }
+  }
+}

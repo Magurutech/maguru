@@ -109,6 +109,12 @@ jobs:
           DIRECT_URL: ${{ secrets.DIRECT_URL }}
           CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+          # Supabase Configuration untuk build
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL: ${{ secrets.NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL }}
+
           NODE_ENV: production
           APP_ENV: prod
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'https://maguru.vercel.app' }}

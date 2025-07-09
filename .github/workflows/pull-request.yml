@@ -94,6 +94,11 @@ jobs:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CLERK_TEST_MODE: true
 
+          # Supabase Configuration untuk testing
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL: ${{ secrets.NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL }}
+
           # App Configuration
           NODE_ENV: test
           APP_ENV: dev
@@ -174,6 +179,11 @@ jobs:
           NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           CLERK_TEST_MODE: true
 
+          # Supabase Configuration untuk testing
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL: ${{ secrets.NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL }}
+
           # App Configuration
           NODE_ENV: test
           APP_ENV: dev
@@ -242,7 +252,13 @@ jobs:
           E2E_CLERK_USER_EMAIL: ${{ secrets.E2E_CLERK_USER_EMAIL }}
           E2E_CLERK_USER_PASSWORD: ${{ secrets.E2E_CLERK_USER_PASSWORD }}
           E2E_CLERK_USER_USERNAME: ${{ secrets.E2E_CLERK_USER_USERNAME }}
-          CLERK_TEST_MODE: true
+          CLERK_TEST_MODE:
+            true
+
+            # Supabase Configuration untuk testing
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL: ${{ secrets.NEXT_PUBLIC_DEFAULT_COURSE_THUMBNAIL_URL }}
 
           # App Configuration
           NODE_ENV: test
