@@ -1,0 +1,557 @@
+{
+  "summary": {
+    "timestamp": "2025-06-25T08-39-14.877Z",
+    "totalTests": 39,
+    "passedTests": 39,
+    "failedTests": 0,
+    "pendingTests": 0,
+    "skippedTests": 0,
+    "totalTestSuites": 9,
+    "passedTestSuites": 9,
+    "failedTestSuites": 0,
+    "executionTime": "26.91s",
+    "startTime": "2025-06-25T08:39:06.197Z",
+    "endTime": "2025-06-25T08:39:33.103Z",
+    "errorPatterns": {}
+  },
+  "testFiles": [
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\CustomCard.test.tsx",
+      "relativePath": "features\\homepage\\CustomCard.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 5,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2712,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.316Z",
+        "endTime": "2025-06-25T08:39:14.028Z"
+      },
+      "testResults": [
+        {
+          "title": "renders with title and children",
+          "fullName": "CustomCard Component renders with title and children",
+          "ancestorTitles": [
+            "CustomCard Component"
+          ],
+          "status": "passed",
+          "duration": 67,
+          "failureDetails": null
+        },
+        {
+          "title": "does not render action button when no onAction provided",
+          "fullName": "CustomCard Component does not render action button when no onAction provided",
+          "ancestorTitles": [
+            "CustomCard Component"
+          ],
+          "status": "passed",
+          "duration": 13,
+          "failureDetails": null
+        },
+        {
+          "title": "renders action button with default label when onAction provided",
+          "fullName": "CustomCard Component renders action button with default label when onAction provided",
+          "ancestorTitles": [
+            "CustomCard Component"
+          ],
+          "status": "passed",
+          "duration": 8,
+          "failureDetails": null
+        },
+        {
+          "title": "renders action button with custom label when provided",
+          "fullName": "CustomCard Component renders action button with custom label when provided",
+          "ancestorTitles": [
+            "CustomCard Component"
+          ],
+          "status": "passed",
+          "duration": 6,
+          "failureDetails": null
+        },
+        {
+          "title": "calls onAction when action button is clicked",
+          "fullName": "CustomCard Component calls onAction when action button is clicked",
+          "ancestorTitles": [
+            "CustomCard Component"
+          ],
+          "status": "passed",
+          "duration": 14,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\stats.test.tsx",
+      "relativePath": "features\\homepage\\stats.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 3,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2826,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.321Z",
+        "endTime": "2025-06-25T08:39:14.147Z"
+      },
+      "testResults": [
+        {
+          "title": "renders all statistics values correctly",
+          "fullName": "Stats Component renders all statistics values correctly",
+          "ancestorTitles": [
+            "Stats Component"
+          ],
+          "status": "passed",
+          "duration": 86,
+          "failureDetails": null
+        },
+        {
+          "title": "renders all statistic labels correctly",
+          "fullName": "Stats Component renders all statistic labels correctly",
+          "ancestorTitles": [
+            "Stats Component"
+          ],
+          "status": "passed",
+          "duration": 25,
+          "failureDetails": null
+        },
+        {
+          "title": "renders inside a glass panel",
+          "fullName": "Stats Component renders inside a glass panel",
+          "ancestorTitles": [
+            "Stats Component"
+          ],
+          "status": "passed",
+          "duration": 18,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\testimonials.test.tsx",
+      "relativePath": "features\\homepage\\testimonials.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2922,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.323Z",
+        "endTime": "2025-06-25T08:39:14.245Z"
+      },
+      "testResults": [
+        {
+          "title": "renders section title and description",
+          "fullName": "Testimonials Component renders section title and description",
+          "ancestorTitles": [
+            "Testimonials Component"
+          ],
+          "status": "passed",
+          "duration": 106,
+          "failureDetails": null
+        },
+        {
+          "title": "renders all testimonial cards with correct names and roles",
+          "fullName": "Testimonials Component renders all testimonial cards with correct names and roles",
+          "ancestorTitles": [
+            "Testimonials Component"
+          ],
+          "status": "passed",
+          "duration": 53,
+          "failureDetails": null
+        },
+        {
+          "title": "renders testimonial quotes correctly",
+          "fullName": "Testimonials Component renders testimonial quotes correctly",
+          "ancestorTitles": [
+            "Testimonials Component"
+          ],
+          "status": "passed",
+          "duration": 42,
+          "failureDetails": null
+        },
+        {
+          "title": "renders 5-star ratings for all testimonials",
+          "fullName": "Testimonials Component renders 5-star ratings for all testimonials",
+          "ancestorTitles": [
+            "Testimonials Component"
+          ],
+          "status": "passed",
+          "duration": 31,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\features.test.tsx",
+      "relativePath": "features\\homepage\\features.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 3,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2924,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.323Z",
+        "endTime": "2025-06-25T08:39:14.247Z"
+      },
+      "testResults": [
+        {
+          "title": "renders section title and description",
+          "fullName": "Features Component renders section title and description",
+          "ancestorTitles": [
+            "Features Component"
+          ],
+          "status": "passed",
+          "duration": 112,
+          "failureDetails": null
+        },
+        {
+          "title": "renders all feature cards with correct titles",
+          "fullName": "Features Component renders all feature cards with correct titles",
+          "ancestorTitles": [
+            "Features Component"
+          ],
+          "status": "passed",
+          "duration": 56,
+          "failureDetails": null
+        },
+        {
+          "title": "renders feature descriptions correctly",
+          "fullName": "Features Component renders feature descriptions correctly",
+          "ancestorTitles": [
+            "Features Component"
+          ],
+          "status": "passed",
+          "duration": 44,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\components\\layout\\footer.test.tsx",
+      "relativePath": "components\\layout\\footer.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 6,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2985,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.319Z",
+        "endTime": "2025-06-25T08:39:14.304Z"
+      },
+      "testResults": [
+        {
+          "title": "renders brand info",
+          "fullName": "Footer Component renders brand info",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 111,
+          "failureDetails": null
+        },
+        {
+          "title": "renders contact information",
+          "fullName": "Footer Component renders contact information",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 34,
+          "failureDetails": null
+        },
+        {
+          "title": "renders course links section",
+          "fullName": "Footer Component renders course links section",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 48,
+          "failureDetails": null
+        },
+        {
+          "title": "renders company links section",
+          "fullName": "Footer Component renders company links section",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 36,
+          "failureDetails": null
+        },
+        {
+          "title": "renders support links section",
+          "fullName": "Footer Component renders support links section",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 35,
+          "failureDetails": null
+        },
+        {
+          "title": "renders copyright and social links",
+          "fullName": "Footer Component renders copyright and social links",
+          "ancestorTitles": [
+            "Footer Component"
+          ],
+          "status": "passed",
+          "duration": 25,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\cta.test.tsx",
+      "relativePath": "features\\homepage\\cta.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 2996,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.318Z",
+        "endTime": "2025-06-25T08:39:14.314Z"
+      },
+      "testResults": [
+        {
+          "title": "renders headline and sub-headline",
+          "fullName": "CTA Component renders headline and sub-headline",
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "status": "passed",
+          "duration": 151,
+          "failureDetails": null
+        },
+        {
+          "title": "renders call-to-action buttons",
+          "fullName": "CTA Component renders call-to-action buttons",
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "status": "passed",
+          "duration": 14,
+          "failureDetails": null
+        },
+        {
+          "title": "renders trust indicators",
+          "fullName": "CTA Component renders trust indicators",
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "status": "passed",
+          "duration": 15,
+          "failureDetails": null
+        },
+        {
+          "title": "renders with glass panel styling",
+          "fullName": "CTA Component renders with glass panel styling",
+          "ancestorTitles": [
+            "CTA Component"
+          ],
+          "status": "passed",
+          "duration": 15,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\hero.test.tsx",
+      "relativePath": "features\\homepage\\hero.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 3040,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.318Z",
+        "endTime": "2025-06-25T08:39:14.358Z"
+      },
+      "testResults": [
+        {
+          "title": "renders headline and main call-to-action",
+          "fullName": "Hero Component renders headline and main call-to-action",
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "status": "passed",
+          "duration": 156,
+          "failureDetails": null
+        },
+        {
+          "title": "renders social proof elements",
+          "fullName": "Hero Component renders social proof elements",
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "status": "passed",
+          "duration": 36,
+          "failureDetails": null
+        },
+        {
+          "title": "renders interactive learning section",
+          "fullName": "Hero Component renders interactive learning section",
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "status": "passed",
+          "duration": 25,
+          "failureDetails": null
+        },
+        {
+          "title": "renders floating information cards",
+          "fullName": "Hero Component renders floating information cards",
+          "ancestorTitles": [
+            "Hero Component"
+          ],
+          "status": "passed",
+          "duration": 26,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\components\\layout\\navbar.test.tsx",
+      "relativePath": "components\\layout\\navbar.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 4,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 3098,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.322Z",
+        "endTime": "2025-06-25T08:39:14.420Z"
+      },
+      "testResults": [
+        {
+          "title": "renders logo and brand name",
+          "fullName": "Navbar Component renders logo and brand name",
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "status": "passed",
+          "duration": 124,
+          "failureDetails": null
+        },
+        {
+          "title": "renders desktop menu items",
+          "fullName": "Navbar Component renders desktop menu items",
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "status": "passed",
+          "duration": 17,
+          "failureDetails": null
+        },
+        {
+          "title": "renders desktop CTA buttons",
+          "fullName": "Navbar Component renders desktop CTA buttons",
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "status": "passed",
+          "duration": 20,
+          "failureDetails": null
+        },
+        {
+          "title": "toggles mobile menu when menu button is clicked",
+          "fullName": "Navbar Component toggles mobile menu when menu button is clicked",
+          "ancestorTitles": [
+            "Navbar Component"
+          ],
+          "status": "passed",
+          "duration": 166,
+          "failureDetails": null
+        }
+      ]
+    },
+    {
+      "filePath": "D:\\2-Maguru\\maguru\\features\\homepage\\courses.test.tsx",
+      "relativePath": "features\\homepage\\courses.test.tsx",
+      "numFailingTests": 0,
+      "numPassingTests": 6,
+      "numPendingTests": 0,
+      "perfStats": {
+        "runtime": 3403,
+        "slowest": false,
+        "startTime": "2025-06-25T08:39:11.322Z",
+        "endTime": "2025-06-25T08:39:14.725Z"
+      },
+      "testResults": [
+        {
+          "title": "renders section title and description",
+          "fullName": "Courses Component renders section title and description",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 299,
+          "failureDetails": null
+        },
+        {
+          "title": "renders course cards with correct information",
+          "fullName": "Courses Component renders course cards with correct information",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 88,
+          "failureDetails": null
+        },
+        {
+          "title": "renders course ratings and statistics",
+          "fullName": "Courses Component renders course ratings and statistics",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 43,
+          "failureDetails": null
+        },
+        {
+          "title": "renders course level badges",
+          "fullName": "Courses Component renders course level badges",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 29,
+          "failureDetails": null
+        },
+        {
+          "title": "renders pricing information",
+          "fullName": "Courses Component renders pricing information",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 63,
+          "failureDetails": null
+        },
+        {
+          "title": "renders view all button",
+          "fullName": "Courses Component renders view all button",
+          "ancestorTitles": [
+            "Courses Component"
+          ],
+          "status": "passed",
+          "duration": 55,
+          "failureDetails": null
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "snapshots": {
+    "total": 0,
+    "matched": 0,
+    "added": 0,
+    "updated": 0,
+    "unmatched": 0,
+    "unchecked": 0,
+    "filesAdded": 0,
+    "filesRemoved": 0,
+    "filesUnmatched": 0,
+    "filesUpdated": 0
+  }
+}

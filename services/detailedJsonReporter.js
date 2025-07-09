@@ -58,7 +58,7 @@ class DetailedJsonReporter {
     }
 
     // Menyimpan file report
-    const outputDir = path.resolve(process.cwd(), 'services/detailed-report');
+    const outputDir = path.resolve(process.cwd(), 'test-results');
 
     try {
       if (!fs.existsSync(outputDir)) {
