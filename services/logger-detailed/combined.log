@@ -44122,3 +44122,380 @@
     }
   }
 }
+2025-07-10T14:50:12.596Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752159012595,
+    "memory": {
+      "rss": 1075593216,
+      "heapTotal": 250249216,
+      "heapUsed": 220518288,
+      "external": 30687439,
+      "arrayBuffers": 26757767
+    }
+  }
+}
+2025-07-10T14:50:12.610Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1752159012610,
+    "memory": {
+      "rss": 1075613696,
+      "heapTotal": 250249216,
+      "heapUsed": 220536184,
+      "external": 30687439,
+      "arrayBuffers": 26757767
+    }
+  }
+}
+2025-07-10T14:50:12.643Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-10T14:50:12.668Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1752159012668,
+    "memory": {
+      "rss": 1075601408,
+      "heapTotal": 250249216,
+      "heapUsed": 220640040,
+      "external": 30688037,
+      "arrayBuffers": 26758365
+    }
+  }
+}
+2025-07-10T14:50:12.682Z [INFO] [API_Courses][POST] Validation successful
+2025-07-10T14:50:12.689Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1752159012688,
+    "memory": {
+      "rss": 1075666944,
+      "heapTotal": 250249216,
+      "heapUsed": 220724736,
+      "external": 30688037,
+      "arrayBuffers": 26758365
+    }
+  }
+}
+2025-07-10T14:50:12.695Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752159012695,
+    "memory": {
+      "rss": 1075666944,
+      "heapTotal": 250249216,
+      "heapUsed": 220731832,
+      "external": 30688037,
+      "arrayBuffers": 26758365
+    }
+  }
+}
+2025-07-10T14:50:14.843Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "3644ms"
+  }
+}
+2025-07-10T14:50:14.859Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "50fd20ec-ae99-4671-94c0-3f2c697d6282",
+  "duration": "3644ms",
+  "performance": {
+    "timestamp": 1752159014859,
+    "memory": {
+      "rss": 1080270848,
+      "heapTotal": 250249216,
+      "heapUsed": 220916696,
+      "external": 30688094,
+      "arrayBuffers": 26758422
+    }
+  }
+}
+2025-07-10T14:58:00.699Z [INFO] [API_Courses][GET] Processing request with filters
+{
+  "page": 1,
+  "limit": 10,
+  "performance": {
+    "timestamp": 1752159480699,
+    "memory": {
+      "rss": 1041883136,
+      "heapTotal": 182165504,
+      "heapUsed": 152795768,
+      "external": 9100736,
+      "arrayBuffers": 5174428
+    }
+  }
+}
+2025-07-10T15:45:47.816Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-10T15:45:49.401Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752162349401,
+    "memory": {
+      "rss": 606769152,
+      "heapTotal": 234274816,
+      "heapUsed": 204930816,
+      "external": 15974798,
+      "arrayBuffers": 12045106
+    }
+  }
+}
+2025-07-10T15:45:49.409Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1752162349408,
+    "memory": {
+      "rss": 606777344,
+      "heapTotal": 234274816,
+      "heapUsed": 204941128,
+      "external": 15974798,
+      "arrayBuffers": 12045106
+    }
+  }
+}
+2025-07-10T15:45:49.419Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-10T15:45:49.425Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1752162349425,
+    "memory": {
+      "rss": 606806016,
+      "heapTotal": 234274816,
+      "heapUsed": 205019648,
+      "external": 15975392,
+      "arrayBuffers": 12045700
+    }
+  }
+}
+2025-07-10T15:45:49.434Z [INFO] [API_Courses][POST] Validation successful
+2025-07-10T15:45:49.438Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1752162349438,
+    "memory": {
+      "rss": 606806016,
+      "heapTotal": 234274816,
+      "heapUsed": 205055624,
+      "external": 15975392,
+      "arrayBuffers": 12045700
+    }
+  }
+}
+2025-07-10T15:45:49.450Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752162349449,
+    "memory": {
+      "rss": 606806016,
+      "heapTotal": 234274816,
+      "heapUsed": 205062592,
+      "external": 15975392,
+      "arrayBuffers": 12045700
+    }
+  }
+}
+2025-07-10T15:45:50.314Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2497ms"
+  }
+}
+2025-07-10T15:45:50.320Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "8e9ce4b5-c0b9-4f3d-8b53-e44b675050df",
+  "duration": "2497ms",
+  "performance": {
+    "timestamp": 1752162350320,
+    "memory": {
+      "rss": 606826496,
+      "heapTotal": 234274816,
+      "heapUsed": 205155248,
+      "external": 15975506,
+      "arrayBuffers": 12045814
+    }
+  }
+}
+2025-07-10T15:49:51.388Z [INFO] [API_Courses][GET] Processing request with filters
+{
+  "page": 1,
+  "limit": 10,
+  "performance": {
+    "timestamp": 1752162591388,
+    "memory": {
+      "rss": 573448192,
+      "heapTotal": 186650624,
+      "heapUsed": 177648528,
+      "external": 9875914,
+      "arrayBuffers": 5949626
+    }
+  }
+}
+2025-07-10T15:50:38.142Z [INFO] [API_Courses][GET] Processing request with filters
+{
+  "page": 1,
+  "limit": 10,
+  "performance": {
+    "timestamp": 1752162638142,
+    "memory": {
+      "rss": 594866176,
+      "heapTotal": 233725952,
+      "heapUsed": 195618424,
+      "external": 17451304,
+      "arrayBuffers": 10570868
+    }
+  }
+}
+2025-07-10T15:55:55.159Z [INFO] [API_Courses][POST] Starting course creation process
+2025-07-10T15:55:55.753Z [INFO] [API_Courses][POST] Authentication successful
+{
+  "userId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752162955753,
+    "memory": {
+      "rss": 614842368,
+      "heapTotal": 218513408,
+      "heapUsed": 212409624,
+      "external": 20869148,
+      "arrayBuffers": 16939476
+    }
+  }
+}
+2025-07-10T15:55:55.757Z [INFO] [API_Courses][POST] Role authorization successful
+{
+  "role": "creator",
+  "performance": {
+    "timestamp": 1752162955757,
+    "memory": {
+      "rss": 614842368,
+      "heapTotal": 218513408,
+      "heapUsed": 212417192,
+      "external": 20869148,
+      "arrayBuffers": 16939476
+    }
+  }
+}
+2025-07-10T15:55:55.764Z [INFO] [API_Courses][POST] FormData parsed successfully
+2025-07-10T15:55:55.767Z [INFO] [API_Courses][POST] FormData extracted
+{
+  "fields": [
+    "title",
+    "description",
+    "category",
+    "status"
+  ],
+  "files": [],
+  "performance": {
+    "timestamp": 1752162955767,
+    "memory": {
+      "rss": 614842368,
+      "heapTotal": 218513408,
+      "heapUsed": 212494368,
+      "external": 20869741,
+      "arrayBuffers": 16940069
+    }
+  }
+}
+2025-07-10T15:55:55.772Z [INFO] [API_Courses][POST] Validation successful
+2025-07-10T15:55:55.776Z [INFO] [API_Courses][POST] Using default thumbnail
+{
+  "thumbnailUrl": "/images/default-course-thumbnail.svg",
+  "performance": {
+    "timestamp": 1752162955776,
+    "memory": {
+      "rss": 614842368,
+      "heapTotal": 218513408,
+      "heapUsed": 212530376,
+      "external": 20869741,
+      "arrayBuffers": 16940069
+    }
+  }
+}
+2025-07-10T15:55:55.783Z [INFO] [API_Courses][POST] Creating course in database
+{
+  "creatorId": "user_2zD4Gxnl8EDIvG8YzRSA7rA7YBl",
+  "performance": {
+    "timestamp": 1752162955783,
+    "memory": {
+      "rss": 614850560,
+      "heapTotal": 218513408,
+      "heapUsed": 212537360,
+      "external": 20869741,
+      "arrayBuffers": 16940069
+    }
+  }
+}
+2025-07-10T15:55:57.670Z [INFO] [API_Courses][POST] Course created successfully
+{
+  "performance": {
+    "label": "Course creation",
+    "duration": "2511ms"
+  }
+}
+2025-07-10T15:55:57.674Z [INFO] [API_Courses][POST] Course creation completed
+{
+  "courseId": "302cf229-bec6-42ac-8268-1f3d66963f4e",
+  "duration": "2511ms",
+  "performance": {
+    "timestamp": 1752162957674,
+    "memory": {
+      "rss": 614948864,
+      "heapTotal": 218513408,
+      "heapUsed": 212629080,
+      "external": 20869855,
+      "arrayBuffers": 16940183
+    }
+  }
+}
+2025-07-10T15:56:29.623Z [INFO] [API_Courses][GET] Processing request with filters
+{
+  "page": 1,
+  "limit": 10,
+  "performance": {
+    "timestamp": 1752162989623,
+    "memory": {
+      "rss": 559423488,
+      "heapTotal": 203468800,
+      "heapUsed": 178540824,
+      "external": 4327699,
+      "arrayBuffers": 401391
+    }
+  }
+}
+2025-07-10T15:58:33.728Z [INFO] [API_Courses][GET] Processing request with filters
+{
+  "page": 1,
+  "limit": 10,
+  "performance": {
+    "timestamp": 1752163113728,
+    "memory": {
+      "rss": 587829248,
+      "heapTotal": 222597120,
+      "heapUsed": 190107768,
+      "external": 9962023,
+      "arrayBuffers": 6035715
+    }
+  }
+}

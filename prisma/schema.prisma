@@ -23,7 +23,23 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Relations
+  enrollments Enrollment[]
+
   @@map("courses")
+}
+
+model Enrollment {
+  id        String   @id @default(uuid())
+  userId    String   @db.VarChar(255) // Clerk User ID
+  courseId  String   @db.VarChar(255)
+  enrolledAt DateTime @default(now())
+
+  // Relations
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId]) // Prevent duplicate enrollments
+  @@map("enrollments")
 }
 
 enum CourseStatus {

@@ -1,538 +1,295 @@
 {
-  "numTotalTests": 67,
-  "numPassedTests": 67,
+  "numTotalTests": 35,
+  "numPassedTests": 35,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-09T15:11:53.287Z",
-  "endTime": "2025-07-09T15:11:58.702Z",
+  "startTime": "2025-07-10T16:54:44.918Z",
+  "endTime": "2025-07-10T16:55:28.365Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseService.integration.test.ts",
+      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\enrollmentAdapter.integration.test.ts",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Database Connection Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Database Connection Handling should handle database connection failure gracefully",
-          "status": "passed",
-          "title": "should handle database connection failure gracefully",
-          "failureMessages": [],
-          "duration": 23
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Database Connection Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Database Connection Handling should handle database disconnection gracefully",
-          "status": "passed",
-          "title": "should handle database disconnection gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Transaction Management"
-          ],
-          "fullName": "CourseService ↔ Database Integration Transaction Management should handle transaction rollback on partial failure",
-          "status": "passed",
-          "title": "should handle transaction rollback on partial failure",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Transaction Management"
-          ],
-          "fullName": "CourseService ↔ Database Integration Transaction Management should handle successful transaction completion",
-          "status": "passed",
-          "title": "should handle successful transaction completion",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Concurrent Access Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Concurrent Access Handling should handle concurrent access to same course",
-          "status": "passed",
-          "title": "should handle concurrent access to same course",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Concurrent Access Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Concurrent Access Handling should handle concurrent creation conflicts",
-          "status": "passed",
-          "title": "should handle concurrent creation conflicts",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle foreign key constraint violations",
-          "status": "passed",
-          "title": "should handle foreign key constraint violations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle not null constraint violations",
-          "status": "passed",
-          "title": "should handle not null constraint violations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle check constraint violations",
-          "status": "passed",
-          "title": "should handle check constraint violations",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Data Consistency"
-          ],
-          "fullName": "CourseService ↔ Database Integration Data Consistency should maintain data consistency across operations",
-          "status": "passed",
-          "title": "should maintain data consistency across operations",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Data Consistency"
-          ],
-          "fullName": "CourseService ↔ Database Integration Data Consistency should handle data inconsistency gracefully",
-          "status": "passed",
-          "title": "should handle data inconsistency gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Error Propagation"
-          ],
-          "fullName": "CourseService ↔ Database Integration Error Propagation should propagate database errors with meaningful messages",
-          "status": "passed",
-          "title": "should propagate database errors with meaningful messages",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Error Propagation"
-          ],
-          "fullName": "CourseService ↔ Database Integration Error Propagation should handle unknown database errors gracefully",
-          "status": "passed",
-          "title": "should handle unknown database errors gracefully",
-          "failureMessages": [],
-          "duration": 1
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAPI.integration.test.ts",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service layer errors properly",
-          "status": "passed",
-          "title": "should handle service layer errors properly",
-          "failureMessages": [],
-          "duration": 18
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service timeout scenarios",
-          "status": "passed",
-          "title": "should handle service timeout scenarios",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service returning null/undefined",
-          "status": "passed",
-          "title": "should handle service returning null/undefined",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should validate input before calling service",
-          "status": "passed",
-          "title": "should validate input before calling service",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should handle invalid course ID format",
-          "status": "passed",
-          "title": "should handle invalid course ID format",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should require valid user ID for course operations",
-          "status": "passed",
-          "title": "should require valid user ID for course operations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should handle authorization failures gracefully",
-          "status": "passed",
-          "title": "should handle authorization failures gracefully",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform request data before service call",
-          "status": "passed",
-          "title": "should transform request data before service call",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform service response for API",
-          "status": "passed",
-          "title": "should transform service response for API",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should propagate database errors with meaningful messages",
-          "status": "passed",
-          "title": "should propagate database errors with meaningful messages",
-          "failureMessages": [],
-          "duration": 7
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should handle unknown database errors gracefully",
-          "status": "passed",
-          "title": "should handle unknown database errors gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle GET requests properly",
-          "status": "passed",
-          "title": "should handle GET requests properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle POST requests properly",
-          "status": "passed",
-          "title": "should handle POST requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PUT requests properly",
-          "status": "passed",
-          "title": "should handle PUT requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle DELETE requests properly",
-          "status": "passed",
-          "title": "should handle DELETE requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PATCH requests for status updates",
-          "status": "passed",
-          "title": "should handle PATCH requests for status updates",
-          "failureMessages": [],
-          "duration": 1
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAdapter.integration.test.ts",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "Network Error Propagation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should propagate network errors from adapter to hook",
+          "fullName": "EnrollmentAdapter Integration Network Error Propagation should propagate network errors from adapter to service",
           "status": "passed",
-          "title": "should propagate network errors from adapter to hook",
+          "title": "should propagate network errors from adapter to service",
           "failureMessages": [],
-          "duration": 34
+          "duration": 3014
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "Network Error Propagation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should handle network timeout gracefully",
+          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle network timeout gracefully",
           "status": "passed",
           "title": "should handle network timeout gracefully",
           "failureMessages": [],
-          "duration": 112
+          "duration": 3033
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "Network Error Propagation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should handle connection refused errors",
+          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle connection refused errors",
           "status": "passed",
           "title": "should handle connection refused errors",
+          "failureMessages": [],
+          "duration": 3021
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Network Error Propagation"
+          ],
+          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle DNS resolution failures",
+          "status": "passed",
+          "title": "should handle DNS resolution failures",
+          "failureMessages": [],
+          "duration": 3018
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "API Error Handling"
+          ],
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 401 Unauthorized errors properly",
+          "status": "passed",
+          "title": "should handle 401 Unauthorized errors properly",
           "failureMessages": [],
           "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "API Error Handling"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 401 errors properly",
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 403 Forbidden errors properly",
           "status": "passed",
-          "title": "should handle 401 errors properly",
+          "title": "should handle 403 Forbidden errors properly",
           "failureMessages": [],
-          "duration": 4
+          "duration": 0
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "API Error Handling"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 403 errors properly",
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 404 Not Found errors properly",
           "status": "passed",
-          "title": "should handle 403 errors properly",
+          "title": "should handle 404 Not Found errors properly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "API Error Handling"
+          ],
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 409 Conflict errors properly",
+          "status": "passed",
+          "title": "should handle 409 Conflict errors properly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "API Error Handling"
+          ],
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 422 Validation errors properly",
+          "status": "passed",
+          "title": "should handle 422 Validation errors properly",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "API Error Handling"
+          ],
+          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 500 Internal Server errors properly",
+          "status": "passed",
+          "title": "should handle 500 Internal Server errors properly",
+          "failureMessages": [],
+          "duration": 3013
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Error State Management"
+          ],
+          "fullName": "EnrollmentAdapter Integration Error State Management should provide meaningful error messages",
+          "status": "passed",
+          "title": "should provide meaningful error messages",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Error State Management"
+          ],
+          "fullName": "EnrollmentAdapter Integration Error State Management should handle malformed error responses",
+          "status": "passed",
+          "title": "should handle malformed error responses",
+          "failureMessages": [],
+          "duration": 3008
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Error State Management"
+          ],
+          "fullName": "EnrollmentAdapter Integration Error State Management should handle non-JSON error responses",
+          "status": "passed",
+          "title": "should handle non-JSON error responses",
+          "failureMessages": [],
+          "duration": 3011
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Error State Management"
+          ],
+          "fullName": "EnrollmentAdapter Integration Error State Management should handle empty error responses",
+          "status": "passed",
+          "title": "should handle empty error responses",
+          "failureMessages": [],
+          "duration": 3018
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Retry Mechanisms"
+          ],
+          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should handle temporary network failures gracefully",
+          "status": "passed",
+          "title": "should handle temporary network failures gracefully",
+          "failureMessages": [],
+          "duration": 1018
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Retry Mechanisms"
+          ],
+          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should not retry on permanent errors",
+          "status": "passed",
+          "title": "should not retry on permanent errors",
           "failureMessages": [],
           "duration": 2
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
+            "EnrollmentAdapter Integration",
+            "Retry Mechanisms"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 404 errors properly",
+          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should respect retry-after header",
           "status": "passed",
-          "title": "should handle 404 errors properly",
-          "failureMessages": [],
-          "duration": 6
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 500 errors properly",
-          "status": "passed",
-          "title": "should handle 500 errors properly",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 422 validation errors properly",
-          "status": "passed",
-          "title": "should handle 422 validation errors properly",
+          "title": "should respect retry-after header",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
+            "EnrollmentAdapter Integration",
+            "Retry Mechanisms"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should provide meaningful error messages",
+          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should implement exponential backoff",
           "status": "passed",
-          "title": "should provide meaningful error messages",
+          "title": "should implement exponential backoff",
+          "failureMessages": [],
+          "duration": 3022
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Retry Mechanisms"
+          ],
+          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should limit maximum retry attempts",
+          "status": "passed",
+          "title": "should limit maximum retry attempts",
+          "failureMessages": [],
+          "duration": 3015
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Different Error Types"
+          ],
+          "fullName": "EnrollmentAdapter Integration Different Error Types should handle CORS errors",
+          "status": "passed",
+          "title": "should handle CORS errors",
+          "failureMessages": [],
+          "duration": 3011
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Different Error Types"
+          ],
+          "fullName": "EnrollmentAdapter Integration Different Error Types should handle SSL/TLS errors",
+          "status": "passed",
+          "title": "should handle SSL/TLS errors",
+          "failureMessages": [],
+          "duration": 3021
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Different Error Types"
+          ],
+          "fullName": "EnrollmentAdapter Integration Different Error Types should handle rate limiting errors",
+          "status": "passed",
+          "title": "should handle rate limiting errors",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Different Error Types"
+          ],
+          "fullName": "EnrollmentAdapter Integration Different Error Types should handle server overload errors",
+          "status": "passed",
+          "title": "should handle server overload errors",
+          "failureMessages": [],
+          "duration": 3025
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Data Transformation"
+          ],
+          "fullName": "EnrollmentAdapter Integration Data Transformation should transform API response data correctly",
+          "status": "passed",
+          "title": "should transform API response data correctly",
           "failureMessages": [],
           "duration": 16
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should handle malformed error responses",
-          "status": "passed",
-          "title": "should handle malformed error responses",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should handle non-JSON error responses",
-          "status": "passed",
-          "title": "should handle non-JSON error responses",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Retry Mechanisms should handle temporary network failures gracefully",
-          "status": "passed",
-          "title": "should handle temporary network failures gracefully",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Retry Mechanisms should not retry on permanent errors",
-          "status": "passed",
-          "title": "should not retry on permanent errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Different Error Types"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Different Error Types should handle CORS errors",
-          "status": "passed",
-          "title": "should handle CORS errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Different Error Types"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Different Error Types should handle SSL/TLS errors",
-          "status": "passed",
-          "title": "should handle SSL/TLS errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "Data Transformation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should transform API response data correctly",
+          "fullName": "EnrollmentAdapter Integration Data Transformation should handle empty response data",
           "status": "passed",
-          "title": "should transform API response data correctly",
+          "title": "should handle empty response data",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
+            "EnrollmentAdapter Integration",
             "Data Transformation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should handle empty response data",
-          "status": "passed",
-          "title": "should handle empty response data",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should handle null response data",
+          "fullName": "EnrollmentAdapter Integration Data Transformation should handle null response data",
           "status": "passed",
           "title": "should handle null response data",
           "failureMessages": [],
@@ -540,229 +297,102 @@
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
+            "EnrollmentAdapter Integration",
+            "Data Transformation"
           ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle FormData for createCourse",
+          "fullName": "EnrollmentAdapter Integration Data Transformation should validate response schema",
           "status": "passed",
-          "title": "should handle FormData for createCourse",
+          "title": "should validate response schema",
           "failureMessages": [],
-          "duration": 2
+          "duration": 1
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
+            "EnrollmentAdapter Integration",
+            "Request/Response Headers"
           ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle FormData for updateCourse",
+          "fullName": "EnrollmentAdapter Integration Request/Response Headers should include proper authentication headers",
           "status": "passed",
-          "title": "should handle FormData for updateCourse",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle successful POST create course",
-          "status": "passed",
-          "title": "should handle successful POST create course",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Rate Limiting"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Rate Limiting should handle rate limiting errors",
-          "status": "passed",
-          "title": "should handle rate limiting errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Rate Limiting"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Rate Limiting should respect retry-after header",
-          "status": "passed",
-          "title": "should respect retry-after header",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Successful API Calls should handle successful GET courses",
-          "status": "passed",
-          "title": "should handle successful GET courses",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Successful API Calls should handle successful GET course by ID",
-          "status": "passed",
-          "title": "should handle successful GET course by ID",
-          "failureMessages": [],
-          "duration": 2
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\frontend\\hooks.integration.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourse Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should handle successful adapter calls",
-          "status": "passed",
-          "title": "should handle successful adapter calls",
-          "failureMessages": [],
-          "duration": 127
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourse Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should manage loading states correctly",
-          "status": "passed",
-          "title": "should manage loading states correctly",
-          "failureMessages": [],
-          "duration": 170
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course creation workflow",
-          "status": "passed",
-          "title": "should handle course creation workflow",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course update workflow",
-          "status": "passed",
-          "title": "should handle course update workflow",
-          "failureMessages": [],
-          "duration": 6
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course deletion workflow",
-          "status": "passed",
-          "title": "should handle course deletion workflow",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle permission errors",
-          "status": "passed",
-          "title": "should handle permission errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form data updates",
-          "status": "passed",
-          "title": "should handle form data updates",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form validation errors",
-          "status": "passed",
-          "title": "should handle form validation errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload with adapter",
-          "status": "passed",
-          "title": "should handle file upload with adapter",
+          "title": "should include proper authentication headers",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
+            "EnrollmentAdapter Integration",
+            "Request/Response Headers"
           ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload errors",
+          "fullName": "EnrollmentAdapter Integration Request/Response Headers should handle missing auth token gracefully",
           "status": "passed",
-          "title": "should handle file upload errors",
+          "title": "should handle missing auth token gracefully",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Request/Response Headers"
+          ],
+          "fullName": "EnrollmentAdapter Integration Request/Response Headers should include proper content-type headers for POST requests",
+          "status": "passed",
+          "title": "should include proper content-type headers for POST requests",
           "failureMessages": [],
           "duration": 2
         },
         {
           "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Error Recovery and Retry"
+            "EnrollmentAdapter Integration",
+            "Request/Response Headers"
           ],
-          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should allow retry after network failure",
+          "fullName": "EnrollmentAdapter Integration Request/Response Headers should handle custom headers correctly",
           "status": "passed",
-          "title": "should allow retry after network failure",
+          "title": "should handle custom headers correctly",
           "failureMessages": [],
-          "duration": 20
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Error Recovery and Retry"
+            "EnrollmentAdapter Integration",
+            "Successful API Calls"
           ],
-          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should clear errors on successful retry",
+          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful POST enrollment",
           "status": "passed",
-          "title": "should clear errors on successful retry",
+          "title": "should handle successful POST enrollment",
           "failureMessages": [],
-          "duration": 8
+          "duration": 1
         },
         {
           "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Data Consistency"
+            "EnrollmentAdapter Integration",
+            "Successful API Calls"
           ],
-          "fullName": "Hooks ↔ Adapters Integration Data Consistency should maintain data consistency across operations",
+          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful GET enrollments",
           "status": "passed",
-          "title": "should maintain data consistency across operations",
+          "title": "should handle successful GET enrollments",
           "failureMessages": [],
-          "duration": 79
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Successful API Calls"
+          ],
+          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful GET enrollment status",
+          "status": "passed",
+          "title": "should handle successful GET enrollment status",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter Integration",
+            "Successful API Calls"
+          ],
+          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful DELETE enrollment",
+          "status": "passed",
+          "title": "should handle successful DELETE enrollment",
+          "failureMessages": [],
+          "duration": 1
         }
       ],
       "failureMessage": null

@@ -106,27 +106,38 @@ model Course {
 ### TypeScript Interfaces
 
 ```typescript
+// Database Model (untuk CRUD operations)
 interface Enrollment {
   id: string
   userId: string
   courseId: string
   enrolledAt: Date
-  course?: Course
+  course?: Course // Database model untuk internal operations
 }
 
+// Display Model (untuk UI components)
+interface EnrollmentDisplay {
+  id: string
+  userId: string
+  courseId: string
+  enrolledAt: Date
+  course: CourseCatalogItem // Display model untuk UI
+}
+
+// Request/Response Types
 interface CreateEnrollmentRequest {
   courseId: string
 }
 
 interface EnrollmentResponse {
   success: boolean
-  data?: Enrollment
+  data?: EnrollmentDisplay // Display model untuk response
   error?: string
 }
 
 interface EnrollmentListResponse {
   success: boolean
-  data: Enrollment[]
+  data: EnrollmentDisplay[] // Display models untuk response
   pagination: PaginationInfo
   error?: string
 }
@@ -136,6 +147,13 @@ interface EnrollmentStatusResponse {
   isEnrolled: boolean
   enrollmentDate?: Date
   error?: string
+}
+
+// Utility Types
+interface UserEnrollmentContext {
+  userId: string
+  enrolledCourses: string[]
+  enrollmentDates: Record<string, Date>
 }
 ```
 
@@ -149,10 +167,13 @@ interface EnrollmentStatusResponse {
 
 ### 2. **Service Layer**
 
-- `EnrollmentService` untuk business logic
+- `EnrollmentService` untuk business logic dan database operations
+- `EnrollmentDisplayService` untuk transformation ke display model
 - Validasi duplicate enrollment
 - Update course.students count
 - Error handling dan logging
+- **Integration dengan courseTransformers untuk display data**
+- **User context management untuk enrollment status**
 
 ### 3. **API Routes**
 
@@ -160,20 +181,62 @@ interface EnrollmentStatusResponse {
 - `app/api/courses/[id]/enrollment-status/route.ts` - GET
 - Authentication middleware integration
 - Zod validation untuk request data
+- **Response transformation menggunakan courseTransformers**
+- **Display model integration untuk UI consistency**
 
-### 4. **Error Handling**
+### 4. **Adapter Layer**
+
+- `EnrollmentAdapter` untuk client-side API communication
+- Error handling dan response formatting
+- Request/response transformation utilities
+- **Integration dengan courseTransformers untuk display data**
+- **Retry logic dan timeout handling**
+- **Graceful fallback untuk failed operations**
+
+### 5. **Error Handling**
 
 - Duplicate enrollment error (409 Conflict)
 - Course not found error (404 Not Found)
 - Authentication error (401 Unauthorized)
 - Authorization error (403 Forbidden)
 
-### 5. **Business Logic**
+### 6. **Business Logic**
 
 - Validasi course exists dan status PUBLISHED
 - Validasi user tidak sudah terdaftar
 - Atomic transaction untuk enrollment + update course.students
 - Logging untuk audit trail
+- **Integration dengan courseTransformers untuk display data**
+
+### 7. **Designing for Failure Patterns**
+
+#### **Retry Pattern**
+
+- Exponential backoff untuk enrollment operations
+- Circuit breaker pattern untuk API calls
+- Retry logic dengan maximum attempts (3x)
+- Graceful degradation untuk temporary failures
+
+#### **Timeout Handling**
+
+- AbortController untuk enrollment requests
+- Request timeout configuration (30s default)
+- Graceful timeout handling dengan user feedback
+- Connection pooling untuk database operations
+
+#### **Graceful Fallback**
+
+- Fallback UI untuk enrollment failures
+- Skeleton loading states untuk enrollment list
+- Error boundaries untuk enrollment components
+- Safe default state untuk partial failures
+
+#### **Safe Default State**
+
+- Default enrollment status handling
+- Safe fallback values untuk failed operations
+- Graceful degradation untuk partial failures
+- Local caching untuk enrollment status
 
 ## Peningkatan UX
 
@@ -183,6 +246,7 @@ interface EnrollmentStatusResponse {
 - Connection pooling untuk database operations
 - Caching untuk enrollment status checks
 - Pagination untuk enrollment list
+- **Display model caching untuk UI performance**
 
 ### Security Enhancement
 
@@ -203,9 +267,11 @@ interface EnrollmentStatusResponse {
 ### Unit Tests
 
 - EnrollmentService business logic
+- EnrollmentDisplayService transformation logic
 - Database operations dan constraints
 - Validation logic
 - Error handling scenarios
+- **Course transformation integration tests**
 
 ### Integration Tests
 
@@ -213,7 +279,7 @@ interface EnrollmentStatusResponse {
 - Authentication flow
 - Database integration
 - Error response handling
-
+- **Display model transformation flow**
 
 ## Pertanyaan untuk Diklarifikasi
 
@@ -229,26 +295,37 @@ interface EnrollmentStatusResponse {
 - [ ] API endpoint POST /api/enrollments berfungsi dengan authentication
 - [ ] API endpoint GET /api/enrollments berfungsi dengan pagination
 - [ ] API endpoint GET /api/courses/[id]/enrollment-status berfungsi
+- [ ] **EnrollmentAdapter berhasil diimplementasi dengan retry logic**
 - [ ] Duplicate enrollment prevention berfungsi dengan baik
 - [ ] Course.students count terupdate otomatis saat enrollment
 - [ ] Error handling mencakup semua skenario (404, 409, 401, 403)
+- [ ] **Display model transformation berfungsi dengan courseTransformers**
+- [ ] **UI components menggunakan CourseCatalogItem interface**
+- [ ] **Designing for failure patterns diimplementasi (retry, timeout, fallback)**
+- [ ] **Graceful degradation untuk partial failures**
 - [ ] Unit tests dan integration tests berhasil dengan coverage ≥80%
 - [ ] Performance optimization diimplementasikan
 - [ ] Security measures diterapkan
 
 ## Estimasi Effort
 
-**Total: 8 jam**
+**Total: 12 jam** _(Updated untuk include adapter layer dan designing for failure)_
 
 - Database schema design dan migration: 2 jam
-- Service layer implementation: 2 jam
+- Service layer implementation: 3 jam _(+1 jam untuk display service)_
 - API endpoints development: 2 jam
-- Testing dan debugging: 2 jam
+- **Adapter layer implementation: 1 jam**
+- **Display model integration: 1 jam**
+- **Designing for failure patterns: 2 jam**
+- Testing dan debugging: 1 jam
 
 ## Dependencies
 
 - TSK-47: Backend CRUD Course (✅ Complete)
+- **TSK-50: Course Catalog UI dengan Layered Interface Pattern (✅ Complete)**
 - Clerk authentication setup (✅ Complete)
 - Prisma ORM configuration (✅ Complete)
 - Existing error handling patterns
 - Existing logging infrastructure
+- **Course transformation utilities (courseTransformers)**
+- **CourseCatalogItem dan CourseDetailView interfaces**

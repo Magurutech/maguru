@@ -1,14 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the `User` table. If the table is not empty, all the data it contains will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "CourseStatus" AS ENUM ('DRAFT', 'PUBLISHED');
-
--- DropTable
-DROP TABLE "User";
 
 -- CreateTable
 CREATE TABLE "courses" (
@@ -28,3 +19,19 @@ CREATE TABLE "courses" (
 
     CONSTRAINT "courses_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateTable
+CREATE TABLE "enrollments" (
+    "id" TEXT NOT NULL,
+    "userId" VARCHAR(255) NOT NULL,
+    "courseId" VARCHAR(255) NOT NULL,
+    "enrolledAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "enrollments_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "enrollments_userId_courseId_key" ON "enrollments"("userId", "courseId");
+
+-- AddForeignKey
+ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "courses"("id") ON DELETE CASCADE ON UPDATE CASCADE;

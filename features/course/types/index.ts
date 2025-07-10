@@ -215,3 +215,53 @@ export const courseThumbnailUtils = {
     return DEFAULT_COURSE_THUMBNAIL.URL
   },
 }
+
+// ============================================================================
+// ENROLLMENT MODELS (TSK-51) - Simplified for TSK-11 requirements
+// ============================================================================
+
+// Core Database Model
+export interface Enrollment {
+  id: string
+  userId: string // Clerk User ID
+  courseId: string
+  enrolledAt: Date
+  course?: Course // For internal operations
+}
+
+// Request/Response Types
+export interface CreateEnrollmentRequest {
+  courseId: string
+}
+
+export interface EnrollmentResponse {
+  success: boolean
+  data?: Enrollment
+  error?: string
+}
+
+export interface EnrollmentListResponse {
+  success: boolean
+  data: Enrollment[]
+  pagination: PaginationInfo
+  error?: string
+}
+
+export interface EnrollmentStatusResponse {
+  success: boolean
+  isEnrolled: boolean
+  enrollmentDate?: Date
+  error?: string
+}
+
+// ============================================================================
+// ZOD SCHEMAS untuk validasi (TSK-51)
+// ============================================================================
+
+export const CreateEnrollmentSchema = z.object({
+  courseId: z.string().min(1, 'Course ID harus diisi'),
+})
+
+export const EnrollmentStatusSchema = z.object({
+  courseId: z.string().min(1, 'Course ID harus diisi'),
+})
