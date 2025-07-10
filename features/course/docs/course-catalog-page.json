@@ -1,0 +1,38 @@
+{
+  "additional_components": {
+    "category_tabs": {
+      "layout": "horizontal scrollable chips/tabs above the grid",
+      "styling": "rounded, glass panel effect, active state with accent color",
+      "elements": ["category chip (All, Martial Arts, Culture, etc)"],
+      "interaction": "click to filter grid instantly"
+    },
+    "sort_dropdown": {
+      "layout": "dropdown next to search/filter",
+      "styling": "minimal, glass panel, icon indicator",
+      "options": ["Popularity", "Rating", "Newest", "Price: Low-High", "Price: High-Low"],
+      "interaction": "select to re-sort grid"
+    },
+    "quick_view_modal": {
+      "trigger": "hover or click on course card",
+      "layout": "centered modal with course summary",
+      "elements": ["thumbnail", "title", "short description", "enroll button"],
+      "styling": "glass panel, smooth transition, close button"
+    },
+    "wishlist_button": {
+      "placement": "top-right of course card",
+      "icon": "heart/bookmark",
+      "interaction": "toggle add/remove from wishlist",
+      "styling": "accent color when active"
+    },
+    "empty_state_illustration": {
+      "placement": "center of grid area when no courses found",
+      "elements": ["illustration", "message", "reset filters button"],
+      "styling": "whimsical, friendly, consistent with theme"
+    },
+    "announcement_banner": {
+      "placement": "top of page, above search/filter",
+      "elements": ["promo text", "link/button"],
+      "styling": "glass panel, accent color, dismissible"
+    }
+  }
+}

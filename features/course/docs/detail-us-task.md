@@ -1,153 +1,179 @@
-TSK-11 Sebagai siswa, saya ingin menelusuri dan mendaftar di kursus agar dapat mengakses materi pembelajaran.
 
-Asumsi:
-
-Aplikasi menggunakan Clerk untuk autentikasi.
-
-Siswa sudah terautentikasi dengan role "user".
-
-Database tersedia untuk menyimpan data pendaftaran kursus.
-
-Detail:
-
-Halaman katalog kursus menampilkan daftar kursus yang tersedia dengan informasi seperti judul, deskripsi, dan creator.
-
-Tombol pendaftaran untuk setiap kursus, dengan konfirmasi setelah pendaftaran berhasil.
-
-Kriteria Penerimaan:
-
-Given saya adalah siswa,
-When saya mengakses halaman katalog kursus,
-Then saya dapat melihat daftar kursus yang tersedia.
-
-Given saya adalah siswa,
-When saya mengklik "Daftar" pada kursus,
-Then saya dapat mendaftar dan melihat konfirmasi pendaftaran.
-
-Given saya adalah siswa,
-When saya mencoba mendaftar di kursus yang sudah saya ikuti,
-Then saya diberitahu bahwa saya sudah terdaftar.
-
-FlowChart:
-
-(Start) -> [Login sebagai siswa] -> <Role valid?> ->
-[Ya: Akses katalog kursus] -> [Pilih kursus] ->
-[Daftar kursus] -> [Simpan pendaftaran] ->
-[Tampilkan konfirmasi] ->
-(End)
-[Tidak: Tampilkan error] ->
-(End)
-
-Evaluasi INVEST:
-
-Independent: Ya, dapat dikerjakan terpisah dari fitur lain.
-
-Negotiable: Dapat didiskusikan (misalnya, desain katalog).
-
-Valuable: Memberikan akses ke materi pembelajaran bagi siswa.
-
-Estimable: Estimasi effort jelas (5 story points).
-
-Small: Dapat diselesaikan dalam sprint.
-
-Testable: Kriteria penerimaan dapat diuji.
-
-<!-- ============================== -->
-
-TSK-50 Desain UI untuk katalog kursus
-
-Membuat wireframe atau mockup untuk halaman katalog kursus, termasuk daftar kursus dan tombol pendaftaran.
-
-Checklist:
-
-Desain tampilan daftar kursus.
-
-Desain tombol pendaftaran.
-
-Desain konfirmasi pendaftaran.
-
-Estimasi Effort: 5 jam
-
-Owner: Bob
-
-Definisi Selesai: Wireframe atau mockup selesai dan disetujui oleh Product Owner.
-
-Catatan Tambahan: Pastikan desain responsif dan sesuai dengan brand Maguru.
-
-<!-- = -->
-
-TSK-51 Implementasi backend untuk pendaftaran kursus dengan integrasi Clerk
-
-Membuat API endpoint untuk pendaftaran kursus, termasuk penyimpanan data pendaftaran di database. Menambahkan middleware untuk memeriksa autentikasi di endpoint pendaftaran kursus.
-
-Checklist:
-
-Buat model pendaftaran di database.
-
-Implementasi endpoint POST /enrollments untuk mendaftar kursus.
-
-Implementasi endpoint GET /enrollments untuk mendapatkan daftar pendaftaran siswa.
-
-Tambahkan pengecekan autentikasi di endpoint POST /enrollments.
-
-Owner: Bob
-
-Definisi Selesai: Endpoint berfungsi dengan benar, lulus unit test.Endpoint hanya dapat diakses oleh pengguna terautentikasi, lulus unit test.
-
-Catatan Tambahan: Pastikan endpoint mencegah pendaftaran ganda.
-
-<!-- = -->
-
-TSK-52 Implementasi Front end untuk pendaftaran kursus
-
-Menambahkanbusiness logic context dan hooks sesuai dengan Ui UX
-
-Checklist:
-
-Owner: Bob
-
-Definisi Selesai:
-
-Dependensi: T-006
-
-Catatan Tambahan: Gunakan conetxt API React Query , dan jika pelru state yang complex gunakan Redux
-
-TSK-53 Menulis unit test dan integration test untuk pendaftaran kursus
-
-Membuat unit test untuk endpoint pendaftaran kursus, termasuk test untuk autentikasi.
-
-Checklist:
-
-Test untuk endpoint POST /enrollments.
-
-Test untuk pengecekan autentikasi.
-
-Test untuk skenario pendaftaran ganda.
-
-Owner: Bob
-
-Definisi Selesai: Semua unit test berhasil, coverage minimal 80%.
-
-Catatan Tambahan: Pastikan test mencakup skenario positif dan negatif
-
-TSk-67 Menulis test case e2e untuk pendaftaran kursus
-
-Membuat test case e2e untuk skenario pendaftaran kursus, termasuk autentikasi.
-
-Checklist:
-
-Test case untuk siswa mendaftar kursus.
-
-Test case untuk siswa mencoba mendaftar kursus yang sudah diikuti.
-
-Test case untuk pengguna tidak terautentikasi (harus gagal).
-
-Owner: Alice
-
-Definisi Selesai: Test case ditulis dan dapat dijalankan dengan Playwright.
-
-Estimasi Effort: 6 jam
-
-Dependensi: Fitur pendaftaran kursus selesai
-
-Catatan Tambahan: Pastikan test mencakup skenario autentikasi.
+### 1. **Course Catalog Page** (`app/courses/page.tsx`)
+
+**Deskripsi:**
+Halaman utama katalog kursus yang menampilkan grid course cards dengan filter dan search functionality. Halaman ini menjadi entry point utama bagi siswa untuk menelusuri dan mendaftar ke kursus yang tersedia.
+
+**Layout Structure:**
+
+```
+┌─────────────────────────────────────┐
+│ Header Section                      │
+│ ┌─────────────────────────────────┐ │
+│ │ Search Bar + Filter Controls    │ │
+│ │ [Search Input] [Category Dropdown] │
+│ └─────────────────────────────────┘ │
+├─────────────────────────────────────┤
+│ Main Content Area                   │
+│ ┌─────────┐ ┌─────────┐ ┌─────────┐ │
+│ │ Card 1  │ │ Card 2  │ │ Card 3  │ │
+│ │         │ │         │ │         │ │
+│ └─────────┘ └─────────┘ └─────────┘ │
+│ ┌─────────┐ ┌─────────┐ ┌─────────┐ │
+│ │ Card 4  │ │ Card 5  │ │ Card 6  │ │
+│ │         │ │         │ │         │ │
+│ └─────────┘ └─────────┘ └─────────┘ │
+├─────────────────────────────────────┤
+│ Pagination Section                  │
+│ [Previous] [1] [2] [3] [Next]      │
+└─────────────────────────────────────┘
+```
+
+**Key Features:**
+
+- Responsive grid layout (1 column mobile, 2-4 columns desktop)
+- Search bar dengan debouncing (300ms delay)
+- Category filter dropdown dengan custom styling
+- Loading skeleton untuk course cards
+- Empty state dengan ilustrasi ketika tidak ada kursus
+- Pagination untuk navigasi antar halaman
+
+**Components yang Akan Dibuat:**
+
+#### 1.1 **CourseCatalogHeader** (`features/course/components/course-catalog/CourseCatalogHeader.tsx`)
+
+**Props:**
+
+```typescript
+interface CourseCatalogHeaderProps {
+  searchQuery: string
+  selectedCategory: string
+  categories: string[]
+  onSearchChange: (query: string) => void
+  onCategoryChange: (category: string) => void
+  onClearFilters: () => void
+}
+```
+
+**Design Elements:**
+
+- Glass panel background dengan backdrop-blur
+- Search input dengan search icon dan clear button
+- Category dropdown dengan custom styling
+- Clear filters button dengan hover effect
+- Responsive layout untuk mobile (stacked) dan desktop (inline)
+
+**States:**
+
+- **Default**: Search input focused, dropdown closed
+- **Search Active**: Input with value, clear button visible
+- **Filter Active**: Dropdown open, selected category highlighted
+- **Loading**: Disabled state dengan spinner
+
+#### 1.2 **CourseCatalogGrid** (`features/course/components/course-catalog/CourseCatalogGrid.tsx`)
+
+**Props:**
+
+```typescript
+interface CourseCatalogGridProps {
+  courses: Course[]
+  isLoading: boolean
+  onEnroll: (courseId: string) => void
+  onViewDetails: (courseId: string) => void
+}
+```
+
+**Design Elements:**
+
+- CSS Grid layout dengan responsive breakpoints
+- Gap spacing yang konsisten (1rem mobile, 1.5rem desktop)
+- Skeleton loading state dengan shimmer effect
+- Empty state dengan ilustrasi dan call-to-action
+- Intersection Observer untuk lazy loading
+
+**Grid Configuration:**
+
+- **Mobile (320px-768px)**: 1 column, gap 1rem
+- **Tablet (768px-1024px)**: 2 columns, gap 1.25rem
+- **Desktop (1024px+)**: 3-4 columns, gap 1.5rem
+
+#### 1.3 **CourseCatalogCard** (`features/course/components/course-catalog/CourseCatalogCard.tsx`)
+
+**Props:**
+
+```typescript
+interface CourseCatalogCardProps {
+  course: Course
+  isEnrolled: boolean
+  onEnroll: () => void
+  onViewDetails: () => void
+}
+```
+
+**Design Elements:**
+
+- Glass panel background dengan subtle shadow
+- Course thumbnail dengan fallback image dan aspect ratio 16:9
+- Enrollment status badge (Available/Enrolled) dengan color coding
+- Hover effects dengan scale transform (1.02) dan shadow elevation
+- Ancient fantasy border motif dengan subtle pattern
+- Rating display dengan star icons
+- Creator name dengan avatar placeholder
+
+**Card Layout:**
+
+```
+┌─────────────────────────────────┐
+│ [Thumbnail Image]               │
+│ ┌─────────────────────────────┐ │
+│ │ [Status Badge] [Rating]     │ │
+│ └─────────────────────────────┘ │
+├─────────────────────────────────┤
+│ [Course Title]                  │
+│ [Course Description]            │
+│ ┌─────────────────────────────┐ │
+│ │ [Creator] [Students] [Lessons] │
+│ └─────────────────────────────┘ │
+├─────────────────────────────────┤
+│ [Enrollment Button]             │
+└─────────────────────────────────┘
+```
+
+**States:**
+
+- **Default**: Card dengan hover effect
+- **Hover**: Scale transform dan shadow elevation
+- **Enrolled**: Green badge dan disabled enrollment button
+- **Loading**: Skeleton state dengan shimmer
+
+#### 1.4 **CourseSearchFilter** (`features/course/components/course-catalog/CourseSearchFilter.tsx`)
+
+**Props:**
+
+```typescript
+interface CourseSearchFilterProps {
+  searchQuery: string
+  selectedCategory: string
+  categories: string[]
+  onSearchChange: (query: string) => void
+  onCategoryChange: (category: string) => void
+  onClearFilters: () => void
+  isLoading: boolean
+}
+```
+
+**Design Elements:**
+
+- Search input dengan search icon dan clear button
+- Category dropdown dengan custom styling
+- Clear filters button dengan hover effect
+- Loading state dengan spinner
+- Responsive layout untuk mobile dan desktop
+
+**Features:**
+
+- Search debouncing (300ms delay)
+- Category filter dengan "All Categories" option
+- Clear filters functionality
+- Loading state untuk search results
+- Keyboard navigation support

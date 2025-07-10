@@ -100,7 +100,7 @@ export default function DashboardPage() {
       {
         icon: <BookOpen className="w-4 h-4 mr-2" />,
         label: 'Jelajahi Kursus Baru',
-        href: '/courses',
+        href: '/course',
       },
       {
         icon: <User className="w-4 h-4 mr-2" />,
