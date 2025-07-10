@@ -60,7 +60,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
                   </Button>
                 </Link>
 
-                <Link href="/user/certificates">
+                <Link href="course/id">
                   <Button
                     variant="ghost"
                     className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"

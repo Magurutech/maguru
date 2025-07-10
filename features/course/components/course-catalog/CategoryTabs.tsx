@@ -16,11 +16,9 @@ export function CategoryTabs({ categories, selectedCategory, onSelect }: Categor
             variant={selectedCategory === category ? 'default' : 'outline'}
             size="sm"
             onClick={() => onSelect(category)}
-            className={`whitespace-nowrap glass-panel transition-all duration-200 font-medium rounded-full px-5 py-2 shadow-sm ${
-              selectedCategory === category
-                ? 'bg-red-600 hover:bg-red-700 text-white shadow-lg'
-                : 'bg-white/30 border-white/40 hover:bg-white/50 text-gray-700'
-            }`}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200
+              ${selectedCategory === category ? 'bg-primary text-white shadow-lg' : 'bg-white/80 text-beige-900 hover:bg-primary/10'}
+            `}
             aria-pressed={selectedCategory === category}
           >
             {category}

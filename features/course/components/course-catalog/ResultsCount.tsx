@@ -10,7 +10,7 @@ export function ResultsCount({ count, loading }: ResultsCountProps) {
 
   return (
     <div className="mb-6">
-      <p className="text-gray-600">
+      <p className="text-beige-900 font-semibold">
         {count === 0
           ? 'No courses found matching your criteria'
           : `Showing ${count} course${count !== 1 ? 's' : ''}`}

@@ -23,10 +23,10 @@ export function EmptyStateIllustration({
           <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-200 rounded-full animate-pulse" />
           <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-blue-200 rounded-full animate-pulse delay-300" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">
+        <h3 className="text-xl font-bold text-beige-900 mb-2">
           {hasActiveFilters ? 'No mystical courses found' : 'The ancient library awaits'}
         </h3>
-        <p className="text-gray-600 mb-4">
+        <p className="text-beige-800 mb-4">
           {hasActiveFilters
             ? 'Try adjusting your search terms or exploring different categories to discover hidden knowledge.'
             : 'Explore our collection of ancient wisdom and mystical arts to begin your journey.'}

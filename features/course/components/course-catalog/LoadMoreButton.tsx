@@ -15,7 +15,7 @@ export function LoadMoreButton({ hasMoreCourses, onLoadMore }: LoadMoreButtonPro
         variant="outline"
         size="lg"
         onClick={onLoadMore}
-        className="glass-panel bg-white/30 border-white/40 hover:bg-white/50 backdrop-blur-md"
+        className="btn-primary px-6 py-2 rounded-lg text-lg font-semibold"
       >
         Load More Courses
       </Button>

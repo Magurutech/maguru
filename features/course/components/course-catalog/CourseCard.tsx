@@ -49,7 +49,7 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
   return (
     <DialogContent className="max-w-2xl glass-panel">
       <DialogHeader>
-        <DialogTitle className="text-2xl font-bold text-gray-800">{course.title}</DialogTitle>
+        <DialogTitle className="text-2xl font-bold text-beige-900">{course.title}</DialogTitle>
       </DialogHeader>
       <div className="grid md:grid-cols-2 gap-6">
         <div className="space-y-4">
@@ -61,9 +61,9 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
               className="object-cover"
             />
           </div>
-          <div className="flex items-center gap-4 text-sm text-gray-600">
+          <div className="flex items-center gap-4 text-sm text-beige-700">
             <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <Star className="w-4 h-4 fill-secondary text-secondary" />
               <span className="font-medium">{course.rating}</span>
             </div>
             <div className="flex items-center gap-1">
@@ -78,31 +78,31 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
         </div>
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-gray-600 mb-2">by {course.creator}</p>
+            <p className="text-sm text-beige-700 mb-2">by {course.creator}</p>
             <Badge variant="secondary" className="mb-4">
               {course.category}
             </Badge>
-            <p className="text-gray-700 leading-relaxed">{course.longDescription}</p>
+            <p className="text-beige-800 leading-relaxed">{course.longDescription}</p>
           </div>
           <div>
-            <h4 className="font-semibold text-gray-800 mb-2">What you&apos;ll learn:</h4>
+            <h4 className="font-semibold text-beige-900 mb-2">What you&apos;ll learn:</h4>
             <ul className="space-y-1">
               {course.curriculum.map((item, index) => (
-                <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
+                <li key={index} className="text-sm text-beige-700 flex items-center gap-2">
                   <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
                   {item}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-            <span className="text-2xl font-bold text-gray-800">${course.price}</span>
+          <div className="flex items-center justify-between pt-4 border-t border-beige-200">
+            <span className="text-2xl font-bold text-beige-900">${course.price}</span>
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => onWishlist(course.id)}
-                className={`${course.wishlist ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
+                className={`${course.wishlist ? 'bg-primary/10 border-primary/20 text-primary' : ''}`}
               >
                 <Heart className={`w-4 h-4 ${course.wishlist ? 'fill-current' : ''}`} />
               </Button>
@@ -111,8 +111,8 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
                 disabled={isLoading}
                 className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
                   course.enrolled
-                    ? 'bg-green-500 hover:bg-green-600 text-white'
-                    : 'bg-red-600 hover:bg-red-700 text-white'
+                    ? 'bg-accent hover:bg-accent-600 text-white'
+                    : 'bg-primary hover:bg-primary-700 text-white'
                 }`}
               >
                 {isLoading ? (
@@ -154,8 +154,8 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
         onClick={() => onWishlist(course.id)}
         className={`absolute top-3 right-3 z-10 w-8 h-8 p-0 rounded-full backdrop-blur-sm ${
           course.wishlist
-            ? 'bg-red-500/90 hover:bg-red-600/90 text-white'
-            : 'bg-white/90 hover:bg-white text-gray-600'
+            ? 'bg-primary/90 hover:bg-primary-600/90 text-white'
+            : 'bg-white/90 hover:bg-white text-beige-700'
         }`}
         aria-label={course.wishlist ? 'Remove from wishlist' : 'Add to wishlist'}
       >
@@ -170,7 +170,7 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3">
-          <Badge variant="secondary" className="bg-white/90 text-gray-800 font-medium">
+          <Badge variant="secondary" className="bg-white/90 text-beige-900 font-medium">
             {course.category}
           </Badge>
         </div>
@@ -181,7 +181,7 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="absolute bottom-3 right-3 w-8 h-8 p-0 rounded-full backdrop-blur-sm bg-white/90 hover:bg-white text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute bottom-3 right-3 w-8 h-8 p-0 rounded-full backdrop-blur-sm bg-white/90 hover:bg-white text-beige-700 opacity-0 group-hover:opacity-100 transition-opacity"
               aria-label={`Quick view ${course.title}`}
             >
               <Eye className="w-4 h-4" />
@@ -193,15 +193,15 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
 
       <div className="p-6 space-y-4">
         <div>
-          <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-red-700 transition-colors">
+          <h3 className="font-bold text-lg text-beige-900 line-clamp-2 group-hover:text-primary transition-colors">
             {course.title}
           </h3>
-          <p className="text-sm text-gray-600 mt-1">by {course.creator}</p>
+          <p className="text-sm text-beige-700 mt-1">by {course.creator}</p>
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <div className="flex items-center gap-4 text-sm text-beige-700">
           <div className="flex items-center gap-1">
-            <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            <Star className="w-4 h-4 fill-secondary text-secondary" />
             <span className="font-medium">{course.rating}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -215,14 +215,14 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-gray-800">${course.price}</span>
+          <span className="text-2xl font-bold text-beige-900">${course.price}</span>
           <Button
             onClick={handleEnroll}
             disabled={isLoading}
             className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
               course.enrolled
-                ? 'bg-green-500 hover:bg-green-600 text-white'
-                : 'bg-red-600 hover:bg-red-700 text-white hover:shadow-lg'
+                ? 'bg-accent hover:bg-accent-600 text-white'
+                : 'bg-primary hover:bg-primary-700 text-white hover:shadow-lg'
             }`}
             aria-label={course.enrolled ? 'Already enrolled' : `Enroll in ${course.title}`}
           >
