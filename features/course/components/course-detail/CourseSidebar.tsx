@@ -3,10 +3,10 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Calendar, Globe, Award, Download, Clock, BookOpen, Video, FileText } from 'lucide-react'
 import Image from 'next/image'
-import type { Course } from './CourseDetailPage'
+import type { CourseDetail } from '@/features/course/types'
 
 interface CourseSidebarProps {
-  course: Course
+  course: CourseDetail
 }
 
 export function CourseSidebar({ course }: CourseSidebarProps) {

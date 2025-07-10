@@ -11,12 +11,12 @@ import {
 import { Button } from '@/components/ui/button'
 import { CheckCircle, CreditCard, Shield } from 'lucide-react'
 import Image from 'next/image'
-import { Course } from './CourseDetailPage'
+import type { CourseDetail } from '@/features/course/types'
 
 interface EnrollmentDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  course: Course
+  course: CourseDetail
   onConfirm: () => void
 }
 

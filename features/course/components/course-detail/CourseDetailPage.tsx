@@ -6,47 +6,10 @@ import { EnrollmentCTA } from './EnrollmentCta'
 import { CourseTabs } from './CourseTabs'
 import { CourseSidebar } from './CourseSidebar'
 import { EnrollmentDialog } from './Enrollment-dialog'
-
-export interface Course {
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  instructor: {
-    name: string
-    avatar: string
-    bio: string
-    credentials: string[]
-    rating: number
-    students: number
-  }
-  rating: number
-  totalRatings: number
-  students: number
-  duration: string
-  level: string
-  language: string
-  price: number
-  originalPrice: number
-  category: string
-  lastUpdated: string
-  certificate: boolean
-  downloadableResources: number
-  articlesCount: number
-  videosCount: number
-  totalHours: number
-  enrolled: boolean
-  inWishlist: boolean
-  learningOutcomes: string[]
-  requirements: string[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  curriculum: any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  reviews: any[]
-}
+import type { CourseDetail } from '@/features/course/types'
 
 interface CourseDetailPageProps {
-  course: Course
+  course: CourseDetail
 }
 
 export function CourseDetailPage({ course }: CourseDetailPageProps) {

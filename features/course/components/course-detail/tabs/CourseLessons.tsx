@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { Course } from '../CourseDetailPage'
+import type { CourseDetail } from '@/features/course/types'
 
 interface CourseLessonsProps {
-  course: Course
+  course: CourseDetail
 }
 
 export function CourseLessons({ course }: CourseLessonsProps) {

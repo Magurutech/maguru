@@ -214,12 +214,6 @@ interface EnrollmentStatusResponse {
 - Database integration
 - Error response handling
 
-### Performance Tests
-
-- Concurrent enrollment requests
-- Database query performance
-- API response time
-- Memory usage optimization
 
 ## Pertanyaan untuk Diklarifikasi
 

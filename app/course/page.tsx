@@ -9,11 +9,12 @@ import { CategoryTabs } from '@/features/course/components/course-catalog/Catego
 import { ResultsCount } from '@/features/course/components/course-catalog/ResultsCount'
 import { CourseCatalogGrid } from '@/features/course/components/course-catalog/CourseCatalogGrid'
 import { LoadMoreButton } from '@/features/course/components/course-catalog/LoadMoreButton'
+import type { CourseCatalog } from '@/features/course/types'
 
 // Mock course data with additional fields
 const mockCourses = [
   {
-    id: 1,
+    id: '1',
     title: 'Ancient Dragon Martial Arts',
     creator: 'Master Li Wei',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -36,7 +37,7 @@ const mockCourses = [
     wishlist: false,
   },
   {
-    id: 2,
+    id: '2',
     title: 'Mystical Tea Ceremony',
     creator: 'Sensei Akiko',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -59,7 +60,7 @@ const mockCourses = [
     wishlist: true,
   },
   {
-    id: 3,
+    id: '3',
     title: 'Calligraphy of the Ancients',
     creator: 'Master Chen',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -77,7 +78,7 @@ const mockCourses = [
     wishlist: false,
   },
   {
-    id: 4,
+    id: '4',
     title: 'Meditation in Sacred Gardens',
     creator: 'Guru Priya',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -100,7 +101,7 @@ const mockCourses = [
     wishlist: false,
   },
   {
-    id: 5,
+    id: '5',
     title: 'Legendary Sword Forging',
     creator: 'Blacksmith Tanaka',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -118,7 +119,7 @@ const mockCourses = [
     wishlist: true,
   },
   {
-    id: 6,
+    id: '6',
     title: 'Phoenix Dance Performance',
     creator: 'Dancer Mei Lin',
     thumbnail: '/images/default-course-thumbnail.svg',
@@ -151,26 +152,8 @@ const sortOptions = [
   { value: 'price-high', label: 'Price: High to Low' },
 ]
 
-interface Course {
-  id: number
-  title: string
-  creator: string
-  thumbnail: string
-  rating: number
-  students: number
-  duration: string
-  category: string
-  price: number
-  enrolled: boolean
-  createdAt: string
-  description: string
-  longDescription: string
-  curriculum: string[]
-  wishlist: boolean
-}
-
 export default function CourseCatalogPage() {
-  const [courses, setCourses] = useState<Course[]>([])
+  const [courses, setCourses] = useState<CourseCatalog[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -220,7 +203,7 @@ export default function CourseCatalogPage() {
     return filtered
   }, [courses, searchQuery, selectedCategory, sortBy])
 
-  const handleEnroll = (courseId: number) => {
+  const handleEnroll = (courseId: string) => {
     setCourses((prev) =>
       prev.map((course) => (course.id === courseId ? { ...course, enrolled: true } : course)),
     )
@@ -228,7 +211,7 @@ export default function CourseCatalogPage() {
     toast.success(`You've successfully enrolled in "${course?.title}". Start learning now!`)
   }
 
-  const handleWishlist = (courseId: number) => {
+  const handleWishlist = (courseId: string) => {
     setCourses((prev) =>
       prev.map((course) =>
         course.id === courseId ? { ...course, wishlist: !course.wishlist } : course,

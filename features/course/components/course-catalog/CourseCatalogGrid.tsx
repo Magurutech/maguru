@@ -2,30 +2,13 @@ import React from 'react'
 import { CourseCard } from './CourseCard'
 import { CourseCardSkeleton } from './CourseCardSkeleton'
 import { EmptyStateIllustration } from './EmptyStateIllustration'
-
-interface Course {
-  id: number
-  title: string
-  creator: string
-  thumbnail: string
-  rating: number
-  students: number
-  duration: string
-  category: string
-  price: number
-  enrolled: boolean
-  createdAt: string
-  description: string
-  longDescription: string
-  curriculum: string[]
-  wishlist: boolean
-}
+import type { CourseCatalog } from '@/features/course/types'
 
 interface CourseCatalogGridProps {
-  courses: Course[]
+  courses: CourseCatalog[]
   loading: boolean
-  onEnroll: (courseId: number) => void
-  onWishlist: (courseId: number) => void
+  onEnroll: (courseId: string) => void
+  onWishlist: (courseId: string) => void
   hasActiveFilters: boolean
   onClearFilters: () => void
 }

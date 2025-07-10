@@ -10,29 +10,12 @@ import {
 import { Star, Users, Clock, BookOpen, Heart, Eye } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
-
-interface Course {
-  id: number
-  title: string
-  creator: string
-  thumbnail: string
-  rating: number
-  students: number
-  duration: string
-  category: string
-  price: number
-  enrolled: boolean
-  createdAt: string
-  description: string
-  longDescription: string
-  curriculum: string[]
-  wishlist: boolean
-}
+import type { CourseCatalog } from '../../types'
 
 interface CourseCardProps {
-  course: Course
-  onEnroll: (courseId: number) => void
-  onWishlist: (courseId: number) => void
+  course: CourseCatalog
+  onEnroll: (courseId: string) => void
+  onWishlist: (courseId: string) => void
 }
 
 function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {

@@ -3,10 +3,10 @@
 import Image from 'next/image'
 import { Star, Users, Clock, Award, ChevronRight } from 'lucide-react'
 // import { Badge } from '@/components/ui/badge'
-import type { Course } from './CourseDetailPage'
+import type { CourseDetail } from '@/features/course/types'
 
 interface CourseHeroSectionProps {
-  course: Course
+  course: CourseDetail
 }
 
 export function CourseHeroSection({ course }: CourseHeroSectionProps) {
