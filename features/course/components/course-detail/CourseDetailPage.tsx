@@ -6,10 +6,10 @@ import { EnrollmentCTA } from './EnrollmentCta'
 import { CourseTabs } from './CourseTabs'
 import { CourseSidebar } from './CourseSidebar'
 import { EnrollmentDialog } from './Enrollment-dialog'
-import type { CourseDetail } from '@/features/course/types'
+import type { CourseDetailView } from '@/features/course/types'
 
 interface CourseDetailPageProps {
-  course: CourseDetail
+  course: CourseDetailView
 }
 
 export function CourseDetailPage({ course }: CourseDetailPageProps) {

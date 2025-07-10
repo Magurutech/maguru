@@ -1,9 +1,9 @@
 import { CheckCircle, Target, Users, BookOpen } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { CourseDetail } from '@/features/course/types'
+import type { CourseDetailView } from '@/features/course/types'
 
 interface CourseOverviewProps {
-  course: CourseDetail
+  course: CourseDetailView
 }
 
 export function CourseOverview({ course }: CourseOverviewProps) {

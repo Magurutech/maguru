@@ -18,3 +18,4 @@ export function ResultsCount({ count, loading }: ResultsCountProps) {
     </div>
   )
 }
+ 

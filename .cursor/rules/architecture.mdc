@@ -456,6 +456,7 @@ Bagian ini menjelaskan komponen utama yang membangun arsitektur setiap fitur di 
    - Kumpulan fungsi pembantu (helper), tipe TypeScript, dan skema validasi (Zod).
    - Bisa bersifat umum (di `lib/`) atau spesifik fitur (di `features/*/lib` atau `features/*/types`).
    - Digunakan di berbagai layer sebagai cross-cutting concerns.
+   - menggunakan pendekatan functionalLayered Interface Pattern adalah pendekatan arsitektur untuk mengatasi masalah interface redundancy dan type safety di feature course. Pattern ini memisahkan interface berdasarkan layer dan tanggung jawab yang berbeda.
 
 ---
 

@@ -10,7 +10,10 @@ export const DEFAULT_COURSE_THUMBNAIL = {
   FORMAT: 'svg',
 }
 
-// Database Models (sesuai dengan Prisma schema)
+// ============================================================================
+// LAYER 1: CORE DATABASE MODELS (sesuai dengan Prisma schema)
+// ============================================================================
+
 export interface Course {
   id: string
   title: string
@@ -27,25 +30,29 @@ export interface Course {
   updatedAt: Date
 }
 
-export interface CourseCatalog {
+// ============================================================================
+// LAYER 2: DISPLAY MODELS (User-facing interfaces)
+// ============================================================================
+
+export interface CourseCatalogItem {
   id: string
   title: string
-  creator: string
+  creator: string // Transformed from creatorId
   thumbnail: string
   rating: number
   students: number
   duration: string
   category: string
-  price: number
-  enrolled: boolean
-  createdAt: string
+  price: number // Computed field
+  enrolled: boolean // User-specific
+  createdAt: string // Formatted date
   description: string
   longDescription: string
   curriculum: string[]
-  wishlist: boolean
+  wishlist: boolean // User-specific
 }
 
-export interface CourseDetail {
+export interface CourseDetailView {
   id: string
   title: string
   description: string
@@ -77,16 +84,27 @@ export interface CourseDetail {
   inWishlist: boolean
   learningOutcomes: string[]
   requirements: string[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  curriculum: any[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  reviews: any[]
+  curriculum: Record<string, unknown>[]
+  reviews: Record<string, unknown>[]
 }
+
+// ============================================================================
+// LEGACY: Backward compatibility (akan dihapus setelah migration)
+// ============================================================================
+
+/** @deprecated Use CourseCatalogItem instead */
+export type CourseCatalog = CourseCatalogItem
+
+/** @deprecated Use CourseDetailView instead */
+export type CourseDetail = CourseDetailView
 
 // Re-export Prisma enum untuk konsistensi
 export { PrismaCourseStatus as CourseStatus }
 
-// Request/Response Types
+// ============================================================================
+// REQUEST/RESPONSE TYPES
+// ============================================================================
+
 export interface CreateCourseRequest {
   title: string
   description: string
@@ -138,7 +156,10 @@ export interface PaginationInfo {
   totalPages: number
 }
 
-// Zod Schemas untuk validasi
+// ============================================================================
+// ZOD SCHEMAS untuk validasi
+// ============================================================================
+
 export const CourseSchema = z.object({
   title: z.string().min(1, 'Judul kursus harus diisi').max(100, 'Judul terlalu panjang'),
   description: z.string().min(1, 'Deskripsi harus diisi').max(500, 'Deskripsi terlalu panjang'),
@@ -147,7 +168,10 @@ export const CourseSchema = z.object({
   status: z.nativeEnum(PrismaCourseStatus).default(PrismaCourseStatus.DRAFT),
 })
 
-// Utility Types
+// ============================================================================
+// UTILITY TYPES
+// ============================================================================
+
 export type CourseStatusType = keyof typeof PrismaCourseStatus
 
 // Metadata untuk frontend (sesuai dengan contoh yang diminta)
@@ -165,7 +189,10 @@ export interface CourseMetadata {
   createdAt: string
 }
 
-// Utility functions untuk thumbnail handling
+// ============================================================================
+// UTILITY FUNCTIONS untuk thumbnail handling
+// ============================================================================
+
 export const courseThumbnailUtils = {
   /**
    * Get display thumbnail URL dengan fallback ke default

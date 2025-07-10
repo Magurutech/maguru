@@ -22,3 +22,4 @@ export function LoadMoreButton({ hasMoreCourses, onLoadMore }: LoadMoreButtonPro
     </div>
   )
 }
+ 

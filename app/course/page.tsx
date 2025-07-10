@@ -9,7 +9,7 @@ import { CategoryTabs } from '@/features/course/components/course-catalog/Catego
 import { ResultsCount } from '@/features/course/components/course-catalog/ResultsCount'
 import { CourseCatalogGrid } from '@/features/course/components/course-catalog/CourseCatalogGrid'
 import { LoadMoreButton } from '@/features/course/components/course-catalog/LoadMoreButton'
-import type { CourseCatalog } from '@/features/course/types'
+import type { CourseCatalogItem } from '@/features/course/types'
 
 // Mock course data with additional fields
 const mockCourses = [
@@ -153,7 +153,7 @@ const sortOptions = [
 ]
 
 export default function CourseCatalogPage() {
-  const [courses, setCourses] = useState<CourseCatalog[]>([])
+  const [courses, setCourses] = useState<CourseCatalogItem[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')

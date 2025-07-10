@@ -3,10 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import Image from 'next/image'
-import type { CourseDetail } from '@/features/course/types'
+import type { CourseDetailView } from '@/features/course/types'
 
 interface CourseReviewsProps {
-  course: CourseDetail
+  course: CourseDetailView
 }
 
 export function CourseReviews({ course }: CourseReviewsProps) {

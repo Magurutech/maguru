@@ -3,10 +3,10 @@
 import { Button } from '@/components/ui/button'
 import { Heart, Share2, Download, Loader2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import type { CourseDetail } from '@/features/course/types'
+import type { CourseDetailView } from '@/features/course/types'
 
 interface EnrollmentCTAProps {
-  course: CourseDetail
+  course: CourseDetailView
   status: 'available' | 'enrolled' | 'loading'
   onEnroll: () => void
 }

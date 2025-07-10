@@ -2,10 +2,10 @@ import React from 'react'
 import { CourseCard } from './CourseCard'
 import { CourseCardSkeleton } from './CourseCardSkeleton'
 import { EmptyStateIllustration } from './EmptyStateIllustration'
-import type { CourseCatalog } from '@/features/course/types'
+import type { CourseCatalogItem } from '@/features/course/types'
 
 interface CourseCatalogGridProps {
-  courses: CourseCatalog[]
+  courses: CourseCatalogItem[]
   loading: boolean
   onEnroll: (courseId: string) => void
   onWishlist: (courseId: string) => void

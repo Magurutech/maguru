@@ -10,10 +10,10 @@ import {
 import { Star, Users, Clock, BookOpen, Heart, Eye } from 'lucide-react'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import type { CourseCatalog } from '../../types'
+import type { CourseCatalogItem } from '../../types'
 
 interface CourseCardProps {
-  course: CourseCatalog
+  course: CourseCatalogItem
   onEnroll: (courseId: string) => void
   onWishlist: (courseId: string) => void
 }

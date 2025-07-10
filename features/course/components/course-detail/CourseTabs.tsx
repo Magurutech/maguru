@@ -3,10 +3,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CourseOverview } from './tabs/CourseOverview'
 import { CourseLessons } from './tabs/CourseLessons'
 import { CourseReviews } from './tabs/CourseReviews'
-import type { CourseDetail } from '@/features/course/types'
+import type { CourseDetailView } from '@/features/course/types'
 
 interface CourseTabsProps {
-  course: CourseDetail
+  course: CourseDetailView
 }
 
 export function CourseTabs({ course }: CourseTabsProps) {
