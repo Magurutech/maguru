@@ -1,398 +1,354 @@
 {
-  "numTotalTests": 35,
-  "numPassedTests": 35,
+  "numTotalTests": 31,
+  "numPassedTests": 31,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-10T16:54:44.918Z",
-  "endTime": "2025-07-10T16:55:28.365Z",
+  "startTime": "2025-07-10T23:18:17.885Z",
+  "endTime": "2025-07-10T23:18:56.456Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\enrollmentAdapter.integration.test.ts",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\adapters\\enrollmentAdapter.test.ts",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Network Error Propagation"
+            "EnrollmentAdapter",
+            "createEnrollment"
           ],
-          "fullName": "EnrollmentAdapter Integration Network Error Propagation should propagate network errors from adapter to service",
+          "fullName": "EnrollmentAdapter createEnrollment should make successful POST request with auth",
           "status": "passed",
-          "title": "should propagate network errors from adapter to service",
+          "title": "should make successful POST request with auth",
+          "failureMessages": [],
+          "duration": 19
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle missing authentication (401)",
+          "status": "passed",
+          "title": "should handle missing authentication (401)",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle forbidden access (403)",
+          "status": "passed",
+          "title": "should handle forbidden access (403)",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle validation errors (400)",
+          "status": "passed",
+          "title": "should handle validation errors (400)",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle duplicate enrollment (409)",
+          "status": "passed",
+          "title": "should handle duplicate enrollment (409)",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle course not found (404)",
+          "status": "passed",
+          "title": "should handle course not found (404)",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
+          "failureMessages": [],
+          "duration": 3016
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle timeout errors",
+          "status": "passed",
+          "title": "should handle timeout errors",
+          "failureMessages": [],
+          "duration": 3011
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should retry on temporary failures",
+          "status": "passed",
+          "title": "should retry on temporary failures",
+          "failureMessages": [],
+          "duration": 1004
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "createEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter createEnrollment should handle malformed response",
+          "status": "passed",
+          "title": "should handle malformed response",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should make successful GET request with auth",
+          "status": "passed",
+          "title": "should make successful GET request with auth",
+          "failureMessages": [],
+          "duration": 6
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should handle pagination parameters",
+          "status": "passed",
+          "title": "should handle pagination parameters",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
+          "failureMessages": [],
+          "duration": 3005
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should handle API error responses",
+          "status": "passed",
+          "title": "should handle API error responses",
+          "failureMessages": [],
+          "duration": 3028
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollments"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollments should transform response data correctly",
+          "status": "passed",
+          "title": "should transform response data correctly",
+          "failureMessages": [],
+          "duration": 5
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollmentStatus"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollmentStatus should make successful GET request",
+          "status": "passed",
+          "title": "should make successful GET request",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollmentStatus"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle course not found",
+          "status": "passed",
+          "title": "should handle course not found",
+          "failureMessages": [],
+          "duration": 7
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollmentStatus"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle authentication errors",
+          "status": "passed",
+          "title": "should handle authentication errors",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollmentStatus"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
+          "failureMessages": [],
+          "duration": 3052
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "getEnrollmentStatus"
+          ],
+          "fullName": "EnrollmentAdapter getEnrollmentStatus should return correct enrollment status",
+          "status": "passed",
+          "title": "should return correct enrollment status",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "deleteEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter deleteEnrollment should make successful DELETE request with auth",
+          "status": "passed",
+          "title": "should make successful DELETE request with auth",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "deleteEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter deleteEnrollment should handle missing authentication",
+          "status": "passed",
+          "title": "should handle missing authentication",
+          "failureMessages": [],
+          "duration": 2
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "deleteEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter deleteEnrollment should handle enrollment not found",
+          "status": "passed",
+          "title": "should handle enrollment not found",
+          "failureMessages": [],
+          "duration": 1
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "deleteEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter deleteEnrollment should handle unauthorized deletion",
+          "status": "passed",
+          "title": "should handle unauthorized deletion",
+          "failureMessages": [],
+          "duration": 4
+        },
+        {
+          "ancestorTitles": [
+            "EnrollmentAdapter",
+            "deleteEnrollment"
+          ],
+          "fullName": "EnrollmentAdapter deleteEnrollment should handle network errors",
+          "status": "passed",
+          "title": "should handle network errors",
           "failureMessages": [],
           "duration": 3014
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Network Error Propagation"
+            "EnrollmentAdapter",
+            "Error Handling"
           ],
-          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle network timeout gracefully",
-          "status": "passed",
-          "title": "should handle network timeout gracefully",
-          "failureMessages": [],
-          "duration": 3033
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Network Error Propagation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle connection refused errors",
-          "status": "passed",
-          "title": "should handle connection refused errors",
-          "failureMessages": [],
-          "duration": 3021
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Network Error Propagation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Network Error Propagation should handle DNS resolution failures",
-          "status": "passed",
-          "title": "should handle DNS resolution failures",
-          "failureMessages": [],
-          "duration": 3018
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 401 Unauthorized errors properly",
-          "status": "passed",
-          "title": "should handle 401 Unauthorized errors properly",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 403 Forbidden errors properly",
-          "status": "passed",
-          "title": "should handle 403 Forbidden errors properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 404 Not Found errors properly",
-          "status": "passed",
-          "title": "should handle 404 Not Found errors properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 409 Conflict errors properly",
-          "status": "passed",
-          "title": "should handle 409 Conflict errors properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 422 Validation errors properly",
-          "status": "passed",
-          "title": "should handle 422 Validation errors properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "API Error Handling"
-          ],
-          "fullName": "EnrollmentAdapter Integration API Error Handling should handle 500 Internal Server errors properly",
-          "status": "passed",
-          "title": "should handle 500 Internal Server errors properly",
-          "failureMessages": [],
-          "duration": 3013
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Error State Management"
-          ],
-          "fullName": "EnrollmentAdapter Integration Error State Management should provide meaningful error messages",
-          "status": "passed",
-          "title": "should provide meaningful error messages",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Error State Management"
-          ],
-          "fullName": "EnrollmentAdapter Integration Error State Management should handle malformed error responses",
-          "status": "passed",
-          "title": "should handle malformed error responses",
-          "failureMessages": [],
-          "duration": 3008
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Error State Management"
-          ],
-          "fullName": "EnrollmentAdapter Integration Error State Management should handle non-JSON error responses",
-          "status": "passed",
-          "title": "should handle non-JSON error responses",
-          "failureMessages": [],
-          "duration": 3011
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Error State Management"
-          ],
-          "fullName": "EnrollmentAdapter Integration Error State Management should handle empty error responses",
-          "status": "passed",
-          "title": "should handle empty error responses",
-          "failureMessages": [],
-          "duration": 3018
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should handle temporary network failures gracefully",
-          "status": "passed",
-          "title": "should handle temporary network failures gracefully",
-          "failureMessages": [],
-          "duration": 1018
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should not retry on permanent errors",
-          "status": "passed",
-          "title": "should not retry on permanent errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should respect retry-after header",
-          "status": "passed",
-          "title": "should respect retry-after header",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should implement exponential backoff",
-          "status": "passed",
-          "title": "should implement exponential backoff",
-          "failureMessages": [],
-          "duration": 3022
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "EnrollmentAdapter Integration Retry Mechanisms should limit maximum retry attempts",
-          "status": "passed",
-          "title": "should limit maximum retry attempts",
-          "failureMessages": [],
-          "duration": 3015
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Different Error Types"
-          ],
-          "fullName": "EnrollmentAdapter Integration Different Error Types should handle CORS errors",
+          "fullName": "EnrollmentAdapter Error Handling should handle CORS errors",
           "status": "passed",
           "title": "should handle CORS errors",
           "failureMessages": [],
-          "duration": 3011
+          "duration": 3010
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Different Error Types"
+            "EnrollmentAdapter",
+            "Error Handling"
           ],
-          "fullName": "EnrollmentAdapter Integration Different Error Types should handle SSL/TLS errors",
+          "fullName": "EnrollmentAdapter Error Handling should handle SSL/TLS errors",
           "status": "passed",
           "title": "should handle SSL/TLS errors",
           "failureMessages": [],
-          "duration": 3021
+          "duration": 3016
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Different Error Types"
+            "EnrollmentAdapter",
+            "Error Handling"
           ],
-          "fullName": "EnrollmentAdapter Integration Different Error Types should handle rate limiting errors",
+          "fullName": "EnrollmentAdapter Error Handling should handle rate limiting errors",
           "status": "passed",
           "title": "should handle rate limiting errors",
           "failureMessages": [],
-          "duration": 3
+          "duration": 5
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Different Error Types"
+            "EnrollmentAdapter",
+            "Error Handling"
           ],
-          "fullName": "EnrollmentAdapter Integration Different Error Types should handle server overload errors",
+          "fullName": "EnrollmentAdapter Error Handling should respect retry-after header",
           "status": "passed",
-          "title": "should handle server overload errors",
-          "failureMessages": [],
-          "duration": 3025
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Data Transformation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Data Transformation should transform API response data correctly",
-          "status": "passed",
-          "title": "should transform API response data correctly",
-          "failureMessages": [],
-          "duration": 16
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Data Transformation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Data Transformation should handle empty response data",
-          "status": "passed",
-          "title": "should handle empty response data",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Data Transformation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Data Transformation should handle null response data",
-          "status": "passed",
-          "title": "should handle null response data",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Data Transformation"
-          ],
-          "fullName": "EnrollmentAdapter Integration Data Transformation should validate response schema",
-          "status": "passed",
-          "title": "should validate response schema",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Request/Response Headers"
-          ],
-          "fullName": "EnrollmentAdapter Integration Request/Response Headers should include proper authentication headers",
-          "status": "passed",
-          "title": "should include proper authentication headers",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Request/Response Headers"
-          ],
-          "fullName": "EnrollmentAdapter Integration Request/Response Headers should handle missing auth token gracefully",
-          "status": "passed",
-          "title": "should handle missing auth token gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Request/Response Headers"
-          ],
-          "fullName": "EnrollmentAdapter Integration Request/Response Headers should include proper content-type headers for POST requests",
-          "status": "passed",
-          "title": "should include proper content-type headers for POST requests",
+          "title": "should respect retry-after header",
           "failureMessages": [],
           "duration": 2
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Request/Response Headers"
+            "EnrollmentAdapter",
+            "Error Handling"
           ],
-          "fullName": "EnrollmentAdapter Integration Request/Response Headers should handle custom headers correctly",
+          "fullName": "EnrollmentAdapter Error Handling should handle different error response formats",
           "status": "passed",
-          "title": "should handle custom headers correctly",
+          "title": "should handle different error response formats",
           "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful POST enrollment",
-          "status": "passed",
-          "title": "should handle successful POST enrollment",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful GET enrollments",
-          "status": "passed",
-          "title": "should handle successful GET enrollments",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful GET enrollment status",
-          "status": "passed",
-          "title": "should handle successful GET enrollment status",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "EnrollmentAdapter Integration Successful API Calls should handle successful DELETE enrollment",
-          "status": "passed",
-          "title": "should handle successful DELETE enrollment",
-          "failureMessages": [],
-          "duration": 1
+          "duration": 3023
         }
       ],
       "failureMessage": null

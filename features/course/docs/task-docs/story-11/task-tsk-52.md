@@ -13,9 +13,9 @@
 
 ## Pendahuluan
 
-Task TSK-52 fokus pada implementasi frontend untuk fitur pendaftaran kursus yang memungkinkan siswa berinteraksi dengan sistem enrollment melalui UI yang intuitif dan responsif. Implementasi ini akan membangun di atas komponen course management yang sudah ada dengan menambahkan enrollment functionality.
+Task TSK-52 fokus pada implementasi frontend untuk fitur pendaftaran kursus yang memungkinkan siswa berinteraksi dengan sistem enrollment melalui UI yang intuitif dan responsif. Implementasi ini akan membangun di atas komponen course management yang sudah ada dengan menambahkan enrollment functionality yang terintegrasi dengan course catalog dan course detail pages.
 
-Frontend akan menggunakan React Query untuk state management, custom hooks untuk business logic, dan komponen UI yang konsisten dengan tema Maguru. Implementasi ini akan memastikan user experience yang smooth dengan proper loading states, error handling, dan feedback yang jelas.
+Frontend akan menggunakan React Query untuk state management, custom hooks untuk business logic, dan komponen UI yang konsisten dengan tema Maguru. Implementasi ini akan memastikan user experience yang smooth dengan proper loading states, error handling, dan feedback yang jelas, serta mengikuti arsitektur layered dan designing for failure patterns.
 
 ## Perbandingan dengan Referensi
 
@@ -26,6 +26,7 @@ Frontend akan menggunakan React Query untuk state management, custom hooks untuk
 | Loading States   | Skeleton loaders, spinners         | Skeleton loaders dengan ancient fantasy theme |
 | Error Handling   | Toast notifications, inline errors | Toast notifications dengan custom styling     |
 | UI Components    | Material-UI, Ant Design            | Shadcn/ui + custom components                 |
+| Course Detail    | Dedicated enrollment section       | Integrated enrollment CTA dan dialog          |
 
 ## Batasan dan Penyederhanaan Implementasi
 
@@ -34,6 +35,7 @@ Frontend akan menggunakan React Query untuk state management, custom hooks untuk
 - Menggunakan existing course components sebagai base
 - Menambahkan enrollment functionality tanpa refactor besar
 - Tidak membuat design system baru
+- **Integrasi dengan course detail page yang sudah ada**
 
 ### 2. **State Management**:
 
@@ -41,18 +43,21 @@ Frontend akan menggunakan React Query untuk state management, custom hooks untuk
 - Custom hooks untuk business logic
 - Local state untuk UI interactions
 - Tidak menggunakan Redux untuk simplicity
+- **Mengikuti hierarchical state management strategy**
 
 ### 3. **User Flow**:
 
 - One-click enrollment dengan confirmation
 - Tidak ada multi-step enrollment process
 - Tidak ada course preview sebelum enrollment
+- **Enrollment dari course catalog dan course detail page**
 
 ### 4. **Error Handling**:
 
 - Toast notifications untuk feedback
 - Inline error messages untuk forms
 - Graceful fallbacks untuk network errors
+- **Designing for failure patterns implementation**
 
 ## Spesifikasi Teknis
 
@@ -76,6 +81,19 @@ interface EnrollmentStatus {
 interface EnrollmentRequest {
   courseId: string
 }
+
+// Integration dengan existing types
+interface CourseCatalogItem {
+  // ... existing fields
+  enrolled: boolean
+  enrollmentDate?: Date
+}
+
+interface CourseDetailView {
+  // ... existing fields
+  enrolled: boolean
+  enrollmentDate?: Date
+}
 ```
 
 ### Component Architecture
@@ -84,25 +102,31 @@ interface EnrollmentRequest {
 features/course/
 ├── components/
 │   ├── enrollment/
-│   │   ├── EnrollmentButton.tsx
-│   │   ├── EnrollmentDialog.tsx
-│   │   └── EnrollmentStatus.tsx
-│   └── course-catalog/
-│       ├── CourseCatalogCard.tsx
-│       ├── CourseCatalogGrid.tsx
-│       └── CourseCatalogFilter.tsx
+│   │   ├── EnrollmentButton.tsx          # Reusable enrollment button
+│   │   ├── EnrollmentDialog.tsx          # Confirmation dialog
+│   │   └── EnrollmentStatus.tsx          # Status indicator
+│   ├── course-catalog/
+│   │   ├── CourseCard.tsx                # Update dengan enrollment
+│   │   ├── CourseCatalogGrid.tsx         # Update dengan enrollment
+│   │   └── CourseCatalogFilter.tsx       # Existing
+│   └── course-detail/
+│       ├── CourseDetailPage.tsx          # Update dengan enrollment
+│       ├── EnrollmentCTA.tsx             # Update dengan real enrollment
+│       ├── EnrollmentDialog.tsx          # Update dengan real enrollment
+│       └── CourseSidebar.tsx             # Update dengan enrollment status
 ├── hooks/
-│   ├── useEnrollment.ts
-│   └── useEnrollmentStatus.ts
+│   ├── useEnrollment.ts                  # Enrollment operations
+│   ├── useEnrollmentStatus.ts            # Status checking
+│   └── useCourseManagement.ts            # Update existing hook
 ├── adapters/
-│   └── enrollmentAdapter.ts
+│   └── enrollmentAdapter.ts              # API communication
 └── types/
-    └── enrollment.ts
+    └── enrollment.ts                     # Enrollment types
 ```
 
 ### Flow Pengguna
 
-#### Enrollment Process:
+#### Enrollment Process dari Course Catalog:
 
 1. User melihat course card dengan enrollment button
 2. User mengklik "Daftar" button
@@ -111,6 +135,16 @@ features/course/
 5. Loading state ditampilkan
 6. Success/error feedback ditampilkan
 7. Course card update dengan enrollment status
+
+#### Enrollment Process dari Course Detail Page:
+
+1. User melihat course detail page dengan enrollment CTA
+2. User mengklik "Enroll Now" button
+3. EnrollmentDialog muncul dengan course details
+4. User mengkonfirmasi enrollment
+5. Loading state ditampilkan
+6. Success/error feedback ditampilkan
+7. Course detail page update dengan enrollment status
 
 ## Implementasi Teknis
 
@@ -122,13 +156,19 @@ features/course/
 export function useEnrollment() {
   const queryClient = useQueryClient()
 
-  // Enrollment mutation
+  // Enrollment mutation dengan designing for failure
   const enrollMutation = useMutation({
     mutationFn: (courseId: string) => EnrollmentAdapter.enrollCourse(courseId),
     onSuccess: (data) => {
+      // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: ['enrollments'] })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
+      queryClient.invalidateQueries({ queryKey: ['enrollment-status'] })
       return data
+    },
+    onError: (error) => {
+      // Error handling dengan graceful fallback
+      console.error('Enrollment failed:', error)
     },
   })
 
@@ -148,6 +188,8 @@ export function useEnrollmentStatus(courseId: string) {
     queryKey: ['enrollment-status', courseId],
     queryFn: () => EnrollmentAdapter.getEnrollmentStatus(courseId),
     enabled: !!courseId,
+    retry: 3, // Retry pattern
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
   })
 }
 ```
@@ -160,6 +202,7 @@ export function useEnrollmentStatus(courseId: string) {
 - Loading state saat enrollment process
 - Error handling dengan retry mechanism
 - Accessibility support
+- **Reusable untuk course catalog dan detail page**
 
 #### EnrollmentDialog Component
 
@@ -167,26 +210,23 @@ export function useEnrollmentStatus(courseId: string) {
 - Form validation dan error display
 - Responsive design untuk mobile
 - Keyboard navigation support
+- **Designing for failure patterns**
 
-### 3. **Enrollment Adapter**
+### 3. **Integration dengan Existing Components**
 
-#### enrollmentAdapter.ts
+#### Update CourseCard Component
 
-```typescript
-export class EnrollmentAdapter {
-  static async enrollCourse(courseId: string): Promise<EnrollmentResponse> {
-    // API call implementation
-  }
+- Integrasi dengan enrollment hooks
+- Update enrollment status real-time
+- Error handling dan loading states
+- **Menggunakan semantic Tailwind classes**
 
-  static async getEnrollmentStatus(courseId: string): Promise<EnrollmentStatusResponse> {
-    // API call implementation
-  }
+#### Update CourseDetailPage Component
 
-  static async getUserEnrollments(): Promise<EnrollmentListResponse> {
-    // API call implementation
-  }
-}
-```
+- Integrasi dengan enrollment hooks
+- Update EnrollmentCTA dengan real enrollment
+- Update CourseSidebar dengan enrollment status
+- **Mengikuti arsitektur layered**
 
 ### 4. **State Management Strategy**
 
@@ -196,6 +236,7 @@ export class EnrollmentAdapter {
 - Background refetch untuk enrollment status
 - Cache invalidation strategy
 - Error retry configuration
+- **Designing for failure patterns**
 
 #### Local State Management
 
@@ -203,6 +244,37 @@ export class EnrollmentAdapter {
 - Form validation state
 - Loading states untuk UI interactions
 - Error state management
+- **Mengikuti hierarchical state management**
+
+### 5. **Designing for Failure Patterns**
+
+#### Retry Pattern
+
+- Exponential backoff untuk enrollment operations
+- Circuit breaker pattern untuk API calls
+- Retry logic dengan maximum attempts (3x)
+- Graceful degradation untuk temporary failures
+
+#### Timeout Handling
+
+- AbortController untuk enrollment requests
+- Request timeout configuration (30s default)
+- Graceful timeout handling dengan user feedback
+- Connection pooling untuk database operations
+
+#### Graceful Fallback
+
+- Fallback UI untuk enrollment failures
+- Skeleton loading states untuk enrollment list
+- Error boundaries untuk enrollment components
+- Safe default state untuk partial failures
+
+#### Safe Default State
+
+- Default enrollment status handling
+- Safe fallback values untuk failed operations
+- Graceful degradation untuk partial failures
+- Local caching untuk enrollment status
 
 ## Peningkatan UX
 
@@ -212,6 +284,7 @@ export class EnrollmentAdapter {
 - **Success Feedback**: Toast notifications dengan custom styling
 - **Error Feedback**: Inline error messages dengan clear actions
 - **Status Indicators**: Visual cues untuk enrollment status
+- **Semantic Tailwind classes untuk konsistensi**
 
 ### Interaction Design
 
@@ -226,6 +299,7 @@ export class EnrollmentAdapter {
 - **Memoization**: React.memo untuk expensive components
 - **Debouncing**: Search input debouncing
 - **Image Optimization**: Optimized course thumbnails
+- **React Query caching untuk enrollment data**
 
 ## Test Plan
 
@@ -235,6 +309,7 @@ export class EnrollmentAdapter {
 - Component rendering dan interactions
 - Adapter API calls
 - State management logic
+- **Designing for failure patterns testing**
 
 ### Integration Tests
 
@@ -242,10 +317,12 @@ export class EnrollmentAdapter {
 - API integration testing
 - Error handling scenarios
 - Loading state management
+- **Course catalog dan detail page integration**
 
 ### E2E Tests
 
-- Complete enrollment process
+- Complete enrollment process dari catalog
+- Complete enrollment process dari detail page
 - Error scenarios handling
 - Mobile responsiveness
 - Accessibility compliance
@@ -268,22 +345,31 @@ export class EnrollmentAdapter {
 - [ ] Loading states dan error handling diimplementasikan
 - [ ] Responsive design bekerja dengan baik di semua device
 - [ ] Accessibility requirements terpenuhi (ARIA labels, keyboard navigation)
+- [ ] **CourseCard component terintegrasi dengan enrollment functionality**
+- [ ] **CourseDetailPage component terintegrasi dengan enrollment functionality**
+- [ ] **Designing for failure patterns diimplementasi (retry, timeout, fallback)**
+- [ ] **Semantic Tailwind classes digunakan untuk konsistensi**
+- [ ] **Mengikuti arsitektur layered dan hierarchical state management**
 - [ ] Unit tests dan integration tests berhasil
 - [ ] Performance optimization diimplementasikan
 
 ## Estimasi Effort
 
-**Total: 6 jam**
+**Total: 8 jam** _(Updated untuk include integration dan designing for failure)_
 
-- Component development: 2 jam
+- Component development: 2.5 jam
 - Hook implementation: 1.5 jam
 - Adapter development: 1 jam
+- **Integration dengan existing components: 1.5 jam**
+- **Designing for failure patterns: 1.5 jam**
 - Testing dan refinement: 1.5 jam
 
 ## Dependencies
 
-- TSK-50: Desain UI untuk katalog kursus
-- TSK-51: Backend untuk pendaftaran kursus
+- TSK-50: Desain UI untuk katalog kursus (✅ Complete)
+- TSK-51: Backend untuk pendaftaran kursus (✅ Complete)
 - React Query setup (✅ Complete)
-- Existing UI components dan theme system
+- Existing UI components dan theme system (✅ Complete)
 - Clerk authentication integration (✅ Complete)
+- **Existing course detail page components (✅ Complete)**
+- **Course transformation utilities (✅ Complete)**
