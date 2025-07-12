@@ -9,25 +9,51 @@ import {
 } from '@/components/ui/dialog'
 import { Star, Users, Clock, BookOpen, Heart, Eye } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React from 'react'
+import { toast } from 'sonner'
 import type { CourseCatalogItem } from '../../types'
+import { useEnrollmentStatus } from '../../hooks/useEnrollmentStatus'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
+import { useCourseContext } from '../../contexts/courseContext'
 
 interface CourseCardProps {
   course: CourseCatalogItem
-  onEnroll: (courseId: string) => void
-  onWishlist: (courseId: string) => void
+  // ❌ No more props drilling
 }
 
-function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
-  const [isLoading, setIsLoading] = useState(false)
+function QuickViewModal({ course }: CourseCardProps) {
+  // Real enrollment integration
+  const { data: enrollmentStatus, isLoading: statusLoading } = useEnrollmentStatus(course.id)
+  const { enrollCourseWithValidation, isEnrolling } = useCourseManagement()
+  const { setEnrollmentLoading } = useCourseContext()
 
   const handleEnroll = async () => {
-    if (course.enrolled) return
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    onEnroll(course.id)
-    setIsLoading(false)
+    if (enrollmentStatus?.isEnrolled) return
+
+    try {
+      setEnrollmentLoading(true)
+      const success = await enrollCourseWithValidation(course.id)
+
+      if (success) {
+        toast.success(`You've successfully enrolled in "${course.title}". Start learning now!`)
+      } else {
+        toast.error('Failed to enroll in course. Please try again.')
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.')
+      console.error('Enrollment error:', error)
+    } finally {
+      setEnrollmentLoading(false)
+    }
   }
+
+  const handleWishlist = () => {
+    // TODO: Implement wishlist functionality
+    toast.info('Wishlist functionality coming soon!')
+  }
+
+  const isEnrolled = enrollmentStatus?.isEnrolled || false
+  const isLoading = isEnrolling || statusLoading
 
   return (
     <DialogContent className="max-w-2xl glass-panel">
@@ -84,16 +110,16 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onWishlist(course.id)}
+                onClick={handleWishlist}
                 className={`${course.wishlist ? 'bg-primary/10 border-primary/20 text-primary' : ''}`}
               >
                 <Heart className={`w-4 h-4 ${course.wishlist ? 'fill-current' : ''}`} />
               </Button>
               <Button
                 onClick={handleEnroll}
-                disabled={isLoading}
+                disabled={isLoading || isEnrolled}
                 className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                  course.enrolled
+                  isEnrolled
                     ? 'bg-accent hover:bg-accent-600 text-white'
                     : 'bg-primary hover:bg-primary-700 text-white'
                 }`}
@@ -103,7 +129,7 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     Loading...
                   </div>
-                ) : course.enrolled ? (
+                ) : isEnrolled ? (
                   'Enrolled'
                 ) : (
                   'Enroll Now'
@@ -117,16 +143,39 @@ function QuickViewModal({ course, onEnroll, onWishlist }: CourseCardProps) {
   )
 }
 
-export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
-  const [isLoading, setIsLoading] = useState(false)
+export function CourseCard({ course }: CourseCardProps) {
+  // Real enrollment integration
+  const { data: enrollmentStatus, isLoading: statusLoading } = useEnrollmentStatus(course.id)
+  const { enrollCourseWithValidation, isEnrolling } = useCourseManagement()
+  const { setEnrollmentLoading } = useCourseContext()
 
   const handleEnroll = async () => {
-    if (course.enrolled) return
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    onEnroll(course.id)
-    setIsLoading(false)
+    if (enrollmentStatus?.isEnrolled) return
+
+    try {
+      setEnrollmentLoading(true)
+      const success = await enrollCourseWithValidation(course.id)
+
+      if (success) {
+        toast.success(`You've successfully enrolled in "${course.title}". Start learning now!`)
+      } else {
+        toast.error('Failed to enroll in course. Please try again.')
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.')
+      console.error('Enrollment error:', error)
+    } finally {
+      setEnrollmentLoading(false)
+    }
   }
+
+  const handleWishlist = () => {
+    // TODO: Implement wishlist functionality
+    toast.info('Wishlist functionality coming soon!')
+  }
+
+  const isEnrolled = enrollmentStatus?.isEnrolled || false
+  const isLoading = isEnrolling || statusLoading
 
   return (
     <div className="group relative overflow-hidden rounded-2xl glass-panel card-ancient hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:bg-white/25">
@@ -134,7 +183,7 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
       <Button
         variant="ghost"
         size="sm"
-        onClick={() => onWishlist(course.id)}
+        onClick={handleWishlist}
         className={`absolute top-3 right-3 z-10 w-8 h-8 p-0 rounded-full backdrop-blur-sm ${
           course.wishlist
             ? 'bg-primary/90 hover:bg-primary-600/90 text-white'
@@ -170,7 +219,7 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
               <Eye className="w-4 h-4" />
             </Button>
           </DialogTrigger>
-          <QuickViewModal course={course} onEnroll={onEnroll} onWishlist={onWishlist} />
+          <QuickViewModal course={course} />
         </Dialog>
       </div>
 
@@ -201,20 +250,20 @@ export function CourseCard({ course, onEnroll, onWishlist }: CourseCardProps) {
           <span className="text-2xl font-bold text-beige-900">${course.price}</span>
           <Button
             onClick={handleEnroll}
-            disabled={isLoading}
+            disabled={isLoading || isEnrolled}
             className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-              course.enrolled
+              isEnrolled
                 ? 'bg-accent hover:bg-accent-600 text-white'
                 : 'bg-primary hover:bg-primary-700 text-white hover:shadow-lg'
             }`}
-            aria-label={course.enrolled ? 'Already enrolled' : `Enroll in ${course.title}`}
+            aria-label={isEnrolled ? 'Already enrolled' : `Enroll in ${course.title}`}
           >
             {isLoading ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 Loading...
               </div>
-            ) : course.enrolled ? (
+            ) : isEnrolled ? (
               <div className="flex items-center gap-2">
                 <BookOpen className="w-4 h-4" />
                 Enrolled

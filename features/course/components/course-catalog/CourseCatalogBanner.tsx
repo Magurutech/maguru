@@ -1,13 +1,10 @@
 import { Button } from '@/components/ui/button'
 import { Gift, ArrowRight, X } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
 
-interface CourseCatalogBannerProps {
-  showBanner: boolean
-  onClose: () => void
-}
+export function CourseCatalogBanner() {
+  const [showBanner, setShowBanner] = useState(true)
 
-export function CourseCatalogBanner({ showBanner, onClose }: CourseCatalogBannerProps) {
   if (!showBanner) return null
 
   return (
@@ -34,7 +31,7 @@ export function CourseCatalogBanner({ showBanner, onClose }: CourseCatalogBanner
           <Button
             variant="ghost"
             size="sm"
-            onClick={onClose}
+            onClick={() => setShowBanner(false)}
             className="text-gray-600 hover:text-gray-800"
           >
             <X className="w-4 h-4" />

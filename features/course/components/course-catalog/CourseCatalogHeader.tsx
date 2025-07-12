@@ -9,26 +9,20 @@ import {
 } from '@/components/ui/select'
 import { Search, X, ChevronDown } from 'lucide-react'
 import React from 'react'
+import { useCourseContext } from '../../contexts/courseContext'
 
-interface CourseCatalogHeaderProps {
-  searchQuery: string
-  sortBy: string
-  sortOptions: { value: string; label: string }[]
-  onSearchChange: (query: string) => void
-  onSortChange: (sort: string) => void
-  hasActiveFilters: boolean
-  onClearFilters: () => void
-}
+const sortOptions = [
+  { value: 'popularity', label: 'Popularity' },
+  { value: 'rating', label: 'Rating' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'price-low', label: 'Price: Low to High' },
+  { value: 'price-high', label: 'Price: High to Low' },
+]
 
-export function CourseCatalogHeader({
-  searchQuery,
-  sortBy,
-  sortOptions,
-  onSearchChange,
-  onSortChange,
-  hasActiveFilters,
-  onClearFilters,
-}: CourseCatalogHeaderProps) {
+export function CourseCatalogHeader() {
+  const { searchQuery, setSearchQuery, hasActiveFilters, clearFilters } = useCourseContext()
+  const [sortBy, setSortBy] = React.useState('popularity')
+
   return (
     <div className="glass-panel p-6 shadow-lg rounded-2xl mb-8">
       <div className="flex flex-col lg:flex-row gap-4 items-center">
@@ -38,13 +32,13 @@ export function CourseCatalogHeader({
             type="text"
             placeholder="Search courses, instructors, or topics..."
             value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 bg-white/50 border-white/50 focus:bg-white/70 transition-all duration-200"
             aria-label="Search courses"
           />
         </div>
         <div className="flex items-center gap-3 w-full lg:w-auto">
-          <Select value={sortBy} onValueChange={onSortChange}>
+          <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-full lg:w-48 bg-white/50 border-white/50 focus:bg-white/70">
               <ChevronDown className="w-4 h-4 mr-2" />
               <SelectValue placeholder="Sort by" />
@@ -61,7 +55,7 @@ export function CourseCatalogHeader({
             <Button
               variant="outline"
               size="sm"
-              onClick={onClearFilters}
+              onClick={clearFilters}
               className="bg-white/50 border-white/50 hover:bg-white/70"
               aria-label="Clear all filters"
             >
@@ -74,4 +68,3 @@ export function CourseCatalogHeader({
     </div>
   )
 }
- 

@@ -1,25 +1,34 @@
 import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
 import React from 'react'
+import { useCourseManagement } from '../../hooks/useCourseManagement'
 
-interface LoadMoreButtonProps {
-  hasMoreCourses: boolean
-  onLoadMore: () => void
-}
+export function LoadMoreButton() {
+  const { courses, isLoading } = useCourseManagement()
 
-export function LoadMoreButton({ hasMoreCourses, onLoadMore }: LoadMoreButtonProps) {
-  if (!hasMoreCourses) return null
+  const handleLoadMore = () => {
+    // TODO: Implement load more functionality
+    console.log('Load more courses')
+  }
+
+  if (isLoading || courses.length === 0) return null
 
   return (
-    <div className="text-center mt-12">
+    <div className="flex justify-center mt-8">
       <Button
-        variant="outline"
-        size="lg"
-        onClick={onLoadMore}
-        className="btn-primary px-6 py-2 rounded-lg text-lg font-semibold"
+        onClick={handleLoadMore}
+        className="btn-primary px-8 py-3 rounded-lg text-lg font-semibold"
+        disabled={isLoading}
       >
-        Load More Courses
+        {isLoading ? (
+          <>
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+            Loading...
+          </>
+        ) : (
+          'Load More Courses'
+        )}
       </Button>
     </div>
   )
 }
- 

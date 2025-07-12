@@ -1,30 +1,29 @@
 import { Button } from '@/components/ui/button'
+import React from 'react'
+import { useCourseContext } from '../../contexts/courseContext'
 
-interface CategoryTabsProps {
-  categories: string[]
-  selectedCategory: string
-  onSelect: (category: string) => void
-}
+const categories = ['All', 'Martial Arts', 'Culture', 'Arts', 'Spirituality', 'Crafts', 'Dance']
 
-export function CategoryTabs({ categories, selectedCategory, onSelect }: CategoryTabsProps) {
+export function CategoryTabs() {
+  const { selectedCategory, setSelectedCategory } = useCourseContext()
+
   return (
-    <div className="mb-8">
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onSelect(category)}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200
-              ${selectedCategory === category ? 'bg-primary text-white shadow-lg' : 'bg-white/80 text-beige-900 hover:bg-primary/10'}
-            `}
-            aria-pressed={selectedCategory === category}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
+    <div className="flex flex-wrap gap-2 mb-8">
+      {categories.map((category) => (
+        <Button
+          key={category}
+          variant={selectedCategory === category ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setSelectedCategory(category)}
+          className={`transition-all duration-200 ${
+            selectedCategory === category
+              ? 'bg-primary text-white shadow-lg'
+              : 'bg-white/50 border-white/50 hover:bg-white/70'
+          }`}
+        >
+          {category}
+        </Button>
+      ))}
     </div>
   )
 }

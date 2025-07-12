@@ -58,6 +58,7 @@ interface CourseContextState {
   // Search/filter state (global untuk mempengaruhi grid, stats, dsb)
   searchQuery: string
   selectedStatus: string
+  selectedCategory: string
   hasActiveFilters: boolean
 
   // Enrollment dialog state
@@ -78,6 +79,7 @@ type CourseContextAction =
   | { type: 'RESET_FORM' }
   | { type: 'SET_SEARCH_QUERY'; payload: string }
   | { type: 'SET_SELECTED_STATUS'; payload: string }
+  | { type: 'SET_SELECTED_CATEGORY'; payload: string }
   | { type: 'CLEAR_FILTERS' }
   | { type: 'SET_ENROLLMENT_LOADING'; payload: boolean }
   | { type: 'CLOSE_ENROLLMENT_DIALOG' }
@@ -116,6 +118,7 @@ const initialState: CourseContextState = {
   // Search/filter state
   searchQuery: '',
   selectedStatus: 'all',
+  selectedCategory: 'All',
   hasActiveFilters: false,
 
   // Enrollment dialog state
@@ -235,14 +238,26 @@ function courseContextReducer(
       return {
         ...state,
         searchQuery: action.payload,
-        hasActiveFilters: action.payload !== '' || state.selectedStatus !== 'all',
+        hasActiveFilters:
+          action.payload !== '' ||
+          state.selectedStatus !== 'all' ||
+          state.selectedCategory !== 'All',
       }
 
     case 'SET_SELECTED_STATUS':
       return {
         ...state,
         selectedStatus: action.payload,
-        hasActiveFilters: state.searchQuery !== '' || action.payload !== 'all',
+        hasActiveFilters:
+          state.searchQuery !== '' || action.payload !== 'all' || state.selectedCategory !== 'All',
+      }
+
+    case 'SET_SELECTED_CATEGORY':
+      return {
+        ...state,
+        selectedCategory: action.payload,
+        hasActiveFilters:
+          state.searchQuery !== '' || state.selectedStatus !== 'all' || action.payload !== 'All',
       }
 
     case 'CLEAR_FILTERS':
@@ -250,6 +265,7 @@ function courseContextReducer(
         ...state,
         searchQuery: '',
         selectedStatus: 'all',
+        selectedCategory: 'All',
         hasActiveFilters: false,
       }
 
@@ -287,6 +303,7 @@ interface CourseContextValue extends CourseContextState {
   // Search/filter actions
   setSearchQuery: (query: string) => void
   setSelectedStatus: (status: string) => void
+  setSelectedCategory: (category: string) => void
   clearFilters: () => void
 
   // Enrollment actions
@@ -364,6 +381,10 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
     dispatch({ type: 'SET_SELECTED_STATUS', payload: status })
   }, [])
 
+  const setSelectedCategory = useCallback((category: string) => {
+    dispatch({ type: 'SET_SELECTED_CATEGORY', payload: category })
+  }, [])
+
   const clearFilters = useCallback(() => {
     dispatch({ type: 'CLEAR_FILTERS' })
   }, [])
@@ -423,6 +444,7 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
       // Search/filter actions
       setSearchQuery,
       setSelectedStatus,
+      setSelectedCategory,
       clearFilters,
 
       // Enrollment actions
@@ -448,6 +470,7 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
       resetForm,
       setSearchQuery,
       setSelectedStatus,
+      setSelectedCategory,
       clearFilters,
       setEnrollmentLoading,
       getFormErrors,
