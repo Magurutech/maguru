@@ -191,6 +191,12 @@ Lapisan ini bertanggung jawab untuk semua interaksi dengan sumber data (database
   - **Adapters** (`features/*/adapters`): antarmuka client-side ke API backend
   - **Prisma ORM** dan kode terkait di Services (server-side) untuk akses database
 
+- **Best Practice untuk Maguru (dan FE Modern):**
+  - Gunakan object literal untuk adapter/data-access layer, kecuali ada kebutuhan stateful/complex (jarang di FE).
+  - Pastikan semua method pure/stateless.
+  - Testing: Mock object, bukan instance class.
+  - Layer API dan Hooks: Tidak perlu tahu implementasi adapter, hanya perlu interface/contract-nya.
+
 **Alur Ketergantungan:**
 
 - Umumnya, alur data dan ketergantungan berjalan dari atas ke bawah:
@@ -456,6 +462,7 @@ Bagian ini menjelaskan komponen utama yang membangun arsitektur setiap fitur di 
    - Kumpulan fungsi pembantu (helper), tipe TypeScript, dan skema validasi (Zod).
    - Bisa bersifat umum (di `lib/`) atau spesifik fitur (di `features/*/lib` atau `features/*/types`).
    - Digunakan di berbagai layer sebagai cross-cutting concerns.
+   - menggunakan pendekatan functionalLayered Interface Pattern adalah pendekatan arsitektur untuk mengatasi masalah interface redundancy dan type safety di feature course. Pattern ini memisahkan interface berdasarkan layer dan tanggung jawab yang berbeda.
 
 ---
 

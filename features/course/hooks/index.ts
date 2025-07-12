@@ -8,6 +8,8 @@
 
 // Low-level hooks
 export { useCourse } from './useCourse'
+export { useEnrollment } from './useEnrollment'
+export { useEnrollmentStatus, useEnrollmentList } from './useEnrollmentStatus'
 
 // High-level hooks
 export { useCourseManagement } from './useCourseManagement'

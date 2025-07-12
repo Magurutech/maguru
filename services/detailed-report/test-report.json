@@ -1,771 +1,185 @@
 {
-  "numTotalTests": 67,
-  "numPassedTests": 67,
-  "numFailedTests": 0,
+  "numTotalTests": 13,
+  "numPassedTests": 0,
+  "numFailedTests": 13,
   "numPendingTests": 0,
-  "startTime": "2025-07-09T15:11:53.287Z",
-  "endTime": "2025-07-09T15:11:58.702Z",
+  "startTime": "2025-07-12T06:36:37.912Z",
+  "endTime": "2025-07-12T06:36:41.323Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseService.integration.test.ts",
+      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Database Connection Handling"
+            "CourseCardCatalog Component",
+            "Course Display"
           ],
-          "fullName": "CourseService ↔ Database Integration Database Connection Handling should handle database connection failure gracefully",
-          "status": "passed",
-          "title": "should handle database connection failure gracefully",
-          "failureMessages": [],
-          "duration": 23
+          "fullName": "CourseCardCatalog Component Course Display should display course information correctly",
+          "status": "failed",
+          "title": "should display course information correctly",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:149:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 94
         },
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Database Connection Handling"
+            "CourseCardCatalog Component",
+            "Course Display"
           ],
-          "fullName": "CourseService ↔ Database Integration Database Connection Handling should handle database disconnection gracefully",
-          "status": "passed",
-          "title": "should handle database disconnection gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Transaction Management"
+          "fullName": "CourseCardCatalog Component Course Display should display course thumbnail",
+          "status": "failed",
+          "title": "should display course thumbnail",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:165:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
           ],
-          "fullName": "CourseService ↔ Database Integration Transaction Management should handle transaction rollback on partial failure",
-          "status": "passed",
-          "title": "should handle transaction rollback on partial failure",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Transaction Management"
-          ],
-          "fullName": "CourseService ↔ Database Integration Transaction Management should handle successful transaction completion",
-          "status": "passed",
-          "title": "should handle successful transaction completion",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Concurrent Access Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Concurrent Access Handling should handle concurrent access to same course",
-          "status": "passed",
-          "title": "should handle concurrent access to same course",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Concurrent Access Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Concurrent Access Handling should handle concurrent creation conflicts",
-          "status": "passed",
-          "title": "should handle concurrent creation conflicts",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle foreign key constraint violations",
-          "status": "passed",
-          "title": "should handle foreign key constraint violations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle not null constraint violations",
-          "status": "passed",
-          "title": "should handle not null constraint violations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Constraint Violation Handling"
-          ],
-          "fullName": "CourseService ↔ Database Integration Constraint Violation Handling should handle check constraint violations",
-          "status": "passed",
-          "title": "should handle check constraint violations",
-          "failureMessages": [],
           "duration": 5
         },
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Data Consistency"
+            "CourseCardCatalog Component",
+            "Enrollment Operations"
           ],
-          "fullName": "CourseService ↔ Database Integration Data Consistency should maintain data consistency across operations",
-          "status": "passed",
-          "title": "should maintain data consistency across operations",
-          "failureMessages": [],
-          "duration": 0
+          "fullName": "CourseCardCatalog Component Enrollment Operations should call onEnroll when enroll button is clicked",
+          "status": "failed",
+          "title": "should call onEnroll when enroll button is clicked",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:179:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 6
         },
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Data Consistency"
+            "CourseCardCatalog Component",
+            "Enrollment Operations"
           ],
-          "fullName": "CourseService ↔ Database Integration Data Consistency should handle data inconsistency gracefully",
-          "status": "passed",
-          "title": "should handle data inconsistency gracefully",
-          "failureMessages": [],
-          "duration": 1
+          "fullName": "CourseCardCatalog Component Enrollment Operations should not call onEnroll when course is already enrolled",
+          "status": "failed",
+          "title": "should not call onEnroll when course is already enrolled",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:196:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 4
         },
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Error Propagation"
+            "CourseCardCatalog Component",
+            "Enrollment Operations"
           ],
-          "fullName": "CourseService ↔ Database Integration Error Propagation should propagate database errors with meaningful messages",
-          "status": "passed",
-          "title": "should propagate database errors with meaningful messages",
-          "failureMessages": [],
-          "duration": 1
+          "fullName": "CourseCardCatalog Component Enrollment Operations should show loading state during enrollment",
+          "status": "failed",
+          "title": "should show loading state during enrollment",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:222:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 6
         },
         {
           "ancestorTitles": [
-            "CourseService ↔ Database Integration",
-            "Error Propagation"
+            "CourseCardCatalog Component",
+            "Wishlist Integration"
           ],
-          "fullName": "CourseService ↔ Database Integration Error Propagation should handle unknown database errors gracefully",
-          "status": "passed",
-          "title": "should handle unknown database errors gracefully",
-          "failureMessages": [],
-          "duration": 1
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAPI.integration.test.ts",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
+          "fullName": "CourseCardCatalog Component Wishlist Integration should call onWishlist when wishlist button is clicked",
+          "status": "failed",
+          "title": "should call onWishlist when wishlist button is clicked",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:234:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service layer errors properly",
-          "status": "passed",
-          "title": "should handle service layer errors properly",
-          "failureMessages": [],
-          "duration": 18
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
+            "CourseCardCatalog Component",
+            "Wishlist Integration"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service timeout scenarios",
-          "status": "passed",
-          "title": "should handle service timeout scenarios",
-          "failureMessages": [],
-          "duration": 1
+          "fullName": "CourseCardCatalog Component Wishlist Integration should show wishlist state correctly",
+          "status": "failed",
+          "title": "should show wishlist state correctly",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:249:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Service Layer Error Handling"
+            "CourseCardCatalog Component",
+            "Quick View Modal"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Service Layer Error Handling should handle service returning null/undefined",
-          "status": "passed",
-          "title": "should handle service returning null/undefined",
-          "failureMessages": [],
-          "duration": 1
+          "fullName": "CourseCardCatalog Component Quick View Modal should open quick view modal when quick view button is clicked",
+          "status": "failed",
+          "title": "should open quick view modal when quick view button is clicked",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:266:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
+            "CourseCardCatalog Component",
+            "Quick View Modal"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should validate input before calling service",
-          "status": "passed",
-          "title": "should validate input before calling service",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Input Validation"
+          "fullName": "CourseCardCatalog Component Quick View Modal should display course details in quick view modal",
+          "status": "failed",
+          "title": "should display course details in quick view modal",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:281:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Input Validation should handle invalid course ID format",
-          "status": "passed",
-          "title": "should handle invalid course ID format",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should require valid user ID for course operations",
-          "status": "passed",
-          "title": "should require valid user ID for course operations",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Authentication and Authorization"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Authentication and Authorization should handle authorization failures gracefully",
-          "status": "passed",
-          "title": "should handle authorization failures gracefully",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform request data before service call",
-          "status": "passed",
-          "title": "should transform request data before service call",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Data Transformation should transform service response for API",
-          "status": "passed",
-          "title": "should transform service response for API",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should propagate database errors with meaningful messages",
-          "status": "passed",
-          "title": "should propagate database errors with meaningful messages",
-          "failureMessages": [],
           "duration": 7
         },
         {
           "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "Error Response Format"
+            "CourseCardCatalog Component",
+            "Accessibility"
           ],
-          "fullName": "CourseAPI ↔ Service Integration Error Response Format should handle unknown database errors gracefully",
-          "status": "passed",
-          "title": "should handle unknown database errors gracefully",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
+          "fullName": "CourseCardCatalog Component Accessibility should have proper ARIA labels",
+          "status": "failed",
+          "title": "should have proper ARIA labels",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:302:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
           ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle GET requests properly",
-          "status": "passed",
-          "title": "should handle GET requests properly",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle POST requests properly",
-          "status": "passed",
-          "title": "should handle POST requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PUT requests properly",
-          "status": "passed",
-          "title": "should handle PUT requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle DELETE requests properly",
-          "status": "passed",
-          "title": "should handle DELETE requests properly",
-          "failureMessages": [],
-          "duration": 0
-        },
-        {
-          "ancestorTitles": [
-            "CourseAPI ↔ Service Integration",
-            "HTTP Method Handling"
-          ],
-          "fullName": "CourseAPI ↔ Service Integration HTTP Method Handling should handle PATCH requests for status updates",
-          "status": "passed",
-          "title": "should handle PATCH requests for status updates",
-          "failureMessages": [],
-          "duration": 1
-        }
-      ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\backend\\courseAdapter.integration.test.ts",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Network Error Propagation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should propagate network errors from adapter to hook",
-          "status": "passed",
-          "title": "should propagate network errors from adapter to hook",
-          "failureMessages": [],
-          "duration": 34
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Network Error Propagation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should handle network timeout gracefully",
-          "status": "passed",
-          "title": "should handle network timeout gracefully",
-          "failureMessages": [],
-          "duration": 112
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Network Error Propagation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Network Error Propagation should handle connection refused errors",
-          "status": "passed",
-          "title": "should handle connection refused errors",
-          "failureMessages": [],
           "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
+            "CourseCardCatalog Component",
+            "Accessibility"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 401 errors properly",
-          "status": "passed",
-          "title": "should handle 401 errors properly",
-          "failureMessages": [],
-          "duration": 4
+          "fullName": "CourseCardCatalog Component Accessibility should have proper ARIA labels for enrolled state",
+          "status": "failed",
+          "title": "should have proper ARIA labels for enrolled state",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:316:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 11
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
+            "CourseCardCatalog Component",
+            "Component States"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 403 errors properly",
-          "status": "passed",
-          "title": "should handle 403 errors properly",
-          "failureMessages": [],
-          "duration": 2
+          "fullName": "CourseCardCatalog Component Component States should handle enrolled course state",
+          "status": "failed",
+          "title": "should handle enrolled course state",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:330:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
+            "CourseCardCatalog Component",
+            "Component States"
           ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 404 errors properly",
-          "status": "passed",
-          "title": "should handle 404 errors properly",
-          "failureMessages": [],
+          "fullName": "CourseCardCatalog Component Component States should handle wishlist course state",
+          "status": "failed",
+          "title": "should handle wishlist course state",
+          "failureMessages": [
+            "Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\nCheck the render method of `CourseCard`.\n    at createFiberFromTypeAndProps (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4259:28)\n    at createFiberFromElement (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:4273:14)\n    at reconcileChildFibersImpl (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:7879:31)\n    at D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8057:33\n    at reconcileChildren (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:8621:13)\n    at beginWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:10793:13)\n    at runWithFiberInDEV (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:1522:13)\n    at performUnitOfWork (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:15140:22)\n    at workLoopSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14956:41)\n    at renderRootSync (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14936:11)\n    at performWorkOnRoot (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:14462:44)\n    at performWorkOnRootViaSchedulerTask (D:\\2-Maguru\\maguru\\node_modules\\react-dom\\cjs\\react-dom-client.development.js:16216:7)\n    at flushActQueue (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:566:34)\n    at process.env.NODE_ENV.exports.act (D:\\2-Maguru\\maguru\\node_modules\\react\\cjs\\react.development.js:859:10)\n    at D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\act-compat.js:47:25\n    at renderRoot (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:190:26)\n    at render (D:\\2-Maguru\\maguru\\node_modules\\@testing-library\\react\\dist\\pure.js:292:10)\n    at Object.<anonymous> (D:\\2-Maguru\\maguru\\features\\course\\components\\course-catalog\\CourseCardCatalog.test.tsx:343:13)\n    at Promise.finally.completed (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1559:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1499:10)\n    at _callCircusTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1009:40)\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at _runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:949:3)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:839:13)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at _runTestsForDescribeBlock (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:829:11)\n    at run (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:757:3)\n    at runAndTransformResultsToJestFormat (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\jestAdapterInit.js:1920:21)\n    at jestAdapter (D:\\2-Maguru\\maguru\\node_modules\\jest-circus\\build\\runner.js:101:19)\n    at runTestInternal (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:272:16)\n    at runTest (D:\\2-Maguru\\maguru\\node_modules\\jest-runner\\build\\index.js:340:7)"
+          ],
           "duration": 6
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 500 errors properly",
-          "status": "passed",
-          "title": "should handle 500 errors properly",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "API Error Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration API Error Handling should handle 422 validation errors properly",
-          "status": "passed",
-          "title": "should handle 422 validation errors properly",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should provide meaningful error messages",
-          "status": "passed",
-          "title": "should provide meaningful error messages",
-          "failureMessages": [],
-          "duration": 16
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should handle malformed error responses",
-          "status": "passed",
-          "title": "should handle malformed error responses",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Error State Management"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Error State Management should handle non-JSON error responses",
-          "status": "passed",
-          "title": "should handle non-JSON error responses",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Retry Mechanisms should handle temporary network failures gracefully",
-          "status": "passed",
-          "title": "should handle temporary network failures gracefully",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Retry Mechanisms"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Retry Mechanisms should not retry on permanent errors",
-          "status": "passed",
-          "title": "should not retry on permanent errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Different Error Types"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Different Error Types should handle CORS errors",
-          "status": "passed",
-          "title": "should handle CORS errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Different Error Types"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Different Error Types should handle SSL/TLS errors",
-          "status": "passed",
-          "title": "should handle SSL/TLS errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should transform API response data correctly",
-          "status": "passed",
-          "title": "should transform API response data correctly",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should handle empty response data",
-          "status": "passed",
-          "title": "should handle empty response data",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Data Transformation"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Data Transformation should handle null response data",
-          "status": "passed",
-          "title": "should handle null response data",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle FormData for createCourse",
-          "status": "passed",
-          "title": "should handle FormData for createCourse",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle FormData for updateCourse",
-          "status": "passed",
-          "title": "should handle FormData for updateCourse",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "FormData Handling"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration FormData Handling should handle successful POST create course",
-          "status": "passed",
-          "title": "should handle successful POST create course",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Rate Limiting"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Rate Limiting should handle rate limiting errors",
-          "status": "passed",
-          "title": "should handle rate limiting errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Rate Limiting"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Rate Limiting should respect retry-after header",
-          "status": "passed",
-          "title": "should respect retry-after header",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Successful API Calls should handle successful GET courses",
-          "status": "passed",
-          "title": "should handle successful GET courses",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "CourseAdapter ↔ API Integration",
-            "Successful API Calls"
-          ],
-          "fullName": "CourseAdapter ↔ API Integration Successful API Calls should handle successful GET course by ID",
-          "status": "passed",
-          "title": "should handle successful GET course by ID",
-          "failureMessages": [],
-          "duration": 2
         }
       ],
-      "failureMessage": null
-    },
-    {
-      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\frontend\\hooks.integration.test.tsx",
-      "testFileResults": [
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourse Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should handle successful adapter calls",
-          "status": "passed",
-          "title": "should handle successful adapter calls",
-          "failureMessages": [],
-          "duration": 127
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourse Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should manage loading states correctly",
-          "status": "passed",
-          "title": "should manage loading states correctly",
-          "failureMessages": [],
-          "duration": 170
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course creation workflow",
-          "status": "passed",
-          "title": "should handle course creation workflow",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course update workflow",
-          "status": "passed",
-          "title": "should handle course update workflow",
-          "failureMessages": [],
-          "duration": 6
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course deletion workflow",
-          "status": "passed",
-          "title": "should handle course deletion workflow",
-          "failureMessages": [],
-          "duration": 5
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseManagement Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle permission errors",
-          "status": "passed",
-          "title": "should handle permission errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form data updates",
-          "status": "passed",
-          "title": "should handle form data updates",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form validation errors",
-          "status": "passed",
-          "title": "should handle form validation errors",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload with adapter",
-          "status": "passed",
-          "title": "should handle file upload with adapter",
-          "failureMessages": [],
-          "duration": 4
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "useCourseDialog Hook Integration"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload errors",
-          "status": "passed",
-          "title": "should handle file upload errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Error Recovery and Retry"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should allow retry after network failure",
-          "status": "passed",
-          "title": "should allow retry after network failure",
-          "failureMessages": [],
-          "duration": 20
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Error Recovery and Retry"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should clear errors on successful retry",
-          "status": "passed",
-          "title": "should clear errors on successful retry",
-          "failureMessages": [],
-          "duration": 8
-        },
-        {
-          "ancestorTitles": [
-            "Hooks ↔ Adapters Integration",
-            "Data Consistency"
-          ],
-          "fullName": "Hooks ↔ Adapters Integration Data Consistency should maintain data consistency across operations",
-          "status": "passed",
-          "title": "should maintain data consistency across operations",
-          "failureMessages": [],
-          "duration": 79
-        }
-      ],
-      "failureMessage": null
+      "failureMessage": "\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Course Display › should display course information correctly\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 147 |\u001b[39m   describe(\u001b[32m'Course Display'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m 148 |\u001b[39m     test(\u001b[32m'should display course information correctly'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 149 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 150 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 151 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 152 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:149:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Course Display › should display course thumbnail\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 163 |\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 164 |\u001b[39m     test(\u001b[32m'should display course thumbnail'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 165 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 166 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 167 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 168 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:165:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Enrollment Operations › should call onEnroll when enroll button is clicked\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 177 |\u001b[39m   describe(\u001b[32m'Enrollment Operations'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m 178 |\u001b[39m     test(\u001b[32m'should call onEnroll when enroll button is clicked'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 179 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 180 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 181 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 182 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:179:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Enrollment Operations › should not call onEnroll when course is already enrolled\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 194 |\u001b[39m       \u001b[36mconst\u001b[39m enrolledCourse \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mmockCourse\u001b[33m,\u001b[39m enrolled\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }\u001b[22m\n\u001b[2m     \u001b[90m 195 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 196 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 197 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 198 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{enrolledCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 199 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:196:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Enrollment Operations › should show loading state during enrollment\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 220 |\u001b[39m       } \u001b[36mas\u001b[39m any)\u001b[22m\n\u001b[2m     \u001b[90m 221 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 222 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 223 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 224 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 225 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:222:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Wishlist Integration › should call onWishlist when wishlist button is clicked\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 232 |\u001b[39m   describe(\u001b[32m'Wishlist Integration'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m 233 |\u001b[39m     test(\u001b[32m'should call onWishlist when wishlist button is clicked'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 234 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 235 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 236 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 237 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:234:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Wishlist Integration › should show wishlist state correctly\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 247 |\u001b[39m       \u001b[36mconst\u001b[39m wishlistedCourse \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mmockCourse\u001b[33m,\u001b[39m wishlist\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }\u001b[22m\n\u001b[2m     \u001b[90m 248 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 249 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 250 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 251 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 252 |\u001b[39m             course\u001b[33m=\u001b[39m{wishlistedCourse}\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:249:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Quick View Modal › should open quick view modal when quick view button is clicked\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 264 |\u001b[39m   describe(\u001b[32m'Quick View Modal'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m 265 |\u001b[39m     test(\u001b[32m'should open quick view modal when quick view button is clicked'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 266 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 267 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 268 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 269 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:266:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Quick View Modal › should display course details in quick view modal\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 279 |\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 280 |\u001b[39m     test(\u001b[32m'should display course details in quick view modal'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 281 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 282 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 283 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 284 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:281:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Accessibility › should have proper ARIA labels\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 300 |\u001b[39m   describe(\u001b[32m'Accessibility'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m     \u001b[90m 301 |\u001b[39m     test(\u001b[32m'should have proper ARIA labels'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 302 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 303 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 304 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{mockCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 305 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:302:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Accessibility › should have proper ARIA labels for enrolled state\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 314 |\u001b[39m       \u001b[36mconst\u001b[39m enrolledCourse \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mmockCourse\u001b[33m,\u001b[39m enrolled\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }\u001b[22m\n\u001b[2m     \u001b[90m 315 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 316 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 317 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 318 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{enrolledCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 319 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:316:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Component States › should handle enrolled course state\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 328 |\u001b[39m       \u001b[36mconst\u001b[39m enrolledCourse \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mmockCourse\u001b[33m,\u001b[39m enrolled\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }\u001b[22m\n\u001b[2m     \u001b[90m 329 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 330 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 331 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 332 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m course\u001b[33m=\u001b[39m{enrolledCourse} onEnroll\u001b[33m=\u001b[39m{mockOnEnroll} onWishlist\u001b[33m=\u001b[39m{mockOnWishlist} \u001b[33m/\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 333 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33m/\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[33m,\u001b[39m\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:330:13)\u001b[22m\u001b[2m\u001b[22m\n\n\u001b[1m\u001b[31m  \u001b[1m● \u001b[22m\u001b[1mCourseCardCatalog Component › Component States › should handle wishlist course state\u001b[39m\u001b[22m\n\n    Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.\n\n    Check the render method of `CourseCard`.\n\u001b[2m\u001b[22m\n\u001b[2m    \u001b[0m \u001b[90m 341 |\u001b[39m       \u001b[36mconst\u001b[39m wishlistedCourse \u001b[33m=\u001b[39m { \u001b[33m...\u001b[39mmockCourse\u001b[33m,\u001b[39m wishlist\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m }\u001b[22m\n\u001b[2m     \u001b[90m 342 |\u001b[39m\u001b[22m\n\u001b[2m    \u001b[31m\u001b[1m>\u001b[22m\u001b[2m\u001b[39m\u001b[90m 343 |\u001b[39m       render(\u001b[22m\n\u001b[2m     \u001b[90m     |\u001b[39m             \u001b[31m\u001b[1m^\u001b[22m\u001b[2m\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 344 |\u001b[39m         \u001b[33m<\u001b[39m\u001b[33mTestWrapper\u001b[39m\u001b[33m>\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 345 |\u001b[39m           \u001b[33m<\u001b[39m\u001b[33mCourseCard\u001b[39m\u001b[22m\n\u001b[2m     \u001b[90m 346 |\u001b[39m             course\u001b[33m=\u001b[39m{wishlistedCourse}\u001b[0m\u001b[22m\n\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromTypeAndProps (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4259:28)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat createFiberFromElement (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:4273:14)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildFibersImpl (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:7879:31)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8057:33\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat reconcileChildren (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:8621:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat beginWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:10793:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat runWithFiberInDEV (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:1522:13)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performUnitOfWork (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:15140:22)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat workLoopSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14956:41)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRootSync (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14936:11)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRoot (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:14462:44)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat performWorkOnRootViaSchedulerTask (\u001b[22m\u001b[2mnode_modules/react-dom/cjs/react-dom-client.development.js\u001b[2m:16216:7)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat flushActQueue (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:566:34)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat process.env.NODE_ENV.exports.act (\u001b[22m\u001b[2mnode_modules/react/cjs/react.development.js\u001b[2m:859:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat \u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/act-compat.js\u001b[2m:47:25\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat renderRoot (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:190:26)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat render (\u001b[22m\u001b[2mnode_modules/@testing-library/react/dist/pure.js\u001b[2m:292:10)\u001b[22m\u001b[2m\u001b[22m\n\u001b[2m      \u001b[2mat Object.<anonymous> (\u001b[22m\u001b[2m\u001b[0m\u001b[36mfeatures/course/components/course-catalog/CourseCardCatalog.test.tsx\u001b[39m\u001b[0m\u001b[2m:343:13)\u001b[22m\u001b[2m\u001b[22m\n"
     }
   ]
 }
