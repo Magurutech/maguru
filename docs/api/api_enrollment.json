@@ -1,0 +1,338 @@
+{
+  "info": {
+    "name": "Maguru Enrollment API - Core Tests",
+    "description": "API collection untuk testing core Enrollment Management di Maguru",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "",
+      "type": "string",
+      "description": "ID course yang akan digunakan untuk enrollment testing"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string",
+      "description": "User ID dari Clerk (akan diisi otomatis dari session)"
+    }
+  ],
+  "cookie": [
+    {
+      "domain": "localhost",
+      "expires": "2025-12-31T23:59:59.000Z",
+      "maxAge": "",
+      "hostOnly": true,
+      "httpOnly": false,
+      "name": "__session",
+      "path": "/",
+      "secure": false,
+      "session": true,
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "item": [
+    {
+      "name": "1. Create Enrollment",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"courseId\": \"{{courseId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/enrollments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "enrollments"]
+        },
+        "description": "Mendaftar user ke kursus tertentu. Memerlukan authentication dan course ID yang valid."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get User Enrollments",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/enrollments?page=1&limit=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "enrollments"],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "Mengambil daftar enrollment user dengan pagination. Memerlukan authentication."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Check Enrollment Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{courseId}}/enrollment-status",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "courses", "{{courseId}}", "enrollment-status"]
+        },
+        "description": "Mengecek status enrollment user untuk kursus tertentu. Memerlukan authentication."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Create Duplicate Enrollment (Error Test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"courseId\": \"{{courseId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/enrollments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "enrollments"]
+        },
+        "description": "Mencoba mendaftar ke kursus yang sudah diikuti. Seharusnya return 409 Conflict."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Create Enrollment - Invalid Course ID",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"courseId\": \"invalid-course-id\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/enrollments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "enrollments"]
+        },
+        "description": "Mencoba mendaftar ke course ID yang tidak valid. Seharusnya return 404 Not Found."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Create Enrollment - Unauthenticated",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"courseId\": \"{{courseId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/enrollments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "enrollments"]
+        },
+        "description": "Mencoba mendaftar tanpa authentication. Seharusnya return 401 Unauthorized."
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pre-request script untuk setup environment",
+          "console.log('🚀 Testing Maguru Enrollment API - Core Tests...');",
+          "console.log('📍 Base URL:', pm.collectionVariables.get('baseUrl'));",
+          "console.log('📚 Course ID:', pm.collectionVariables.get('courseId'));",
+          "console.log('👤 User ID:', pm.collectionVariables.get('userId'));",
+          "",
+          "// Check if __session cookie exists",
+          "const sessionCookie = pm.cookies.get('__session');",
+          "if (sessionCookie) {",
+          "    console.log('✅ __session cookie found:', sessionCookie.substring(0, 20) + '...');",
+          "} else {",
+          "    console.log('⚠️ __session cookie not found - auth requests may fail');",
+          "    console.log('💡 Copy __session value from browser DevTools > Application > Cookies');",
+          "}",
+          "",
+          "// Validate required variables",
+          "if (!pm.collectionVariables.get('courseId')) {",
+          "    console.log('⚠️ Course ID not set - please set a valid course ID for testing');",
+          "    console.log('💡 You can get course ID from Course API or database');",
+          "}",
+          "",
+          "// Set userId from session if available",
+          "if (sessionCookie && !pm.collectionVariables.get('userId')) {",
+          "    try {",
+          "        const sessionData = JSON.parse(atob(sessionCookie.split('.')[1]));",
+          "        if (sessionData.userId) {",
+          "            pm.collectionVariables.set('userId', sessionData.userId);",
+          "            console.log('✅ User ID set from session:', sessionData.userId);",
+          "        }",
+          "    } catch (e) {",
+          "        console.log('⚠️ Could not extract user ID from session');",
+          "    }",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Test script untuk validasi response",
+          "const responseCode = pm.response.code;",
+          "const responseBody = pm.response.json();",
+          "",
+          "// Log response untuk debugging",
+          "console.log('📊 Response Status:', responseCode);",
+          "console.log('⏱️ Response Time:', pm.response.responseTime + 'ms');",
+          "console.log('📄 Response Body:', JSON.stringify(responseBody, null, 2));",
+          "",
+          "// Common tests untuk semua responses",
+          "pm.test('Response time is less than 3000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+          "});",
+          "",
+          "pm.test('Response has success property', function () {",
+          "    pm.expect(responseBody).to.have.property('success');",
+          "    pm.expect(responseBody.success).to.be.a('boolean');",
+          "});",
+          "",
+          "// Test berdasarkan endpoint dan expected behavior",
+          "if (pm.request.name.includes('Error Test') || pm.request.name.includes('Invalid') || pm.request.name.includes('Unauthenticated')) {",
+          "    // Error test cases",
+          "    pm.test('Error response has appropriate status code', function () {",
+          "        pm.expect(responseCode).to.be.oneOf([400, 401, 403, 404, 409, 500]);",
+          "    });",
+          "",
+          "    pm.test('Error response has success: false', function () {",
+          "        pm.expect(responseBody.success).to.be.false;",
+          "    });",
+          "",
+          "    pm.test('Error response has error message', function () {",
+          "        pm.expect(responseBody).to.have.property('error');",
+          "        pm.expect(responseBody.error).to.be.a('string');",
+          "    });",
+          "} else {",
+          "    // Success test cases",
+          "    pm.test('Success response has appropriate status code', function () {",
+          "        pm.expect(responseCode).to.be.oneOf([200, 201]);",
+          "    });",
+          "",
+          "    pm.test('Success response has success: true', function () {",
+          "        pm.expect(responseBody.success).to.be.true;",
+          "    });",
+          "}",
+          "",
+          "// Specific tests untuk setiap endpoint",
+          "if (pm.request.name.includes('Create Enrollment') && !pm.request.name.includes('Error') && !pm.request.name.includes('Invalid') && !pm.request.name.includes('Unauthenticated')) {",
+          "    pm.test('Create enrollment response has enrollment data', function () {",
+          "        pm.expect(responseBody).to.have.property('data');",
+          "        pm.expect(responseBody.data).to.have.property('id');",
+          "        pm.expect(responseBody.data).to.have.property('courseId');",
+          "        pm.expect(responseBody.data).to.have.property('enrolledAt');",
+          "    });",
+          "}",
+          "",
+          "if (pm.request.name.includes('Get User Enrollments')) {",
+          "    pm.test('Get enrollments response has enrollment list', function () {",
+          "        pm.expect(responseBody).to.have.property('data');",
+          "        pm.expect(responseBody.data).to.be.an('array');",
+          "    });",
+          "",
+          "    pm.test('Get enrollments response has pagination info', function () {",
+          "        pm.expect(responseBody).to.have.property('pagination');",
+          "        pm.expect(responseBody.pagination).to.have.property('page');",
+          "        pm.expect(responseBody.pagination).to.have.property('limit');",
+          "        pm.expect(responseBody.pagination).to.have.property('total');",
+          "        pm.expect(responseBody.pagination).to.have.property('totalPages');",
+          "    });",
+          "}",
+          "",
+          "if (pm.request.name.includes('Check Enrollment Status')) {",
+          "    pm.test('Enrollment status response has isEnrolled property', function () {",
+          "        pm.expect(responseBody).to.have.property('isEnrolled');",
+          "        pm.expect(responseBody.isEnrolled).to.be.a('boolean');",
+          "    });",
+          "}",
+          "",
+          "// Specific error case validations",
+          "if (pm.request.name.includes('Duplicate Enrollment')) {",
+          "    pm.test('Duplicate enrollment returns 409 Conflict', function () {",
+          "        pm.expect(responseCode).to.equal(409);",
+          "    });",
+          "}",
+          "",
+          "if (pm.request.name.includes('Invalid Course ID')) {",
+          "    pm.test('Invalid course ID returns 404 Not Found', function () {",
+          "        pm.expect(responseCode).to.equal(404);",
+          "    });",
+          "}",
+          "",
+          "if (pm.request.name.includes('Unauthenticated')) {",
+          "    pm.test('Unauthenticated request returns 401 Unauthorized', function () {",
+          "        pm.expect(responseCode).to.equal(401);",
+          "    });",
+          "}",
+          "",
+          "// Performance validation",
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});",
+          "",
+          "console.log('✅ Test completed for:', pm.request.name);"
+        ]
+      }
+    }
+  ]
+}
