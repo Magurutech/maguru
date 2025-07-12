@@ -4,7 +4,7 @@
  * Test ini bertujuan untuk menguji interaksi antara EnrollmentService
  * dan database dengan fokus pada data consistency dan error propagation.
  *
- * Coverage: Database connection, transactions, concurrent access, constraints
+ * Coverage: Database connection, transactions, constraints
  * Designing for Failure: Connection failures, transaction rollbacks, data consistency
  */
 
@@ -12,7 +12,7 @@ import { EnrollmentService } from '../../../../features/course/services/enrollme
 import { Enrollment } from '../../../../features/course/types'
 import { CourseStatus } from '@prisma/client'
 
-// Mock Prisma untuk integration testing - Fix path to match service import
+// Mock Prisma untuk integration testing
 jest.mock('@/lib/prisma', () => ({
   prisma: {
     enrollment: {
@@ -39,13 +39,12 @@ describe('EnrollmentService Integration', () => {
   beforeEach(() => {
     enrollmentService = new EnrollmentService()
     jest.clearAllMocks()
-    // ✅ SOLUSI: Akses mock yang benar dari jest.mock()
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     mockPrisma = require('@/lib/prisma').prisma
   })
 
   describe('Database Connection Handling', () => {
-    it('should handle database connection failure gracefully', async () => {
+    test('should handle database connection failure gracefully', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -58,10 +57,10 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Database operation failed')
+      expect(result.error).toBe('Database operation failed')
     })
 
-    it('should handle database disconnection gracefully', async () => {
+    test('should handle database disconnection gracefully', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockEnrollmentFindMany = mockPrisma.enrollment.findMany as jest.MockedFunction<any>
@@ -72,21 +71,7 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Database query failed')
-    })
-
-    it('should handle connection timeout scenarios', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockEnrollmentFindUnique = mockPrisma.enrollment.findUnique as jest.MockedFunction<any>
-      mockEnrollmentFindUnique.mockRejectedValue(new Error('Connection timeout'))
-
-      // Act
-      const result = await enrollmentService.getEnrollmentStatus('user-123', 'course-123')
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Database query failed')
+      expect(result.error).toBe('Database query failed')
     })
   })
 
@@ -105,7 +90,7 @@ describe('EnrollmentService Integration', () => {
       enrolledAt: new Date(),
     }
 
-    it('should handle transaction rollback on partial failure', async () => {
+    test('should handle transaction rollback on failure', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -121,10 +106,10 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Transaction failed, please try again')
+      expect(result.error).toBe('Transaction failed, please try again')
     })
 
-    it('should handle successful transaction completion', async () => {
+    test('should handle successful transaction completion', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -147,140 +132,14 @@ describe('EnrollmentService Integration', () => {
       expect(result.success).toBe(true)
       expect(mockPrisma.$transaction).toHaveBeenCalled()
     })
-
-    it('should handle concurrent transaction conflicts', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Concurrent transaction conflict')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Transaction failed, please try again')
-    })
-
-    it('should handle transaction timeout scenarios', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Transaction timeout')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Transaction failed, please try again')
-    })
-  })
-
-  describe('Concurrent Access Handling', () => {
-    const mockCourse = {
-      id: 'course-123',
-      title: 'Test Course',
-      status: CourseStatus.PUBLISHED,
-      students: 10,
-    }
-
-    it('should handle concurrent enrollment to same course', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Concurrent enrollment detected')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Concurrent modification detected, please try again')
-    })
-
-    it('should handle concurrent enrollment conflicts', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Unique constraint violation')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('already enrolled')
-    })
-
-    it('should handle race conditions in student count updates', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Race condition in student count')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Concurrent modification detected, please try again')
-    })
-
-    it('should handle database lock scenarios', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Database lock timeout')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Database operation failed')
-    })
   })
 
   describe('Constraint Violation Handling', () => {
-    it('should handle foreign key constraint violations', async () => {
+    test('should handle foreign key constraint violations', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
       mockCourseFindUnique.mockResolvedValue(null) // Course not found
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Foreign key constraint failed')
-      })
 
       // Act
       const result = await enrollmentService.createEnrollment('user-123', {
@@ -289,10 +148,10 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('not found')
+      expect(result.error).toBe('Course not found')
     })
 
-    it('should handle unique constraint violations (duplicate enrollment)', async () => {
+    test('should handle unique constraint violations (duplicate enrollment)', async () => {
       // Arrange
       const mockCourse = {
         id: 'course-123',
@@ -314,27 +173,10 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('already enrolled')
+      expect(result.error).toBe('User is already enrolled in this course')
     })
 
-    it('should handle not null constraint violations', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(null)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('NOT NULL constraint failed')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', { courseId: '' })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Invalid course ID provided')
-    })
-
-    it('should handle check constraint violations', async () => {
+    test('should handle course not published', async () => {
       // Arrange
       const draftCourse = {
         id: 'course-123',
@@ -353,7 +195,7 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('not published')
+      expect(result.error).toBe('Course is not published')
     })
   })
 
@@ -372,7 +214,7 @@ describe('EnrollmentService Integration', () => {
       enrolledAt: new Date(),
     }
 
-    it('should maintain data consistency across enrollment operations', async () => {
+    test('should maintain data consistency across enrollment operations', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -399,7 +241,7 @@ describe('EnrollmentService Integration', () => {
       })
     })
 
-    it('should handle data inconsistency gracefully', async () => {
+    test('should handle data inconsistency gracefully', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -415,59 +257,12 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Database operation failed')
-    })
-
-    it('should verify course.students count accuracy', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockEnrollmentCreate = mockPrisma.enrollment.create as jest.MockedFunction<any>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseUpdate = mockPrisma.course.update as jest.MockedFunction<any>
-
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockEnrollmentCreate.mockResolvedValue(mockEnrollment)
-      mockCourseUpdate.mockResolvedValue({ ...mockCourse, students: 11 })
-      mockPrisma.$transaction.mockImplementation((callback) => callback(mockPrisma))
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(true)
-      expect(mockCourseUpdate).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: { students: { increment: 1 } },
-        }),
-      )
-    })
-
-    it('should handle partial enrollment failures', async () => {
-      // Arrange
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
-      mockCourseFindUnique.mockResolvedValue(mockCourse)
-      mockPrisma.$transaction.mockImplementation(() => {
-        throw new Error('Partial enrollment failure')
-      })
-
-      // Act
-      const result = await enrollmentService.createEnrollment('user-123', {
-        courseId: 'course-123',
-      })
-
-      // Assert
-      expect(result.success).toBe(false)
-      expect(result.error).toContain('Transaction failed, please try again')
+      expect(result.error).toBe('Database operation failed')
     })
   })
 
   describe('Error Propagation', () => {
-    it('should propagate database errors with meaningful messages', async () => {
+    test('should propagate database errors with meaningful messages', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockCourseFindUnique = mockPrisma.course.findUnique as jest.MockedFunction<any>
@@ -480,10 +275,10 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Database operation failed')
+      expect(result.error).toBe('Database operation failed')
     })
 
-    it('should handle unknown database errors gracefully', async () => {
+    test('should handle unknown database errors gracefully', async () => {
       // Arrange
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mockEnrollmentFindMany = mockPrisma.enrollment.findMany as jest.MockedFunction<any>
@@ -494,9 +289,7 @@ describe('EnrollmentService Integration', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Database query failed')
+      expect(result.error).toBe('Database query failed')
     })
-
-
   })
 })

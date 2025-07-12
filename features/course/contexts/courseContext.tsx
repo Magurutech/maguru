@@ -4,10 +4,11 @@
  * @description
  * Context untuk mengelola state UI/UX yang perlu diakses lintas komponen dalam fitur course.
  * Mengikuti arsitektur Maguru untuk feature context dengan:
- * - Dialog state management (create, edit, delete)
+ * - Dialog state management (create, edit, delete, enrollment)
  * - Form state management untuk dialog
  * - Search/filter state yang mempengaruhi multiple komponen
  * - File upload state untuk thumbnail
+ * - Enrollment dialog state management
  *
  * State data kursus (courses, isLoading, dsb) tetap di hook (useCourseManagement),
  * context hanya untuk state UI/UX yang perlu diakses lintas komponen.
@@ -27,7 +28,7 @@ import type { Course, CreateCourseFormData, CourseStatus } from '../types'
 // import { logger } from '@/services/logger'
 
 // Dialog types
-type DialogType = 'create' | 'edit' | 'delete' | null
+type DialogType = 'create' | 'edit' | 'delete' | 'enrollment' | null
 
 // Form state interface
 interface FormState {
@@ -35,6 +36,14 @@ interface FormState {
   errors: string[]
   isValid: boolean
   isSubmitting: boolean
+}
+
+// Enrollment dialog state interface
+interface EnrollmentDialogState {
+  isOpen: boolean
+  courseId: string | null
+  courseTitle: string | null
+  isLoading: boolean
 }
 
 // Context state interface
@@ -50,6 +59,9 @@ interface CourseContextState {
   searchQuery: string
   selectedStatus: string
   hasActiveFilters: boolean
+
+  // Enrollment dialog state
+  enrollmentDialog: EnrollmentDialogState
 }
 
 // Context actions
@@ -57,6 +69,7 @@ type CourseContextAction =
   | { type: 'OPEN_CREATE_DIALOG' }
   | { type: 'OPEN_EDIT_DIALOG'; payload: Course }
   | { type: 'OPEN_DELETE_DIALOG'; payload: Course }
+  | { type: 'OPEN_ENROLLMENT_DIALOG'; payload: { courseId: string; courseTitle: string } }
   | { type: 'CLOSE_DIALOG' }
   | { type: 'UPDATE_FORM_DATA'; payload: Partial<CreateCourseFormData> }
   | { type: 'SET_FORM_ERRORS'; payload: string[] }
@@ -66,6 +79,8 @@ type CourseContextAction =
   | { type: 'SET_SEARCH_QUERY'; payload: string }
   | { type: 'SET_SELECTED_STATUS'; payload: string }
   | { type: 'CLEAR_FILTERS' }
+  | { type: 'SET_ENROLLMENT_LOADING'; payload: boolean }
+  | { type: 'CLOSE_ENROLLMENT_DIALOG' }
 
 // Initial form state
 const initialFormState: FormState = {
@@ -81,6 +96,14 @@ const initialFormState: FormState = {
   isSubmitting: false,
 }
 
+// Initial enrollment dialog state
+const initialEnrollmentDialogState: EnrollmentDialogState = {
+  isOpen: false,
+  courseId: null,
+  courseTitle: null,
+  isLoading: false,
+}
+
 // Initial context state
 const initialState: CourseContextState = {
   // Dialog state
@@ -94,6 +117,9 @@ const initialState: CourseContextState = {
   searchQuery: '',
   selectedStatus: 'all',
   hasActiveFilters: false,
+
+  // Enrollment dialog state
+  enrollmentDialog: initialEnrollmentDialogState,
 }
 
 // Reducer function
@@ -135,12 +161,32 @@ function courseContextReducer(
         selectedCourse: action.payload,
       }
 
+    case 'OPEN_ENROLLMENT_DIALOG':
+      return {
+        ...state,
+        activeDialog: 'enrollment',
+        enrollmentDialog: {
+          isOpen: true,
+          courseId: action.payload.courseId,
+          courseTitle: action.payload.courseTitle,
+          isLoading: false,
+        },
+      }
+
     case 'CLOSE_DIALOG':
       return {
         ...state,
         activeDialog: null,
         selectedCourse: null,
         formState: initialFormState,
+        enrollmentDialog: initialEnrollmentDialogState,
+      }
+
+    case 'CLOSE_ENROLLMENT_DIALOG':
+      return {
+        ...state,
+        activeDialog: null,
+        enrollmentDialog: initialEnrollmentDialogState,
       }
 
     case 'UPDATE_FORM_DATA':
@@ -207,6 +253,15 @@ function courseContextReducer(
         hasActiveFilters: false,
       }
 
+    case 'SET_ENROLLMENT_LOADING':
+      return {
+        ...state,
+        enrollmentDialog: {
+          ...state.enrollmentDialog,
+          isLoading: action.payload,
+        },
+      }
+
     default:
       return state
   }
@@ -218,7 +273,9 @@ interface CourseContextValue extends CourseContextState {
   openCreateDialog: () => void
   openEditDialog: (course: Course) => void
   openDeleteDialog: (course: Course) => void
+  openEnrollmentDialog: (courseId: string, courseTitle: string) => void
   closeDialog: () => void
+  closeEnrollmentDialog: () => void
 
   // Form actions
   updateFormData: (data: Partial<CreateCourseFormData>) => void
@@ -231,6 +288,9 @@ interface CourseContextValue extends CourseContextState {
   setSearchQuery: (query: string) => void
   setSelectedStatus: (status: string) => void
   clearFilters: () => void
+
+  // Enrollment actions
+  setEnrollmentLoading: (isLoading: boolean) => void
 
   // Utility functions
   getFormErrors: () => string[]
@@ -262,8 +322,16 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
     dispatch({ type: 'OPEN_DELETE_DIALOG', payload: course })
   }, [])
 
+  const openEnrollmentDialog = useCallback((courseId: string, courseTitle: string) => {
+    dispatch({ type: 'OPEN_ENROLLMENT_DIALOG', payload: { courseId, courseTitle } })
+  }, [])
+
   const closeDialog = useCallback(() => {
     dispatch({ type: 'CLOSE_DIALOG' })
+  }, [])
+
+  const closeEnrollmentDialog = useCallback(() => {
+    dispatch({ type: 'CLOSE_ENROLLMENT_DIALOG' })
   }, [])
 
   // Form actions
@@ -300,6 +368,11 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
     dispatch({ type: 'CLEAR_FILTERS' })
   }, [])
 
+  // Enrollment actions
+  const setEnrollmentLoading = useCallback((isLoading: boolean) => {
+    dispatch({ type: 'SET_ENROLLMENT_LOADING', payload: isLoading })
+  }, [])
+
   // Utility functions
   const getFormErrors = useCallback((): string[] => {
     return state.formState.errors
@@ -329,30 +402,35 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
   // Context value dengan memoization untuk mencegah re-render berlebihan
   const contextValue: CourseContextValue = useMemo(
     () => ({
-    // State
-    ...state,
+      // State
+      ...state,
 
-    // Dialog actions
-    openCreateDialog,
-    openEditDialog,
-    openDeleteDialog,
-    closeDialog,
+      // Dialog actions
+      openCreateDialog,
+      openEditDialog,
+      openDeleteDialog,
+      openEnrollmentDialog,
+      closeDialog,
+      closeEnrollmentDialog,
 
-    // Form actions
-    updateFormData,
-    setFormErrors,
-    setFormValid,
-    setFormSubmitting,
-    resetForm,
+      // Form actions
+      updateFormData,
+      setFormErrors,
+      setFormValid,
+      setFormSubmitting,
+      resetForm,
 
-    // Search/filter actions
-    setSearchQuery,
-    setSelectedStatus,
-    clearFilters,
+      // Search/filter actions
+      setSearchQuery,
+      setSelectedStatus,
+      clearFilters,
 
-    // Utility functions
-    getFormErrors,
-    hasFormChanges,
+      // Enrollment actions
+      setEnrollmentLoading,
+
+      // Utility functions
+      getFormErrors,
+      hasFormChanges,
       isSelectedCourseValid,
     }),
     [
@@ -360,7 +438,9 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
       openCreateDialog,
       openEditDialog,
       openDeleteDialog,
+      openEnrollmentDialog,
       closeDialog,
+      closeEnrollmentDialog,
       updateFormData,
       setFormErrors,
       setFormValid,
@@ -369,6 +449,7 @@ export function CourseContextProvider({ children }: CourseContextProviderProps) 
       setSearchQuery,
       setSelectedStatus,
       clearFilters,
+      setEnrollmentLoading,
       getFormErrors,
       hasFormChanges,
       isSelectedCourseValid,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { CourseCard } from './CourseCard'
+import { CourseCard } from './CourseCardCatalog'
 import { CourseCardSkeleton } from './CourseCardSkeleton'
 import { EmptyStateIllustration } from './EmptyStateIllustration'
 import type { CourseCatalogItem } from '@/features/course/types'

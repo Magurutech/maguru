@@ -230,9 +230,12 @@ export interface Enrollment {
 }
 
 // Request/Response Types
-export interface CreateEnrollmentRequest {
+export interface EnrollmentRequest {
   courseId: string
 }
+
+// Alias untuk backward compatibility
+export type CreateEnrollmentRequest = EnrollmentRequest
 
 export interface EnrollmentResponse {
   success: boolean

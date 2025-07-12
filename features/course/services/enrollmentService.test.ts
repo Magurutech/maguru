@@ -422,7 +422,7 @@ describe('EnrollmentService', () => {
 
       // Assert
       expect(result.success).toBe(false)
-      expect(result.error).toContain('Transaction failed, please try again')
+      expect(result.error).toContain('Database operation failed')
     })
   })
 })

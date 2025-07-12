@@ -3,12 +3,13 @@
  *
  * @description
  * High-level hook yang menggabungkan low-level hooks untuk menjalankan logika bisnis yang kompleks.
- * Hook ini menggunakan useCourse (low-level) dan menambahkan:
+ * Hook ini menggunakan useCourse (low-level) dan useEnrollment (low-level) dan menambahkan:
  * - Business logic workflows
  * - Local state management (tidak menggunakan context)
  * - Complex operations (batch operations, optimistic updates)
  * - Error recovery strategies
  * - User role validation
+ * - Enrollment integration
  *
  * Mengikuti arsitektur Maguru untuk high-level hooks dengan:
  * - Orchestration dari multiple low-level hooks
@@ -16,28 +17,26 @@
  * - Local state management
  * - Error handling dan recovery strategies
  * - Designing for failure principles
+ * - Enrollment operations integration
  */
 
 'use client'
 
 import { useCourse } from './useCourse'
+import { useEnrollment } from './useEnrollment'
 import { useUserRole } from '@/features/auth/hooks/useUserRole'
 import { useState, useCallback } from 'react'
-// import { useQueryClient } from '@tanstack/react-query' // Tidak digunakan lagi
 import type { CreateCourseRequest, UpdateCourseRequest } from '../types'
 
 export function useCourseManagement() {
   // Auth hook untuk role validation
   const { role } = useUserRole()
 
-  // React Query client untuk error handling (tidak digunakan lagi setelah fix)
-  // const queryClient = useQueryClient()
-
   // Local state management (UI only) - akan diintegrasikan dengan context
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedStatus, setSelectedStatus] = useState('all')
 
-  // Low-level hook untuk data operations (React Query)
+  // Low-level hooks untuk data operations (React Query)
   const {
     courses,
     isLoading,
@@ -51,9 +50,23 @@ export function useCourseManagement() {
     fetchCourses,
   } = useCourse()
 
+  // Enrollment hooks
+  const {
+    enrollCourse,
+    unenrollCourse,
+    isEnrolling,
+    isUnenrolling,
+    enrollmentError,
+    unenrollmentError,
+    isEnrollmentSuccess,
+    isUnenrollmentSuccess,
+    resetEnrollment,
+    resetUnenrollment,
+  } = useEnrollment()
+
   // Permission checking
   const hasPermission = useCallback(
-    (action: 'create' | 'update' | 'delete' | 'view'): boolean => {
+    (action: 'create' | 'update' | 'delete' | 'view' | 'enroll'): boolean => {
       if (!role) return false
       switch (action) {
         case 'create':
@@ -63,6 +76,8 @@ export function useCourseManagement() {
           return role === 'creator' || role === 'admin'
         case 'view':
           return role === 'creator' || role === 'admin' || role === 'user'
+        case 'enroll':
+          return role === 'user' // Hanya user yang bisa enroll
         default:
           return false
       }
@@ -145,6 +160,53 @@ export function useCourseManagement() {
     [hasPermission, deleteCourse, fetchCourses],
   )
 
+  // Enrollment operations dengan business logic
+  const enrollCourseWithValidation = useCallback(
+    async (courseId: string): Promise<boolean> => {
+      if (!hasPermission('enroll')) {
+        console.error(
+          'useCourseManagement: enrollCourseWithValidation - Access denied for enrollment',
+        )
+        return false
+      }
+
+      try {
+        enrollCourse(courseId)
+        return true
+      } catch (error) {
+        console.error(
+          'useCourseManagement: enrollCourseWithValidation - Failed to enroll course',
+          error,
+        )
+        return false
+      }
+    },
+    [hasPermission, enrollCourse],
+  )
+
+  const unenrollCourseWithValidation = useCallback(
+    async (courseId: string): Promise<boolean> => {
+      if (!hasPermission('enroll')) {
+        console.error(
+          'useCourseManagement: unenrollCourseWithValidation - Access denied for unenrollment',
+        )
+        return false
+      }
+
+      try {
+        unenrollCourse(courseId)
+        return true
+      } catch (error) {
+        console.error(
+          'useCourseManagement: unenrollCourseWithValidation - Failed to unenroll course',
+          error,
+        )
+        return false
+      }
+    },
+    [hasPermission, unenrollCourse],
+  )
+
   // Load courses by creator (for creator dashboard)
   const loadCreatorCourses = useCallback(async () => {
     if (!hasPermission('view')) {
@@ -210,22 +272,46 @@ export function useCourseManagement() {
     setSelectedStatus('all')
   }, [])
 
+  // Reset enrollment states
+  const resetEnrollmentStates = useCallback(() => {
+    resetEnrollment()
+    resetUnenrollment()
+  }, [resetEnrollment, resetUnenrollment])
+
   return {
+    // Course data
     courses,
     isLoading,
     error,
+
+    // Course operations
     createCourseWithValidation,
     updateCourseWithValidation,
     deleteCourseWithConfirmation,
     loadCreatorCourses,
-    fetchCourses, // Tambahkan fetchCourses ke return object
-    searchCourses, // Tambahkan searchCourses ke return object
+    fetchCourses,
+    searchCourses,
     getDisplayThumbnail,
     isDefaultThumbnail,
     getDefaultThumbnailUrl,
+
+    // Enrollment operations
+    enrollCourseWithValidation,
+    unenrollCourseWithValidation,
+    isEnrolling,
+    isUnenrolling,
+    enrollmentError,
+    unenrollmentError,
+    isEnrollmentSuccess,
+    isUnenrollmentSuccess,
+
+    // Utility functions
     clearError,
     resetState,
+    resetEnrollmentStates,
     hasPermission,
+
+    // Search/filter state
     searchQuery,
     setSearchQuery,
     selectedStatus,

@@ -1,366 +1,216 @@
 /**
- * EnrollmentAdapter - Client-side API Communication Layer
+ * EnrollmentAdapter - Data Access Layer
  *
- * Adapter ini menangani komunikasi antara frontend dan backend API
- * untuk enrollment operations dengan designing for failure patterns.
- *
- * Features:
+ * @description
+ * Adapter untuk komunikasi dengan backend API enrollment.
+ * Mengimplementasikan designing for failure patterns:
  * - Retry logic dengan exponential backoff
- * - Timeout handling dengan AbortController
- * - Graceful fallback untuk network errors
- * - Comprehensive error handling
- * - Request/response transformation
+ * - Timeout handling
+ * - Error transformation
+ * - Request/response formatting
+ *
+ * Mengikuti arsitektur Maguru untuk adapters dengan:
+ * - Direct API communication
+ * - Error handling dan transformation
+ * - Request/response formatting
+ * - Designing for failure principles
  */
 
-import {
-  CreateEnrollmentRequest,
+import type {
+  EnrollmentRequest,
   EnrollmentResponse,
-  EnrollmentListResponse,
   EnrollmentStatusResponse,
+  EnrollmentListResponse,
 } from '../types'
 
-export class EnrollmentAdapter {
-  private readonly baseUrl: string
-  private readonly maxRetries: number
-  private readonly retryDelay: number
-  private readonly timeout: number
-  private readonly isTestEnvironment: boolean
+// Base API configuration
+const API_BASE_URL = '/api'
+const DEFAULT_TIMEOUT = 30000 // 30 seconds
 
-  constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_API_URL || ''
-    this.maxRetries = process.env.NODE_ENV === 'test' ? 3 : 3 // Enable retry for tests
-    this.retryDelay = 1000 // 1 second
-    this.timeout = 30000 // 30 seconds
-    this.isTestEnvironment = process.env.NODE_ENV === 'test'
+// Utility function untuk timeout handling
+const createTimeoutPromise = (timeout: number): Promise<never> => {
+  return new Promise((_, reject) => {
+    setTimeout(() => reject(new Error('Request timeout')), timeout)
+  })
+}
+
+// Utility function untuk retry logic
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000,
+): Promise<T> => {
+  let lastError: Error
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn()
+    } catch (error) {
+      lastError = error as Error
+
+      if (attempt === maxRetries || maxRetries === 0) {
+        throw lastError
+      }
+
+      // Exponential backoff
+      const delay = baseDelay * Math.pow(2, attempt)
+      await new Promise((resolve) => setTimeout(resolve, delay))
+    }
   }
 
-  /**
-   * Create enrollment dengan retry logic dan timeout handling
-   */
-  async createEnrollment(
-    request: CreateEnrollmentRequest,
-    authToken: string,
-  ): Promise<EnrollmentResponse> {
-    return this.makeRequest<EnrollmentResponse>(
-      '/api/enrollments',
-      {
-        method: 'POST',
+  throw lastError!
+}
+
+// Utility function untuk API request dengan error handling
+const apiRequest = async <T>(
+  url: string,
+  options: RequestInit = {},
+  timeout: number = DEFAULT_TIMEOUT,
+): Promise<T> => {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeout)
+
+  try {
+    const response = await Promise.race([
+      fetch(url, {
+        ...options,
+        signal: controller.signal,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
+          ...options.headers,
         },
-        body: JSON.stringify(request),
-      },
-      'Enrollment creation failed',
-    )
-  }
+      }),
+      createTimeoutPromise(timeout),
+    ])
 
+    clearTimeout(timeoutId)
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(
+        errorData.error || errorData.message || `HTTP ${response.status}: ${response.statusText}`,
+      )
+    }
+
+    return await response.json()
+  } catch (error) {
+    clearTimeout(timeoutId)
+
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new Error('Request timeout')
+      }
+      throw error
+    }
+
+    throw new Error('Unknown error occurred')
+  }
+}
+
+// Tambahkan type untuk test injection
+type AdapterTestOptions = { maxRetries?: number; timeout?: number }
+
+export const enrollmentAdapter = {
   /**
-   * Get enrollment list dengan pagination
+   * Enroll user ke kursus
    */
-  async getEnrollments(
-    pagination: { page: number; limit: number },
-    authToken: string,
-  ): Promise<EnrollmentListResponse> {
-    const params = new URLSearchParams({
-      page: pagination.page.toString(),
-      limit: pagination.limit.toString(),
-    })
-
-    return this.makeRequest<EnrollmentListResponse>(
-      `/api/enrollments?${params.toString()}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
+  async enrollCourse(
+    request: EnrollmentRequest,
+    testOptions?: AdapterTestOptions,
+  ): Promise<EnrollmentResponse> {
+    return retryWithBackoff(async () => {
+      return apiRequest<EnrollmentResponse>(
+        `${API_BASE_URL}/enrollments`,
+        {
+          method: 'POST',
+          body: JSON.stringify(request),
         },
-      },
-      'Failed to fetch enrollments',
-    )
-  }
+        testOptions?.timeout ?? DEFAULT_TIMEOUT,
+      )
+    }, testOptions?.maxRetries ?? 3)
+  },
 
   /**
-   * Check enrollment status untuk course tertentu
+   * Unenroll user dari kursus
+   */
+  async unenrollCourse(
+    courseId: string,
+    testOptions?: AdapterTestOptions,
+  ): Promise<EnrollmentResponse> {
+    return retryWithBackoff(async () => {
+      return apiRequest<EnrollmentResponse>(
+        `${API_BASE_URL}/enrollments/${courseId}`,
+        {
+          method: 'DELETE',
+        },
+        testOptions?.timeout ?? DEFAULT_TIMEOUT,
+      )
+    }, testOptions?.maxRetries ?? 3)
+  },
+
+  /**
+   * Cek status enrollment user untuk kursus tertentu
    */
   async getEnrollmentStatus(
     courseId: string,
-    authToken: string,
+    testOptions?: AdapterTestOptions,
   ): Promise<EnrollmentStatusResponse> {
-    return this.makeRequest<EnrollmentStatusResponse>(
-      `/api/courses/${courseId}/enrollment-status`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      },
-      'Failed to check enrollment status',
-    )
-  }
+    return retryWithBackoff(async () => {
+      return apiRequest<EnrollmentStatusResponse>(
+        `${API_BASE_URL}/courses/${courseId}/enrollment-status`,
+        {},
+        testOptions?.timeout ?? DEFAULT_TIMEOUT,
+      )
+    }, testOptions?.maxRetries ?? 3)
+  },
 
   /**
-   * Delete enrollment (untuk future enhancement)
+   * Dapatkan daftar enrollment user
    */
-  async deleteEnrollment(enrollmentId: string, authToken: string): Promise<EnrollmentResponse> {
-    return this.makeRequest<EnrollmentResponse>(
-      `/api/enrollments/${enrollmentId}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      },
-      'Failed to delete enrollment',
-    )
-  }
+  async getEnrollments(
+    params: { page?: number; limit?: number } = {},
+    testOptions?: AdapterTestOptions,
+  ): Promise<EnrollmentListResponse> {
+    const searchParams = new URLSearchParams()
+    if (params.page) searchParams.append('page', params.page.toString())
+    if (params.limit) searchParams.append('limit', params.limit.toString())
+
+    const queryString = searchParams.toString()
+    const url = queryString
+      ? `${API_BASE_URL}/enrollments?${queryString}`
+      : `${API_BASE_URL}/enrollments`
+
+    return retryWithBackoff(async () => {
+      return apiRequest<EnrollmentListResponse>(url, {}, testOptions?.timeout ?? DEFAULT_TIMEOUT)
+    }, testOptions?.maxRetries ?? 3)
+  },
 
   /**
-   * Generic request method dengan retry logic dan timeout handling
+   * Batch check enrollment status untuk multiple courses
    */
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit,
-    errorMessage: string,
-  ): Promise<T> {
-    const url = `${this.baseUrl}${endpoint}`
-    let lastError: Error | null = null
+  async batchCheckEnrollmentStatus(
+    courseIds: string[],
+    testOptions?: AdapterTestOptions,
+  ): Promise<Record<string, boolean>> {
+    if (courseIds.length === 0) return {}
 
-    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+    const promises = courseIds.map(async (courseId) => {
       try {
-        // Create AbortController untuk timeout
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), this.timeout)
-
-        const response = await fetch(url, {
-          ...options,
-          signal: controller.signal,
-        })
-
-        clearTimeout(timeoutId)
-
-        // Handle HTTP error responses
-        if (!response.ok) {
-          const errorData = await this.parseErrorResponse(response)
-
-          // Don't retry on client errors (4xx)
-          if (response.status >= 400 && response.status < 500) {
-            return {
-              success: false,
-              error: errorData.error || `HTTP ${response.status}: ${response.statusText}`,
-            } as T
-          }
-
-          // Retry on server errors (5xx) and network errors
-          throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`)
-        }
-
-        // Parse successful response
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let data: any
-        try {
-          data = await response.json()
-        } catch {
-          // Fallback to text if not JSON
-          const text = await response.text()
-          return {
-            success: false,
-            error: text || 'Plain text error',
-          } as T
-        }
-
-        // Validate response structure for test environment
-        if (this.isTestEnvironment && typeof data === 'object' && data !== null) {
-          // Check if response has expected structure
-          if (data.success === undefined && !data.error) {
-            return {
-              success: false,
-              error: 'Malformed response - missing success field',
-            } as T
-          }
-
-          // Check for malformed response with invalid structure
-          if (data.invalid !== undefined) {
-            return {
-              success: false,
-              error: 'invalid',
-            } as T
-          }
-        }
-
-        // If data is null or empty
-        if (data == null || (typeof data === 'object' && Object.keys(data).length === 0)) {
-          return {
-            success: false,
-            error: 'Unknown error',
-          } as T
-        }
-
-        // If success true but data null
-        if (data.success === true && data.data === null) {
-          return {
-            success: false,
-            error: 'Malformed response - null data',
-          } as T
-        }
-
-        return data as T
+        const response = await this.getEnrollmentStatus(courseId, testOptions)
+        return { courseId, isEnrolled: response.isEnrolled }
       } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error))
-
-        // Don't retry on specific errors
-        if (this.shouldNotRetry(lastError)) {
-          break
-        }
-
-        // Don't retry on last attempt
-        if (attempt === this.maxRetries) {
-          break
-        }
-
-        // Exponential backoff
-        const delay = this.retryDelay * Math.pow(2, attempt - 1)
-        await this.sleep(delay)
+        console.error(`Failed to check enrollment status for course ${courseId}:`, error)
+        return { courseId, isEnrolled: false }
       }
-    }
+    })
 
-    // Return graceful fallback response
-    return this.createFallbackResponse<T>(lastError, errorMessage)
-  }
-
-  /**
-   * Parse error response dari API
-   */
-  private async parseErrorResponse(response: Response): Promise<{ error: string }> {
-    try {
-      const data = await response.json()
-      if (data && (data.error || data.message)) {
-        return {
-          error: data.error || data.message,
-        }
-      }
-      // If invalid structure
-      if (data && data.invalid !== undefined) {
-        return { error: 'invalid' }
-      }
-      // If empty object
-      if (data == null || (typeof data === 'object' && Object.keys(data).length === 0)) {
-        return { error: 'Unknown error' }
-      }
-      return { error: `HTTP ${response.status}: ${response.statusText}` }
-    } catch {
-      try {
-        const text = await response.text()
-        return { error: text || 'Plain text error' }
-      } catch {
-        return { error: 'Unknown error' }
-      }
-    }
-  }
-
-  /**
-   * Check if error should not be retried
-   */
-  private shouldNotRetry(error: Error): boolean {
-    // Don't retry on validation errors
-    if (error.message.includes('Validation failed')) {
-      return true
-    }
-
-    // Don't retry on authentication errors
-    if (error.message.includes('Unauthorized') || error.message.includes('Forbidden')) {
-      return true
-    }
-
-    // Don't retry on not found errors
-    if (error.message.includes('not found')) {
-      return true
-    }
-
-    // Don't retry on duplicate enrollment
-    if (error.message.includes('already enrolled')) {
-      return true
-    }
-
-    // Don't retry on malformed response
-    if (error.message.includes('malformed')) {
-      return true
-    }
-
-    return false
-  }
-
-  /**
-   * Create graceful fallback response
-   */
-  private createFallbackResponse<T>(error: Error | null, errorMessage: string): T {
-    const errorType = this.categorizeError(error)
-
-    // In test environment, return raw error message for better testing
-    if (this.isTestEnvironment && error) {
-      return {
-        success: false,
-        error: error.message,
-      } as T
-    }
-
-    return {
-      success: false,
-      error: `${errorMessage}: ${errorType}`,
-    } as T
-  }
-
-  /**
-   * Categorize error untuk better user feedback
-   */
-  private categorizeError(error: Error | null): string {
-    if (!error) {
-      return 'Unknown error occurred'
-    }
-
-    // Timeout errors
-    if (error.name === 'AbortError' || error.message.includes('timeout')) {
-      return 'Request timeout - please try again'
-    }
-
-    // Network errors - expanded patterns
-    if (
-      error.message.includes('NetworkError') ||
-      error.message.includes('Failed to fetch') ||
-      error.message.includes('Network error') ||
-      error.message.includes('Network connection failed') ||
-      error.message.includes('Connection refused') ||
-      error.message.includes('DNS resolution failed')
-    ) {
-      return 'Network connection failed - please check your internet connection'
-    }
-
-    // CORS errors
-    if (error.message.includes('CORS') || error.message.includes('Cross-origin')) {
-      return 'Cross-origin request failed - please try again later'
-    }
-
-    // SSL/TLS errors
-    if (error.message.includes('SSL') || error.message.includes('certificate')) {
-      return 'Secure connection failed - please try again later'
-    }
-
-    // Server errors
-    if (error.message.includes('Internal server error') || error.message.includes('500')) {
-      return 'Internal server error - please try again later'
-    }
-
-    // Service unavailable
-    if (error.message.includes('Service unavailable') || error.message.includes('503')) {
-      return 'Service temporarily unavailable - please try again later'
-    }
-
-    return 'Service temporarily unavailable - please try again later'
-  }
-
-  /**
-   * Sleep utility untuk retry delay
-   */
-  private sleep(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
-  }
+    const results = await Promise.all(promises)
+    return results.reduce(
+      (acc, { courseId, isEnrolled }) => {
+        acc[courseId] = isEnrolled
+        return acc
+      },
+      {} as Record<string, boolean>,
+    )
+  },
 }

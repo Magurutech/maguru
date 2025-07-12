@@ -1,15 +1,19 @@
 import { Course, CourseCatalogItem, CourseDetailView, courseThumbnailUtils } from '../types'
+import { mockCoursesCatalog } from './mockData'
 
 /**
  * Course Transformation Utilities
  *
  * Functions untuk mengkonversi antara database model (Course)
  * dan display models (CourseCatalogItem, CourseDetailView)
+ *
+ * Menggunakan hybrid approach: backend data + mock data untuk fields yang belum ada di backend
  */
 
 export const courseTransformers = {
   /**
    * Transform database Course ke CourseCatalogItem untuk catalog display
+   * Menggunakan hybrid data: backend data + mock data untuk missing fields
    */
   toCatalogItem: (
     course: Course,
@@ -19,27 +23,31 @@ export const courseTransformers = {
       wishlistCourses?: string[]
     },
   ): CourseCatalogItem => {
+    // Find corresponding mock data untuk enrichment
+    const mockData = mockCoursesCatalog.find((mock) => mock.id === course.id)
+
     return {
       id: course.id,
       title: course.title,
-      creator: 'Creator Name', // TODO: Get from Clerk metadata using course.creatorId
+      creator: mockData?.creator || 'Creator Name', // Mock data atau fallback
       thumbnail: courseThumbnailUtils.getDisplayThumbnail(course.thumbnail),
       rating: course.rating,
       students: course.students,
-      duration: course.duration,
+      duration: mockData?.duration || '2 hours', // Mock data atau default
       category: course.category,
-      price: 0, // TODO: Get from pricing service
+      price: mockData?.price || 0, // Mock data atau default
       enrolled: userContext?.enrolledCourses?.includes(course.id) || false,
       createdAt: course.createdAt.toISOString(),
       description: course.description,
-      longDescription: course.description, // TODO: Add separate field to database
-      curriculum: [], // TODO: Get from curriculum service
+      longDescription: mockData?.longDescription || course.description, // Mock data atau fallback ke description
+      curriculum: mockData?.curriculum || [], // Mock data atau empty array
       wishlist: userContext?.wishlistCourses?.includes(course.id) || false,
     }
   },
 
   /**
    * Transform database Course ke CourseDetailView untuk detail page
+   * Menggunakan hybrid data: backend data + mock data untuk missing fields
    */
   toDetailView: (
     course: Course,
@@ -49,13 +57,16 @@ export const courseTransformers = {
       wishlistCourses?: string[]
     },
   ): CourseDetailView => {
+    // Find corresponding mock data untuk enrichment
+    const mockData = mockCoursesCatalog.find((mock) => mock.id === course.id)
+
     return {
       id: course.id,
       title: course.title,
       description: course.description,
       thumbnail: courseThumbnailUtils.getDisplayThumbnail(course.thumbnail),
       instructor: {
-        name: 'Instructor Name', // TODO: Get from Clerk metadata using course.creatorId
+        name: mockData?.creator || 'Instructor Name', // Mock data atau fallback
         avatar: '/placeholder-avatar.jpg',
         bio: 'Instructor bio...',
         credentials: [],
@@ -65,11 +76,11 @@ export const courseTransformers = {
       rating: course.rating,
       totalRatings: 0, // TODO: Get from reviews service
       students: course.students,
-      duration: course.duration,
+      duration: mockData?.duration || '2 hours', // Mock data atau default
       level: 'Beginner', // TODO: Add to database
       language: 'Indonesian', // TODO: Add to database
-      price: 0, // TODO: Get from pricing service
-      originalPrice: 0,
+      price: mockData?.price || 0, // Mock data atau default
+      originalPrice: mockData?.price ? mockData.price * 1.2 : 0, // 20% markup
       category: course.category,
       lastUpdated: course.updatedAt.toISOString(),
       certificate: false, // TODO: Add to database
@@ -79,9 +90,9 @@ export const courseTransformers = {
       totalHours: 0, // TODO: Calculate from content
       enrolled: userContext?.enrolledCourses?.includes(course.id) || false,
       inWishlist: userContext?.wishlistCourses?.includes(course.id) || false,
-      learningOutcomes: [], // TODO: Get from content service
+      learningOutcomes: mockData?.curriculum || [], // Use curriculum as learning outcomes
       requirements: [], // TODO: Get from content service
-      curriculum: [], // TODO: Get from curriculum service
+      curriculum: mockData?.curriculum?.map((item) => ({ title: item, duration: '30 min' })) || [], // Transform curriculum
       reviews: [], // TODO: Get from reviews service
     }
   },
@@ -112,6 +123,24 @@ export const courseTransformers = {
     },
   ): CourseDetailView[] => {
     return courses.map((course) => courseTransformers.toDetailView(course, userContext))
+  },
+
+  /**
+   * Utility function untuk enrich Course dengan mock data
+   */
+  enrichWithMockData: (course: Course): Course & { mockEnriched: boolean } => {
+    const mockData = mockCoursesCatalog.find((mock) => mock.id === course.id)
+    return {
+      ...course,
+      mockEnriched: !!mockData,
+    }
+  },
+
+  /**
+   * Check if course has corresponding mock data
+   */
+  hasMockData: (courseId: string): boolean => {
+    return mockCoursesCatalog.some((mock) => mock.id === courseId)
   },
 }
 

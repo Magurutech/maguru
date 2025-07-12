@@ -1,354 +1,399 @@
 {
-  "numTotalTests": 31,
-  "numPassedTests": 31,
+  "numTotalTests": 34,
+  "numPassedTests": 34,
   "numFailedTests": 0,
   "numPendingTests": 0,
-  "startTime": "2025-07-10T23:18:17.885Z",
-  "endTime": "2025-07-10T23:18:56.456Z",
+  "startTime": "2025-07-12T03:53:20.871Z",
+  "endTime": "2025-07-12T03:53:26.013Z",
   "testResults": [
     {
-      "testFilePath": "D:\\2-Maguru\\maguru\\features\\course\\adapters\\enrollmentAdapter.test.ts",
+      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\frontend\\useEnrollment.integration.test.tsx",
       "testFileResults": [
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
+            "useEnrollment Integration",
+            "Hook ↔ Adapter Integration"
           ],
-          "fullName": "EnrollmentAdapter createEnrollment should make successful POST request with auth",
+          "fullName": "useEnrollment Integration Hook ↔ Adapter Integration should call enrollmentAdapter.enrollCourse with correct parameters",
           "status": "passed",
-          "title": "should make successful POST request with auth",
+          "title": "should call enrollmentAdapter.enrollCourse with correct parameters",
           "failureMessages": [],
-          "duration": 19
+          "duration": 93
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
+            "useEnrollment Integration",
+            "Hook ↔ Adapter Integration"
           ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle missing authentication (401)",
+          "fullName": "useEnrollment Integration Hook ↔ Adapter Integration should handle adapter error response correctly",
           "status": "passed",
-          "title": "should handle missing authentication (401)",
+          "title": "should handle adapter error response correctly",
           "failureMessages": [],
           "duration": 5
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
+            "useEnrollment Integration",
+            "Hook ↔ Adapter Integration"
           ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle forbidden access (403)",
+          "fullName": "useEnrollment Integration Hook ↔ Adapter Integration should handle adapter network errors correctly",
           "status": "passed",
-          "title": "should handle forbidden access (403)",
+          "title": "should handle adapter network errors correctly",
           "failureMessages": [],
-          "duration": 2
+          "duration": 8
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
+            "useEnrollment Integration",
+            "React Query Integration"
           ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle validation errors (400)",
+          "fullName": "useEnrollment Integration React Query Integration should use useMutation for enrollment operations",
           "status": "passed",
-          "title": "should handle validation errors (400)",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle duplicate enrollment (409)",
-          "status": "passed",
-          "title": "should handle duplicate enrollment (409)",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle course not found (404)",
-          "status": "passed",
-          "title": "should handle course not found (404)",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle network errors",
-          "status": "passed",
-          "title": "should handle network errors",
-          "failureMessages": [],
-          "duration": 3016
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle timeout errors",
-          "status": "passed",
-          "title": "should handle timeout errors",
-          "failureMessages": [],
-          "duration": 3011
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should retry on temporary failures",
-          "status": "passed",
-          "title": "should retry on temporary failures",
-          "failureMessages": [],
-          "duration": 1004
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "createEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter createEnrollment should handle malformed response",
-          "status": "passed",
-          "title": "should handle malformed response",
+          "title": "should use useMutation for enrollment operations",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "useEnrollment Integration",
+            "React Query Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should make successful GET request with auth",
+          "fullName": "useEnrollment Integration React Query Integration should handle mutation success state correctly",
           "status": "passed",
-          "title": "should make successful GET request with auth",
+          "title": "should handle mutation success state correctly",
           "failureMessages": [],
-          "duration": 6
+          "duration": 78
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "useEnrollment Integration",
+            "React Query Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should handle pagination parameters",
+          "fullName": "useEnrollment Integration React Query Integration should handle mutation error state correctly",
           "status": "passed",
-          "title": "should handle pagination parameters",
+          "title": "should handle mutation error state correctly",
           "failureMessages": [],
-          "duration": 3
+          "duration": 16
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "useEnrollment Integration",
+            "State Management"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should handle missing authentication",
+          "fullName": "useEnrollment Integration State Management should provide all required properties",
           "status": "passed",
-          "title": "should handle missing authentication",
+          "title": "should provide all required properties",
           "failureMessages": [],
-          "duration": 3
+          "duration": 4
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "useEnrollment Integration",
+            "State Management"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should handle network errors",
+          "fullName": "useEnrollment Integration State Management should reset enrollment state",
           "status": "passed",
-          "title": "should handle network errors",
+          "title": "should reset enrollment state",
           "failureMessages": [],
-          "duration": 3005
+          "duration": 7
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\frontend\\hooks.integration.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "Hooks ↔ Adapters Integration",
+            "useCourse Hook Integration"
+          ],
+          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should handle successful adapter calls",
+          "status": "passed",
+          "title": "should handle successful adapter calls",
+          "failureMessages": [],
+          "duration": 146
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "Hooks ↔ Adapters Integration",
+            "useCourse Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should handle API error responses",
+          "fullName": "Hooks ↔ Adapters Integration useCourse Hook Integration should manage loading states correctly",
           "status": "passed",
-          "title": "should handle API error responses",
+          "title": "should manage loading states correctly",
           "failureMessages": [],
-          "duration": 3028
+          "duration": 175
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollments"
+            "Hooks ↔ Adapters Integration",
+            "useCourseManagement Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollments should transform response data correctly",
+          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course creation workflow",
           "status": "passed",
-          "title": "should transform response data correctly",
+          "title": "should handle course creation workflow",
           "failureMessages": [],
-          "duration": 5
+          "duration": 17
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollmentStatus"
+            "Hooks ↔ Adapters Integration",
+            "useCourseManagement Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollmentStatus should make successful GET request",
+          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course update workflow",
           "status": "passed",
-          "title": "should make successful GET request",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollmentStatus"
-          ],
-          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle course not found",
-          "status": "passed",
-          "title": "should handle course not found",
+          "title": "should handle course update workflow",
           "failureMessages": [],
           "duration": 7
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollmentStatus"
+            "Hooks ↔ Adapters Integration",
+            "useCourseManagement Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle authentication errors",
+          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle course deletion workflow",
           "status": "passed",
-          "title": "should handle authentication errors",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollmentStatus"
-          ],
-          "fullName": "EnrollmentAdapter getEnrollmentStatus should handle network errors",
-          "status": "passed",
-          "title": "should handle network errors",
-          "failureMessages": [],
-          "duration": 3052
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "getEnrollmentStatus"
-          ],
-          "fullName": "EnrollmentAdapter getEnrollmentStatus should return correct enrollment status",
-          "status": "passed",
-          "title": "should return correct enrollment status",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "deleteEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter deleteEnrollment should make successful DELETE request with auth",
-          "status": "passed",
-          "title": "should make successful DELETE request with auth",
-          "failureMessages": [],
-          "duration": 3
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "deleteEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter deleteEnrollment should handle missing authentication",
-          "status": "passed",
-          "title": "should handle missing authentication",
-          "failureMessages": [],
-          "duration": 2
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "deleteEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter deleteEnrollment should handle enrollment not found",
-          "status": "passed",
-          "title": "should handle enrollment not found",
-          "failureMessages": [],
-          "duration": 1
-        },
-        {
-          "ancestorTitles": [
-            "EnrollmentAdapter",
-            "deleteEnrollment"
-          ],
-          "fullName": "EnrollmentAdapter deleteEnrollment should handle unauthorized deletion",
-          "status": "passed",
-          "title": "should handle unauthorized deletion",
+          "title": "should handle course deletion workflow",
           "failureMessages": [],
           "duration": 4
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "deleteEnrollment"
+            "Hooks ↔ Adapters Integration",
+            "useCourseManagement Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter deleteEnrollment should handle network errors",
+          "fullName": "Hooks ↔ Adapters Integration useCourseManagement Hook Integration should handle permission errors",
           "status": "passed",
-          "title": "should handle network errors",
+          "title": "should handle permission errors",
           "failureMessages": [],
-          "duration": 3014
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "Error Handling"
+            "Hooks ↔ Adapters Integration",
+            "useCourseDialog Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter Error Handling should handle CORS errors",
+          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form data updates",
           "status": "passed",
-          "title": "should handle CORS errors",
+          "title": "should handle form data updates",
           "failureMessages": [],
-          "duration": 3010
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "Error Handling"
+            "Hooks ↔ Adapters Integration",
+            "useCourseDialog Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter Error Handling should handle SSL/TLS errors",
+          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle form validation errors",
           "status": "passed",
-          "title": "should handle SSL/TLS errors",
+          "title": "should handle form validation errors",
           "failureMessages": [],
-          "duration": 3016
+          "duration": 3
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "Error Handling"
+            "Hooks ↔ Adapters Integration",
+            "useCourseDialog Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter Error Handling should handle rate limiting errors",
+          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload with adapter",
           "status": "passed",
-          "title": "should handle rate limiting errors",
+          "title": "should handle file upload with adapter",
           "failureMessages": [],
           "duration": 5
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "Error Handling"
+            "Hooks ↔ Adapters Integration",
+            "useCourseDialog Hook Integration"
           ],
-          "fullName": "EnrollmentAdapter Error Handling should respect retry-after header",
+          "fullName": "Hooks ↔ Adapters Integration useCourseDialog Hook Integration should handle file upload errors",
           "status": "passed",
-          "title": "should respect retry-after header",
+          "title": "should handle file upload errors",
           "failureMessages": [],
           "duration": 2
         },
         {
           "ancestorTitles": [
-            "EnrollmentAdapter",
-            "Error Handling"
+            "Hooks ↔ Adapters Integration",
+            "Error Recovery and Retry"
           ],
-          "fullName": "EnrollmentAdapter Error Handling should handle different error response formats",
+          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should allow retry after network failure",
           "status": "passed",
-          "title": "should handle different error response formats",
+          "title": "should allow retry after network failure",
           "failureMessages": [],
-          "duration": 3023
+          "duration": 37
+        },
+        {
+          "ancestorTitles": [
+            "Hooks ↔ Adapters Integration",
+            "Error Recovery and Retry"
+          ],
+          "fullName": "Hooks ↔ Adapters Integration Error Recovery and Retry should clear errors on successful retry",
+          "status": "passed",
+          "title": "should clear errors on successful retry",
+          "failureMessages": [],
+          "duration": 12
+        },
+        {
+          "ancestorTitles": [
+            "Hooks ↔ Adapters Integration",
+            "Data Consistency"
+          ],
+          "fullName": "Hooks ↔ Adapters Integration Data Consistency should maintain data consistency across operations",
+          "status": "passed",
+          "title": "should maintain data consistency across operations",
+          "failureMessages": [],
+          "duration": 66
+        }
+      ],
+      "failureMessage": null
+    },
+    {
+      "testFilePath": "D:\\2-Maguru\\maguru\\__tests__\\integration\\course\\frontend\\useEnrollmentStatus.integration.test.tsx",
+      "testFileResults": [
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "Hook ↔ Adapter Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration Hook ↔ Adapter Integration should call enrollmentAdapter.getEnrollmentStatus with courseId",
+          "status": "passed",
+          "title": "should call enrollmentAdapter.getEnrollmentStatus with courseId",
+          "failureMessages": [],
+          "duration": 102
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "Hook ↔ Adapter Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration Hook ↔ Adapter Integration should handle adapter success response correctly",
+          "status": "passed",
+          "title": "should handle adapter success response correctly",
+          "failureMessages": [],
+          "duration": 80
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "Hook ↔ Adapter Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration Hook ↔ Adapter Integration should handle adapter error response correctly",
+          "status": "passed",
+          "title": "should handle adapter error response correctly",
+          "failureMessages": [],
+          "duration": 17
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "Hook ↔ Adapter Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration Hook ↔ Adapter Integration should handle adapter network errors correctly",
+          "status": "passed",
+          "title": "should handle adapter network errors correctly",
+          "failureMessages": [],
+          "duration": 15
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "React Query Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration React Query Integration should use useQuery for status checking",
+          "status": "passed",
+          "title": "should use useQuery for status checking",
+          "failureMessages": [],
+          "duration": 84
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "React Query Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration React Query Integration should enable query only when courseId is provided",
+          "status": "passed",
+          "title": "should enable query only when courseId is provided",
+          "failureMessages": [],
+          "duration": 3
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "React Query Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration React Query Integration should use correct query key",
+          "status": "passed",
+          "title": "should use correct query key",
+          "failureMessages": [],
+          "duration": 78
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "React Query Integration"
+          ],
+          "fullName": "useEnrollmentStatus Integration React Query Integration should handle query errors properly",
+          "status": "passed",
+          "title": "should handle query errors properly",
+          "failureMessages": [],
+          "duration": 10
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "State Management"
+          ],
+          "fullName": "useEnrollmentStatus Integration State Management should manage loading state correctly",
+          "status": "passed",
+          "title": "should manage loading state correctly",
+          "failureMessages": [],
+          "duration": 198
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "State Management"
+          ],
+          "fullName": "useEnrollmentStatus Integration State Management should manage error state correctly",
+          "status": "passed",
+          "title": "should manage error state correctly",
+          "failureMessages": [],
+          "duration": 13
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "State Management"
+          ],
+          "fullName": "useEnrollmentStatus Integration State Management should manage data state correctly",
+          "status": "passed",
+          "title": "should manage data state correctly",
+          "failureMessages": [],
+          "duration": 89
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "State Management"
+          ],
+          "fullName": "useEnrollmentStatus Integration State Management should handle state transitions correctly",
+          "status": "passed",
+          "title": "should handle state transitions correctly",
+          "failureMessages": [],
+          "duration": 87
+        },
+        {
+          "ancestorTitles": [
+            "useEnrollmentStatus Integration",
+            "Hook Structure"
+          ],
+          "fullName": "useEnrollmentStatus Integration Hook Structure should provide all required properties",
+          "status": "passed",
+          "title": "should provide all required properties",
+          "failureMessages": [],
+          "duration": 70
         }
       ],
       "failureMessage": null
