@@ -21,7 +21,7 @@ Memberikan siswa kemampuan untuk menelusuri katalog kursus dan mendaftar dengan 
 ### Jenis Perubahan
 
 - [x] 🆕 Fitur baru (non-breaking change yang menambahkan fungsionalitas)
-- [x] 🐛 Bug fix (non-breaking change yang memperbaiki masalah)
+- [x] 🐛 Bug fix (non-breaking change yang memperbaiki masalah) 
 - [ ] 💥 Breaking change (fix atau fitur yang menyebabkan fungsionalitas existing tidak bekerja seperti expected)
 - [x] 📚 Dokumentasi (perubahan dokumentasi saja)
 
