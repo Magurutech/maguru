@@ -23,8 +23,10 @@ def main():
             "description": tool_input.get("description"),
         }
 
-        # Path to the bash_commands.json file in .claude directory
-        log_file = Path(__file__).parent.parent / "bash_commands.json"
+        # Path to the bash_commands.json file in cache directory
+        cache_dir = Path(__file__).parent / "cache"
+        cache_dir.mkdir(exist_ok=True)
+        log_file = cache_dir / "bash_commands.json"
 
         # Load existing data or create empty list
         if log_file.exists():

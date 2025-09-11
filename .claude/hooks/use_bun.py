@@ -48,7 +48,9 @@ def main():
 
         if blocked_command:
             # Log the usage attempt
-            log_file = Path(__file__).parent.parent / "package_manager_enforcement.json"
+            cache_dir = Path(__file__).parent / "cache"
+            cache_dir.mkdir(exist_ok=True)
+            log_file = cache_dir / "package_manager_enforcement.json"
             log_entry = {
                 "session_id": input_data.get("session_id"),
                 "blocked_command": blocked_command,

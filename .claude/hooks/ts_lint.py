@@ -37,8 +37,10 @@ def main():
             )
 
             if result.returncode != 0 and (result.stdout or result.stderr):
-                # Log the error for debugging
-                log_file = Path(__file__).parent.parent / "eslint_errors.json"
+                # Log the error for debugging  
+                cache_dir = Path(__file__).parent / "cache"
+                cache_dir.mkdir(exist_ok=True)
+                log_file = cache_dir / "eslint_errors.json"
                 error_output = result.stdout or result.stderr
                 error_entry = {
                     "file_path": file_path,

@@ -42,18 +42,34 @@
           }
         ]
       }
-    ], 
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "uv run .claude/hooks/windows_notification.py build_complete"
+            "command": "uv run .claude/hooks/quick_type_check.py"
           },
           {
             "type": "command",
             "command": "uv run .claude/hooks/ts_lint.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/duplication_detector.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/accessibility_checker.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/bundle_impact_analyzer.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/windows_notification.py build_complete"
           }
         ]
       }
@@ -66,10 +82,6 @@
             "type": "command",
             "command": "uv run .claude/hooks/play_audio.py ready"
           },
-          {
-            "type": "command",
-            "command": "uv run .claude/hooks/play_audio.py error_fixed"
-          }
         ]
       }
     ],
