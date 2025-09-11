@@ -1,8 +1,9 @@
 {
-  "outputStyle": "Learning",
   "permissions": {
     "allow": [
-      "WebFetch(domain:claudelog.com)"
+      "WebFetch(domain:claudelog.com)",
+      "Bash(python:*)"
     ]
-  }
+  },
+  "outputStyle": "default"
 }

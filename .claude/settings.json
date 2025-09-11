@@ -22,10 +22,27 @@
           {
             "type": "command",
             "command": "uv run .claude/hooks/use_bun.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/validate_environment.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/function_registry_checker.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/pre_edit_validation.py"
           }
         ]
       }
-    ],
+    ], 
     "PostToolUse": [
       {
         "matcher": "Write|Edit|MultiEdit",
