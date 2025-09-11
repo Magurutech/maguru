@@ -74,14 +74,44 @@
         ]
       }
     ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/project_health_check.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py ready"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/cleanup_and_report.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py build_complete"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
         "hooks": [
           {
             "type": "command",
-            "command": "uv run .claude/hooks/play_audio.py ready"
-          },
+            "command": "uv run .claude/hooks/play_audio.py task_complete"
+          }
         ]
       }
     ],
@@ -91,7 +121,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run .claude/hooks/play_audio.py "
+            "command": "uv run .claude/hooks/play_audio.py awaiting_instructions"
           },
           {
             "type": "command",

@@ -466,23 +466,122 @@ sequenceDiagram
 
 ---
 
-## Kesimpulan
+## 🎯 UserPromptSubmit Hooks
 
-PostToolUse Quality Gates memberikan foundation yang solid untuk maintaining code quality secara otomatis. Sistem ini:
+### Konsep Dasar
 
-✅ **Mencegah** technical debt accumulation  
-✅ **Memastikan** consistent quality standards  
-✅ **Mempercepat** development cycle  
-✅ **Mengurangi** manual review overhead  
-✅ **Meningkatkan** developer confidence
+UserPromptSubmit hooks dijalankan setiap kali user submit prompt ke Claude. Fungsi utamanya adalah:
 
-**Next Steps**:
+- Menganalisis intent user
+- Mempersiapkan context yang relevan
+- Mengoptimalkan resource allocation
+- Menerapkan best practices secara otomatis
 
-1. Implement basic hooks (TypeScript + ESLint)
-2. Add duplication detection
-3. Enhance with accessibility checks
-4. Monitor dan optimize performance
+### Manfaat Implementasi
+
+#### 1. **Intelligent Context Loading**
+
+```json
+{
+  "UserPromptSubmit": [
+    {
+      "matcher": "",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "uv run .claude/hooks/session_analyzer.py"
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Keuntungan:**
+
+- Claude langsung memahami konteks feature yang sedang dikerjakan
+- Automatic loading dokumentasi dan patterns yang relevan
+- Mengurangi kebutuhan penjelasan berulang dalam session
+
+#### 2. **Task Complexity Analysis**
+
+Hook ini menganalisis kompleksitas task berdasarkan prompt dan mempersiapkan resource yang tepat:
+
+- **Simple tasks** → Aktivasi tools minimal
+- **Medium tasks** → Load MCP servers yang relevan
+- **Complex tasks** → Full resource allocation + parallel processing
+
+#### 3. **Project Standards Enforcement**
+
+Automatic reminder tentang coding standards berdasarkan jenis task:
+
+- File naming conventions (kebab-case)
+- Directory structure (feature-first)
+- TypeScript requirements
+- Testing obligations
 
 ---
 
-_Dokumentasi ini akan di-update seiring dengan evolusi system hook dan requirements project._
+## 🚀 SessionStart/SessionEnd Hooks
+
+### SessionStart Hooks - Smart Project Initialization
+
+#### Tujuan Utama
+
+- Validasi kesehatan project sebelum development
+- Restore context dari session sebelumnya
+- Optimasi environment development
+- Early detection masalah potensial
+
+### SessionEnd Hooks - Intelligent Cleanup & Persistence
+
+#### Tujuan Utama
+
+- Validasi kualitas kode sebelum session berakhir
+- Generate session summary dan insights
+- Persist context untuk session berikutnya
+- Cleanup temporary files dan resources
+
+## 🔧 Konfigurasi Settings.json
+
+### Implementasi Lengkap
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/session_analyzer.py"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/project_health_check.py"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/cleanup_and_report.py"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
