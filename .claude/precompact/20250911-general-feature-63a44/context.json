@@ -1,0 +1,22 @@
+{
+  "session_id": "20250911-general-feature-63a44",
+  "timestamp": "2025-09-11T20:30:16.513096Z",
+  "project": "maguru",
+  "current_feature": "general",
+  "active_files": [
+    ".claude/hooks/README.md",
+    ".claude/settings.json"
+  ],
+  "git_branch": "feature/tsk-1-claude-setup",
+  "git_status": {
+    "uncommitted_changes": true,
+    "modified_files": 2,
+    "untracked_files": 3
+  },
+  "current_task": "Working on general feature",
+  "task_type": "feature",
+  "session_context": {
+    "trigger": "pre_compaction",
+    "context_status": "backup_created"
+  }
+}
