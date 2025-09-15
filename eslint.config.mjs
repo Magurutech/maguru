@@ -14,6 +14,12 @@ const config = [
   {
     ignores: ['.next/**', 'node_modules/**'],
   },
+  {
+    files: ['next-env.d.ts'],
+    rules: {
+      '@typescript-eslint/triple-slash-reference': 'off',
+    },
+  },
 ];
 
 export default config;

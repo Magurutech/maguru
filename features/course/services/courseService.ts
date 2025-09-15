@@ -102,7 +102,7 @@ export class CourseService {
     const take = Math.min(limit, 50) // Max 50 items per page
 
     // 🔥 TAMBAHAN: Build comprehensive where clause
-    const where: Prisma.CourseWhereInput = {}
+    const where: any = {}
 
     // Creator filter
     if (creatorId) {

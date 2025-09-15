@@ -15,7 +15,7 @@
  */
 
 import { prisma } from '@/lib/prisma'
-import { CourseStatus } from '@prisma/client'
+import { CourseStatus, Prisma } from '@prisma/client'
 import {
   CreateEnrollmentRequest,
   EnrollmentResponse,
@@ -79,7 +79,7 @@ export class EnrollmentService {
       }
 
       // Atomic transaction untuk enrollment + update course.students
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Create enrollment
         const enrollment = await tx.enrollment.create({
           data: {
@@ -373,7 +373,7 @@ export class EnrollmentService {
       }
 
       // Atomic transaction untuk delete enrollment + update course.students
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Delete enrollment
         const deletedEnrollment = await tx.enrollment.delete({
           where: { id: enrollmentId },

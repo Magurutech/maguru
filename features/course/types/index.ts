@@ -113,6 +113,15 @@ export interface CreateCourseRequest {
   status: PrismaCourseStatus // Wajib dengan default DRAFT
 }
 
+// Type for validated API input (after Zod parsing)
+export interface ValidatedCourseInput {
+  title: string
+  description: string
+  category: string
+  thumbnail?: string
+  status: PrismaCourseStatus
+}
+
 export interface UpdateCourseRequest extends CreateCourseRequest {
   id: string
 }
@@ -167,6 +176,9 @@ export const CourseSchema = z.object({
   thumbnail: z.string().optional(),
   status: z.nativeEnum(PrismaCourseStatus).default(PrismaCourseStatus.DRAFT),
 })
+
+// Inferred types from Zod schemas
+export type CourseSchemaType = z.infer<typeof CourseSchema>
 
 // ============================================================================
 // UTILITY TYPES
