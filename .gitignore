@@ -49,6 +49,8 @@ next-env.d.ts
 services/playwright-report/
 services/test-results/
 services/screenshots/
+services/logger-detailed/
+services/detailed-report/
 
 # Clerk authentication state (contains sensitive session data)
 __tests__/playwright/.clerk/
