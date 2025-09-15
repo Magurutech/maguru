@@ -3,6 +3,7 @@ updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: 'github-actions'
     directory: '/'
+    target-branch: 'develop'
     schedule:
       interval: 'monthly'
     labels:
@@ -26,8 +27,12 @@ updates:
   # Maintain dependencies for npm (yarn)
   - package-ecosystem: 'npm'
     directory: '/'
+    target-branch: 'develop'
     schedule:
-      interval: 'monthly'
+      interval: 'weekly'
+      day: 'monday'
+      time: '09:00'
+      timezone: 'Asia/Jakarta'
     labels:
       - 'dependencies'
       - 'npm'
@@ -41,20 +46,50 @@ updates:
       - 'maguru-dev'
     allow:
       - dependency-type: 'direct'
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     groups:
+      core-framework:
+        patterns:
+          - 'next'
+          - '@next/*'
+          - 'react'
+          - 'react-dom'
+        update-types:
+          - 'minor'
+          - 'patch'
+      ui-components:
+        patterns:
+          - '@radix-ui/*'
+          - 'lucide-react'
+          - 'tailwind*'
+          - '@tailwindcss/*'
+        update-types:
+          - 'minor'
+          - 'patch'
       testing:
         patterns:
           - '@testing-library/*'
           - 'jest*'
           - '@types/jest'
+          - '@playwright/*'
+          - 'msw'
         update-types:
           - 'minor'
           - 'patch'
-      nextjs:
+      database:
         patterns:
-          - 'next'
-          - '@next/*'
+          - '@prisma/*'
+          - 'prisma'
+        update-types:
+          - 'minor'
+          - 'patch'
+      development-tools:
+        patterns:
+          - '@typescript-eslint/*'
+          - 'eslint*'
+          - 'prettier'
+          - 'typescript'
+          - '@types/*'
         update-types:
           - 'minor'
           - 'patch'
