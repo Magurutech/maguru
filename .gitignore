@@ -62,6 +62,6 @@ __tests__/playwright/.clerk/
 __pycache__
 .pyc 
 
-# Claude 
-.claude\hooks\cache
-.claude\reports
+# Claude Code generated files and cache
+.claude/reports/
+.claude/hooks/cache
