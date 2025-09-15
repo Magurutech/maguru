@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:claudelog.com)",
+      "Bash(python:*)"
+    ]
+  },
+  "outputStyle": "default"
+}

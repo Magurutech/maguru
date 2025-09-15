@@ -1,0 +1,145 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(**/.env*)",
+      "Read(**/.secret*)",
+      "Read(**/env*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.crt)",
+      "Read(**/*.cert)",
+      "Read(**/secrets/**)",
+      "Read(**/node_modules/**)",
+      "Read(**/credentials/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/use_bun.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/validate_environment.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/function_registry_checker.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/pre_edit_validation.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/quick_type_check.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/ts_lint.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/duplication_detector.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/accessibility_checker.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/bundle_impact_analyzer.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/windows_notification.py build_complete"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/project_health_check.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py ready"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/cleanup_and_report.py"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py build_complete"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py task_complete"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/play_audio.py awaiting_instructions"
+          },
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/windows_notification.py awaiting_instructions"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run .claude/hooks/pre_compact_session_backup.py"
+          }
+        ]
+      }
+    ]
+  }
+}
