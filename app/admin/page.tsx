@@ -1,338 +1,394 @@
 'use client'
 
 /**
- * Admin Dashboard Page
+ * TSK-54: Admin Dashboard - System Operations Focus
  *
- * Halaman dashboard khusus untuk admin role.
- * Menampilkan tools dan fitur administrasi sistem.
+ * Frontend-first redesign dengan Ancient Fantasy Asia design system.
+ * Focus pada system health monitoring, analytics, dan platform settings.
  */
 
 import React from 'react'
-import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
-import { Shield, Users, Settings, BarChart3, Database, AlertTriangle } from 'lucide-react'
-import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
-import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+import {
+  Shield,
+  Activity,
+  TrendingUp,
+  Settings,
+  Server,
+  Users,
+  Gauge,
+  AlertTriangle,
+  Clock,
+  Database,
+  BarChart3,
+  Globe,
+  CheckCircle,
+  XCircle,
+  AlertCircle
+} from 'lucide-react'
+import { useAdminGuard, renderAdminGuard } from '@/features/admin/hooks/useAdminGuard'
 
 export default function AdminDashboardPage() {
-  const { user, isLoaded } = useUser()
-  const { role, isAdmin } = useUserRole()
-  const { canAccessAdmin } = useRoleGuard()
-  const { shouldShowLoader: roleLoading } = useRoleLoadingState()
+  const authState = useAdminGuard()
 
-  if (!isLoaded || roleLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-pink-50 to-rose-50">
-        <div className="animate-pulse">
-          <div className="h-8 w-48 bg-gray-200 rounded mb-4"></div>
-          <div className="h-4 w-32 bg-gray-200 rounded"></div>
-        </div>
-      </div>
-    )
+  // TSK-54 Dummy Data Structures
+  const systemHealth = {
+    status: "healthy" as const,
+    uptime: "99.8%",
+    responseTime: "120ms",
+    storage: "73%",
+    lastChecked: "2025-01-15T14:30:00Z"
   }
 
-  // Client-side role check
-  if (!canAccessAdmin()) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-500 text-6xl mb-4">🚫</div>
-          <h1 className="text-2xl font-bold mb-2">Akses Ditolak</h1>
-          <p className="text-gray-600">Anda tidak memiliki izin administrator.</p>
-          <p className="text-sm text-gray-500 mt-2">Role saat ini: {role || 'Tidak ada'}</p>
-        </div>
-      </div>
-    )
+  const analyticsData = {
+    revenue: { current: 45600, growth: "+12%" },
+    courseQuality: { average: 4.6, totalReviews: 1240 },
+    userEngagement: { activeUsers: 2486, completionRate: "78%" }
   }
 
-  // Mock admin data
-  const adminStats = {
-    totalUsers: 2486,
-    totalCourses: 142,
-    activeCreators: 28,
-    systemHealth: 98,
+  const platformSettings = {
+    maintenanceMode: false,
+    newRegistrations: true,
+    featuredCourses: true,
+    systemNotifications: "enabled" as const
   }
 
-  const recentActivities = [
-    {
-      id: 1,
-      type: 'user_registration',
-      description: '15 pengguna baru mendaftar',
-      timestamp: '2024-01-15 14:30',
-      severity: 'info',
-    },
-    {
-      id: 2,
-      type: 'course_published',
-      description: 'Kursus "Advanced JavaScript" dipublikasi',
-      timestamp: '2024-01-15 13:45',
-      severity: 'success',
-    },
-    {
-      id: 3,
-      type: 'system_alert',
-      description: 'Storage usage mencapai 85%',
-      timestamp: '2024-01-15 12:15',
-      severity: 'warning',
-    },
-  ]
+  // Quick status for 5-second assessment rule
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'healthy': return 'text-hijau-500'
+      case 'warning': return 'text-kuning-500'
+      case 'critical': return 'text-merah-500'
+      default: return 'text-beige-600'
+    }
+  }
 
-  const systemAlerts = [
-    {
-      id: 1,
-      title: 'High Storage Usage',
-      message: 'Storage server mencapai 85% kapasitas',
-      severity: 'warning',
-      action: 'Expand Storage',
-    },
-    {
-      id: 2,
-      title: 'Pending Reviews',
-      message: '12 kursus menunggu review',
-      severity: 'info',
-      action: 'Review Content',
-    },
-  ]
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'healthy': return CheckCircle
+      case 'warning': return AlertCircle
+      case 'critical': return XCircle
+      default: return Activity
+    }
+  }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-pink-50 to-rose-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+  const StatusIcon = getStatusIcon(systemHealth.status)
+
+  return renderAdminGuard(authState, (
+    <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+
+        {/* Header - System Operations Focus */}
+        <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
           <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-red-100 rounded-lg">
-              <Shield className="w-6 h-6 text-red-600" />
+            <div className="flex items-center justify-center w-12 h-12 bg-merah-100 rounded-lg">
+              <Shield className="w-6 h-6 text-merah-600" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Admin Control Panel</h1>
-              <p className="text-gray-600">
-                Selamat datang, {user?.firstName || 'Administrator'}! - Role:{' '}
-                <span className="font-semibold capitalize text-red-600">{role}</span>
+              <h1 className="text-3xl font-bold text-beige-900 font-serif">System Operations</h1>
+              <p className="text-beige-600">
+                Dashboard monitoring sistem - {authState.user?.firstName || 'Administrator'}
               </p>
             </div>
+            <div className="ml-auto flex items-center gap-2">
+              <StatusIcon className={`w-5 h-5 ${getStatusColor(systemHealth.status)}`} />
+              <Badge variant="outline" className="bg-beige-50">
+                System {systemHealth.status}
+              </Badge>
+            </div>
           </div>
         </div>
 
-        {/* System Alerts */}
-        {systemAlerts.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border mb-8">
-            <div className="p-6 border-b">
-              <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-500" />
-                System Alerts
-              </h2>
+        {/* System Health Monitoring - Priority Alert Section */}
+        <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Activity className="w-5 h-5 text-hijau-600" />
+            <h2 className="text-xl font-semibold text-beige-900">System Health</h2>
+            <Badge className="ml-auto bg-hijau-100 text-hijau-800">Live</Badge>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Status Overview */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Server className="w-4 h-4 text-hijau-600" />
+                <span className="text-sm font-medium text-beige-700">Status</span>
+              </div>
+              <p className="text-2xl font-bold text-hijau-600 capitalize">{systemHealth.status}</p>
             </div>
-            <div className="divide-y">
-              {systemAlerts.map((alert) => (
-                <div key={alert.id} className="p-6 flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{alert.title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{alert.message}</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        alert.severity === 'warning'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-blue-100 text-blue-800'
-                      }`}
-                    >
-                      {alert.severity}
-                    </span>
-                    <Button variant="outline" size="sm">
-                      {alert.action}
-                    </Button>
-                  </div>
-                </div>
-              ))}
+
+            {/* Uptime */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="w-4 h-4 text-beige-600" />
+                <span className="text-sm font-medium text-beige-700">Uptime</span>
+              </div>
+              <p className="text-2xl font-bold text-beige-900">{systemHealth.uptime}</p>
+            </div>
+
+            {/* Response Time */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Gauge className="w-4 h-4 text-kuning-600" />
+                <span className="text-sm font-medium text-beige-700">Response</span>
+              </div>
+              <p className="text-2xl font-bold text-beige-900">{systemHealth.responseTime}</p>
+            </div>
+
+            {/* Storage */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center gap-2 mb-2">
+                <Database className="w-4 h-4 text-kuning-600" />
+                <span className="text-sm font-medium text-beige-700">Storage</span>
+              </div>
+              <p className="text-2xl font-bold text-kuning-600">{systemHealth.storage}</p>
+              <div className="w-full bg-beige-200 rounded-full h-2 mt-2">
+                <div className="bg-kuning-400 h-2 rounded-full" style={{ width: systemHealth.storage }}></div>
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">
-                <Users className="w-5 h-5 text-blue-600" />
+        {/* Analytics Dashboard - Revenue & Engagement */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* Revenue Analytics */}
+          <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <TrendingUp className="w-5 h-5 text-merah-600" />
+              <h2 className="text-xl font-semibold text-beige-900">Revenue Analytics</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-beige-600">Current Revenue</span>
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-beige-900">
+                    Rp {analyticsData.revenue.current.toLocaleString()}
+                  </p>
+                  <Badge className="bg-hijau-100 text-hijau-800">
+                    {analyticsData.revenue.growth}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Users</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {adminStats.totalUsers.toLocaleString()}
+
+              <div className="flex items-center justify-between pt-4 border-t border-beige-100">
+                <span className="text-beige-600">Course Quality</span>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-beige-900">
+                    {analyticsData.courseQuality.average}/5.0
+                  </p>
+                  <p className="text-sm text-beige-500">
+                    {analyticsData.courseQuality.totalReviews} reviews
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* User Engagement */}
+          <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Users className="w-5 h-5 text-hijau-600" />
+              <h2 className="text-xl font-semibold text-beige-900">User Engagement</h2>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-beige-600">Active Users</span>
+                <p className="text-2xl font-bold text-beige-900">
+                  {analyticsData.userEngagement.activeUsers.toLocaleString()}
                 </p>
               </div>
-            </div>
-          </div>
 
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
-                <Database className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Total Courses</p>
-                <p className="text-2xl font-bold text-gray-900">{adminStats.totalCourses}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-purple-100 rounded-lg">
-                <Shield className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Active Creators</p>
-                <p className="text-2xl font-bold text-gray-900">{adminStats.activeCreators}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-emerald-100 rounded-lg">
-                <BarChart3 className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">System Health</p>
-                <p className="text-2xl font-bold text-gray-900">{adminStats.systemHealth}%</p>
+              <div className="flex items-center justify-between pt-4 border-t border-beige-100">
+                <span className="text-beige-600">Completion Rate</span>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-hijau-600">
+                    {analyticsData.userEngagement.completionRate}
+                  </p>
+                  <div className="w-24 bg-beige-200 rounded-full h-2 mt-1">
+                    <div
+                      className="bg-hijau-400 h-2 rounded-full"
+                      style={{ width: analyticsData.userEngagement.completionRate }}
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Recent Activities */}
-        <div className="bg-white rounded-lg shadow-sm border mb-8">
-          <div className="p-6 border-b">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Recent Activities</h2>
-              <Button variant="outline" size="sm">
-                View All
+        {/* Platform Settings - System Configuration */}
+        <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Settings className="w-5 h-5 text-beige-700" />
+            <h2 className="text-xl font-semibold text-beige-900">Platform Settings</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            {/* Maintenance Mode */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-beige-700">Maintenance Mode</span>
+                <Badge variant={platformSettings.maintenanceMode ? "destructive" : "secondary"}>
+                  {platformSettings.maintenanceMode ? "ON" : "OFF"}
+                </Badge>
+              </div>
+              <Button
+                variant={platformSettings.maintenanceMode ? "destructive" : "outline"}
+                size="sm"
+                className="w-full"
+              >
+                {platformSettings.maintenanceMode ? "Disable" : "Enable"}
+              </Button>
+            </div>
+
+            {/* New Registrations */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-beige-700">Registrations</span>
+                <Badge variant={platformSettings.newRegistrations ? "default" : "secondary"}>
+                  {platformSettings.newRegistrations ? "OPEN" : "CLOSED"}
+                </Badge>
+              </div>
+              <Button
+                variant={platformSettings.newRegistrations ? "default" : "outline"}
+                size="sm"
+                className="w-full"
+              >
+                {platformSettings.newRegistrations ? "Close" : "Open"}
+              </Button>
+            </div>
+
+            {/* Featured Courses */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-beige-700">Featured Courses</span>
+                <Badge variant={platformSettings.featuredCourses ? "default" : "secondary"}>
+                  {platformSettings.featuredCourses ? "ON" : "OFF"}
+                </Badge>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+              >
+                Configure
+              </Button>
+            </div>
+
+            {/* System Notifications */}
+            <div className="bg-beige-50 rounded-lg p-4 border border-beige-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-beige-700">Notifications</span>
+                <Badge variant={platformSettings.systemNotifications === "enabled" ? "default" : "secondary"}>
+                  {platformSettings.systemNotifications.toUpperCase()}
+                </Badge>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+              >
+                Manage
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions - Task-Oriented Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+            <h3 className="font-semibold text-beige-900 mb-4 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-hijau-600" />
+              System Monitoring
+            </h3>
+            <div className="space-y-3">
+              <Button variant="outline" className="w-full justify-start">
+                View Logs
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                Performance Metrics
+              </Button>
+              <Button variant="outline" className="w-full justify-start">
+                Error Reports
               </Button>
             </div>
           </div>
 
-          <div className="divide-y">
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className="p-6 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      activity.severity === 'success'
-                        ? 'bg-green-400'
-                        : activity.severity === 'warning'
-                          ? 'bg-amber-400'
-                          : 'bg-blue-400'
-                    }`}
-                  ></div>
-                  <div>
-                    <p className="font-medium text-gray-900">{activity.description}</p>
-                    <p className="text-sm text-gray-500">{activity.timestamp}</p>
-                  </div>
-                </div>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    activity.severity === 'success'
-                      ? 'bg-green-100 text-green-800'
-                      : activity.severity === 'warning'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-blue-100 text-blue-800'
-                  }`}
-                >
-                  {activity.severity}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Admin Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Users className="w-5 h-5" />
+          <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+            <h3 className="font-semibold text-beige-900 mb-4 flex items-center gap-2">
+              <Users className="w-5 h-5 text-kuning-600" />
               User Management
             </h3>
             <div className="space-y-3">
-              <Link href="/admin/users" className="block">
-                <Button variant="outline" className="w-full justify-start">
-                  Manage Users
-                </Button>
-              </Link>
               <Button variant="outline" className="w-full justify-start">
-                Role Assignments
+                Active Sessions
               </Button>
               <Button variant="outline" className="w-full justify-start">
                 User Analytics
               </Button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Database className="w-5 h-5" />
-              Content Management
-            </h3>
-            <div className="space-y-3">
               <Button variant="outline" className="w-full justify-start">
-                Review Courses
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                Content Moderation
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                Publishing Queue
+                Role Management
               </Button>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              System Settings
+          <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6">
+            <h3 className="font-semibold text-beige-900 mb-4 flex items-center gap-2">
+              <Globe className="w-5 h-5 text-merah-600" />
+              Platform Control
             </h3>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start">
-                Platform Settings
+              <Button variant="default" className="w-full justify-start bg-merah-500 hover:bg-merah-600">
+                Emergency Stop
               </Button>
               <Button variant="outline" className="w-full justify-start">
-                Security Config
+                Backup System
               </Button>
               <Button variant="outline" className="w-full justify-start">
-                Backup & Recovery
+                Update Platform
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Development Info */}
+        {/* Development Info - TSK-54 Implementation */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="mt-8 bg-gray-50 rounded-lg p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">🔧 Development Info</h3>
+          <div className="bg-beige-100 rounded-lg p-6 border border-beige-200">
+            <h3 className="font-semibold text-beige-900 mb-4">🚀 TSK-54 Implementation Status</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div>
-                <strong>Current Role:</strong> {role}
+              <div className="bg-white rounded p-3">
+                <strong className="text-hijau-600">✅ Completed:</strong>
+                <ul className="mt-1 text-beige-700">
+                  <li>• Ancient Fantasy Asia theming</li>
+                  <li>• System operations focus</li>
+                  <li>• useAdminGuard integration</li>
+                </ul>
               </div>
-              <div>
-                <strong>Is Admin:</strong> {isAdmin ? 'Yes' : 'No'}
+              <div className="bg-white rounded p-3">
+                <strong className="text-kuning-600">🔄 In Progress:</strong>
+                <ul className="mt-1 text-beige-700">
+                  <li>• Component modularization</li>
+                  <li>• Responsive optimization</li>
+                  <li>• Accessibility compliance</li>
+                </ul>
               </div>
-              <div>
-                <strong>Can Access Admin:</strong> {canAccessAdmin() ? 'Yes' : 'No'}
-              </div>
-              <div>
-                <strong>Route:</strong> /admin/dashboard
-              </div>
-              <div>
-                <strong>Middleware Check:</strong> Passed (reached this page)
-              </div>
-              <div>
-                <strong>Required Roles:</strong> [&lsquo;admin&rsquo;]
+              <div className="bg-white rounded p-3">
+                <strong className="text-beige-600">📋 Phase 2:</strong>
+                <ul className="mt-1 text-beige-700">
+                  <li>• Real data integration (TSK-55)</li>
+                  <li>• Backend CRUD operations</li>
+                  <li>• Advanced auth flows</li>
+                </ul>
               </div>
             </div>
           </div>
         )}
+
       </div>
     </div>
-  )
+  ))
 }
