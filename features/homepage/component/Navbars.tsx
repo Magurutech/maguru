@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button'
 import { Menu, X, BookOpen, Search, Bell } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 import { SignOutButton, UserButton } from '@clerk/nextjs'
-import { useUserRole } from '@/features/auth'
+import { useUserRole, useRoleNavigation } from '@/features/auth'
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { isSignedIn } = useUser()
-  const { role, isAdmin, isCreator, isUser } = useUserRole()
+  const { role } = useUserRole()
+  const { getDashboardUrl } = useRoleNavigation()
 
   const navItems = [
     { label: 'Beranda', href: '#home' },
@@ -26,14 +27,6 @@ export function Navbar() {
   // Handler untuk sign out dengan close mobile menu
   const handleSignOut = () => {
     setIsOpen(false)
-  }
-
-  // Get dashboard URL based on role
-  const getDashboardUrl = () => {
-    if (isAdmin) return '/admin'
-    if (isCreator) return '/creator'
-    if (isUser) return '/dashboard'
-    return '/dashboard' // Default fallback
   }
 
   return (

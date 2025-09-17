@@ -114,6 +114,116 @@ function useRoleGuard() {
 }
 
 /**
+ * Hook untuk role-based navigation dan redirect
+ * Provides navigation helpers dan redirect logic berdasarkan role
+ *
+ * @returns Object dengan navigation functions dan redirect URLs
+ *
+ * @example
+ * ```tsx
+ * const { getDashboardUrl, canNavigateTo, getRedirectUrl } = useRoleNavigation();
+ *
+ * const dashboardUrl = getDashboardUrl();
+ * if (canNavigateTo('/admin')) {
+ *   return <AdminPanel />;
+ * }
+ * ```
+ */
+function useRoleNavigation() {
+  const { role } = useUserRole()
+
+  return useMemo(
+    () => ({
+      // Get dashboard URL berdasarkan role
+      getDashboardUrl: () => {
+        switch (role) {
+          case 'admin':
+            return '/admin'
+          case 'creator':
+            return '/creator'
+          case 'user':
+            return '/dashboard'
+          default:
+            return '/dashboard' // Default fallback
+        }
+      },
+
+      // Check if user can navigate to specific route
+      canNavigateTo: (route: string) => {
+        if (!role) return false
+
+        // Admin dapat akses semua
+        if (role === 'admin') return true
+
+        // Creator dapat akses creator dan user routes
+        if (role === 'creator') {
+          return route.startsWith('/creator') || route.startsWith('/dashboard')
+        }
+
+        // User hanya dapat akses user routes
+        if (role === 'user') {
+          return route.startsWith('/dashboard')
+        }
+
+        return false
+      },
+
+      // Get redirect URL for unauthorized access
+      getRedirectUrl: (attemptedRoute: string) => {
+        const dashboardUrl = (() => {
+          switch (role) {
+            case 'admin':
+              return '/admin'
+            case 'creator':
+              return '/creator'
+            case 'user':
+              return '/dashboard'
+            default:
+              return '/unauthorized'
+          }
+        })()
+        return `${dashboardUrl}?redirect=${encodeURIComponent(attemptedRoute)}`
+      },
+
+      // Get role-specific navigation items
+      getNavigationItems: () => {
+        const items = []
+
+        if (role === 'admin') {
+          items.push(
+            { label: 'Admin Dashboard', href: '/admin', icon: 'shield' },
+            { label: 'Creator Panel', href: '/creator', icon: 'edit' },
+            { label: 'User Panel', href: '/dashboard', icon: 'users' },
+          )
+        } else if (role === 'creator') {
+          items.push(
+            { label: 'Creator Dashboard', href: '/creator', icon: 'edit' },
+            { label: 'User Panel', href: '/dashboard', icon: 'users' },
+          )
+        } else if (role === 'user') {
+          items.push({ label: 'User Dashboard', href: '/dashboard', icon: 'users' })
+        }
+
+        return items
+      },
+
+      // Check if route requires authentication
+      isProtectedRoute: (route: string) => {
+        const protectedRoutes = ['/admin', '/creator', '/dashboard']
+        return protectedRoutes.some((protectedRoute) => route.startsWith(protectedRoute))
+      },
+
+      // Get role hierarchy level
+      getRoleLevel: () => {
+        const hierarchy = { user: 1, creator: 2, admin: 3 }
+        return role ? hierarchy[role] : 0
+      },
+    }),
+    [role],
+  )
+}
+
+/**
  * Hook untuk loading states dengan smart defaults
  * Provides intelligent loading state management dan UI helpers
  *
@@ -392,6 +502,7 @@ function useRoleErrorHandling() {
 export {
   useUserRole as default,
   useRoleGuard,
+  useRoleNavigation,
   useRoleLoadingState,
   useRoleDevelopment,
   useRoleConditional,

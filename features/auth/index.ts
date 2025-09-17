@@ -11,6 +11,7 @@ export { RoleDisplay } from './components/RoleDisplay'
 export {
   useUserRole as default,
   useRoleGuard,
+  useRoleNavigation,
   useRoleLoadingState,
   useRoleDevelopment,
   useRoleConditional,
