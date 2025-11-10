@@ -29,10 +29,6 @@
           {
             "type": "command",
             "command": "uv run .claude/hooks/use_bun.py"
-          },
-          {
-            "type": "command",
-            "command": "uv run .claude/hooks/validate_environment.py"
           }
         ]
       },
