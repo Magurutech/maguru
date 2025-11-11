@@ -40,9 +40,9 @@ export async function getCourse(slug: string): Promise<CourseDetailResponse | nu
   }
 }
 
-export async function getCourseContent(contentPath: string): Promise<string> {
+export async function getCourseContent(slug: string, contentPath: string): Promise<string> {
   try {
-    const response = await fetch('/api/courses/content', {
+    const response = await fetch(`/api/courses/${slug}/content`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

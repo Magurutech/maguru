@@ -50,7 +50,7 @@ function CourseDetailContent() {
 
       try {
         setContentLoading(true)
-        const courseContent = await getCourseContent(contentPath)
+        const courseContent = await getCourseContent(slug, contentPath)
         setContent(courseContent)
       } catch (error) {
         console.error('Error loading content:', error)
