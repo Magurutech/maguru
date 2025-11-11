@@ -54,7 +54,7 @@ export async function POST(
     const safePath = validateContentPath(slug, contentPath)
 
     // Load content using the validated path
-    const content = await getCourseContent(safePath)
+    const content = await getCourseContent(slug, safePath)
 
     return NextResponse.json({
       content
@@ -63,11 +63,12 @@ export async function POST(
     console.error('Error loading course content:', error)
 
     // Don't expose sensitive error details to client
-    const isSecurityError = error.message.includes('Invalid path') ||
-                           error.message.includes('Path traversal')
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const isSecurityError = errorMessage.includes('Invalid path') ||
+                           errorMessage.includes('Path traversal')
 
     if (isSecurityError) {
-      console.warn('Security alert:', error.message)
+      console.warn('Security alert:', errorMessage)
     }
 
     return NextResponse.json(

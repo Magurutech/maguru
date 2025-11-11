@@ -34,6 +34,7 @@ export interface Course {
   sections: CourseSection[]
   totalItems: number
   estimatedDuration: string
+  overviewContent?: string  // Course overview content dari course.md
 }
 
 export interface CourseProgress {
@@ -79,6 +80,11 @@ export interface CourseHeaderProps {
   course: Course
   progress?: CourseProgress
   className?: string
+  mode?: 'overview' | 'learning'
+  showStartButton?: boolean
+  startButtonHref?: string
+  showBackButton?: boolean
+  backButtonHref?: string
 }
 
 export interface ContentRendererProps {

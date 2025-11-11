@@ -30,7 +30,9 @@ function parseFrontmatter(content: string): { data: any; content: string } {
 
       // Handle arrays
       if (value.startsWith('[') && value.endsWith(']')) {
-        value = value.slice(1, -1).split(',').map(item => item.trim().replace(/['"]/g, ''))
+        const arrayValue = value.slice(1, -1).split(',').map(item => item.trim().replace(/['"]/g, ''))
+        data[key] = arrayValue  // Save as array
+        return
       }
 
       data[key] = value
@@ -114,7 +116,8 @@ export async function loadCourse(slug: string): Promise<Course> {
     },
     sections,
     totalItems,
-    estimatedDuration
+    estimatedDuration,
+    overviewContent: content.trim() || undefined  // Extract overview content dari course.md
   }
 }
 
@@ -198,7 +201,7 @@ function calculateTotalDuration(sections: CourseSection[]): string {
 }
 
 // Get course content (markdown content for a specific item)
-export async function getCourseContent(contentPath: string): Promise<string> {
+export async function getCourseContent(slug: string, contentPath: string): Promise<string> {
   try {
     const content = await fs.readFile(contentPath, 'utf-8')
     const { content: markdownContent } = parseFrontmatter(content)

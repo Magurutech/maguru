@@ -25,7 +25,7 @@ export function ContentRenderer({ content, contentType, className = '' }: Conten
 
       // Lists
       .replace(/^\* (.+)$/gim, '<li class="ml-4 mb-1">• $1</li>')
-      .replace(/(<li.*<\/li>)/s, '<ul class="list-disc list-inside mb-4 space-y-1">$1</ul>')
+      .replace(/<li[^>]*>[\s\S]*?<\/li>/g, '<ul class="list-disc list-inside mb-4 space-y-1">$&</ul>')
 
       // Line breaks
       .replace(/\n\n/g, '</p><p class="mb-4">')
@@ -47,6 +47,7 @@ export function ContentRenderer({ content, contentType, className = '' }: Conten
               onclick="copyCode('${codeId}', '${codeId.replace('code-', 'copy-')}')"
               class="absolute top-2 right-2 bg-gray-700 hover:bg-gray-600 text-white p-2 rounded transition-colors"
               title="Copy code"
+              aria-label="Copy code to clipboard"
             >
               <svg id="${codeId.replace('code-', 'copy-')}" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
@@ -64,9 +65,9 @@ export function ContentRenderer({ content, contentType, className = '' }: Conten
 
       // Tables (basic)
       .replace(/\|(.+)\|/g, (match, content) => {
-        const cells = content.split('|').map(cell => cell.trim()).filter(cell => cell)
+        const cells = content.split('|').map((cell: string) => cell.trim()).filter((cell: string) => cell)
         if (cells.length > 1) {
-          return `<tr>${cells.map(cell => `<td class="border border-beige-300 px-4 py-2">${cell}</td>`).join('')}</tr>`
+          return `<tr>${cells.map((cell: string) => `<td class="border border-beige-300 px-4 py-2">${cell}</td>`).join('')}</tr>`
         }
         return match
       })
@@ -122,13 +123,38 @@ export function ContentRenderer({ content, contentType, className = '' }: Conten
     <div className={`prose prose-lg max-w-none ${className}`}>
       {contentType === 'markdown' ? (
         <div
-          dangerouslySetInnerHTML={renderContent()}
+          dangerouslySetInnerHTML={{ __html: parseMarkdown(content) }}
           className="markdown-content"
         />
       ) : (
-        <div>
-          {renderContent()}
-        </div>
+        (() => {
+          switch (contentType) {
+            case 'video':
+              return (
+                <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
+                  <p className="text-gray-500">Video content not yet supported</p>
+                </div>
+              )
+            case 'quiz':
+              return (
+                <div className="bg-beige-50 border border-beige-200 rounded-lg p-8 text-center">
+                  <p className="text-beige-700">Quiz content not yet supported</p>
+                </div>
+              )
+            case 'exercise':
+              return (
+                <div className="bg-beige-50 border border-beige-200 rounded-lg p-8 text-center">
+                  <p className="text-beige-700">Exercise content not yet supported</p>
+                </div>
+              )
+            default:
+              return (
+                <div className="bg-beige-50 border border-beige-200 rounded-lg p-8 text-center">
+                  <p className="text-beige-700">Content type not supported</p>
+                </div>
+              )
+          }
+        })()
       )}
 
       <style jsx>{`

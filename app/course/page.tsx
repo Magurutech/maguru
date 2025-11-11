@@ -1,14 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Suspense } from 'react'
 import { CourseCard } from '@/features/course/components/CourseCard'
-import { CourseListItem, CourseProgress } from '@/features/course/types/course.types'
-import { getCourses, getAllCourseProgress } from '@/features/course/api'
-import { BookOpen, Filter, Search } from 'lucide-react'
+import { useCourseList } from '@/features/course/hooks/useCourseList'
+import { BookOpen, Filter, Search, Loader2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -17,209 +15,38 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-function CourseGrid() {
-  const [courses, setCourses] = useState<CourseListItem[]>([])
-  const [loading, setLoading] = useState(true)
+function CoursePageContent() {
+  // Centralized course data management using hook
+  const { courses, error, getCoursesFilteredAndSorted } = useCourseList()
+
+  // Local UI state
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedLevel, setSelectedLevel] = useState<string>('all')
   const [sortBy, setSortBy] = useState<string>('title')
 
-  useEffect(() => {
-    async function loadCourses() {
-      try {
-        const response = await getCourses()
-        const allProgress = getAllCourseProgress()
+  // Memoized filtered and sorted courses
+  const filteredCourses = useMemo(() => {
+    return getCoursesFilteredAndSorted(searchTerm, selectedLevel, sortBy)
+  }, [getCoursesFilteredAndSorted, searchTerm, selectedLevel, sortBy])
 
-        // Merge progress data with courses
-        const coursesWithProgress = response.courses.map(course => ({
-          ...course,
-          progress: allProgress[course.slug]
-        }))
-
-        setCourses(coursesWithProgress)
-      } catch (error) {
-        console.error('Error loading courses:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadCourses()
-  }, [])
-
-  // Filter and sort courses
-  const filteredCourses = courses
-    .filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
-
-      const matchesLevel = selectedLevel === 'all' || course.level.toLowerCase() === selectedLevel.toLowerCase()
-
-      return matchesSearch && matchesLevel
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'title':
-          return a.title.localeCompare(b.title)
-        case 'instructor':
-          return a.instructor.localeCompare(b.instructor)
-        case 'duration':
-          return a.duration.localeCompare(b.duration)
-        case 'progress':
-          const aProgress = a.progress?.completionPercentage || 0
-          const bProgress = b.progress?.completionPercentage || 0
-          return bProgress - aProgress
-        default:
-          return 0
-      }
-    })
-
-  if (loading) {
+  // Error state
+  if (error) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[...Array(6)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="bg-gray-200 rounded-lg h-48 mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  if (courses.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-600 mb-2">
-          Belum ada kursus tersedia
-        </h3>
-        <p className="text-gray-500">
-          Kursus akan segera tersedia. Silakan kembali lagi nanti.
-        </p>
-      </div>
-    )
-  }
-
-  if (filteredCourses.length === 0) {
-    return (
-      <div className="text-center py-12">
-        <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-600 mb-2">
-          Tidak ada kursus yang ditemukan
-        </h3>
-        <p className="text-gray-500">
-          Coba ubah filter atau kata kunci pencarian Anda.
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {filteredCourses.map((course, index) => (
-        <CourseCard
-          key={course.slug}
-          course={course}
-          progress={course.progress}
-          className="animate-fade-in"
-          style={{ animationDelay: `${index * 0.1}s` }}
-        />
-      ))}
-    </div>
-  )
-}
-
-export default function CoursePage() {
-  const [courses, setCourses] = useState<CourseListItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedLevel, setSelectedLevel] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<string>('title')
-
-  useEffect(() => {
-    async function loadCourses() {
-      try {
-        const response = await getCourses()
-        const allProgress = getAllCourseProgress()
-
-        // Merge progress data with courses
-        const coursesWithProgress = response.courses.map(course => ({
-          ...course,
-          progress: allProgress[course.slug]
-        }))
-
-        setCourses(coursesWithProgress)
-      } catch (error) {
-        console.error('Error loading courses:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadCourses()
-  }, [])
-
-  // Filter and sort courses
-  const filteredCourses = courses
-    .filter(course => {
-      const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
-
-      const matchesLevel = selectedLevel === 'all' || course.level.toLowerCase() === selectedLevel.toLowerCase()
-
-      return matchesSearch && matchesLevel
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'title':
-          return a.title.localeCompare(b.title)
-        case 'instructor':
-          return a.instructor.localeCompare(b.instructor)
-        case 'duration':
-          return a.duration.localeCompare(b.duration)
-        case 'progress':
-          const aProgress = a.progress?.completionPercentage || 0
-          const bProgress = b.progress?.completionPercentage || 0
-          return bProgress - aProgress
-        default:
-          return 0
-      }
-    })
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 glass-panel px-4 py-2 rounded-full mb-6">
-              <BookOpen className="w-5 h-5 text-secondary-600" />
-              <span className="text-beige-900 font-medium">Learning Paths</span>
-            </div>
-
-            <h1 className="text-4xl md:text-5xl font-bold text-beige-900 mb-6 font-serif">
-              Petualangan Belajar
-              <span className="text-gradient-primary block mt-2">Terbaik Untukmu ✨</span>
-            </h1>
-
-            <p className="text-xl text-beige-700 max-w-3xl mx-auto leading-relaxed">
-              Jelajahi learning path terstruktur yang dirancang untuk membantumu menguasai
-              keterampilan baru dengan cara yang menyenangkan dan interaktif
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-gray-200 rounded-lg h-48 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              </div>
-            ))}
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-500 mb-4">⚠️</div>
+          <h3 className="text-xl font-semibold text-beige-900 mb-2">
+            Error Loading Courses
+          </h3>
+          <p className="text-beige-700 mb-4">
+            {error}
+          </p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="bg-red-500 hover:bg-red-600"
+          >
+            Try Again
+          </Button>
         </div>
       </div>
     )
@@ -311,38 +138,62 @@ export default function CoursePage() {
         {/* Course Grid */}
         {courses.length === 0 ? (
           <div className="text-center py-12">
-            <BookOpen className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            <BookOpen className="w-16 h-16 text-beige-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-beige-900 mb-2">
               Belum ada kursus tersedia
             </h3>
-            <p className="text-gray-500">
+            <p className="text-beige-700">
               Kursus akan segera tersedia. Silakan kembali lagi nanti.
             </p>
           </div>
         ) : filteredCourses.length === 0 ? (
           <div className="text-center py-12">
-            <Search className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+            <Search className="w-16 h-16 text-beige-300 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-beige-900 mb-2">
               Tidak ada kursus yang ditemukan
             </h3>
-            <p className="text-gray-500">
+            <p className="text-beige-700">
               Coba ubah filter atau kata kunci pencarian Anda.
             </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCourses.map((course, index) => (
-              <CourseCard
+              <div
                 key={course.slug}
-                course={course}
-                progress={course.progress}
                 className="animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
-              />
+              >
+                <CourseCard
+                  course={course}
+                  progress={course.progress}
+                />
+              </div>
             ))}
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+export default function CoursePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[60vh]">
+              <div className="text-center">
+                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-secondary-600" />
+                <p className="text-lg text-beige-700">Loading courses...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <CoursePageContent />
+    </Suspense>
   )
 }

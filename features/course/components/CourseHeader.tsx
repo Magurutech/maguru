@@ -12,11 +12,22 @@ import {
   PlayCircle,
   CheckCircle,
   ArrowRight,
+  ArrowLeft,
   Award,
   Target
 } from 'lucide-react'
+import Link from 'next/link'
 
-export function CourseHeader({ course, progress, className = '' }: CourseHeaderProps) {
+export function CourseHeader({
+  course,
+  progress,
+  className = '',
+  mode = 'overview',
+  showStartButton = false,
+  startButtonHref = '',
+  showBackButton = false,
+  backButtonHref = ''
+}: CourseHeaderProps) {
   const progressPercentage = progress?.completionPercentage || 0
   const isCompleted = progressPercentage === 100
   const isInProgress = progressPercentage > 0 && progressPercentage < 100
@@ -179,30 +190,60 @@ export function CourseHeader({ course, progress, className = '' }: CourseHeaderP
             <h3 className="font-semibold text-beige-900 mb-4">Aksi Cepat</h3>
 
             <div className="space-y-3">
-              {isCompleted ? (
-                <Button className="w-full btn-secondary hover-glow">
-                  <Award className="w-4 h-4 mr-2" />
-                  Review Course
-                </Button>
-              ) : isInProgress ? (
-                <Button className="w-full btn-primary hover-glow">
-                  <PlayCircle className="w-4 h-4 mr-2" />
-                  Lanjut Belajar
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              ) : (
-                <Button className="w-full btn-primary hover-glow">
-                  <PlayCircle className="w-4 h-4 mr-2" />
-                  Mulai Belajar
-                  <ArrowRight className="w-4 h-4 ml-2" />
+              {/* Back Button for Learning Mode */}
+              {showBackButton && backButtonHref && (
+                <Link href={backButtonHref}>
+                  <Button variant="outline" className="w-full">
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Kembali ke Overview
+                  </Button>
+                </Link>
+              )}
+
+              {/* Start Learning Button for Overview Mode */}
+              {showStartButton && startButtonHref && (
+                <Link href={startButtonHref}>
+                  <Button className="w-full btn-primary hover-glow">
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    {hasStarted ? 'Lanjut Belajar' : 'Mulai Belajar'}
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
+              )}
+
+              {/* Legacy Buttons (when in learning mode or no custom config) */}
+              {!showStartButton && mode === 'learning' && (
+                <>
+                  {isCompleted ? (
+                    <Button className="w-full btn-secondary hover-glow">
+                      <Award className="w-4 h-4 mr-2" />
+                      Review Course
+                    </Button>
+                  ) : isInProgress ? (
+                    <Button className="w-full btn-primary hover-glow">
+                      <PlayCircle className="w-4 h-4 mr-2" />
+                      Lanjut Belajar
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button className="w-full btn-primary hover-glow">
+                      <PlayCircle className="w-4 h-4 mr-2" />
+                      Mulai Belajar
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
+                </>
+              )}
+
+              {/* Preview Button (only show when in overview mode without custom start button) */}
+              {mode === 'overview' && !showStartButton && (
+                <Button variant="outline" className="w-full">
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Lihat Preview
                 </Button>
               )}
 
-              <Button variant="outline" className="w-full">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Lihat Preview
-              </Button>
-
+              {/* Schedule Button */}
               <Button variant="ghost" className="w-full">
                 <Calendar className="w-4 h-4 mr-2" />
                 Tambah ke Jadwal
