@@ -133,12 +133,46 @@ Membuat halaman kursus untuk menampilkan konten pembelajaran dengan tab interfac
 - Error handling dan edge cases
 - Cross-browser compatibility testing
 
+### Epic 5: Advanced Content Rendering Implementation
+**Goal**: Implementasi enhanced content rendering dengan react-markdown ecosystem dan interactive learning features
+
+#### Task 5.1: React-Markdown Integration with Plugin Ecosystem
+- **NEW**: Replace custom ContentRenderer.tsx dengan react-markdown implementation
+- **NEW**: Integrate remark-gfm untuk GitHub Flavored Markdown support (tables, task lists, strikethrough)
+- **NEW**: Implement rehype-katex dan remark-math untuk mathematical expressions
+- **NEW**: Setup rehype-raw untuk controlled HTML rendering
+- **NEW**: Custom component mapping untuk existing design system integration
+
+#### Task 5.2: Advanced Syntax Highlighting & Code Features
+- **NEW**: Implement react-syntax-highlighter dengan 300+ language support
+- **NEW**: Add interactive code blocks dengan copy-to-clipboard functionality
+- **NEW**: Implement line numbers dan code highlighting features
+- **NEW**: Create custom syntax theme yang sesuai dengan Ancient Fantasy Asia design system
+- **NEW**: Add code block title bars dengan language indicators
+
+#### Task 5.3: Interactive Learning Components Framework
+- **NEW**: Develop QuizComponent framework untuk embedded assessments
+- **NEW**: Create ExerciseComponent untuk interactive practice problems
+- **NEW**: Implement VideoEmbed component untuk multimedia integration
+- **NEW**: Add ProgressTracker component untuk inline progress indication
+- **NEW**: Create InteractiveNote component untuk student annotations
+
+#### Task 5.4: Performance Optimization & Accessibility
+- **NEW**: Implement lazy loading untuk syntax highlighting on demand
+- **NEW**: Add progressive enhancement untuk better mobile performance
+- **NEW**: Ensure WCAG 2.1 AA compliance untuk semua content components
+- **NEW**: Implement keyboard navigation dan screen reader support
+- **NEW**: Add ARIA labels dan semantic HTML structure
+- **NEW**: Create fallback rendering untuk unsupported features
+
 ## Technical Requirements
 
 ### Dependencies
-- Markdown parser library (markdown-it atau similar)
+- **UPDATED**: React markdown rendering library (react-markdown ecosystem)
 - Existing UI components (shadcn/ui)
 - **NEW**: shadcn/ui Tabs component (@radix-ui/react-tabs)
+- **NEW**: Advanced syntax highlighting (react-syntax-highlighter)
+- **NEW**: Mathematical expressions support (rehype-katex)
 - Design system tokens
 - Local storage untuk progress tracking
 
@@ -290,14 +324,24 @@ Berdasarkan existing patterns di `features/auth` dan `features/homepage`:
 ```json
 {
   "dependencies": {
-    "markdown-it": "^14.1.0",           // Markdown parsing
-    "markdown-it-highlightjs": "^4.0.1", // Code syntax highlighting
-    "@heroicons/react": "^2.0.18",      // Icons (sesuai existing pattern)
-    "clsx": "^2.1.1",                   // Conditional styling
-    "tailwind-merge": "^2.5.4"          // Tailwind class merging
+    "react-markdown": "^9.0.0",           // React markdown rendering (REPLACES markdown-it)
+    "remark-gfm": "^4.0.0",              // GitHub Flavored Markdown support
+    "react-syntax-highlighter": "^15.5.0", // Advanced syntax highlighting (300+ languages)
+    "rehype-katex": "^7.0.0",            // Mathematical expressions (LaTeX)
+    "remark-math": "^6.0.0",              // Math parsing for markdown
+    "rehype-raw": "^7.0.0",              // Safe HTML rendering
+    "@heroicons/react": "^2.0.18",       // Icons (sesuai existing pattern)
+    "clsx": "^2.1.1",                    // Conditional styling
+    "tailwind-merge": "^2.5.4"           // Tailwind class merging
   }
 }
 ```
+
+#### **Bundle Size & Performance**
+- **Expected Bundle Size Increase**: ~120KB (optimized with tree-shaking)
+- **Performance Target**: <100ms render time untuk typical content
+- **Lazy Loading**: Syntax highlighting on demand untuk large content
+- **Lighthouse Score Target**: 95+ performance rating
 
 #### **Design System Integration**
 **Component Priority:**
@@ -309,7 +353,11 @@ Berdasarkan existing patterns di `features/auth` dan `features/homepage`:
 2. **Custom Components** (jika shadcn tidak tersedia):
    - `CourseCard` dengan glass panel effect
    - `TimelineNav` dengan custom styling
-   - `ContentRenderer` untuk markdown
+   - `ContentRenderer` dengan react-markdown integration
+   - `InteractiveCodeBlock` dengan copy functionality dan syntax highlighting
+   - `QuizComponent` untuk interactive learning elements
+   - `MathRenderer` untuk mathematical expressions
+   - `VideoEmbed` untuk multimedia content
 
 **Styling Implementation:**
 ```css
@@ -528,23 +576,4 @@ Berdasarkan existing patterns di `features/auth` dan `features/homepage`:
 *Updated: 2025-01-11*
 *Status: Ready for Implementation*
 *Priority: High*
-*Version: 3.0 (Enhanced with Tab Interface and Learning Mode)*
-
-## 🎯 Key Changes from v2.0 to v3.0
-
-### ✅ **Major Enhancements:**
-1. **Tab Interface Implementation**: 2-tab system (Overview + Timeline) pada course detail page
-2. **Learning Mode Enhancement**: Dedicated `/course/[slug]/learn` page untuk full learning experience
-3. **Enhanced Data Structure**: Support untuk overview content extraction dari course.md
-4. **Improved UX Flow**: Better separation antar discovery (overview) vs consumption (learning)
-
-### 📊 **Updated Timeline:**
-- **Epic 3**: Enhanced from 5 days → 8 days (+3 days for tab interface)
-- **Epic 4**: Enhanced from 2 days → 5 days (+3 days for learning mode)
-- **Total Timeline**: Enhanced from 12 days → 15 days (+25% increase)
-
-### 🛠️ **New Technical Requirements:**
-- shadcn/ui Tabs component integration
-- Enhanced courseUtils.ts untuk overview content parsing
-- Tab state management dengan custom hook
-- New routing structure untuk learning mode
+*Version: 4.0 (Enhanced Markdown visualize  in React Markdown )*

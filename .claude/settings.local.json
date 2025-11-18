@@ -103,7 +103,8 @@
       "mcp__atlassian__getConfluencePage",
       "mcp__atlassian__getVisibleJiraProjects",
       "mcp__atlassian__createJiraIssue",
-      "mcp__serena__list_dir"
+      "mcp__serena__list_dir",
+      "mcp__tavily__tavily-search"
     ]
   },
   "outputStyle": "Learning"
