@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Course, CourseDetailResponse, CourseProgress } from '../types/course.types'
 import { getCourse, markItemCompleted } from '../api'
 
@@ -142,15 +142,15 @@ export function useCourse(slug: string, options: UseCourseOptions = {}) {
     return null
   }
 
-  // Get current item content path
-  const getCurrentContentPath = () => {
+  // Get current item content path (memoized untuk mencegah infinite re-render)
+  const getCurrentContentPath = useMemo(() => {
     if (!course || !currentSectionId || !currentItemId) return null
 
     const section = course.sections.find(s => s.id === currentSectionId)
     const item = section?.items.find(i => i.id === currentItemId)
 
     return item?.contentPath || null
-  }
+  }, [course, currentSectionId, currentItemId])
 
   // Get navigation info
   const getNavigationInfo = () => {
@@ -228,7 +228,7 @@ export function useCourse(slug: string, options: UseCourseOptions = {}) {
     resetProgress,
 
     // Helpers
-    getCurrentContentPath,
+    currentContentPath: getCurrentContentPath,
     getNavigationInfo,
 
     // Computed

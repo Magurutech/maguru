@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { CourseListItem } from '../types/course.types'
 import { getCourses, getAllCourseProgress } from '../api'
 
@@ -37,40 +37,38 @@ export function useCourseList() {
     loadCourses()
   }, [])
 
-  // Memoized filtered and sorted courses
-  const getCoursesFilteredAndSorted = useMemo(() => {
-    return (
-      searchTerm: string,
-      selectedLevel: string,
-      sortBy: string
-    ) => {
-      return courses
-        .filter(course => {
-          const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                               course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                               course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter and sort courses dengan parameters eksternal
+  const getCoursesFilteredAndSorted = useCallback((
+    searchTerm: string,
+    selectedLevel: string,
+    sortBy: string
+  ) => {
+    return courses
+      .filter(course => {
+        const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                             course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
 
-          const matchesLevel = selectedLevel === 'all' || course.level.toLowerCase() === selectedLevel.toLowerCase()
+        const matchesLevel = selectedLevel === 'all' || course.level.toLowerCase() === selectedLevel.toLowerCase()
 
-          return matchesSearch && matchesLevel
-        })
-        .sort((a, b) => {
-          switch (sortBy) {
-            case 'title':
-              return a.title.localeCompare(b.title)
-            case 'instructor':
-              return a.instructor.localeCompare(b.instructor)
-            case 'duration':
-              return a.duration.localeCompare(b.duration)
-            case 'progress':
-              const aProgress = a.progress?.completionPercentage || 0
-              const bProgress = b.progress?.completionPercentage || 0
-              return bProgress - aProgress
-            default:
-              return 0
-          }
-        })
-    }
+        return matchesSearch && matchesLevel
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'title':
+            return a.title.localeCompare(b.title)
+          case 'instructor':
+            return a.instructor.localeCompare(b.instructor)
+          case 'duration':
+            return a.duration.localeCompare(b.duration)
+          case 'progress':
+            const aProgress = a.progress?.completionPercentage || 0
+            const bProgress = b.progress?.completionPercentage || 0
+            return bProgress - aProgress
+          default:
+            return 0
+        }
+      })
   }, [courses])
 
   // Computed values

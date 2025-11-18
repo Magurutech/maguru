@@ -1,8 +1,8 @@
 ---
-title: "Pengenalan HTML dan Dasar-dasar Web Development"
-description: "Memahami konsep dasar HTML, struktur halaman web, dan role HTML dalam web development ecosystem."
-contentType: "markdown"
-duration: "20 menit"
+title: 'Pengenalan HTML dan Dasar-dasar Web Development'
+description: 'Memahami konsep dasar HTML, struktur halaman web, dan role HTML dalam web development ecosystem.'
+contentType: 'markdown'
+duration: '20 menit'
 order: 1
 ---
 
@@ -22,7 +22,9 @@ Selamat datang di course pertama Anda! Dalam modul ini, kita akan mempelajari fo
 HTML adalah **bahasa markup** yang digunakan untuk membuat struktur halaman web. HTML bukanlah bahasa pemrograman, melainkan **bahasa yang mendeskripsikan konten**.
 
 ### **Analogi Sederhana:**
+
 Bayangkan Anda sedang membangun rumah:
+
 - **HTML** = Kerangka bangunan (dinding, pintu, jendela, atap)
 - **CSS** = Cat, wallpaper, dekorasi interior
 - **JavaScript** = Listrik, sistem pendingin, peralatan elektronik
@@ -34,28 +36,29 @@ Setiap halaman HTML memiliki struktur fundamental yang sama:
 ```html
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Halaman Web Pertama Saya</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Selamat Datang!</h1>
     <p>Ini adalah paragraf pertama saya.</p>
-</body>
+  </body>
 </html>
 ```
 
 ### **Penjelasan Setiap Bagian:**
 
-1. **`<!DOCTYPE html>`**: Memberitahu browser ini adalah dokumen HTML5
-2. **`<html lang="id">`**: Root element dengan bahasa Indonesia
-3. **`<head>`**: Meta-informasi (tidak terlihat di halaman)
-4. **`<body>`**: Konten yang terlihat oleh pengguna
+1. **<!DOCTYPE html>**: Memberitahu browser ini adalah dokumen HTML5
+2. **<html lang="id">**: Root element dengan bahasa Indonesia
+3. **<head>**: Meta-informasi (tidak terlihat di halaman)
+4. **<body>**: Konten yang terlihat oleh pengguna
 
 ## 📦 **Elemen-elemen HTML Penting**
 
 ### **Headings (Judul)**
+
 HTML menyediakan 6 level headings:
 
 ```html
@@ -70,6 +73,7 @@ HTML menyediakan 6 level headings:
 **Best Practice**: Gunakan headings hierarkis dan jangan lewatkan level!
 
 ### **Paragraf dan Text Formatting**
+
 ```html
 <p>Ini adalah paragraf normal.</p>
 <p>Ini paragraf dengan <strong>text tebal</strong> dan <em>text miring</em>.</p>
@@ -80,34 +84,38 @@ HTML menyediakan 6 level headings:
 ### **Lists (Daftar)**
 
 **Unordered List (Bullet Points):**
+
 ```html
 <ul>
-    <li>Item pertama</li>
-    <li>Item kedua</li>
-    <li>Item ketiga</li>
+  <li>Item pertama</li>
+  <li>Item kedua</li>
+  <li>Item ketiga</li>
 </ul>
 ```
 
 **Ordered List (Numbered):**
+
 ```html
 <ol>
-    <li>Langkah pertama</li>
-    <li>Langkah kedua</li>
-    <li>Langkah ketiga</li>
+  <li>Langkah pertama</li>
+  <li>Langkah kedua</li>
+  <li>Langkah ketiga</li>
 </ol>
 ```
 
 **Description List:**
+
 ```html
 <dl>
-    <dt>HTML</dt>
-    <dd>HyperText Markup Language</dd>
-    <dt>CSS</dt>
-    <dd>Cascading Style Sheets</dd>
+  <dt>HTML</dt>
+  <dd>HyperText Markup Language</dd>
+  <dt>CSS</dt>
+  <dd>Cascading Style Sheets</dd>
 </dl>
 ```
 
 ### **Links (Tautan)**
+
 ```html
 <!-- External Link -->
 <a href="https://www.google.com">Kunjungi Google</a>
@@ -120,12 +128,14 @@ HTML menyediakan 6 level headings:
 ```
 
 ### **Images (Gambar)**
+
 ```html
 <img
-    src="https://via.placeholder.com/300x200"
-    alt="Placeholder image 300x200"
-    width="300"
-    height="200">
+  src="https://via.placeholder.com/300x200"
+  alt="Placeholder image 300x200"
+  width="300"
+  height="200"
+/>
 ```
 
 **Penting!** Selalu gunakan `alt` attribute untuk accessibility.
@@ -136,34 +146,35 @@ HTML5 memperkenalkan elemen-elemen semantic yang lebih deskriptif:
 
 ```html
 <header>
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
-    </nav>
+  <nav>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
 </header>
 
 <main>
-    <article>
-        <h1>Judul Artikel</h1>
-        <p>Isi artikel...</p>
-    </article>
+  <article>
+    <h1>Judul Artikel</h1>
+    <p>Isi artikel...</p>
+  </article>
 
-    <aside>
-        <h2>Related Links</h2>
-        <ul>
-            <li><a href="#">Link 1</a></li>
-        </ul>
-    </aside>
+  <aside>
+    <h2>Related Links</h2>
+    <ul>
+      <li><a href="#">Link 1</a></li>
+    </ul>
+  </aside>
 </main>
 
 <footer>
-    <p>&copy; 2024 Website Saya</p>
+  <p>&copy; 2024 Website Saya</p>
 </footer>
 ```
 
 ### **Manfaat Semantic HTML:**
+
 - ✅ **Better SEO**: Search engines memahami struktur konten
 - ✅ **Accessibility**: Screen readers bisa navigasi dengan mudah
 - ✅ **Maintainability**: Code lebih mudah dibaca dan maintain
@@ -174,24 +185,18 @@ Atribut memberikan informasi tambahan tentang elemen:
 
 ```html
 <div id="main-content" class="container">
-    <p class="highlight" data-category="important">
-        Text penting di sini
-    </p>
+  <p class="highlight" data-category="important">Text penting di sini</p>
 </div>
 
-<button
-    type="submit"
-    disabled
-    aria-label="Submit form">
-    Submit
-</button>
+<button type="submit" disabled aria-label="Submit form">Submit</button>
 ```
 
 **Atribut umum:**
-- `id`: Unique identifier
-- `class`: Untuk styling dengan CSS
-- `data-*`: Custom data attributes
-- `aria-*`: Accessibility attributes
+
+- id: Unique identifier
+- class: Untuk styling dengan CSS
+- data-\*: Custom data attributes
+- aria-\*: Accessibility attributes
 
 ## ✍️ **Praktik: Buat Halaman Pertama Anda!**
 
@@ -200,50 +205,53 @@ Sekarang coba buat halaman HTML sederhana:
 ```html
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profil Saya</title>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Profil Pribadi</h1>
+      <h1>Profil Pribadi</h1>
     </header>
 
     <main>
-        <section>
-            <h2>Tentang Saya</h2>
-            <p>Saya seorang <strong>web developer pemula</strong> yang sedang belajar HTML.</p>
-        </section>
+      <section>
+        <h2>Tentang Saya</h2>
+        <p>Saya seorang <strong>web developer pemula</strong> yang sedang belajar HTML.</p>
+      </section>
 
-        <section>
-            <h2>Keterampilan</h2>
-            <ul>
-                <li>HTML (sedang belajar)</li>
-                <li>CSS (akan dipelajari)</li>
-                <li>JavaScript (target berikutnya)</li>
-            </ul>
-        </section>
+      <section>
+        <h2>Keterampilan</h2>
+        <ul>
+          <li>HTML (sedang belajar)</li>
+          <li>CSS (akan dipelajari)</li>
+          <li>JavaScript (target berikutnya)</li>
+        </ul>
+      </section>
 
-        <section>
-            <h2>Kontak</h2>
-            <p>Email: <a href="mailto:saya@example.com">saya@example.com</a></p>
-        </section>
+      <section>
+        <h2>Kontak</h2>
+        <p>Email: <a href="mailto:saya@example.com">saya@example.com</a></p>
+      </section>
     </main>
-</body>
+  </body>
 </html>
 ```
 
 ## 🎯 **Checkpoint: Knowledge Check**
 
 ### **Pertanyaan Review:**
+
 1. Apa perbedaan antara HTML, CSS, dan JavaScript?
 2. Mengapa semantic HTML penting?
 3. Apa fungsi dari `alt` attribute pada gambar?
 4. Kapan Anda menggunakan `<ul>` vs `<ol>`?
 
 ### **Mini Challenge:**
+
 Buat halaman "hobi" dengan struktur berikut:
+
 - Header dengan nama Anda
 - Section "Hobi Saya" dengan 3 hobi dalam list
 - Section "Target Belajar" dengan 3 goals

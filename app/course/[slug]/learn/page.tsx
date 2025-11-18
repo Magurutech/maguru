@@ -37,7 +37,7 @@ function LearningModeContent() {
     markCurrentItemCompleted,
     navigateToNextItem,
     navigateToPreviousItem,
-    getCurrentContentPath,
+    currentContentPath,
     getNavigationInfo,
     isCompleted
   } = useCourse(slug)
@@ -45,12 +45,11 @@ function LearningModeContent() {
   // Load content when current item changes
   useEffect(() => {
     async function loadContent() {
-      const contentPath = getCurrentContentPath()
-      if (!contentPath) return
+      if (!currentContentPath) return
 
       try {
         setContentLoading(true)
-        const courseContent = await getCourseContent(slug, contentPath)
+        const courseContent = await getCourseContent(slug, currentContentPath)
         setContent(courseContent)
       } catch (error) {
         console.error('Error loading content:', error)
@@ -60,10 +59,10 @@ function LearningModeContent() {
       }
     }
 
-    if (currentSectionId && currentItemId) {
+    if (currentSectionId && currentItemId && currentContentPath) {
       loadContent()
     }
-  }, [currentSectionId, currentItemId, getCurrentContentPath])
+  }, [currentSectionId, currentItemId, currentContentPath, slug])
 
   // Get current item info
   const getCurrentItem = () => {

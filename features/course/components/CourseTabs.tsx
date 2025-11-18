@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BookOpen, List } from 'lucide-react'
+import { OverviewRenderer } from './OverviewRenderer'
 
 interface CourseTabsProps {
   course: any
@@ -49,11 +50,8 @@ export function CourseTabs({
             <div className="prose prose-gray max-w-none">
               {course.overviewContent ? (
                 <div className="space-y-4">
-                  {/* Render overview content - ini akan di-handle oleh OverviewRenderer */}
-                  <div
-                    dangerouslySetInnerHTML={{ __html: course.overviewContent }}
-                    className="text-beige-700 leading-relaxed"
-                  />
+                  {/* Render overview content menggunakan OverviewRenderer dengan react-markdown */}
+                  <OverviewRenderer course={course} className="text-beige-700 leading-relaxed" />
                 </div>
               ) : (
                 <div className="text-center py-8">
