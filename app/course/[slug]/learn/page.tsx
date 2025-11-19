@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { CourseHeader } from '@/features/course/components/CourseHeader'
-import { TimelineNav } from '@/features/course/components/TimelineNav'
+import { CourseSidebar } from '@/features/course/components/Sidebar/CourseSidebar'
 import { ContentRenderer } from '@/features/course/components/ContentRenderer'
 import { useCourse } from '@/features/course/hooks/useCourse'
 import { getCourseContent } from '@/features/course/api'
@@ -127,7 +126,7 @@ function LearningModeContent() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Timeline Navigation - Desktop */}
           <div className="lg:col-span-1 hidden lg:block">
-            <TimelineNav
+            <CourseSidebar
               sections={course.sections}
               currentSectionId={currentSectionId}
               currentItemId={currentItemId}
@@ -268,7 +267,7 @@ function LearningModeContent() {
 
         {/* Mobile Timeline - Bottom Sheet Style */}
         <div className="lg:hidden mt-8">
-          <TimelineNav
+          <CourseSidebar
             sections={course.sections}
             currentSectionId={currentSectionId}
             currentItemId={currentItemId}

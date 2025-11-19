@@ -29,7 +29,7 @@ Homepage ->  Course Directory -> Filter/Search -> Course Card Click -> Course De
 
 ---
 
-## <� 2. Course Detail Flow (`/course/[slug]`)
+##  2. Course Detail Flow (`/course/[slug]`)
 
 ### **Tujuan**: Mengevaluasi kursus sebelum memulai pembelajaran
 
