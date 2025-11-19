@@ -1,80 +1,101 @@
 # AI Fluency
 
-AI Fluency: Framework & Foundations adalah kursus online gratis dan mandiri dari Anthropic yang dirancang untuk membekali Anda dengan kerangka kerja dan keterampilan praktis dalam berkolaborasi secara efektif, efisien, dan bertanggung jawab dengan sistem AI.
+**AI Fluency: Framework & Foundations** adalah kursus online gratis dan mandiri dari Anthropic yang dirancang untuk membekali Anda dengan kerangka kerja dan keterampilan praktis dalam berkolaborasi secara **efektif**, **efisien**, dan **bertanggung jawab** dengan sistem AI.
 
-Latar Belakang & Pengajar
-Kursus ini dikembangkan oleh Anthropic bekerja sama dengan Prof. Joseph Feller (University College Cork) dan Prof. Rick Dakan (Ringling College of Art and Design). Mereka menerjemahkan temuan akademis tentang interaksi manusia–AI menjadi panduan praktis yang mudah diikuti oleh pemula maupun praktisi berpengalaman (Teaching and Learning).
+## 🎓 Latar Belakang & Pengajar
 
-Siapa yang Cocok Mengikuti?
+Kursus ini dikembangkan oleh Anthropic bekerja sama dengan:
+- **Prof. Joseph Feller** (University College Cork)
+- **Prof. Rick Dakan** (Ringling College of Art and Design)
 
-Pemula: Belum pernah menggunakan Claude atau AI generatif lainnya, dan ingin memahami dasar-dasar interaksi yang aman dan produktif.
+Mereka menerjemahkan temuan akademis tentang interaksi manusia–AI menjadi panduan praktis yang mudah diikuti oleh pemula maupun praktisi berpengalaman.
 
-Praktisi AI: Ingin mendalami bukan hanya “cara”, tetapi “kapan” dan “mengapa” menggunakan AI dalam alur kerja sehari-hari.
+## 🎯 Target Peserta
 
-Pendidik & Pemimpin Tim: Mencari kerangka yang jelas untuk diajarkan atau diterapkan di kelas, tim, atau organisasi.
+### 🌱 Pemula
+Belum pernah menggunakan Claude atau AI generatif lainnya, dan ingin memahami dasar-dasar interaksi yang aman dan produktif.
 
-Kompetensi Inti (4D)
+### 💼 Praktisi AI
+Ingin mendalami bukan hanya "cara", tetapi "kapan" dan "mengapa" menggunakan AI dalam alur kerja sehari-hari.
 
-Delegation (Delegasi)
+### 🎓 Pendidik & Pemimpin Tim
+Mencari kerangka yang jelas untuk diajarkan atau diterapkan di kelas, tim, atau organisasi.
+
+## 🧠 Kompetensi Inti (Framework 4D)
+
+### 1️⃣ **Delegation** (Delegasi)
 Menetapkan tugas-tugas spesifik dan terukur yang akan didelegasikan ke AI.
 
-Description (Deskripsi)
+### 2️⃣ **Description** (Deskripsi)
 Menyampaikan tujuan, konteks, dan batasan secara jelas agar AI tidak salah paham.
 
-Discernment (Diskresi)
+### 3️⃣ **Discernment** (Diskresi)
 Mengevaluasi keluaran AI—mulai dari akurasi hingga pertimbangan etika—secara kritis.
 
-Diligence (Ketelitian)
-Memantau kinerja, mengidentifikasi risiko, dan memastikan standar tanggung jawab terpenuhi sepanjang penggunaan AI (anthropic.com).
+### 4️⃣ **Diligence** (Ketelitian)
+Memantau kinerja, mengidentifikasi risiko, dan memastikan standar tanggung jawab terpenuhi sepanjang penggunaan AI.
 
-Struktur & Modul Kursus
-Total durasi sekitar 3–4 jam, dibagi dalam 12 pelajaran singkat yang mencakup teori, video, dan latihan interaktif (anthropic.com):
+## 📚 Struktur & Modul Kursus
 
-Introduction to AI Fluency
+**Total durasi:** 3–4 jam
+**Format:** 12 pelajaran singkat yang mencakup teori, video, dan latihan interaktif
 
-The AI Fluency Framework
+### 📋 Daftar Modul:
 
-Deep Dive 1: What is Generative AI?
+1. **Introduction to AI Fluency**
+2. **The AI Fluency Framework**
+3. **Deep Dive 1: What is Generative AI?**
+4. **Delegation**
+5. **Applying Delegation**
+6. **Description**
+7. **Deep Dive 2: Effective Prompting Techniques**
+8. **Discernment**
+9. **The Description–Discernment Loop**
+10. **Diligence**
+11. **Conclusion & Certificate**
+12. **Additional Activities**
 
-Delegation
+## 🎯 Format & Metode Pembelajaran
 
-Applying Delegation
+### 📱 **Self-Paced**
+Kerjakan kapan saja dan sesuai kecepatan Anda.
 
-Description
+### 🎬 **Multimedia**
+Kombinasi teks, video pendek, dan kuis interaktif.
 
-Deep Dive 2: Effective Prompting Techniques
+### 🔧 **Praktikal**
+Setiap modul diakhiri dengan latihan nyata untuk mengasah kemampuan:
+- Delegasi
+- Deskripsi
+- Diskresi
+- Ketelitian
 
-Discernment
+## 💎 Manfaat Mengikuti Kursus Ini
 
-The Description–Discernment Loop
+### 📈 **Produktivitas Meningkat**
+Bebaskan waktu dengan mendelegasikan tugas-tugas rutin pada AI.
 
-Diligence
+### 🎨 **Kreativitas Terasah**
+Co-create ide-ide baru melalui prompt yang terstruktur.
 
-Conclusion & Certificate
+### ⚠️ **Risiko Terminimalisir**
+Deteksi dan koreksi bias atau kesalahan sejak dini.
 
-Additional Activities
+### 🛡️ **Etika Terjaga**
+Terapkan praktik penggunaan AI yang adil, transparan, dan bertanggung jawab.
 
-Format & Metode Pembelajaran
+## 🚀 Cara Mengakses
 
-Self-Paced: Kerjakan kapan saja dan sesuai kecepatan Anda.
+### Langkah-langkah Pendaftaran:
+1. Kunjungi halaman kursus di **Anthropic Academy**
+2. Klik tombol **"Start the course"**
+3. Daftar secara gratis
 
-Multimedia: Kombinasi teks, video pendek, dan kuis interaktif.
+### 🔗 Link Kursus:
+**[AI Fluency: Framework & Foundations]**(https://anthropic.com/ai-fluency)
 
-Praktikal: Setiap modul diakhiri dengan latihan nyata untuk mengasah kemampuan Delegasi, Deskripsi, Diskresi, dan Ketelitian.
+---
 
-Manfaat Mengikuti Kursus Ini
+## 🎉 Selamat Belajar!
 
-Produktivitas Meningkat: Bebaskan waktu dengan mendelegasikan tugas-tugas rutin pada AI.
-
-Kreativitas Terasah: Co-create ide-ide baru melalui prompt yang terstruktur.
-
-Risiko Terminimalisir: Deteksi dan koreksi bias atau kesalahan sejak dini.
-
-Etika Terjaga: Terapkan praktik penggunaan AI yang adil, transparan, dan bertanggung jawab (anthropic.com).
-
-Cara Mengakses
-Kunjungi halaman kursus di Anthropic Academy, lalu klik “Start the course” untuk mendaftar secara gratis:
-
-AI Fluency: Framework & Foundations
-
-Selamat belajar dan semoga mahir berkolaborasi dengan AI!
+Semoga mahir berkolaborasi dengan AI!
