@@ -1,3 +1,11 @@
+---
+title: "Diligence: Responsible AI Collaboration"
+description: "Memahami pentingnya tanggung jawab, etika, dan transparansi dalam kolaborasi dengan AI untuk hasil yang berkelanjutan"
+contentType: "markdown"
+duration: "20 menit"
+order: 3
+---
+
 Pada akhir pelajaran ini, Anda akan dpaat : 
 
 Memahami implikasi etis dari kolaborasi AI

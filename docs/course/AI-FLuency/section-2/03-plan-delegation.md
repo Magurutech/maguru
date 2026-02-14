@@ -1,3 +1,11 @@
+---
+title: "Planning Delegation: Project-Based AI Collaboration"
+description: "Menerapkan konsep delegasi dalam proyek nyata dengan perencanaan sistematis dan identifikasi tugas yang cocok untuk AI"
+contentType: "markdown"
+duration: "20 menit"
+order: 3
+---
+
 # Modul: Delegation – Perencanaan dan Pendelegasian Proyek  
 **(Deep Dive praktis – Anda akan membangun proyek nyata sepanjang kursus)**
 

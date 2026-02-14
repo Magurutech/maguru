@@ -1,5 +1,13 @@
-What you’ll learn 
-Memahami cara mengevaluasi keluaran dan proses AI denganc ermat 
+---
+title: "Discernment: Mengevaluasi Hasil AI"
+description: "Mengembangkan keterampilan berpikir kritis untuk mengevaluasi keluaran dan proses AI secara cermat dan bertanggung jawab"
+contentType: "markdown"
+duration: "18 menit"
+order: 2
+---
+
+What you'll learn
+Memahami cara mengevaluasi keluaran dan proses AI denganc ermat
 
 Kembangkan keterampilan berpikir kritis untuk Interaksi AI anda 
 

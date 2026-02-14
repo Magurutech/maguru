@@ -1,3 +1,11 @@
+---
+title: "Description: Effective Communication with AI"
+description: "Menguasai keterampilan memberikan instruksi yang jelas, detail, dan terarah untuk mendapatkan output AI yang optimal"
+contentType: "markdown"
+duration: "18 menit"
+order: 4
+---
+
 # 📘 Description – A Closer Look at Description (Modul 4D Framework)
 
 **Inti Materi**  

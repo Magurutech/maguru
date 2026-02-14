@@ -1,3 +1,11 @@
+---
+title: "The 4D Framework: Delegation, Description, Discernment, Diligence"
+description: "Memahami framework 4D sebagai pondasi kolaborasi efektif dengan AI untuk produktivitas dan kualitas hasil"
+contentType: "markdown"
+duration: "25 menit"
+order: 2
+---
+
 # 🧠 Apa itu 4D Framework?
 
 4D = **Delegation**, **Description**, **Discernment**, **Diligence**

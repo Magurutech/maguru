@@ -1,3 +1,11 @@
+---
+title: "Effective Prompting Techniques"
+description: "Mempelajari 6 teknik dasar prompting efektif untuk meningkatkan kualitas interaksi dan output AI"
+contentType: "markdown"
+duration: "22 menit"
+order: 1
+---
+
 Mari kita bedah dulu inti materi dari video dan ringkasanmu, lalu kita sambungkan ke pembelajaran sebelumnya.
 
 6 Teknik Dasar Prompting Efektif

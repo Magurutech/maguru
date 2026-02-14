@@ -1,3 +1,11 @@
+---
+title: "AI Capabilities & Limitations: Understanding What AI Can and Cannot Do"
+description: "Menganalisis kekuatan dan batasan Generative AI serta strategi untuk mengatasi keterbatasan tersebut"
+contentType: "markdown"
+duration: "25 menit"
+order: 1
+---
+
 # 📘 Deep Dive 1: Capabilities & Limitations Generative AI (Part 2)
 
 ## Capabilities (Kekuatan) Generative AI

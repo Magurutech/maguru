@@ -1,3 +1,11 @@
+---
+title: "Why Do We Need AI Fluency?"
+description: "Memahami pentingnya AI fluency dan tiga bentuk kolaborasi manusia-AI: Automation, Augmentation, dan Agency"
+contentType: "markdown"
+duration: "20 menit"
+order: 1
+---
+
 # Why Do We Need AI Fluency?
 
 Mantap, kita masuk ke topik kedua: **“Why Do We Need AI Fluency?”**

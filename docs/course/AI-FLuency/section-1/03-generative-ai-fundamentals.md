@@ -1,3 +1,11 @@
+---
+title: "Generative AI Fundamentals: How AI Systems Work"
+description: "Memahami dasar-dasar cara kerja Generative AI, Large Language Models, dan implikasinya untuk kolaborasi manusia-AI"
+contentType: "markdown"
+duration: "30 menit"
+order: 3
+---
+
 # 📘 Deep Dive 1: What is Generative AI? (Part 1)
 
 **Fokus utama**: Dasar-dasar Generative AI — bagaimana cara kerjanya dan kenapa kita bisa “berkolaborasi” dengannya.

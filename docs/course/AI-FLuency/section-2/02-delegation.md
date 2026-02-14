@@ -1,3 +1,11 @@
+---
+title: "Delegation: Menugaskan Tugas ke AI"
+description: "Memahami prinsip delegasi efektif dalam kerjasama dengan AI untuk menghemat waktu dan meningkatkan produktivitas"
+contentType: "markdown"
+duration: "15 menit"
+order: 2
+---
+
 # 📘 Modul Delegation – A Closer Look at Delegation (Anthropic AI Fluency Framework)
 
 ## 1. Apa itu Delegation dalam Konteks AI

@@ -1,3 +1,15 @@
+---
+title: "AI Fluency: Framework & Foundations"
+description: "Kursus komprehensif untuk menguasai kolaborasi efektif dengan AI menggunakan framework 4D (Delegation, Description, Discernment, Diligence)"
+instructor: "Prof. Joseph Feller & Prof. Rick Dakan (Anthropic)"
+duration: "3-4 jam"
+level: "Pemula"
+category: "AI & Machine Learning"
+tags: ["AI", "Prompt Engineering", "4D Framework", "Collaboration", "Anthropic"]
+estimatedHours: 4
+lastUpdated: "2025-01-19"
+---
+
 # AI Fluency
 
 **AI Fluency: Framework & Foundations** adalah kursus online gratis dan mandiri dari Anthropic yang dirancang untuk membekali Anda dengan kerangka kerja dan keterampilan praktis dalam berkolaborasi secara **efektif**, **efisien**, dan **bertanggung jawab** dengan sistem AI.
