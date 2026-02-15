@@ -5,8 +5,7 @@
  * Mengikuti Ancient Fantasy Asia design system (beige, kuning, hijau, merah).
  */
 
-import type { DashboardData, StatCard, RecentCourse, QuickAction, Recommendation } from './types'
-import type { LucideIcon } from 'lucide-react'
+import type { DashboardData,  RecentCourse,  Recommendation } from './types'
 import {
   BookOpen,
   User,
