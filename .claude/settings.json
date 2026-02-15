@@ -1,4 +1,11 @@
 {
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "ANTHROPIC_AUTH_TOKEN": "de589a506663408ca5c77cbd6e67a807.3Xctm7SUs1VPfhNO",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.7-flash",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "GLM-4.7-FlashX",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "glm-4.6"
+  },
   "permissions": {
     "deny": [
       "Read(.env)",
@@ -22,10 +29,6 @@
           {
             "type": "command",
             "command": "uv run .claude/hooks/use_bun.py"
-          },
-          {
-            "type": "command",
-            "command": "uv run .claude/hooks/validate_environment.py"
           }
         ]
       },

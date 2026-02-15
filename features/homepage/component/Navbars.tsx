@@ -15,10 +15,10 @@ export function Navbar() {
   const { getDashboardUrl } = useRoleNavigation()
 
   const navItems = [
-    { label: 'Beranda', href: '#home' },
-    { label: 'Kursus', href: '#courses' },
-    { label: 'Tentang', href: '#about' },
-    { label: 'Kontak', href: '#contact' },
+    { label: 'Beranda', href: '/' },
+    { label: 'Kursus', href: '/course' },
+    { label: 'Tentang', href: '/about' },
+    { label: 'Kontak', href: '/contact' },
   ]
 
   // Handler untuk close menu mobile setelah klik link
