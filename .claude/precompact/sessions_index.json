@@ -87,11 +87,19 @@
       "task_type": "feature",
       "git_branch": "feature/kursus-path",
       "active_files_count": 7
+    },
+    {
+      "session_id": "20260215-general-feature-dcc0f",
+      "created_at": "2026-02-15T17:24:23.499908Z",
+      "feature": "general",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 1
     }
   ],
   "stats": {
-    "total_sessions": 11,
-    "last_updated": "2026-02-15T10:12:20.216946Z"
+    "total_sessions": 12,
+    "last_updated": "2026-02-15T17:24:23.499908Z"
   },
   "info": {
     "description": "PreCompact session backup registry for Maguru project",
