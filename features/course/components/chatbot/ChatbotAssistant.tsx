@@ -35,6 +35,19 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
+  // Helpers: Content truncation to reduce token usage
+  const truncateContent = (content: string, maxLen = 1000): string => {
+    if (content.length <= maxLen) return content
+    return content.slice(0, maxLen) + '...'
+  }
+
+  // Helpers: Chat history formatting with limit
+  const formatChatHistory = (msgs: ChatMessageType[]) => {
+    return msgs
+      .slice(-10) // Keep last 10 messages only
+      .map((m) => ({ role: m.role, content: m.content }))
+  }
+
   // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -79,11 +92,8 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
       const request = {
         question: trimmedInput,
         session_title: context.itemTitle,
-        session_content: context.currentContent,
-        chat_history: messages.map((m) => ({
-          role: m.role,
-          content: m.content,
-        })),
+        session_content: truncateContent(context.currentContent),
+        chat_history: formatChatHistory(messages),
       }
 
       // Stream response
@@ -199,6 +209,9 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
 
           {/* Messages Area */}
           <div
+            role="log"
+            aria-live="polite"
+            aria-atomic="false"
             className={cn(
               'flex-1 overflow-y-auto py-4 px-4',
               'scrollbar-thin scrollbar-thumb-beige-300 scrollbar-track-beige-100'

@@ -41,7 +41,8 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: '__tests__/playwright/.clerk/user.json',
+        // storageState removed - using modern Clerk testing approach with @clerk/testing
+        // Tests will use setupClerkTestingToken() and clerk.signIn() helpers
         launchOptions: {
           args: [
             '--disable-web-security',
@@ -50,7 +51,7 @@ export default defineConfig({
           ],
         },
       },
-      dependencies: ['global setup'],
+      dependencies: ['global setup'], // Requires clerkSetup() to run first
     },
   ],
 })
