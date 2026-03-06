@@ -42,28 +42,28 @@ export function ChatMessage({ message, className }: ChatMessageProps) {
       {/* Message Content */}
       <div
         className={cn(
-          'flex-1 max-w-[80%] rounded-2xl px-4 py-3 shadow-sm',
+          'flex-1 max-w-[85%] rounded-2xl px-3 py-2 shadow-sm',
           isAi
             ? 'bg-white/90 backdrop-blur-sm border border-beige-200 text-beige-900 rounded-tl-sm'
             : 'bg-gradient-to-br from-amber-500 to-orange-600 text-white rounded-tr-sm'
         )}
       >
         {isAi ? (
-          <div className="prose prose-sm prose-beige max-w-none">
+          <div className="prose prose-xs prose-beige max-w-none text-xs">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkMath]}
               rehypePlugins={[rehypeKatex, rehypeRaw]}
               components={{
-                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
-                ul: ({ children }) => <ul className="list-disc list-inside mb-2">{children}</ul>,
-                ol: ({ children }) => <ol className="list-decimal list-inside mb-2">{children}</ol>,
-                li: ({ children }) => <li className="mb-1">{children}</li>,
+                p: ({ children }) => <p className="mb-1.5 last:mb-0 text-xs leading-relaxed">{children}</p>,
+                ul: ({ children }) => <ul className="list-disc list-inside mb-1.5 text-xs">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside mb-1.5 text-xs">{children}</ol>,
+                li: ({ children }) => <li className="mb-0.5 text-xs">{children}</li>,
                 code: ({ className, children, ...props }) => {
                   const match = /language-(\w+)/.exec(className || '')
                   return match ? (
                     <code
                       className={cn(
-                        'block bg-beige-100 rounded-md px-3 py-2 text-sm font-mono overflow-x-auto',
+                        'block bg-beige-100 rounded-md px-2 py-1.5 text-xs font-mono overflow-x-auto',
                         'border border-beige-200'
                       )}
                       {...props}
@@ -73,7 +73,7 @@ export function ChatMessage({ message, className }: ChatMessageProps) {
                   ) : (
                     <code
                       className={cn(
-                        'bg-beige-100 text-beige-800 px-1.5 py-0.5 rounded text-sm font-mono',
+                        'bg-beige-100 text-beige-800 px-1 py-0.5 rounded text-xs font-mono',
                         'border border-beige-200'
                       )}
                       {...props}
@@ -83,17 +83,17 @@ export function ChatMessage({ message, className }: ChatMessageProps) {
                   )
                 },
                 pre: ({ children }) => (
-                  <pre className="bg-beige-100 rounded-md p-3 overflow-x-auto border border-beige-200">
+                  <pre className="bg-beige-100 rounded-md p-2 overflow-x-auto border border-beige-200 text-xs">
                     {children}
                   </pre>
                 ),
-                h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-beige-900">{children}</h1>,
-                h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-beige-900">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-sm font-bold mb-2 text-beige-900">{children}</h3>,
+                h1: ({ children }) => <h1 className="text-sm font-bold mb-1.5 text-beige-900">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-xs font-bold mb-1.5 text-beige-900">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-xs font-semibold mb-1 text-beige-900">{children}</h3>,
                 a: ({ href, children }) => (
                   <a
                     href={href}
-                    className="text-amber-600 hover:text-amber-700 underline"
+                    className="text-amber-600 hover:text-amber-700 underline text-xs"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -101,7 +101,7 @@ export function ChatMessage({ message, className }: ChatMessageProps) {
                   </a>
                 ),
                 blockquote: ({ children }) => (
-                  <blockquote className="border-l-4 border-amber-400 pl-3 italic text-beige-700">
+                  <blockquote className="border-l-4 border-amber-400 pl-2 italic text-beige-700 text-xs">
                     {children}
                   </blockquote>
                 ),
@@ -111,7 +111,7 @@ export function ChatMessage({ message, className }: ChatMessageProps) {
             </ReactMarkdown>
           </div>
         ) : (
-          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+          <p className="text-xs whitespace-pre-wrap break-words">{message.content}</p>
         )}
 
         {/* Timestamp */}

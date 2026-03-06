@@ -172,11 +172,11 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
           'fixed top-0 right-0 h-full bg-gradient-to-br from-beige-50 to-white',
           'border-l border-beige-200/50 shadow-2xl z-40',
           'transition-all duration-300 ease-in-out origin-right',
-          // Desktop: Fixed 400px width
-          'w-0 max-w-0 lg:max-w-[400px]',
+          // Desktop: 50vw width (half screen)
+          'w-0 max-w-0 lg:max-w-[50vw]',
           // Mobile: Full screen
           'max-w-full',
-          isOpen && 'w-full max-w-full lg:max-w-[400px]',
+          isOpen && 'w-full max-w-full lg:max-w-[50vw]',
           // Scale animation
           !isOpen && 'scale-x-0 opacity-0',
           isOpen && 'scale-x-100 opacity-100'
@@ -385,8 +385,8 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
           'flex items-center justify-center',
           // Pulse animation when closed
           !isOpen && 'animate-pulse hover:animate-none',
-          // Move FAB when panel is open (desktop only)
-          isOpen && 'lg:translate-x-[400px]'
+          // Move FAB when panel is open (desktop only) - adjusted for 50vw
+          isOpen && 'lg:translate-x-[calc(50vw-4rem)]'
         )}
         aria-label={isOpen ? 'Close AI Tutor' : 'Open AI Tutor'}
         aria-pressed={isOpen}
