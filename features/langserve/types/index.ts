@@ -37,9 +37,9 @@ export interface ExplainCodeResponse {
 // ============================================================================
 
 export interface HintRequest {
-  question: string
-  current_attempt?: string
-  context?: string
+  task: string
+  attempt?: string
+  level?: number
 }
 
 export interface HintResponse {
@@ -52,9 +52,9 @@ export interface HintResponse {
 
 export interface QuizFeedbackRequest {
   question: string
-  user_answer: string
+  student_answer: string
   correct_answer?: string
-  explanation?: string
+  is_correct?: boolean
 }
 
 export interface QuizFeedbackResponse {
@@ -66,8 +66,11 @@ export interface QuizFeedbackResponse {
 // ============================================================================
 
 export interface GreetingRequest {
-  user_name?: string
-  course_title?: string
+  student_name?: string
+  course_metadata?: {
+    title?: string
+    [key: string]: any
+  }
 }
 
 export interface GreetingResponse {
@@ -91,10 +94,17 @@ export interface StreamOptions {
   timeout?: number
 }
 
-export interface LangServeError {
-  message: string
+// LangServeError - Custom error class that extends Error
+export class LangServeError extends Error {
   statusCode?: number
   endpoint?: string
+
+  constructor(message: string, statusCode?: number, endpoint?: string) {
+    super(message)
+    this.name = 'LangServeError'
+    this.statusCode = statusCode
+    this.endpoint = endpoint
+  }
 }
 
 // ============================================================================

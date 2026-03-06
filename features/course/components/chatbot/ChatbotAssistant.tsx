@@ -8,6 +8,7 @@ import { ChatMessage } from './ChatMessage'
 import { streamChatbot } from '@/features/langserve/api'
 import type { ChatMessage as ChatMessageType, ChatbotContext, ChatbotProps } from './types'
 import { cn } from '@/lib/utils'
+import { logger } from '@/services/logger'
 
 /**
  * ChatbotAssistant - AI Tutor with Push-Layout
@@ -96,21 +97,44 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
         chat_history: formatChatHistory(messages),
       }
 
+      logger.info('ChatbotAssistant', 'sendMessage', 'Starting chatbot request', {
+        question: trimmedInput,
+        aiMessageIndex,
+      })
+
       // Stream response
       await streamChatbot(request, {
         onChunk: (chunk: string) => {
+          logger.debug('ChatbotAssistant', 'sendMessage', 'Chunk received in UI', {
+            chunkLength: chunk.length,
+            chunkPreview: chunk.substring(0, 30) + '...',
+            aiMessageIndex,
+          })
+
           setMessages((prev) => {
             const updated = [...prev]
             if (updated[aiMessageIndex]) {
               updated[aiMessageIndex].content += chunk
+              logger.debug('ChatbotAssistant', 'sendMessage', 'Message state updated', {
+                newContentLength: updated[aiMessageIndex].content.length,
+              })
+            } else {
+              logger.warn('ChatbotAssistant', 'sendMessage', 'AI message not found at index', {
+                aiMessageIndex,
+                messageCount: updated.length,
+              })
             }
             return updated
           })
         },
-        onComplete: () => {
+        onComplete: (fullResponse) => {
+          logger.info('ChatbotAssistant', 'sendMessage', 'Stream completed', {
+            totalLength: fullResponse.length,
+          })
           setIsStreaming(false)
         },
         onError: (err: Error) => {
+          logger.error('ChatbotAssistant', 'sendMessage', 'Stream error', err)
           setError(err.message)
           setIsStreaming(false)
         },
