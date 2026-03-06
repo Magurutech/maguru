@@ -11,9 +11,8 @@ import type {
   QuizFeedbackRequest,
   GreetingRequest,
   StreamOptions,
-  LangServeError,
 } from './types'
-import { LANGSERVE_ENDPOINTS } from './types'
+import { LangServeError, LANGSERVE_ENDPOINTS } from './types'
 import { logger } from '@/services/logger'
 
 // ============================================================================
@@ -98,11 +97,11 @@ async function* streamSSE<T>(
     })
 
     if (!response.ok) {
-      const error: LangServeError = {
-        message: `HTTP ${response.status}: ${response.statusText}`,
-        statusCode: response.status,
-        endpoint: url,
-      }
+      const error = new LangServeError(
+        `HTTP ${response.status}: ${response.statusText}`,
+        response.status,
+        url
+      )
       logger.error('LangServeAPI', 'streamSSE', 'HTTP error', error)
       throw error
     }
@@ -190,12 +189,13 @@ async function* streamSSE<T>(
   } catch (error) {
     if (error instanceof Error) {
       if (error.name === 'AbortError') {
-        const timeoutError: LangServeError = {
-          message: `Request timeout after ${timeout}ms`,
-          endpoint: url,
-        }
+        const timeoutError = new LangServeError(
+          `Request timeout after ${timeout}ms`,
+          undefined,
+          url
+        )
         logger.error('LangServeAPI', 'streamSSE', 'Timeout error', timeoutError)
-        onError?.(timeoutError as Error)
+        onError?.(timeoutError)
         throw timeoutError
       }
       logger.error('LangServeAPI', 'streamSSE', 'Stream error', error)
@@ -231,11 +231,13 @@ async function* streamText(
     chunkCount++
 
     // DEBUG: Log raw event received
+    const eventStr = typeof event === 'string' ? event : JSON.stringify(event)
+    const eventPreview = typeof event === 'string' ? (event as string).substring(0, 100) : 'object'
     logger.debug('LangServeAPI', 'streamText', 'Event received from streamSSE', {
       chunk: chunkCount,
       eventType: typeof event,
-      eventPreview: typeof event === 'string' ? event.substring(0, 100) : 'object',
-      fullEvent: JSON.stringify(event).substring(0, 300),
+      eventPreview,
+      fullEvent: eventStr.substring(0, 300),
     })
 
     // Extract output from various LangServe formats
@@ -244,9 +246,10 @@ async function* streamText(
     // CASE 1: Event is a string (direct content from server)
     if (typeof event === 'string') {
       outputChunk = event
+      const chunkLength = (outputChunk as string).length
       logger.debug('LangServeAPI', 'streamText', 'CASE 1 - String event', {
         chunk: chunkCount,
-        length: outputChunk.length,
+        length: chunkLength,
       })
     }
     // CASE 2: Event is an object
@@ -366,11 +369,12 @@ export async function streamChatbot(
       totalChunks: chunksReceived,
     })
 
-    const apiError: LangServeError = {
-      message: error instanceof Error ? error.message : 'Failed to stream chatbot response',
-      endpoint: 'chatbot',
-    }
-    options.onError?.(apiError as Error)
+    const apiError = new LangServeError(
+      error instanceof Error ? error.message : 'Failed to stream chatbot response',
+      undefined,
+      'chatbot'
+    )
+    options.onError?.(apiError)
     throw apiError
   }
 }
@@ -397,11 +401,12 @@ export async function streamExplainCode(
     options.onComplete?.(fullResponse)
     return fullResponse
   } catch (error) {
-    const apiError: LangServeError = {
-      message: error instanceof Error ? error.message : 'Failed to stream code explanation',
-      endpoint: 'explain-code',
-    }
-    options.onError?.(apiError as Error)
+    const apiError = new LangServeError(
+      error instanceof Error ? error.message : 'Failed to stream code explanation',
+      undefined,
+      'explain-code'
+    )
+    options.onError?.(apiError)
     throw apiError
   }
 }
@@ -428,11 +433,12 @@ export async function streamHint(
     options.onComplete?.(fullResponse)
     return fullResponse
   } catch (error) {
-    const apiError: LangServeError = {
-      message: error instanceof Error ? error.message : 'Failed to stream hint',
-      endpoint: 'hint',
-    }
-    options.onError?.(apiError as Error)
+    const apiError = new LangServeError(
+      error instanceof Error ? error.message : 'Failed to stream hint',
+      undefined,
+      'hint'
+    )
+    options.onError?.(apiError)
     throw apiError
   }
 }
@@ -459,11 +465,12 @@ export async function streamQuizFeedback(
     options.onComplete?.(fullResponse)
     return fullResponse
   } catch (error) {
-    const apiError: LangServeError = {
-      message: error instanceof Error ? error.message : 'Failed to stream quiz feedback',
-      endpoint: 'quiz-feedback',
-    }
-    options.onError?.(apiError as Error)
+    const apiError = new LangServeError(
+      error instanceof Error ? error.message : 'Failed to stream quiz feedback',
+      undefined,
+      'quiz-feedback'
+    )
+    options.onError?.(apiError)
     throw apiError
   }
 }
@@ -490,11 +497,12 @@ export async function streamGreeting(
     options.onComplete?.(fullResponse)
     return fullResponse
   } catch (error) {
-    const apiError: LangServeError = {
-      message: error instanceof Error ? error.message : 'Failed to stream greeting',
-      endpoint: 'greeting',
-    }
-    options.onError?.(apiError as Error)
+    const apiError = new LangServeError(
+      error instanceof Error ? error.message : 'Failed to stream greeting',
+      undefined,
+      'greeting'
+    )
+    options.onError?.(apiError)
     throw apiError
   }
 }

@@ -106,7 +106,7 @@ export async function loadCourse(slug: string): Promise<Course> {
       title: metadata.title,
       description: metadata.description,
       instructor: metadata.instructor,
-      level: metadata.level || 'beginner',
+      level: (metadata.level as 'beginner' | 'intermediate' | 'advanced') || 'beginner',
       duration: metadata.duration || estimatedDuration,
       tags: Array.isArray(metadata.tags) ? metadata.tags : [],
       thumbnail: metadata.thumbnail,
