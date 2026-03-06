@@ -12,6 +12,10 @@
 
 # claude
 .claude
+.clerk
+.kiro
+.serena
+.next
 
 # testing
 /coverage
