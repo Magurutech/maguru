@@ -11,7 +11,7 @@ import { test, expect } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { clerk } from '@clerk/testing/playwright'
 import { loginWithRole } from '../utils/role-test-helpers'
-import { gotoDashboard, DASHBOARD_SELECTORS } from './helpers'
+import { gotoDashboard, DASHBOARD_SELECTORS } from '../helpers'
 
 /**
  * Test Suite: API Error Handling
@@ -24,7 +24,7 @@ test.describe('Dashboard Edge Cases - API Errors', () => {
     },
   })
 
-  test('should handle API failure gracefully', async ({ page, context }) => {
+  test('should handle API failure gracefully', async ({ page }) => {
     // Given: Logged in user with mocked API failure
     await setupClerkTestingToken({ page })
     await loginWithRole(page, 'user')

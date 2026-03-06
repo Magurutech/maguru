@@ -69,7 +69,7 @@ export interface GreetingRequest {
   student_name?: string
   course_metadata?: {
     title?: string
-    [key: string]: any
+    [key: string]: unknown
   }
 }
 

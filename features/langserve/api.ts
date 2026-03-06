@@ -7,13 +7,9 @@ import type {
   ChatbotRequest,
   ChatbotResponse,
   ExplainCodeRequest,
-  ExplainCodeResponse,
   HintRequest,
-  HintResponse,
   QuizFeedbackRequest,
-  QuizFeedbackResponse,
   GreetingRequest,
-  GreetingResponse,
   StreamOptions,
   LangServeError,
 } from './types'
@@ -36,6 +32,19 @@ const DEFAULT_TIMEOUT = 30000 // 30 seconds
 // ============================================================================
 // SSE STREAMING HELPER
 // ============================================================================
+
+/**
+ * SSE Event structure from LangServe
+ */
+interface SSEEvent {
+  event?: string
+  data?: {
+    output?: string
+  }
+  output?: string
+  run_id?: string
+  [key: string]: unknown
+}
 
 /**
  * Helper: Safely check if object has property (avoids 'in' operator issues)
@@ -218,7 +227,7 @@ async function* streamText(
 
   let chunkCount = 0
 
-  for await (const event of streamSSE<any>(url, body, options)) {
+  for await (const event of streamSSE<SSEEvent>(url, body, options)) {
     chunkCount++
 
     // DEBUG: Log raw event received
@@ -318,7 +327,7 @@ export async function streamChatbot(
   options: StreamOptions = {}
 ): Promise<string> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).chatbotStream}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.chatbotStream}`
 
   logger.info('LangServeAPI', 'streamChatbot', 'Starting chatbot stream', {
     url,
@@ -375,7 +384,7 @@ export async function streamExplainCode(
   options: StreamOptions = {}
 ): Promise<string> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).explainCodeStream}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.explainCodeStream}`
 
   let fullResponse = ''
 
@@ -406,7 +415,7 @@ export async function streamHint(
   options: StreamOptions = {}
 ): Promise<string> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).hintStream}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.hintStream}`
 
   let fullResponse = ''
 
@@ -437,7 +446,7 @@ export async function streamQuizFeedback(
   options: StreamOptions = {}
 ): Promise<string> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).quizFeedbackStream}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.quizFeedbackStream}`
 
   let fullResponse = ''
 
@@ -468,7 +477,7 @@ export async function streamGreeting(
   options: StreamOptions = {}
 ): Promise<string> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).greetingStream}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.greetingStream}`
 
   let fullResponse = ''
 
@@ -525,7 +534,7 @@ export async function checkHealth(): Promise<boolean> {
  */
 export async function invokeChatbot(request: ChatbotRequest): Promise<ChatbotResponse> {
   const baseUrl = getBaseUrl()
-  const url = `${baseUrl}${(LANGSERVE_ENDPOINTS as any).chatbot}`
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.chatbot}`
 
   try {
     const response = await fetch(url, {

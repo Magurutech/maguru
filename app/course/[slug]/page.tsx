@@ -5,12 +5,9 @@ import { useParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { CourseHeader } from '@/features/course/components/CourseHeader'
 import { CourseTabs } from '@/features/course/components/CourseTabs'
-import { OverviewRenderer } from '@/features/course/components/OverviewRenderer'
-import { TimelinePreview } from '@/features/course/components/TimelinePreview'
 import { Course, CourseProgress } from '@/features/course/types/course.types'
 import { getCourse } from '@/features/course/api'
 import {
-  BookOpen,
   Loader2,
   AlertCircle,
   ArrowLeft

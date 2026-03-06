@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ChatMessage } from './ChatMessage'
 import { streamChatbot } from '@/features/langserve/api'
-import type { ChatMessage as ChatMessageType, ChatbotContext, ChatbotProps } from './types'
+import type { ChatMessage as ChatMessageType, ChatbotProps } from './types'
 import { cn } from '@/lib/utils'
 import { logger } from '@/services/logger'
 
@@ -23,7 +23,7 @@ import { logger } from '@/services/logger'
  * - Real-time streaming from LangServe backend
  * - Ancient Fantasy Asia theme
  */
-export function ChatbotAssistant({ context, className }: ChatbotProps) {
+export function ChatbotAssistant({ context }: ChatbotProps) {
   // State
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<ChatMessageType[]>([])
@@ -251,7 +251,7 @@ export function ChatbotAssistant({ context, className }: ChatbotProps) {
                   Your AI Learning Assistant
                 </h3>
                 <p className="text-sm text-beige-600 max-w-[250px] mb-6">
-                  Ask me anything about your course content, and I'll help you understand
+                  Ask me anything about your course content, and I&apos;ll help you understand
                   better!
                 </p>
                 <div className="flex flex-col gap-2 w-full max-w-[200px]">

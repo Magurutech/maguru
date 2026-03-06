@@ -18,7 +18,6 @@ import {
   Server,
   Users,
   Gauge,
-  AlertTriangle,
   Clock,
   Database,
   BarChart3,

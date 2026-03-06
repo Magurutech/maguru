@@ -16,12 +16,11 @@ import { clerk } from '@clerk/testing/playwright'
 import { loginWithRole } from '../utils/role-test-helpers'
 import {
   gotoDashboard,
-  waitForDashboardLoad,
   verifyDashboardStats,
   verifyQuickActions,
   verifyDashboardHeader,
   DASHBOARD_CONTENT_BY_ROLE,
-} from './helpers'
+} from '../helpers'
 
 /**
  * Test Suite: User Role Dashboard Access

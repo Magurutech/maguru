@@ -4,7 +4,7 @@ import React from 'react'
 import { ExternalLink } from 'lucide-react'
 import type { CustomLinkProps } from '../types/content-renderer.types'
 
-export function CustomLink({ href, children, node, ...props }: CustomLinkProps) {
+export function CustomLink({ href, children, ...props }: CustomLinkProps) {
   const isExternal = href?.startsWith('http') || href?.startsWith('https')
 
   if (isExternal) {

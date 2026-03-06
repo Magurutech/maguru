@@ -1,5 +1,6 @@
 import type { Components } from 'react-markdown'
 import type { Element } from 'hast'
+import type { PluggableList } from 'unified'
 
 // Enhanced Content Renderer Props
 export interface EnhancedContentRendererProps {
@@ -40,13 +41,13 @@ export type MarkdownComponents = Components & {
 
 // Plugin Configuration Types
 export interface MarkdownPluginConfig {
-  remarkPlugins?: Array<any>
-  rehypePlugins?: Array<any>
-  remarkRehypeOptions?: any
+  remarkPlugins?: PluggableList
+  rehypePlugins?: PluggableList
+  remarkRehypeOptions?: Record<string, unknown>
 }
 
 // Syntax Highlighting Theme Types
 export interface CodeTheme {
   name: string
-  style: any
+  style: Record<string, unknown>
 }
