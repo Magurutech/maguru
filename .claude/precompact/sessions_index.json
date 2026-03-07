@@ -87,11 +87,51 @@
       "task_type": "feature",
       "git_branch": "feature/kursus-path",
       "active_files_count": 7
+    },
+    {
+      "session_id": "20260215-general-feature-dcc0f",
+      "created_at": "2026-02-15T17:24:23.499908Z",
+      "feature": "general",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 1
+    },
+    {
+      "session_id": "20260216-course-feature-f7d97",
+      "created_at": "2026-02-16T16:54:13.789771Z",
+      "feature": "course",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 10
+    },
+    {
+      "session_id": "20260216-course-feature-d0615",
+      "created_at": "2026-02-16T16:54:40.860208Z",
+      "feature": "course",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 10
+    },
+    {
+      "session_id": "20260217-course-feature-15d30",
+      "created_at": "2026-02-17T01:59:52.742022Z",
+      "feature": "course",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 10
+    },
+    {
+      "session_id": "20260306-course-feature-710b0",
+      "created_at": "2026-03-06T20:24:02.981021Z",
+      "feature": "course",
+      "task_type": "feature",
+      "git_branch": "feature/MGR-1-chatbot",
+      "active_files_count": 10
     }
   ],
   "stats": {
-    "total_sessions": 11,
-    "last_updated": "2026-02-15T10:12:20.216946Z"
+    "total_sessions": 16,
+    "last_updated": "2026-03-06T20:24:02.981021Z"
   },
   "info": {
     "description": "PreCompact session backup registry for Maguru project",

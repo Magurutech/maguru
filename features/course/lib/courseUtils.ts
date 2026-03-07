@@ -1,9 +1,22 @@
-import { Course, CourseMetadata, CourseSection, CourseItem } from '../types/course.types'
+import { Course, CourseSection, CourseItem } from '../types/course.types'
 import path from 'path'
 import fs from 'fs/promises'
 
+interface FrontmatterData {
+  title?: string
+  description?: string
+  instructor?: string
+  level?: string
+  duration?: string
+  tags?: string[]
+  thumbnail?: string
+  lastUpdated?: string
+  isOptional?: boolean | string
+  [key: string]: unknown
+}
+
 // Simple frontmatter parser (replacement for gray-matter)
-function parseFrontmatter(content: string): { data: any; content: string } {
+function parseFrontmatter(content: string): { data: FrontmatterData; content: string } {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/
   const match = content.match(frontmatterRegex)
 
@@ -15,7 +28,7 @@ function parseFrontmatter(content: string): { data: any; content: string } {
   const markdownContent = match[2]
 
   // Parse YAML-like frontmatter
-  const data: any = {}
+  const data: FrontmatterData = {}
   frontmatter.split('\n').forEach(line => {
     const colonIndex = line.indexOf(':')
     if (colonIndex > 0) {
@@ -40,21 +53,6 @@ function parseFrontmatter(content: string): { data: any; content: string } {
   })
 
   return { data, content: markdownContent }
-}
-
-// Calculate reading time (replacement for reading-time library)
-function calculateReadingTime(content: string): string {
-  const wordsPerMinute = 200
-  const words = content.trim().split(/\s+/).length
-  const minutes = Math.ceil(words / wordsPerMinute)
-
-  if (minutes < 60) {
-    return `${minutes} minutes`
-  } else {
-    const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
-    return `${hours} hour${hours > 1 ? 's' : ''} ${remainingMinutes > 0 ? `${remainingMinutes} minutes` : ''}`
-  }
 }
 
 // Scan course directory and extract course information
@@ -108,7 +106,7 @@ export async function loadCourse(slug: string): Promise<Course> {
       title: metadata.title,
       description: metadata.description,
       instructor: metadata.instructor,
-      level: metadata.level || 'beginner',
+      level: (metadata.level as 'beginner' | 'intermediate' | 'advanced') || 'beginner',
       duration: metadata.duration || estimatedDuration,
       tags: Array.isArray(metadata.tags) ? metadata.tags : [],
       thumbnail: metadata.thumbnail,

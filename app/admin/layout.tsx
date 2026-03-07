@@ -127,7 +127,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </aside>
 
         {/* Main Content */}
-        <main className="ml-64">{children}</main>
+        <div className="ml-64">{children}</div>
 
         {/* Mobile overlay (hidden on desktop) */}
         <div

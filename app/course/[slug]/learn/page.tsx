@@ -18,6 +18,7 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import Link from 'next/link'
+import { ChatbotAssistant } from '@/features/course/components/chatbot'
 
 function LearningModeContent() {
   const params = useParams()
@@ -276,6 +277,21 @@ function LearningModeContent() {
             className="max-h-96"
           />
         </div>
+
+        {/* Chatbot Assistant - AI Tutor */}
+        {course && currentItem && content && (
+          <ChatbotAssistant
+            context={{
+              courseId: course.slug,
+              courseSlug: course.slug,
+              sectionId: currentSectionId,
+              itemId: currentItemId,
+              itemTitle: currentItem.title,
+              currentContent: content,
+              courseTitle: course.metadata.title,
+            }}
+          />
+        )}
       </div>
     </div>
   )

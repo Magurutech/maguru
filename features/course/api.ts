@@ -1,4 +1,4 @@
-import { Course, CourseListItem, CourseProgress, CourseDetailResponse, CourseListResponse } from './types/course.types'
+import { CourseProgress, CourseDetailResponse, CourseListResponse } from './types/course.types'
 
 // Client-side API functions (for client components)
 

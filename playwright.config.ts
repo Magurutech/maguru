@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
+import dotenv from 'dotenv'
+
+// Load .env.test untuk E2E testing
+dotenv.config({ path: '.env.test' })
 
 // Use process.env.PORT by default and fallback to port 3000
 const PORT = process.env.PORT || 3000
@@ -18,7 +22,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : 2,
+  workers: process.env.CI ? 1 : 2, // 2 workers locally for faster execution, 1 in CI for stability
   outputDir: 'services/test-results',
   reporter: [
     ['html', { outputFolder: 'services/playwright-report' }],
@@ -41,7 +45,8 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        storageState: '__tests__/playwright/.clerk/user.json',
+        // storageState removed - using modern Clerk testing approach with @clerk/testing
+        // Tests will use setupClerkTestingToken() and clerk.signIn() helpers
         launchOptions: {
           args: [
             '--disable-web-security',
@@ -50,7 +55,7 @@ export default defineConfig({
           ],
         },
       },
-      dependencies: ['global setup'],
+      dependencies: ['global setup'], // Requires clerkSetup() to run first
     },
   ],
 })

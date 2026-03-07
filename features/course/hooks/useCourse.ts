@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Course, CourseDetailResponse, CourseProgress } from '../types/course.types'
+import { Course, CourseProgress } from '../types/course.types'
 import { getCourse, markItemCompleted } from '../api'
 
 interface UseCourseOptions {

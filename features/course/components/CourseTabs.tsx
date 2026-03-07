@@ -4,17 +4,17 @@ import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { BookOpen, List } from 'lucide-react'
 import { OverviewRenderer } from './OverviewRenderer'
+import type { Course, CourseProgress } from '@/features/course/types/course.types'
 
 interface CourseTabsProps {
-  course: any
-  progress?: any
+  course: Course
+  progress?: CourseProgress
   className?: string
   onTabChange?: (activeTab: string) => void
 }
 
 export function CourseTabs({
   course,
-  progress,
   className = '',
   onTabChange
 }: CourseTabsProps) {
@@ -70,7 +70,7 @@ export function CourseTabs({
             {/* Timeline preview - ini akan di-handle oleh TimelinePreview */}
             <div className="space-y-6">
               {course.sections?.length > 0 ? (
-                course.sections.map((section: any, index: number) => (
+                course.sections.map((section) => (
                   <div key={section.id} className="border-l-4 border-beige-300 pl-4">
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="text-lg font-semibold text-beige-900">
@@ -86,7 +86,7 @@ export function CourseTabs({
                     )}
 
                     <div className="space-y-2">
-                      {section.items.slice(0, 3).map((item: any) => (
+                      {section.items.slice(0, 3).map((item) => (
                         <div
                           key={item.id}
                           className="flex items-center gap-3 text-sm p-2 rounded hover:bg-beige-50 transition-colors"

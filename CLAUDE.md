@@ -4,17 +4,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Maguru is a Next.js-based e-learning platform built with TypeScript, using a feature-first modular monolith architecture. The project combines educational content management with course creation tools.
+Maguru is a Next.js-based e-learning platform built with TypeScript, using a feature-first modular monolith architecture. The project combines educational content management with course creation tools and AI-powered learning assistance.
 
 ## Plan & Review
 
 - Always in Plan mode to make a plan
-- after get the plan, make sure you write the plan to .claude/tasks/TASK_NAME.md
-- after task compleated, make sure you write the report to .claude/reports/TASK_NAME.md
-- The plan should be a detailed implementation plan and the reasoning behind them, as well as tasks broken down
-- if the task require external knowledge or certain package, also research to get latest knowledge (use Task tool for research)
+- after get the plan, make sure you write the plan to `.claude/tasks/TASK_NAME.md`
+- after task completed, make sure you write report to `.claude/reports/TASK_NAME.md`
+- The plan should be a detailed implementation plan and reasoning behind them, as well as tasks broken down
+- if task require external knowledge or certain package, also research to get latest knowledge (use Task tool for research)
 - Don't over plan it, always think MVP.
-- Once you write the plan, foirstly ask me to review it. Do not continue untill i approve the plan
+- Once you write the plan, firstly ask me to review it. Do not continue until i approve the plan
 
 ### While Implementing
 
@@ -63,8 +63,8 @@ yarn env:validate
 #### Unit & Integration Tests
 
 ```bash
-# Run specific test file
-yarn test [file-path]
+# Run specific test file (replace with actual path)
+yarn test features/course/components/CourseCard.test.tsx
 
 # Run all unit tests in features directory
 yarn test:unit:all
@@ -114,6 +114,7 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 - **Presentation Layer**: React components, simple local state
 - **Logic Layer**: Custom hooks, API routes
 - **Data Layer**: Prisma ORM, database operations
+- **Services Layer**: Shared utilities (logging, external integrations)
 
 **Key Principle**: Prefer simplicity over enterprise patterns. Avoid over-engineering for current team size (2 developers).
 
@@ -126,14 +127,15 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 │   ├── admin/         # Admin dashboard routes
 │   ├── creator/       # Creator dashboard routes
 │   └── ...            # Other app routes
-├── features/           # Feature modules (auth, homepage)
+├── features/           # Feature modules (auth, homepage, course, langserve)
 │   └── [feature]/
 │       ├── components/ # UI components (Presentation Layer)
 │       ├── hooks/      # Business logic hooks (Logic Layer)
 │       ├── types/      # TypeScript definitions
 │       ├── lib/        # Feature-specific utilities
-│       └── api.ts      # API client functions (replaces adapters/)
+│       └── api.ts      # API client functions
 ├── lib/                # Shared utilities and global state
+├── services/           # Shared services (logger, external integrations)
 ├── prisma/             # Database schema and migrations
 ├── __tests__/          # Testing infrastructure
 │   ├── integration/    # Integration tests
@@ -145,10 +147,54 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 
 - **auth**: Authentication using Clerk (3 roles: admin, creator, user)
 - **homepage**: Landing page and marketing content
+- **course**: Course management and creation
+- **dashboard**: Dashboard components
+- **creator**: Creator dashboard functionality
+- **langserve**: AI chatbot assistant with LangServe backend integration
+
+### LangServe Integration
+
+The `langserve` feature provides AI-powered learning assistance through LangServe backend:
+
+**Key Components:**
+- **SSE Streaming**: Server-Sent Events for real-time AI responses
+- **AI Chains**: Multiple specialized chains (chatbot, explain-code, hint, quiz-feedback, greeting)
+- **Error Handling**: Comprehensive timeout and error management
+- **Logging**: Integrated with the logger service
+
+**Available Chains:**
+- `streamChatbot`: Personal AI tutor for course questions
+- `streamExplainCode`: Code explanation for students
+- `streamHint`: Progressive hints for exercises
+- `streamQuizFeedback`: Feedback on quiz answers
+- `streamGreeting`: Personalized student greetings
+
+**Configuration:**
+- LangServe URL: `NEXT_PUBLIC_LANGSERVE_URL` (default: `http://localhost:8000`)
+- Default timeout: 30 seconds
+- Health check endpoint: `/health`
+
+### Services Layer
+
+The `services/` folder contains shared utilities used across the application:
+
+**logger.ts**: Centralized logging utility compatible with Next.js (server and client)
+- **Log levels**: error, warn, info, http, verbose, debug
+- **Context-aware**: Separate logs by service/module
+- **Performance tracking**: Built-in timer and memory usage tracking
+- **File logging**: Server-side logs written to `services/logger-detailed/`
+- **Environment-based**: Debug level in development, info level in production
+
+**Usage pattern:**
+```typescript
+import { logger } from '@/services/logger'
+
+logger.info('ContextName', 'functionName', 'Message', { optionalData })
+logger.error('ContextName', 'functionName', 'Error message', errorObject)
+```
 
 ### Planned Features
 
-- **course**: Course management and creation
 - **user_manage**: User management functionality
 
 **Note**: The auth feature currently has complex context management (856 lines) that should be simplified to basic hooks for better maintainability.
@@ -162,6 +208,7 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 - **Prisma 6.16.1** + **Supabase** for database operations
 - **Clerk 6.32.0** for authentication
 - **TailwindCSS 4.1.13** + **shadcn/ui** for styling
+- **LangServe** for AI backend integration (chatbot assistant)
 - **Design System**: Ancient Fantasy Asia theme with comprehensive UI/UX guidelines
 
 ### State Management
@@ -210,7 +257,7 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 **For New Features, Create:**
 1. **UI Components** in `features/[feature]/components/`
 2. **Business Logic** in `features/[feature]/hooks/` (custom hooks for state + logic)
-3. **API Client** in `features/[feature]/api.ts` (replaces adapters/ folder)
+3. **API Client** in `features/[feature]/api.ts`
 4. **Types** in `features/[feature]/types/`
 5. **Utilities** in `features/[feature]/lib/` if needed
 
@@ -228,7 +275,7 @@ features/course/
     └── courseUtils.ts    # Course-specific utilities
 ```
 
-**Avoid:** Creating `services/`, `adapters/`, or `context/` folders unless absolutely necessary.
+**Avoid:** Creating `services/`, `adapters/`, or `context/` folders within features unless absolutely necessary.
 
 ### Current Architectural Debt & Migration Plan
 
@@ -370,7 +417,7 @@ The design system uses a 4-palette approach with semantic color mapping:
 
 **When Creating UI Components:**
 1. **Check Shadcn UI first** - use existing components when possible
-2. **Follow color palette** - use semantic color tokens from the design system
+2. **Follow color palette** - use semantic color tokens from design system
 3. **Apply consistent spacing** - use 4px scale for padding/margins
 4. **Include interactive states** - hover, focus, active, disabled
 5. **Consider mobile-first** - ensure 44px minimum touch targets

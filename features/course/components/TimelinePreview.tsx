@@ -10,14 +10,12 @@ interface TimelinePreviewProps {
   course: Course
   progress?: CourseProgress
   className?: string
-  onStartLearning?: () => void
 }
 
 export function TimelinePreview({
   course,
   progress,
-  className = '',
-  onStartLearning
+  className = ''
 }: TimelinePreviewProps) {
   const [expandedSections, setExpandedSections] = useState<string[]>([])
 
@@ -147,7 +145,7 @@ export function TimelinePreview({
               {/* Section Items */}
               {isExpanded && (
                 <div className="border-t border-beige-200 p-4 space-y-2">
-                  {section.items.map((item, itemIndex) => (
+                  {section.items.map((item) => (
                     <div
                       key={item.id}
                       className={`flex items-center gap-3 p-3 rounded-lg transition-all ${

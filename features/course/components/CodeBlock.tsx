@@ -7,7 +7,7 @@ import { Copy, Check } from 'lucide-react'
 import { useCopyCode } from '../hooks/useCopyCode'
 import type { CodeBlockProps } from '../types/content-renderer.types'
 
-export function CodeBlock({ children, className, node }: CodeBlockProps) {
+export function CodeBlock({ children, className }: CodeBlockProps) {
   const { copyCode, isCopied } = useCopyCode()
 
   const codeId = useMemo(() => `code-${Math.random().toString(36).substr(2, 9)}`, [])

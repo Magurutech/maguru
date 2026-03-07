@@ -1,8 +1,13 @@
 /**
- * TSK-54: Admin Components Exports
+ * Admin Components Exports
  *
  * Clean exports for admin dashboard components
  */
+
+// Sidebar & Header
+// TODO: Create these components
+// export { AdminSidebar } from './AdminSidebar'
+// export { AdminHeaderMobile } from './AdminHeaderMobile'
 
 // Re-export admin guard components
 export { useAdminGuard, renderAdminGuard, AdminLoadingScreen, AdminAccessDenied } from '../hooks/useAdminGuard'

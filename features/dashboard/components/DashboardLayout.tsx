@@ -19,7 +19,7 @@ interface DashboardLayoutProps {
  *
  * Menyediakan layout dashboard dengan background gradient dan glass-panel styling.
  */
-export function DashboardLayout({ children, role }: DashboardLayoutProps) {
+export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-ancient-fantasy">
       <div className="max-w-7xl mx-auto p-6 space-y-8">

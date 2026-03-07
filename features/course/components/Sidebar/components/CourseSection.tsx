@@ -43,7 +43,7 @@ export function CourseSection({
   const sectionProgress = React.useMemo(() => {
     const completedInSection = section.items.filter((item: CourseItem) => completedItems.includes(item.id)).length
     return Math.round((completedInSection / section.items.length) * 100)
-  }, [section.items, completedItems, section.id])
+  }, [section.items, completedItems])
 
   const isCurrentSection = currentSectionId === section.id
 
@@ -142,7 +142,7 @@ function CourseItem({
     if (completedItems.includes(item.id)) return 'completed'
     if (currentSectionId === sectionId && currentItemId === item.id) return 'current'
     return 'locked'
-  }, [completedItems, item.id, currentSectionId, currentItemId])
+  }, [completedItems, item.id, currentSectionId, currentItemId, sectionId])
 
   const isActive = currentSectionId === sectionId && currentItemId === item.id
 

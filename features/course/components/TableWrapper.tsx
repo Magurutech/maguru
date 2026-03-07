@@ -3,7 +3,7 @@
 import React from 'react'
 import type { TableWrapperProps } from '../types/content-renderer.types'
 
-export function TableWrapper({ children, node, ...props }: TableWrapperProps) {
+export function TableWrapper({ children, ...props }: TableWrapperProps) {
   return (
     <div className="overflow-x-auto mb-4 rounded-lg border border-beige-300 shadow-sm">
       <table
