@@ -1,9 +1,12 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 /**
- * Enhanced Clerk Middleware dengan Role-Based Authorization
+ * Enhanced Clerk Proxy dengan Role-Based Authorization
  *
- * Middleware ini menggunakan Clerk's recommended approach dengan auth.protect()
+ * MIGRATION NOTE: Renamed from middleware.ts to proxy.ts for Next.js 16
+ * The term "proxy" clarifies the network boundary behavior of this feature.
+ *
+ * This proxy uses Clerk's recommended approach dengan auth.protect()
  * untuk mengatasi session timing issues dan mengikuti best practices.
  *
  * Role diambil dari custom session claim "role" yang dikonfigurasi di Clerk Dashboard.
@@ -12,6 +15,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
  * - https://clerk.com/docs/references/nextjs/clerk-middleware
  * - https://clerk.com/docs/guides/basic-rbac
  * - https://clerk.com/docs/backend-requests/jwt-templates
+ * - https://nextjs.org/docs/messages/middleware-to-proxy
  *
  * App Structure:
  * - /dashboard = User area (default)
@@ -71,8 +75,7 @@ export default clerkMiddleware(
     }
   },
   {
-    // ✅ FIX: Include test environment untuk debug
-    // debug: process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
+    // Debug mode disabled for production
     debug: false,
     // Fix clock skew issue - allow 30 seconds difference
     clockSkewInMs: 30000,
