@@ -1,212 +1,156 @@
-# Lint & Type-Check Analysis Report - RESOLVED ✅
+# Sprint 2: Quiz & Assessment System - Hasil Klarifikasi
 
-## Executive Summary
-
-**Analysis Date**: 2026-03-07
-**Resolution Date**: 2026-03-07
-**Status**: ✅ ALL ISSUES RESOLVED
-**Final Results**: 
-- TypeScript: 0 errors
-- ESLint: 0 errors, 1 warning (non-blocking)
+**Tanggal:** 2026-03-07
 
 ---
 
-## Resolution Summary
+## ✅ Keputusan Terfinal (Disetujui User)
 
-All 20 issues from the library upgrade have been successfully resolved:
-
-### Phase 1: Critical Fixes (Clerk v7 & Zod v4) ✅
-1. ✅ Fixed Clerk types import - Changed from `@clerk/types` to using `ReturnType<typeof useUser>['user']`
-2. ✅ Removed `afterSignOutUrl` prop from UserButton components (2 instances)
-3. ✅ Fixed Zod `.default('false')` to `.default(false)` for boolean type
-4. ✅ Fixed Zod `.errors` to `.issues` property
-5. ✅ Added explicit `ZodIssue` type annotation
-
-### Phase 2: Code Quality Fixes (React Hooks) ✅
-6. ✅ Fixed component creation during render in `admin/page.tsx` using `useMemo`
-7. ✅ Fixed impure `Math.random()` in `CodeBlock.tsx` using `useId()` hook
-8. ✅ Fixed impure `Math.random()` in `sidebar.tsx` using `useState(() => ...)`
-
-### Phase 3: Configuration Cleanup ✅
-9. ✅ Removed invalid `@typescript-eslint/no-require-imports` directives from:
-   - jest.config.js
-   - jest.setup.js (5 instances)
-   - next.config.ts
-   - services/detailedJsonReporter.js (2 instances)
+| # | Pertanyaan | Keputusan | Alasan |
+|---|-------------|-------------|---------|
+| 1 | Course Structure | ✅ **Quiz per Lesson** | Align dengan plan.md, lebih granular untuk feedback spesifik |
+| 2 | Quiz Attachment | ✅ **Lesson as attachment point** | Lampirkan quiz ke lessonId |
+| 3 | Section & Lesson Creation | ✅ **Sprint 2 MULAI dengan buat Section & Lesson models** | Sebagai prerequisite untuk quiz attachment |
+| 4 | Quiz Attempts | ✅ **Multiple attempts dengan best score tracking** | Lebih user-friendly untuk learning |
+| 5 | Question Types MVP | ✅ **Multiple Choice saja untuk Sprint 2** | Code Completion bisa Sprint 2.1 atau Sprint 3 |
+| 6 | Hint Cooldown | ✅ **5 menit per question** | Simple dan mudah diimplementasi |
+| 7 | Diagnostic Test | ✅ **SKIP untuk Sprint 2** | Fokus Quiz+Hint+Review, Diagnostic jadi Sprint terpisah |
+| 8 | LangServe Rate Limiting | ✅ **SKIP untuk MVP** | Implementasi nanti jika ada issue abuse |
 
 ---
 
-## Final Verification Results
+## 📋 Brainstorming Results - Arsitektur & Design
 
-```bash
-# TypeScript Check
-$ yarn type-check
-✅ Done in 4.48s - 0 errors
+### 1. Quiz Attachment Decision
+**Keputusan:** Quiz attached ke Lesson (bukan ke Course langsung)
 
-# ESLint Check  
-$ yarn lint
-⚠️ 1 warning (non-blocking): eslint.config.mjs - anonymous default export
-✅ 0 errors
+**Alasan:**
+- Lebih granular untuk feedback spesifik dari LangServe AI
+- Lesson adalah unit pembelajaran yang logis
+- Sesuai dengan struktur "Course → Section → Lesson" di plan.md
+
+**Implikasi:**
+- Quiz punya `lessonId` sebagai foreign key
+- Setiap lesson bisa punya 0 atau 1 quiz
+- Quiz bisa opsional (tidak semua lesson harus punya quiz)
+
+### 2. Schema Hierarchy
 ```
+Course
+  └─ Section (bab)
+      └─ Lesson (materi)
+          └─ Quiz (opsional)
+              └─ QuizQuestion (soal)
+                  └─ QuizAnswer (pilihan)
+```
+
+### 3. Quiz Scoring Strategy
+**Approach:** Multiple attempts with best score tracking
+
+**Alasan:**
+- User-friendly: User bisa belajar dari kesalahan
+- Progress tracking: Best score digunakan untuk mengukur kemajuan
+- Analytics: Semua attempts disimpan untuk insight
+
+**Model:**
+```prisma
+model QuizScore {
+  id           String   @id @default(uuid())
+  quizId       String
+  userId        String
+  attemptNumber Int      @default(1)
+  score        Float
+  totalPoints  Int
+  passed       Boolean
+  isBestScore  Boolean  @default(false)  // Track best score
+  completedAt  DateTime @default(now())
+
+  @@unique([quizId, userId, attemptNumber])
+}
+```
+
+### 4. Hint System Design
+**Approach:** Progressive hints dengan cooldown
+
+**3 Level Hint:**
+1. **Halus** - Hint ringan yang tidak memberi jawaban langsung
+2. **Konseptual** - Menjelaskan konsep yang relevan
+3. **Langsung** - Menunjuk ke arah solusi
+
+**Cooldown:** 5 menit per question per user
+
+**Trigger Reset:**
+- User submit quiz (semua hint terkait reset)
+- User pindah ke lesson lain
+
+### 5. Review Flow Trigger
+**Kondisi:** Score < 70% (failed quiz)
+
+**Flow:**
+1. Detect quiz dengan score < 70%
+2. Identifikasi topik yang gagal (dari question metadata)
+3. Rekomendasi lesson yang relevan
+4. Buat review session di database
+5. Setelah user selesai review, tawarkan verification quiz
 
 ---
 
-## Changes Made
+## 🎯 Sprint 2 Final Scope
 
-### 1. features/admin/hooks/useAdminGuard.tsx
-```typescript
-// BEFORE:
-import type { UserResource } from '@clerk/types'
+### Phase 1: Quiz System (Core - Blocking) - 2-3 Hari
+| Component | Deskripsi |
+|-----------|-----------|
+| Database Schema | Section, Lesson, Quiz, QuizQuestion, QuizAnswer, QuizScore, HintRequest |
+| API Routes | Quiz CRUD, Submit answers, Calculate score |
+| Creator UI | Quiz Builder interface (buat/edit quiz, attach ke lesson) |
+| Student UI | Quiz taking interface (tampil soal, pilih jawaban, submit) |
+| Scoring | Automatic calculation dengan 70% threshold |
+| LangServe | Quiz feedback integration |
 
-// AFTER:
-import { useUser } from '@clerk/nextjs'
-// Using ReturnType to infer correct type
-user: ReturnType<typeof useUser>['user']
-```
+### Phase 2: Hint System (Parallel with Phase 1) - 1-2 Hari
+| Component | Deskripsi |
+|-----------|-----------|
+| Hint Request Tracking | Simpan semua request hint di database |
+| Cooldown Enforcement | Cek last request, blokir jika < 5 menit |
+| Hint UI | Tombol hint di learning interface |
+| LangServe | 3-level progressive hints |
 
-### 2. features/homepage/component/Navbars.tsx
-```tsx
-// BEFORE:
-<UserButton afterSignOutUrl="/" />
+### Phase 3: Review Flow (Depends on Phase 1) - 1-2 Hari
+| Component | Deskripsi |
+|-----------|-----------|
+| Failed Quiz Detection | Query quizScores dengan passed=false |
+| Weak Topics Mapping | Identifikasi topic dari questions yang salah |
+| Alternative Content | Rekomendasi lesson untuk review |
+| Verification Quiz | Mini quiz untuk verifikasi setelah review |
 
-// AFTER:
-<UserButton />
-// Note: Clerk v7 handles redirect automatically via signOutOptions in SignOutButton
-```
-
-### 3. lib/env-validation.ts
-```typescript
-// BEFORE:
-.default('false')  // String
-error.errors       // Deprecated property
-.map((err) => ...) // Implicit any
-
-// AFTER:
-.default(false)    // Boolean
-error.issues       // New property name
-.map((err: z.ZodIssue) => ...) // Explicit type
-```
-
-### 4. app/admin/page.tsx
-```tsx
-// BEFORE:
-const getStatusIcon = (status: string) => { ... }
-const StatusIcon = getStatusIcon(systemHealth.status)
-
-// AFTER:
-const StatusIcon = React.useMemo(() => {
-  const status = systemHealth.status as 'healthy' | 'warning' | 'critical'
-  switch (status) { ... }
-}, [systemHealth.status])
-```
-
-### 5. features/course/components/CodeBlock.tsx
-```tsx
-// BEFORE:
-const codeId = `code-${Math.random().toString(36).substr(2, 9)}`
-
-// AFTER:
-import { useId } from 'react'
-const codeId = useId()
-```
-
-### 6. components/ui/sidebar.tsx
-```tsx
-// BEFORE:
-const width = `${Math.floor(Math.random() * 40) + 50}%`
-
-// AFTER:
-const [width] = React.useState(() => `${Math.floor(Math.random() * 40) + 50}%`)
-```
-
-### 7. Configuration Files (jest.config.js, jest.setup.js, next.config.ts, detailedJsonReporter.js)
-```javascript
-// REMOVED all instances of:
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-```
+### Phase 4: SKIP - Diagnostic Test (Onboarding Flow)
+- Diagnostic test akan jadi Sprint 3 (Onboarding Enhancement)
+- Fokus Sprint 2 ke core learning loop
 
 ---
 
-## Remaining Non-Blocking Issues
+## 📊 Prerequisite Checklist Sebelum Implementasi
 
-### ESLint Warning (Can be ignored or fixed later)
-```
-eslint.config.mjs:4:1 - warning: Assign array to a variable before exporting as module default
-```
-
-This is a style warning and does not affect functionality. Can be fixed by:
-```javascript
-// Current:
-export default [...]
-
-// Recommended:
-const config = [...]
-export default config
-```
+| Item | Status | Catatan |
+|-------|---------|----------|
+| Section & Lesson models dibuat | ⏳ Perlu buat dulu |
+| Prisma migration dijalankan | ⏳ Setelah schema update |
+| LangServe server running | ⏳ Validasi di env dev/prod |
+| CMS Quiz Builder UI exists | ⏳ Perlu buat di Creator Dashboard |
 
 ---
 
-## Breaking Changes Handled
+## 🎬 Next Steps
 
-| Library | Version | Breaking Change | Resolution |
-|---------|---------|----------------|------------|
-| @clerk/nextjs | v6 → v7 | `@clerk/types` removed | Use `ReturnType<typeof useUser>['user']` |
-| @clerk/nextjs | v6 → v7 | `afterSignOutUrl` removed | Removed prop, use `signOutOptions` in SignOutButton |
-| zod | v3 → v4 | `.default()` strict typing | Changed string to boolean |
-| zod | v3 → v4 | `.errors` → `.issues` | Updated property name |
-| typescript-eslint | v7 → v8 | `no-require-imports` removed | Removed all directives |
+1. Review dan setujui keputusan di atas
+2. Update docs/feat/quiz.md dengan detail yang sudah disetujui
+3. Buat implementation plan detail untuk setiap Phase
+4. Mulai implementasi Phase 1 (Quiz System)
 
 ---
 
-## Testing Recommendations
+## Referensi
 
-After these fixes, run:
-```bash
-# 1. Verify no type errors
-yarn type-check
-
-# 2. Verify no lint errors
-yarn lint
-
-# 3. Run unit tests
-yarn test:unit:all
-
-# 4. Run integration tests
-yarn test:integration:all
-
-# 5. Test authentication flow
-# - Sign in/out functionality
-# - UserButton behavior
-# - Admin guard protection
-
-# 6. Test environment validation
-# - Development mode
-# - Production mode
-# - Test mode
-```
-
----
-
-## Success Metrics
-
-✅ All TypeScript errors resolved (6 → 0)
-✅ All ESLint errors resolved (12 → 0)
-✅ Only 1 non-blocking warning remains
-✅ All critical authentication code working
-✅ All validation logic updated for Zod v4
-✅ All React hooks following best practices
-✅ All configuration files cleaned up
-
----
-
-## Next Steps
-
-1. ✅ COMPLETED: Fix all lint and type-check errors
-2. 🔄 RECOMMENDED: Run full test suite to verify functionality
-3. 🔄 RECOMMENDED: Test authentication flows manually
-4. 🔄 OPTIONAL: Fix eslint.config.mjs warning
-5. 🔄 OPTIONAL: Update documentation for Clerk v7 changes
-
----
-
-**Status**: Ready for development and testing ✅
+- Quiz feature epic: `docs/feat/quiz.md`
+- Sprint 1 plan: `docs/rules/plan.md`
+- LangServe API: `docs/api/langserve/langserve.json`

@@ -127,11 +127,19 @@
       "task_type": "feature",
       "git_branch": "feature/MGR-1-chatbot",
       "active_files_count": 10
+    },
+    {
+      "session_id": "20260307-general-feature-4c6f3",
+      "created_at": "2026-03-07T17:38:52.089400Z",
+      "feature": "general",
+      "task_type": "feature",
+      "git_branch": "feature/quiz-dashboard",
+      "active_files_count": 3
     }
   ],
   "stats": {
-    "total_sessions": 16,
-    "last_updated": "2026-03-06T20:24:02.981021Z"
+    "total_sessions": 17,
+    "last_updated": "2026-03-07T17:38:52.089400Z"
   },
   "info": {
     "description": "PreCompact session backup registry for Maguru project",
