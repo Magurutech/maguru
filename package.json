@@ -16,7 +16,7 @@
     "test:integration": "jest __tests__/integration/course/frontend --verbose --passWithNoTests",
     "test:integration:all": "jest __tests__/integration --verbose --passWithNoTests",
     "test:e2e": "cross-env NODE_ENV=test  playwright test __tests__/playwright/course/course-creation.spec.ts --debug",
-    "test:e2e:all": "cross-env NODE_ENV=test playwright test __tests__/playwright/",
+    "test:e2e:all": "cross-env NODE_ENV=test playwright test __tests__/playwright/"
     },
   "dependencies": {
     "@clerk/nextjs": "^6.32.0",
