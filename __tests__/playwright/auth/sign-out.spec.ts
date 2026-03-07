@@ -15,18 +15,32 @@
 import { test, expect } from '@playwright/test'
 import { setupClerkTestingToken } from '@clerk/testing/playwright'
 import { waitForPageLoad, takeScreenshot, verifyUserLoggedOut } from '../utils/test-helpers'
-import path from 'path'
+import { testUsers } from '../fixtures/test-users'
 
 test.describe('Sign Out Flow', () => {
-  // CRITICAL: Menggunakan authenticated state dari global setup untuk sign-out tests
-  // Berbeda dengan sign-in tests yang menggunakan fresh state
-  // Debug path untuk memastikan file storageState terbaca dengan benar
-  const authFile = path.join(__dirname, '../.clerk/user.json')
-  test.use({ storageState: authFile })
-
+  // IMPORTANT: Sign-out tests require authenticated state
+  // We login manually in beforeEach instead of using storageState
+  // This ensures fresh, valid authentication for each test
+  
   test.beforeEach(async ({ page }) => {
     // Setup Clerk testing token untuk setiap test
     await setupClerkTestingToken({ page })
+    
+    // LOGIN MANUAL - Ensure user is authenticated before testing sign-out
+    await page.goto('/sign-in')
+    await waitForPageLoad(page)
+    
+    // Fill email/username
+    await page.fill('input[name="identifier"]', testUsers.existingUser.email)
+    await page.click('button:has-text("Continue")')
+    
+    // Wait for password field and fill
+    await page.waitForSelector('input[name="password"]', { timeout: 10000 })
+    await page.fill('input[name="password"]', testUsers.existingUser.password)
+    await page.click('button:has-text("Continue")')
+    
+    // Wait for successful login - redirect to homepage
+    await page.waitForURL('/', { timeout: 15000 })
   })
 
   /**
@@ -36,16 +50,18 @@ test.describe('Sign Out Flow', () => {
    * Expected: User berhasil logout dan diarahkan ke homepage
    *
    * BDD Format:
-   * - Given: User sudah login dan berada di dashboard
-   * - When: User klik sign out button
+   * - Given: User sudah login (dari beforeEach)
+   * - When: User navigasi ke dashboard dan klik sign out button
    * - Then: User berhasil logout dan diarahkan ke homepage
    */
   test('should successfully sign out from dashboard', async ({ page }) => {
-    // Given: User sudah login dan berada di dashboard
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard
     await page.goto('/dashboard')
     await waitForPageLoad(page)
 
-    // Verify user berada di dashboard
+    // Verify user berhasil akses dashboard
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
     await expect(page).toHaveURL('/dashboard')
 
@@ -126,12 +142,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: User tidak dapat mengakses protected routes setelah logout
    *
    * BDD Format:
-   * - Given: User sudah login
-   * - When: User sign out
+   * - Given: User sudah login (dari beforeEach)
+   * - When: User navigasi ke dashboard dan sign out
    * - Then: User tidak dapat mengakses protected routes
    */
   test('should sign out and block protected route access', async ({ page }) => {
-    // Given: User sudah login
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
@@ -185,12 +203,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: Sign out berhasil dari halaman manapun
    *
    * BDD Format:
-   * - Given: User sudah login
-   * - When: User sign out dari homepage
+   * - Given: User sudah login (dari beforeEach)
+   * - When: User navigasi ke homepage dan sign out
    * - Then: Sign out berhasil dari halaman manapun
    */
   test('should sign out from different pages', async ({ page }) => {
-    // Given: User sudah login
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard first to verify authentication
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
@@ -257,12 +277,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: Session data (storage, cookies) dibersihkan
    *
    * BDD Format:
-   * - Given: User sudah login
-   * - When: User sign out
+   * - Given: User sudah login (dari beforeEach)
+   * - When: User navigasi ke dashboard dan sign out
    * - Then: Session data dibersihkan
    */
   test('should clear session data after sign out', async ({ page }) => {
-    // Given: User sudah login
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
@@ -298,12 +320,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: User masih bisa sign out setelah refresh
    *
    * BDD Format:
-   * - Given: User sudah login
-   * - When: User refresh browser setelah login
+   * - Given: User sudah login (dari beforeEach)
+   * - When: User navigasi ke dashboard, refresh browser
    * - Then: User masih bisa sign out setelah refresh
    */
   test('should handle sign out with browser refresh', async ({ page }) => {
-    // Given: User sudah login
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
@@ -340,14 +364,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: Tab lain juga logout (shared session)
    *
    * BDD Format:
-   * - Given: User login di tab pertama (menggunakan shared storageState)
+   * - Given: User login di tab pertama (dari beforeEach context)
    * - When: User sign out dari tab pertama
    * - Then: Verify logout successful pada tab pertama
    * Note: Test ini difokuskan pada sign out functionality, session sharing
    * antar tab memerlukan setup yang lebih kompleks
    */
   test('should handle multiple tab sign out', async ({ context }) => {
-    // Given: User login di tab pertama - menggunakan storageState dari global setup
+    // Given: User login di tab pertama - authentication dari beforeEach context
     const page1 = await context.newPage()
     await setupClerkTestingToken({ page: page1 })
 
@@ -358,10 +382,18 @@ test.describe('Sign Out Flow', () => {
     try {
       await page1.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
     } catch {
-      // If Tab1 can't access dashboard, skip the test gracefully
-      await takeScreenshot(page1, 'tab1-auth-failed')
-      await page1.close()
-      return // Skip test jika authentication tidak bekerja
+      // If Tab1 can't access dashboard, login manually
+      await page1.goto('/sign-in')
+      await page1.fill('input[name="identifier"]', testUsers.existingUser.email)
+      await page1.click('button:has-text("Continue")')
+      await page1.waitForSelector('input[name="password"]', { timeout: 10000 })
+      await page1.fill('input[name="password"]', testUsers.existingUser.password)
+      await page1.click('button:has-text("Continue")')
+      await page1.waitForURL('/', { timeout: 15000 })
+      
+      // Try dashboard again
+      await page1.goto('/dashboard')
+      await page1.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
     }
 
     // When: User sign out dari tab pertama
@@ -425,12 +457,14 @@ test.describe('Sign Out Flow', () => {
    * Expected: Error handled gracefully
    *
    * BDD Format:
-   * - Given: User sudah login
+   * - Given: User sudah login (dari beforeEach)
    * - When: User mencoba sign out dengan network error
    * - Then: Error handled gracefully
    */
   test('should handle sign out error gracefully', async ({ page }) => {
-    // Given: User sudah login
+    // Given: User sudah login dari beforeEach
+    
+    // Navigate to dashboard
     await page.goto('/dashboard')
     await page.waitForURL((url) => url.toString().includes('/dashboard'), { timeout: 15000 })
 
