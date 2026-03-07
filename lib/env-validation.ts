@@ -32,7 +32,7 @@ const envSchema = z.object({
   CLERK_TEST_MODE: z
     .string()
     .transform((val) => val === 'true')
-    .default('false'),
+    .default(false),
   NEXT_PUBLIC_CLERK_FRONTEND_API: z.string().optional(),
 })
 
@@ -69,8 +69,8 @@ export function validateEnv(): ValidatedEnv {
       return result
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errorMessages = error.errors
-          .map((err) => `${err.path.join('.')}: ${err.message}`)
+        const errorMessages = error.issues
+          .map((err: z.ZodIssue) => `${err.path.join('.')}: ${err.message}`)
           .join('\n')
 
         console.error('❌ Production environment validation failed:')

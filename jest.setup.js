@@ -1,18 +1,14 @@
 // Polyfill untuk Node.js environment - HARUS DI AWAL sebelum import lain
 // Menggunakan node-fetch v2 untuk polyfill yang lebih robust
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { TextEncoder, TextDecoder } = require('util')
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
 
 // Polyfill Web Streams API (diperlukan untuk MSW v2)
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('web-streams-polyfill/polyfill')
 
 // Polyfill fetch API menggunakan node-fetch
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fetch = require('node-fetch')
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { Headers, Request, Response } = require('node-fetch')
 
 // Assign ke global jika belum ada
@@ -30,11 +26,9 @@ if (!global.Response) {
 }
 
 // Import jest-dom untuk menambahkan custom matchers seperti toBeInTheDocument()
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('@testing-library/jest-dom')
 
 // Import React untuk mock components
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const React = require('react')
 
 // Setup environment variables untuk testing

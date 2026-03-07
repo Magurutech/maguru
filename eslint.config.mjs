@@ -1,25 +1,40 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import { FlatCompat } from '@eslint/eslintrc';
+import nextConfig from 'eslint-config-next';
+import tseslint from 'typescript-eslint';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const config = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+export default [
+  // Global ignores - harus di awal
   {
-    ignores: ['.next/**', 'node_modules/**'],
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      '.turbo/**',
+      'out/**',
+      'coverage/**',
+      '.swc/**',
+      'tsconfig.tsbuildinfo',
+    ],
   },
+
+  // Next.js config (sudah include react, typescript, jsx-a11y, dll)
+  ...nextConfig,
+
+  // Custom rules untuk TypeScript files
   {
-    files: ['next-env.d.ts'],
+    files: ['**/*.ts', '**/*.tsx'],
+    plugins: {
+      '@typescript-eslint': tseslint.plugin,
+    },
     rules: {
-      '@typescript-eslint/triple-slash-reference': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ];
-
-export default config;

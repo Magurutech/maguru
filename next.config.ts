@@ -6,7 +6,6 @@ const isCIEnvironment = process.env.CI === 'true'
 
 if (!isTestEnvironment && !isCIEnvironment) {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { validateEnvSafe } = require('./lib/env-validation.ts')
     const validation = validateEnvSafe()
     if (!validation.success) {

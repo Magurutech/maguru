@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useId } from 'react'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { Copy, Check } from 'lucide-react'
@@ -10,7 +10,7 @@ import type { CodeBlockProps } from '../types/content-renderer.types'
 export function CodeBlock({ children, className }: CodeBlockProps) {
   const { copyCode, isCopied } = useCopyCode()
 
-  const codeId = useMemo(() => `code-${Math.random().toString(36).substr(2, 9)}`, [])
+  const codeId = useId()
 
   const language = useMemo(() => {
     if (!className) return 'text'

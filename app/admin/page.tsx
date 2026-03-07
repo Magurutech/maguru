@@ -63,16 +63,15 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const StatusIcon = React.useMemo(() => {
+    const status = systemHealth.status as 'healthy' | 'warning' | 'critical'
     switch (status) {
       case 'healthy': return CheckCircle
       case 'warning': return AlertCircle
       case 'critical': return XCircle
       default: return Activity
     }
-  }
-
-  const StatusIcon = getStatusIcon(systemHealth.status)
+  }, [systemHealth.status])
 
   return renderAdminGuard(authState, (
     <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">

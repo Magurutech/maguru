@@ -119,7 +119,6 @@ export function Navbar() {
                 </SignOutButton>
 
                 <UserButton
-                  afterSignOutUrl="/"
                   data-testid="desktop-user-button"
                   appearance={{
                     elements: {
@@ -217,7 +216,6 @@ export function Navbar() {
 
                     <div className="pt-2 flex justify-center">
                       <UserButton
-                        afterSignOutUrl="/"
                         data-testid="mobile-user-button"
                         appearance={{
                           elements: {
