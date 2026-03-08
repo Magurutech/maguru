@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  title       String       @db.VarChar(100)
+  description String       @db.Text
+  thumbnail   String?      @db.VarChar(255)
+  status      CourseStatus @default(DRAFT)
+  students    Int          @default(0)
+  lessons     Int          @default(0)
+  duration    String       @default("0 jam")
+  rating      Float        @default(0.0)
+  category    String       @db.VarChar(50)
+  creatorId   String       @db.VarChar(255) // Clerk User ID
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  enrollments Enrollment[]
+  sections    Section[]
+
+  @@map("courses")
+}
+
+model Section {
+  id          String   @id @default(uuid())
+  courseId    String
+  order       Int
+  title       String   @db.VarChar(200)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@unique([courseId, order])
+  @@index([courseId, order])
+  @@map("sections")
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  sectionId String
+  order     Int
+  title     String   @db.VarChar(200)
+  content   Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  section  Section          @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  progress LessonProgress[]
+
+  @@unique([sectionId, order])
+  @@index([sectionId, order])
+  @@map("lessons")
+}
+
+model LessonProgress {
+  id          String    @id @default(uuid())
+  lessonId    String
+  userId      String    @db.VarChar(255)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  // Relations
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, userId])
+  @@index([userId])
+  @@index([lessonId])
+  @@map("lesson_progress")
+}
+
+model CourseCompletion {
+  id          String    @id @default(uuid())
+  courseId    String
+  userId      String    @db.VarChar(255)
+  percentage  Float     @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([courseId, userId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_completions")
+}
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  userId     String   @db.VarChar(255) // Clerk User ID
+  courseId   String   @db.VarChar(255)
+  enrolledAt DateTime @default(now())
+
+  // Relations
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId]) // Prevent duplicate enrollments
+  @@map("enrollments")
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+}

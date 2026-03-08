@@ -1,11 +1,10 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/prisma"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 model Course {
@@ -25,8 +24,78 @@ model Course {
 
   // Relations
   enrollments Enrollment[]
+  sections    Section[]
 
   @@map("courses")
+}
+
+model Section {
+  id          String   @id @default(uuid())
+  courseId    String
+  order       Int
+  title       String   @db.VarChar(200)
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+
+  @@unique([courseId, order])
+  @@index([courseId, order])
+  @@map("sections")
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  sectionId   String
+  order       Int
+  title       String   @db.VarChar(200)
+  content     Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  section     Section   @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  progress    LessonProgress[]
+
+  @@unique([sectionId, order])
+  @@index([sectionId, order])
+  @@map("lessons")
+}
+
+model LessonProgress {
+  id          String   @id @default(uuid())
+  lessonId    String
+  userId      String   @db.VarChar(255)
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  // Relations
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, userId])
+  @@index([userId])
+  @@index([lessonId])
+  @@map("lesson_progress")
+}
+
+model CourseCompletion {
+  id           String   @id @default(uuid())
+  courseId     String
+  userId       String   @db.VarChar(255)
+  percentage   Float    @default(0)
+  completed    Boolean  @default(false)
+  completedAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([courseId, userId])
+  @@index([userId])
+  @@index([courseId])
+  @@map("course_completions")
 }
 
 model Enrollment {
