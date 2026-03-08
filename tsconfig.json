@@ -46,6 +46,7 @@
     "dist",
     "build",
     "coverage",
+    "prisma/generated",
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.integration.test.ts",
