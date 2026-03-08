@@ -15,6 +15,7 @@
 .clerk
 .serena
 .next
+rules/error.md
 
 # testing
 /coverage
