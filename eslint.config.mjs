@@ -1,7 +1,7 @@
 import nextConfig from 'eslint-config-next';
 import tseslint from 'typescript-eslint';
 
-export default [
+const config = [
   // Global ignores - harus di awal
   {
     ignores: [
@@ -14,6 +14,8 @@ export default [
       'coverage/**',
       '.swc/**',
       'tsconfig.tsbuildinfo',
+      'prisma/generated/**',  // Ignore Prisma generated files
+      '**/*.wasm-base64.js',  // Ignore WASM base64 files
     ],
   },
 
@@ -38,3 +40,5 @@ export default [
     },
   },
 ];
+
+export default config;

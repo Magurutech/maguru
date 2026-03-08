@@ -7,22 +7,19 @@ global.TextDecoder = TextDecoder
 // Polyfill Web Streams API (diperlukan untuk MSW v2)
 require('web-streams-polyfill/polyfill')
 
-// Polyfill fetch API menggunakan node-fetch
-const fetch = require('node-fetch')
-const { Headers, Request, Response } = require('node-fetch')
-
-// Assign ke global jika belum ada
-if (!global.fetch) {
-  global.fetch = fetch
+// Polyfill fetch API - only if not already available
+// Skip node-fetch import to avoid ESM issues in Jest
+if (typeof global.fetch === 'undefined') {
+  global.fetch = jest.fn()
 }
-if (!global.Headers) {
-  global.Headers = Headers
+if (typeof global.Headers === 'undefined') {
+  global.Headers = jest.fn()
 }
-if (!global.Request) {
-  global.Request = Request
+if (typeof global.Request === 'undefined') {
+  global.Request = jest.fn()
 }
-if (!global.Response) {
-  global.Response = Response
+if (typeof global.Response === 'undefined') {
+  global.Response = jest.fn()
 }
 
 // Import jest-dom untuk menambahkan custom matchers seperti toBeInTheDocument()
