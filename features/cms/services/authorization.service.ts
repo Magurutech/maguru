@@ -9,12 +9,13 @@ import prisma from '@/prisma/lib/client'
 
 export class AuthorizationService {
   /**
-   * Check if the current user owns a course or is an admin
+   * Check if a specific user owns a course or is an admin
    * Requirements: 8.1, 8.2, 8.4, 8.7
    */
-  async checkCourseOwnership(courseId: string): Promise<boolean> {
-    const { userId } = await auth()
-
+  async checkCourseOwnershipByUserId(
+    userId: string,
+    courseId: string
+  ): Promise<boolean> {
     if (!userId) {
       return false
     }
@@ -33,6 +34,20 @@ export class AuthorizationService {
     })
 
     return !!course
+  }
+
+  /**
+   * Check if the current user owns a course or is an admin
+   * Requirements: 8.1, 8.2, 8.4, 8.7
+   */
+  async checkCourseOwnership(courseId: string): Promise<boolean> {
+    const { userId } = await auth()
+
+    if (!userId) {
+      return false
+    }
+
+    return this.checkCourseOwnershipByUserId(userId, courseId)
   }
 
   /**
