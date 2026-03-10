@@ -191,6 +191,19 @@ jest.mock('@clerk/nextjs', () => ({
   SignUp: () => <div data-testid="sign-up">Sign Up</div>,
 }))
 
+// Mock Clerk Server (untuk course.service.ts)
+jest.mock('@clerk/nextjs/server', () => ({
+  auth: jest.fn(() => Promise.resolve({ userId: 'user_test123' })),
+  clerkClient: jest.fn(() => Promise.resolve({
+    users: {
+      getUser: jest.fn((userId) => Promise.resolve({
+        id: userId,
+        publicMetadata: { role: 'USER' },
+      })),
+    },
+  })),
+}))
+
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
   User: () => <div data-testid="user-icon">User Icon</div>,

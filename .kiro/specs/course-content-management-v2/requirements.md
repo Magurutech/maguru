@@ -28,6 +28,7 @@ The Course Content Management feature enables creators to build structured learn
 - **Student**: A user who enrolls in courses and consumes learning content
 - **Admin**: A user with admin role who can manage all courses
 - **Course**: A complete learning program containing sections and lessons
+- **Course Service**: Backend service layer that handles course-related operations and authorization
 - **Section**: A chapter or module within a course that groups related lessons
 - **Lesson**: An individual learning unit containing Tiptap JSON content
 - **Tiptap_JSON**: Native JSON structure from Tiptap editor representing rich text content
@@ -39,6 +40,30 @@ The Course Content Management feature enables creators to build structured learn
 ---
 
 ## Requirements
+
+### Requirement 0: Course Service Layer
+
+**User Story:** As a System, I want a centralized course service layer, so that course-related operations and authorization are handled consistently across all CMS features.
+
+#### Acceptance Criteria
+
+0.1. THE System SHALL provide a course service that handles course retrieval by slug
+
+0.2. THE System SHALL provide a course service that validates course ownership for authorization
+
+0.3. WHEN retrieving a course by slug, THE System SHALL return course data including id, title, slug, creatorId, and status
+
+0.4. WHEN checking course ownership, THE System SHALL verify if the user is the course creator OR has Admin role
+
+0.5. THE System SHALL use the course service in all section and lesson operations for authorization
+
+0.6. IF a course does not exist, THE System SHALL return appropriate error response
+
+0.7. THE System SHALL cache course ownership checks to optimize performance
+
+0.8. THE course service SHALL be reusable across all CMS API endpoints
+
+---
 
 ### Requirement 1: Section Management
 
@@ -378,6 +403,7 @@ The Course Content Management feature enables creators to build structured learn
 
 | Requirement | Total Criteria | Priority |
 |-------------|----------------|----------|
+| Course Service Layer | 8 | High |
 | Section Management | 8 | High |
 | Lesson Management | 9 | High |
 | Tiptap JSON Storage | 6 | High |
@@ -391,10 +417,10 @@ The Course Content Management feature enables creators to build structured learn
 | Performance | 6 | Medium |
 | Data Persistence | 7 | High |
 
-**Total Acceptance Criteria:** 93
+**Total Acceptance Criteria:** 101
 
 ---
 
-**Document Version:** 2.0  
-**Last Updated:** 2026-03-08  
+**Document Version:** 2.1  
+**Last Updated:** 2026-03-10  
 **Status:** Ready for Design Phase

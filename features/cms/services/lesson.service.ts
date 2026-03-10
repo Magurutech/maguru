@@ -2,9 +2,11 @@
  * Lesson Service
  * Business logic for Lesson management
  * Requirements: 2.1-2.9, 3.1-3.6, 9.2, 9.3, 9.6, 9.9, 12.7
+ * Updated: Now uses Course Service for authorization (Requirements: 0.5, 0.8)
  */
 
 import prisma from '@/prisma/lib/client'
+import { checkCourseOwnership } from './course.service'
 import { validateLessonContent } from '../validation/tiptap'
 import {
   Lesson,
@@ -21,10 +23,12 @@ export class LessonService {
   /**
    * Create a new lesson within a section
    * Requirements: 2.1, 2.7, 2.8, 3.1, 9.2, 9.3, 9.6, 9.9
+   * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
    */
   async createLesson(
     sectionId: string,
-    input: CreateLessonInput
+    input: CreateLessonInput,
+    userId?: string
   ): Promise<Lesson> {
     // Validate title
     if (!input.title || input.title.trim().length === 0) {
@@ -49,13 +53,22 @@ export class LessonService {
       )
     }
 
-    // Check if section exists
+    // Check if section exists and get courseId
     const section = await prisma.section.findUnique({
       where: { id: sectionId },
+      select: { id: true, courseId: true },
     })
 
     if (!section) {
       throw new Error('Section not found')
+    }
+
+    // Check course ownership using Course Service
+    if (userId) {
+      const hasOwnership = await checkCourseOwnership(section.courseId, userId)
+      if (!hasOwnership) {
+        throw new Error('Unauthorized: You do not own this course')
+      }
     }
 
     // Check for duplicate order
@@ -144,18 +157,36 @@ export class LessonService {
   /**
    * Update an existing lesson
    * Requirements: 2.4, 2.6, 2.7, 2.8, 3.2, 9.2, 9.3
+   * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
    */
   async updateLesson(
     lessonId: string,
-    input: UpdateLessonInput
+    input: UpdateLessonInput,
+    userId?: string
   ): Promise<Lesson> {
-    // Check if lesson exists
+    // Check if lesson exists and get courseId
     const existingLesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
+      include: {
+        section: {
+          select: { courseId: true },
+        },
+      },
     })
 
     if (!existingLesson) {
       throw new Error('Lesson not found')
+    }
+
+    // Check course ownership using Course Service
+    if (userId) {
+      const hasOwnership = await checkCourseOwnership(
+        existingLesson.section.courseId,
+        userId
+      )
+      if (!hasOwnership) {
+        throw new Error('Unauthorized: You do not own this course')
+      }
     }
 
     // Validate title if provided
@@ -232,20 +263,38 @@ export class LessonService {
   /**
    * Delete a lesson and all its progress records (cascade)
    * Requirements: 2.5, 2.7, 2.8, 12.7
+   * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
    */
-  async deleteLesson(lessonId: string): Promise<DeleteLessonResult> {
-    // Check if lesson exists
+  async deleteLesson(
+    lessonId: string,
+    userId?: string
+  ): Promise<DeleteLessonResult> {
+    // Check if lesson exists and get courseId
     const existingLesson = await prisma.lesson.findUnique({
       where: { id: lessonId },
       include: {
         _count: {
           select: { progress: true },
         },
+        section: {
+          select: { courseId: true },
+        },
       },
     })
 
     if (!existingLesson) {
       throw new Error('Lesson not found')
+    }
+
+    // Check course ownership using Course Service
+    if (userId) {
+      const hasOwnership = await checkCourseOwnership(
+        existingLesson.section.courseId,
+        userId
+      )
+      if (!hasOwnership) {
+        throw new Error('Unauthorized: You do not own this course')
+      }
     }
 
     const progressCount = existingLesson._count.progress

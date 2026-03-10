@@ -4,6 +4,7 @@
  * Based on: https://www.prisma.io/docs/orm/prisma-client/testing/unit-testing
  * 
  * Requirements: 1.1-1.8, 9.1, 9.5, 9.8, 12.5, 12.6
+ * Updated: Now tests Course Service integration (Requirements: 0.5, 0.8)
  */
 
 import { describe, it, expect, beforeEach } from '@jest/globals'
@@ -11,12 +12,21 @@ import { sectionService } from '../section.service'
 import { prismaMock } from '@/prisma/lib/singleton'
 import type { Course, Section } from '@/prisma/generated/prisma/client'
 
+// Mock Course Service - must be before imports
+jest.mock('../course.service')
+
+import { checkCourseOwnership } from '../course.service'
+
 describe('SectionService', () => {
   const mockCourseId = 'test-course-id'
   const mockSectionId = 'test-section-id'
+  const mockUserId = 'test-user-id'
 
   beforeEach(() => {
-    // Mocks are automatically reset by the singleton setup
+    // Reset mocks
+    jest.clearAllMocks()
+    // Default: user has ownership
+    ;(checkCourseOwnership as jest.Mock).mockResolvedValue(true)
   })
 
   describe('createSection', () => {
@@ -32,50 +42,83 @@ describe('SectionService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }
-
-      prismaMock.course.findUnique.mockResolvedValue(mockCourse)
+ //eslint-disable-next-line 
+      prismaMock.course.findUnique.mockResolvedValue(mockCourse as any)
       prismaMock.section.findUnique.mockResolvedValue(null)
       prismaMock.section.create.mockResolvedValue(mockSection)
 
-      const result = await sectionService.createSection(mockCourseId, {
-        title: 'Introduction',
-        description: 'Getting started',
-        order: 1,
-      })
+      const result = await sectionService.createSection(
+        mockCourseId,
+        {
+          title: 'Introduction',
+          description: 'Getting started',
+          order: 1,
+        },
+        mockUserId
+      )
 
       expect(result).toEqual(mockSection)
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
       expect(prismaMock.course.findUnique).toHaveBeenCalledWith({
         where: { id: mockCourseId },
       })
     })
 
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: 'Test Section',
+            order: 1,
+          },
+          mockUserId
+        )
+      ).rejects.toThrow('Unauthorized: You do not own this course')
+    })
+
     it('should reject empty title', async () => {
       // Requirement: 9.1
       await expect(
-        sectionService.createSection(mockCourseId, {
-          title: '',
-          order: 1,
-        })
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: '',
+            order: 1,
+          },
+          mockUserId
+        )
       ).rejects.toThrow('Section title is required')
     })
 
     it('should reject title exceeding 200 characters', async () => {
       // Requirement: 9.1
       await expect(
-        sectionService.createSection(mockCourseId, {
-          title: 'a'.repeat(201),
-          order: 1,
-        })
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: 'a'.repeat(201),
+            order: 1,
+          },
+          mockUserId
+        )
       ).rejects.toThrow('Section title must not exceed 200 characters')
     })
 
     it('should reject non-positive order', async () => {
       // Requirement: 9.8
       await expect(
-        sectionService.createSection(mockCourseId, {
-          title: 'Test Section',
-          order: 0,
-        })
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: 'Test Section',
+            order: 0,
+          },
+          mockUserId
+        )
       ).rejects.toThrow('Section order must be a positive integer')
     })
 
@@ -84,10 +127,14 @@ describe('SectionService', () => {
       prismaMock.course.findUnique.mockResolvedValue(null)
 
       await expect(
-        sectionService.createSection(mockCourseId, {
-          title: 'Test Section',
-          order: 1,
-        })
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: 'Test Section',
+            order: 1,
+          },
+          mockUserId
+        )
       ).rejects.toThrow('Course not found')
     })
 
@@ -98,15 +145,20 @@ describe('SectionService', () => {
         id: 'existing-id', 
         order: 1 
       }
-
-      prismaMock.course.findUnique.mockResolvedValue(mockCourse)
-      prismaMock.section.findUnique.mockResolvedValue(existingSection)
+ //eslint-disable-next-line 
+      prismaMock.course.findUnique.mockResolvedValue(mockCourse as any)
+       //eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(existingSection as any)
 
       await expect(
-        sectionService.createSection(mockCourseId, {
-          title: 'Test Section',
-          order: 1,
-        })
+        sectionService.createSection(
+          mockCourseId,
+          {
+            title: 'Test Section',
+            order: 1,
+          },
+          mockUserId
+        )
       ).rejects.toThrow('Section with order 1 already exists in this course')
     })
   })
@@ -180,18 +232,42 @@ describe('SectionService', () => {
       prismaMock.section.findUnique.mockResolvedValue(existingSection)
       prismaMock.section.update.mockResolvedValue(updatedSection)
 
-      const result = await sectionService.updateSection(mockSectionId, {
-        title: 'Updated Title',
-      })
+      const result = await sectionService.updateSection(
+        mockSectionId,
+        {
+          title: 'Updated Title',
+        },
+        mockUserId
+      )
 
       expect(result.title).toBe('Updated Title')
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
+    })
+
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      const existingSection: Pick<Section, 'id' | 'courseId'> = {
+        id: mockSectionId,
+        courseId: mockCourseId,
+      }
+ //eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(existingSection as any)
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        sectionService.updateSection(
+          mockSectionId,
+          { title: 'Test' },
+          mockUserId
+        )
+      ).rejects.toThrow('Unauthorized: You do not own this course')
     })
 
     it('should reject if section does not exist', async () => {
       prismaMock.section.findUnique.mockResolvedValue(null)
 
       await expect(
-        sectionService.updateSection(mockSectionId, { title: 'Test' })
+        sectionService.updateSection(mockSectionId, { title: 'Test' }, mockUserId)
       ).rejects.toThrow('Section not found')
     })
 
@@ -210,11 +286,13 @@ describe('SectionService', () => {
       }
 
       prismaMock.section.findUnique
-        .mockResolvedValueOnce(existingSection)
-        .mockResolvedValueOnce(duplicateSection)
+       //eslint-disable-next-line 
+        .mockResolvedValueOnce(existingSection as any)
+         //eslint-disable-next-line 
+        .mockResolvedValueOnce(duplicateSection as any)
 
       await expect(
-        sectionService.updateSection(mockSectionId, { order: 1 })
+        sectionService.updateSection(mockSectionId, { order: 1 }, mockUserId)
       ).rejects.toThrow('Section with order 1 already exists in this course')
     })
   })
@@ -231,24 +309,46 @@ describe('SectionService', () => {
         courseId: mockCourseId,
         _count: { lessons: 5 },
       }
+//eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(existingSection as any)
+      //eslint-disable-next-line 
+      prismaMock.section.delete.mockResolvedValue(existingSection as any)
 
-      prismaMock.section.findUnique.mockResolvedValue(existingSection)
-      prismaMock.section.delete.mockResolvedValue(existingSection)
-
-      const result = await sectionService.deleteSection(mockSectionId)
+      const result = await sectionService.deleteSection(mockSectionId, mockUserId)
 
       expect(result.message).toBe('Section deleted successfully')
       expect(result.deletedLessons).toBe(5)
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
       expect(prismaMock.section.delete).toHaveBeenCalledWith({
         where: { id: mockSectionId },
       })
+    })
+
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      type SectionWithCount = Pick<Section, 'id' | 'courseId'> & { 
+        _count: { lessons: number } 
+      }
+      
+      const existingSection: SectionWithCount = {
+        id: mockSectionId,
+        courseId: mockCourseId,
+        _count: { lessons: 5 },
+      }
+ //eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(existingSection as any)
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        sectionService.deleteSection(mockSectionId, mockUserId)
+      ).rejects.toThrow('Unauthorized: You do not own this course')
     })
 
     it('should reject if section does not exist', async () => {
       prismaMock.section.findUnique.mockResolvedValue(null)
 
       await expect(
-        sectionService.deleteSection(mockSectionId)
+        sectionService.deleteSection(mockSectionId, mockUserId)
       ).rejects.toThrow('Section not found')
     })
   })

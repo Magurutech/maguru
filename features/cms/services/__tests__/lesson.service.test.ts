@@ -1,11 +1,15 @@
 /**
  * Lesson Service Integration Tests
  * Requirements: 2.1-2.9, 3.1-3.6
+ * Updated: Now tests Course Service integration (Requirements: 0.5, 0.8)
  */
 
 import { lessonService } from '../lesson.service'
 import { prismaMock } from '@/prisma/lib/singleton'
 import { LessonContent } from '../../types/lesson.types'
+
+// Mock Course Service - must be before other mocks
+jest.mock('../course.service')
 
 // Mock the validation module
 jest.mock('../../validation/tiptap', () => ({
@@ -24,9 +28,16 @@ jest.mock('../../validation/tiptap', () => ({
   }),
 }))
 
+import { checkCourseOwnership } from '../course.service'
+
 describe('LessonService', () => {
+  const mockUserId = 'test-user-id'
+  const mockCourseId = 'course-1'
+
   beforeEach(() => {
     jest.clearAllMocks()
+    // Default: user has ownership
+    ;(checkCourseOwnership as jest.Mock).mockResolvedValue(true)
   })
 
   const validLessonContent: LessonContent = {
@@ -54,7 +65,7 @@ describe('LessonService', () => {
 
       const mockSection = {
         id: sectionId,
-        courseId: 'course-1',
+        courseId: mockCourseId,
         order: 1,
         title: 'Section 1',
         description: null,
@@ -71,18 +82,42 @@ describe('LessonService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }
-
-      prismaMock.section.findUnique.mockResolvedValue(mockSection)
+//eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
       prismaMock.lesson.findUnique.mockResolvedValue(null) // No duplicate
       prismaMock.lesson.create.mockResolvedValue(mockLesson as unknown as never)
 
-      const result = await lessonService.createLesson(sectionId, input)
+      const result = await lessonService.createLesson(sectionId, input, mockUserId)
 
       expect(result).toEqual(mockLesson)
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
       expect(prismaMock.section.findUnique).toHaveBeenCalledWith({
         where: { id: sectionId },
+        select: { id: true, courseId: true },
       })
       expect(prismaMock.lesson.create).toHaveBeenCalled()
+    })
+
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      const sectionId = 'section-1'
+      const input = {
+        title: 'Test Lesson',
+        content: validLessonContent,
+        order: 1,
+      }
+
+      const mockSection = {
+        id: sectionId,
+        courseId: mockCourseId,
+      }
+//eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        lessonService.createLesson(sectionId, input, mockUserId)
+      ).rejects.toThrow('Unauthorized: You do not own this course')
     })
 
     it('should reject empty title', async () => {
@@ -93,7 +128,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Lesson title is required')
     })
 
@@ -105,7 +140,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Lesson title must not exceed 200 characters')
     })
 
@@ -117,7 +152,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Lesson order must be a positive integer')
     })
 
@@ -129,7 +164,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Lesson order must be a positive integer')
     })
 
@@ -141,7 +176,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Lesson order must be a positive integer')
     })
 
@@ -162,7 +197,7 @@ describe('LessonService', () => {
       }
 
       await expect(
-        lessonService.createLesson('section-1', input)
+        lessonService.createLesson('section-1', input, mockUserId)
       ).rejects.toThrow('Invalid lesson content')
     })
 
@@ -176,7 +211,7 @@ describe('LessonService', () => {
       prismaMock.section.findUnique.mockResolvedValue(null)
 
       await expect(
-        lessonService.createLesson('nonexistent-section', input)
+        lessonService.createLesson('nonexistent-section', input, mockUserId)
       ).rejects.toThrow('Section not found')
     })
 
@@ -190,7 +225,7 @@ describe('LessonService', () => {
 
       const mockSection = {
         id: sectionId,
-        courseId: 'course-1',
+        courseId: mockCourseId,
         order: 1,
         title: 'Section 1',
         description: null,
@@ -207,12 +242,12 @@ describe('LessonService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }
-
-      prismaMock.section.findUnique.mockResolvedValue(mockSection)
+//eslint-disable-next-line 
+      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
       prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
 
       await expect(
-        lessonService.createLesson(sectionId, input)
+        lessonService.createLesson(sectionId, input, mockUserId)
       ).rejects.toThrow('Lesson with order 1 already exists in this section')
     })
   })
@@ -346,6 +381,9 @@ describe('LessonService', () => {
       order: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
+      section: {
+        courseId: mockCourseId,
+      },
     }
 
     it('should update lesson title', async () => {
@@ -357,10 +395,23 @@ describe('LessonService', () => {
         title: input.title,
       } as unknown as never)
 
-      const result = await lessonService.updateLesson('lesson-1', input)
+      const result = await lessonService.updateLesson('lesson-1', input, mockUserId)
 
       expect(result.title).toBe('Updated Title')
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
       expect(prismaMock.lesson.update).toHaveBeenCalled()
+    })
+
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      const input = { title: 'Updated Title' }
+
+      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        lessonService.updateLesson('lesson-1', input, mockUserId)
+      ).rejects.toThrow('Unauthorized: You do not own this course')
     })
 
     it('should increment version when content is updated', async () => {
@@ -386,7 +437,7 @@ describe('LessonService', () => {
         content: { ...updatedContent, version: 2 },
       } as unknown as never)
 
-      await lessonService.updateLesson('lesson-1', input)
+      await lessonService.updateLesson('lesson-1', input, mockUserId)
 
       const updateCall = prismaMock.lesson.update.mock.calls[0][0]
       const updatedContentData = updateCall.data.content as LessonContent
@@ -401,7 +452,7 @@ describe('LessonService', () => {
       prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
 
       await expect(
-        lessonService.updateLesson('lesson-1', input)
+        lessonService.updateLesson('lesson-1', input, mockUserId)
       ).rejects.toThrow('Lesson title cannot be empty')
     })
 
@@ -409,7 +460,7 @@ describe('LessonService', () => {
       prismaMock.lesson.findUnique.mockResolvedValue(null)
 
       await expect(
-        lessonService.updateLesson('nonexistent', { title: 'Test' })
+        lessonService.updateLesson('nonexistent', { title: 'Test' }, mockUserId)
       ).rejects.toThrow('Lesson not found')
     })
 
@@ -431,7 +482,7 @@ describe('LessonService', () => {
         .mockResolvedValueOnce(duplicateLesson as unknown as never) // Second call: check duplicate
 
       await expect(
-        lessonService.updateLesson('lesson-1', input)
+        lessonService.updateLesson('lesson-1', input, mockUserId)
       ).rejects.toThrow('Lesson with order 2 already exists in this section')
     })
   })
@@ -450,24 +501,50 @@ describe('LessonService', () => {
         _count: {
           progress: 5,
         },
+        section: {
+          courseId: mockCourseId,
+        },
       }
 
       prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
       prismaMock.lesson.delete.mockResolvedValue(mockLesson as unknown as never)
 
-      const result = await lessonService.deleteLesson(lessonId)
+      const result = await lessonService.deleteLesson(lessonId, mockUserId)
 
       expect(result.message).toBe('Lesson deleted successfully')
       expect(result.deletedProgressRecords).toBe(5)
+      expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
       expect(prismaMock.lesson.delete).toHaveBeenCalledWith({
         where: { id: lessonId },
       })
     })
 
+    it('should reject unauthorized user', async () => {
+      // Requirement: 0.5, 0.8
+      const lessonId = 'lesson-1'
+      const mockLesson = {
+        id: lessonId,
+        sectionId: 'section-1',
+        _count: {
+          progress: 5,
+        },
+        section: {
+          courseId: mockCourseId,
+        },
+      }
+
+      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
+
+      await expect(
+        lessonService.deleteLesson(lessonId, mockUserId)
+      ).rejects.toThrow('Unauthorized: You do not own this course')
+    })
+
     it('should reject when lesson does not exist', async () => {
       prismaMock.lesson.findUnique.mockResolvedValue(null)
 
-      await expect(lessonService.deleteLesson('nonexistent')).rejects.toThrow(
+      await expect(lessonService.deleteLesson('nonexistent', mockUserId)).rejects.toThrow(
         'Lesson not found'
       )
     })

@@ -1,0 +1,512 @@
+{
+  "info": {
+    "name": "Course Management API",
+    "description": "API testing collection for Course Content Management - Course Service endpoints\n\nFeature: MGR-27 - Course Content Management V2\nRequirements: 0.1-0.8",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseSlug",
+      "value": "web-dev-101",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Get Course by Slug",
+      "item": [
+        {
+          "name": "Get Course - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has course data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('title');",
+                  "    pm.expect(jsonData).to.have.property('slug');",
+                  "    pm.expect(jsonData).to.have.property('creatorId');",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData.slug).to.eql(pm.collectionVariables.get('courseSlug'));",
+                  "    ",
+                  "    // Save courseId for later tests",
+                  "    pm.collectionVariables.set('courseId', jsonData.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}"]
+            },
+            "description": "Get course by slug - validates course exists\n\nRequirements: 0.1, 0.3, 0.6"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course - Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates course not found\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData).to.have.property('code', 'NOT_FOUND');",
+                  "    pm.expect(jsonData.error).to.include('Course not found');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/non-existent-course",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "non-existent-course"]
+            },
+            "description": "Test error handling: course not found\n\nRequirements: 0.3"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for course retrieval by slug"
+    },
+    {
+      "name": "2. Check Course Ownership",
+      "item": [
+        {
+          "name": "Check Ownership - Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates ownership\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('hasOwnership', true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/ownership",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "ownership"]
+            },
+            "description": "Check if authenticated user owns the course\n\nRequirements: 0.2, 0.4, 0.7"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Ownership - Non-Owner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates no ownership\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('hasOwnership', false);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text",
+                "description": "Use token for non-owner user"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/ownership",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "ownership"]
+            },
+            "description": "Check ownership for user who doesn't own the course\n\nRequirements: 0.2, 0.7"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Ownership - Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response indicates ownership for admin\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('hasOwnership', true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text",
+                "description": "Use token for admin user"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/ownership",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "ownership"]
+            },
+            "description": "Admin should have ownership of all courses\n\nRequirements: 0.4, 0.7"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Ownership - Unauthorized",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates unauthorized\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData).to.have.property('code', 'UNAUTHORIZED');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/ownership",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "ownership"]
+            },
+            "description": "Test authorization: no auth token provided\n\nRequirements: 0.7"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for course ownership validation"
+    },
+    {
+      "name": "3. Get Course with Sections",
+      "item": [
+        {
+          "name": "Get Course with Sections - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has course with sections\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('title');",
+                  "    pm.expect(jsonData).to.have.property('sections');",
+                  "    pm.expect(jsonData.sections).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Sections are ordered by order field\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.sections.length > 1) {",
+                  "        for (let i = 0; i < jsonData.sections.length - 1; i++) {",
+                  "            pm.expect(jsonData.sections[i].order).to.be.at.most(jsonData.sections[i + 1].order);",
+                  "        }",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Each section has lesson count\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.sections.length > 0) {",
+                  "        pm.expect(jsonData.sections[0]).to.have.property('_count');",
+                  "        pm.expect(jsonData.sections[0]._count).to.have.property('lessons');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "dashboard"]
+            },
+            "description": "Get course with sections for creator dashboard\n\nRequirements: 0.1, 0.2, 0.4"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course with Sections - Unauthorized",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates unauthorized\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData).to.have.property('code', 'FORBIDDEN');",
+                  "    pm.expect(jsonData.error).to.include('do not own this course');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text",
+                "description": "Use token for non-owner user"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "dashboard"]
+            },
+            "description": "Test authorization: user doesn't own the course\n\nRequirements: 0.2, 0.4"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course with Sections - Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates course not found\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData).to.have.property('code', 'NOT_FOUND');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/non-existent-course/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "non-existent-course", "dashboard"]
+            },
+            "description": "Test error handling: course not found\n\nRequirements: 0.1"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for getting course with sections (creator dashboard)"
+    },
+    {
+      "name": "4. Integration Tests",
+      "item": [
+        {
+          "name": "Section Creation with Course Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Section created successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('courseId');",
+                  "    pm.expect(jsonData.title).to.eql('Test Section');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Section\",\n  \"description\": \"Testing course service integration\",\n  \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Test that section creation uses course service for validation\n\nRequirements: 0.5, 0.8"
+          },
+          "response": []
+        },
+        {
+          "name": "Lesson Creation with Course Authorization",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Lesson created successfully\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('sectionId');",
+                  "    pm.expect(jsonData.title).to.eql('Test Lesson');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Lesson\",\n  \"content\": {\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": [\n        {\n          \"type\": \"paragraph\",\n          \"content\": [\n            {\n              \"type\": \"text\",\n              \"text\": \"Test content\"\n            }\n          ]\n        }\n      ]\n    },\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-10T10:00:00Z\"\n  },\n  \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "Test that lesson creation uses course service for authorization\n\nRequirements: 0.5, 0.8"
+          },
+          "response": []
+        }
+      ],
+      "description": "Integration tests for course service usage across CMS endpoints"
+    }
+  ]
+}

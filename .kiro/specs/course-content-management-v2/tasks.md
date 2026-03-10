@@ -60,6 +60,42 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ All tests passing (10/10 manual tests verified)
     - _Requirements: 3.3, 9.3_
 
+- [x] 2.5 Course Service Layer
+  - [x] 2.5.1 Implement getCourseBySlug function
+    - ✓ Fetch course by slug from database
+    - ✓ Return course data (id, title, slug, creatorId, status)
+    - ✓ Handle course not found error
+    - ✓ Implemented in features/cms/services/course.service.ts
+    - _Requirements: 0.1, 0.3, 0.6_
+
+- [x] 2.5.2 Implement checkCourseOwnership function
+    - ✓ Verify user authentication via Clerk
+    - ✓ Check if user is Admin (allow all)
+    - ✓ Check if user owns the course
+    - ✓ Return boolean result
+    - ✓ Implemented in features/cms/services/course.service.ts
+    - _Requirements: 0.2, 0.4, 0.7_
+
+- [x] 2.5.3 Implement getCourseWithSections function
+    - ✓ Fetch course with all sections
+    - ✓ Include lesson count per section
+    - ✓ Verify user authorization
+    - ✓ Implemented in features/cms/services/course.service.ts
+    - _Requirements: 0.1, 0.2, 0.4_
+
+- [x] 2.5.4 Write unit tests for course service
+    - ✓ Test getCourseBySlug with valid slug
+    - ✓ Test getCourseBySlug with invalid slug
+    - ✓ Test checkCourseOwnership for course owner
+    - ✓ Test checkCourseOwnership for admin
+    - ✓ Test checkCourseOwnership for non-owner
+    - ✓ Test getCourseWithSections with authorization
+    - ✓ Created comprehensive test suite at features/cms/services/__tests__/course.service.test.ts
+    - ✓ All tests passing (14/14 tests)
+    - ✓ Implemented Prisma mock using jest-mock-extended
+    - ✓ Created Postman collection at docs/api/course-management.postman_collection.json
+    - _Requirements: 0.1-0.8_
+
 - [x] 3. Section Management API
   - [x] 3.1 Implement POST /api/courses/[slug]/sections endpoint
     - ✓ Authorization check (Creator owns course or Admin)
@@ -68,6 +104,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Return created section
     - ✓ Created service layer at features/cms/services/section.service.ts
     - ✓ Created API route at app/api/courses/[slug]/sections/route.ts
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 1.1, 1.6, 1.7, 8.1, 8.2, 9.1, 9.5, 9.8_
 
 - [x] 3.2 Implement GET /api/courses/[slug]/sections endpoint
@@ -75,6 +112,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Fetch sections ordered by order field
     - ✓ Include lesson count for each section
     - ✓ Implemented in same route file
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 1.2, 8.3_
 
 - [x] 3.3 Implement PUT /api/courses/[slug]/sections/[sectionId] endpoint
@@ -82,6 +120,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Validate updated fields
     - ✓ Update section in database
     - ✓ Created API route at app/api/courses/[slug]/sections/[sectionId]/route.ts
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 1.3, 1.5, 1.6, 1.7, 9.1_
 
 - [x] 3.4 Implement DELETE /api/courses/[slug]/sections/[sectionId] endpoint
@@ -89,6 +128,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Delete section (cascade to lessons)
     - ✓ Return count of deleted lessons
     - ✓ Implemented in same route file
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 1.4, 1.6, 1.7, 12.6_
 
 - [x] 3.5 Write integration tests for section endpoints
@@ -102,6 +142,13 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✅ Setup singleton pattern for consistent mocking across tests
     - _Requirements: 1.1-1.8_
 
+- [x] 3.6 Refactor Section Service to use Course Service
+    - ✓ Updated section.service.ts to import and use course.service.ts
+    - ✓ Added userId parameter to createSection, updateSection, deleteSection
+    - ✓ Replaced inline authorization with checkCourseOwnership
+    - ✓ Updated tests to mock course service using jest.mock()
+    - ✓ All tests passing (16/16 tests)
+    - _Requirements: 0.5, 0.8_
 
 - [x] 4. Lesson Management API
   - [x] 4.1 Implement POST /api/courses/[slug]/sections/[sectionId]/lessons endpoint
@@ -111,6 +158,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Create lesson in database
     - ✓ Created service layer at features/cms/services/lesson.service.ts
     - ✓ Created API route at app/api/courses/[slug]/sections/[sectionId]/lessons/route.ts
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 2.1, 2.7, 2.8, 3.1, 9.2, 9.3, 9.6, 9.9_
 
 - [x] 4.2 Implement GET /api/courses/[slug]/sections/[sectionId]/lessons endpoint
@@ -118,6 +166,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Fetch lessons ordered by order field
     - ✓ Return with content preview (first 200 chars)
     - ✓ Implemented in same route file
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 2.2, 8.3_
 
 - [x] 4.3 Implement GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] endpoint
@@ -125,6 +174,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Fetch lesson with full content
     - ✓ Include section information
     - ✓ Created API route at app/api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]/route.ts
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 2.3, 3.4_
 
 - [x] 4.4 Implement PUT /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] endpoint
@@ -133,6 +183,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Increment version number if content changed
     - ✓ Update lastEdit timestamp
     - ✓ Implemented in same route file
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 2.4, 2.6, 2.7, 2.8, 3.2, 9.2, 9.3_
 
 - [x] 4.5 Implement DELETE /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] endpoint
@@ -140,6 +191,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Delete lesson (cascade to progress records)
     - ✓ Return count of deleted progress records
     - ✓ Implemented in same route file
+    - ✓ **NOTE**: Will be updated to use Course Service for authorization
     - _Requirements: 2.5, 2.7, 2.8, 12.7_
 
 - [x] 4.6 Write integration tests for lesson endpoints
@@ -151,6 +203,15 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✅ Created comprehensive test suite at features/cms/services/__tests__/lesson.service.test.ts
     - ✅ All validation scenarios covered (23/23 tests passing)
     - _Requirements: 2.1-2.9, 3.1-3.6_
+
+- [x] 4.7 Refactor Lesson Service to use Course Service
+    - ✓ Updated lesson.service.ts to import and use course.service.ts
+    - ✓ Added userId parameter to createLesson, updateLesson, deleteLesson
+    - ✓ Replaced inline authorization with checkCourseOwnership
+    - ✓ Updated tests to mock course service
+    - ✓ Uses same mock singleton pattern as section service
+    - ✓ All tests passing (26/26 tests)
+    - _Requirements: 0.5, 0.8_
 
 - [ ] 5. Progress Tracking API
   - [ ] 5.1 Implement POST /api/progress/lesson/[lessonId]/complete endpoint
@@ -603,8 +664,8 @@ yarn add @tiptap/react @tiptap/starter-kit @tiptap/pm @tiptap/html zod
 
 ---
 
-**Document Version:** 2.0  
-**Last Updated:** 2026-03-08  
+**Document Version:** 2.1  
+**Last Updated:** 2026-03-10  
 **Status:** Ready for Execution  
-**Next Step:** Begin with Task 1 (Database Schema and Migrations)
+**Next Step:** Implement Course Service (Task 2.5)
 

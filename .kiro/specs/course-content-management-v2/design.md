@@ -971,6 +971,194 @@ export function ProgressBar({ percentage, completedLessons, totalLessons }: Prog
 
 ## Business Logic
 
+### Course Service Layer
+
+#### getCourseBySlug Function
+
+**Purpose:** Retrieve course information by slug for validation and authorization
+
+**Location:** `features/cms/services/course.service.ts`
+
+**Implementation:**
+```typescript
+import { prisma } from '@/lib/prisma'
+
+export interface CourseServiceResult {
+  success: boolean
+  data?: any
+  error?: string
+}
+
+/**
+ * Get course by slug
+ * Used by section and lesson services for validation
+ * 
+ * @param slug - Course slug
+ * @returns Course data or error
+ */
+export async function getCourseBySlug(slug: string): Promise<CourseServiceResult> {
+  try {
+    const course = await prisma.courses.findFirst({
+      where: { 
+        slug: slug 
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        creatorId: true,
+        status: true
+      }
+    })
+
+    if (!course) {
+      return {
+        success: false,
+        error: 'Course not found'
+      }
+    }
+
+    return {
+      success: true,
+      data: course
+    }
+  } catch (error) {
+    console.error('Error fetching course:', error)
+    return {
+      success: false,
+      error: 'Failed to fetch course'
+    }
+  }
+}
+```
+
+---
+
+#### checkCourseOwnership Function
+
+**Purpose:** Verify if user owns a course or is admin
+
+**Location:** `features/cms/services/course.service.ts`
+
+**Implementation:**
+```typescript
+import { auth } from '@clerk/nextjs'
+import { prisma } from '@/lib/prisma'
+
+/**
+ * Check if user owns the course or is admin
+ * Used for authorization in section/lesson operations
+ * 
+ * @param courseId - Course ID
+ * @param userId - User ID (optional, will use auth() if not provided)
+ * @returns Boolean indicating ownership
+ */
+export async function checkCourseOwnership(
+  courseId: string, 
+  userId?: string
+): Promise<boolean> {
+  try {
+    // Get userId from auth if not provided
+    const actualUserId = userId || auth().userId
+    
+    if (!actualUserId) {
+      return false
+    }
+
+    // Check if user is admin
+    const user = await prisma.users.findUnique({
+      where: { clerkId: actualUserId },
+      select: { role: true }
+    })
+
+    if (user?.role === 'ADMIN') {
+      return true
+    }
+
+    // Check if user owns the course
+    const course = await prisma.courses.findFirst({
+      where: {
+        id: courseId,
+        creatorId: actualUserId
+      }
+    })
+
+    return !!course
+  } catch (error) {
+    console.error('Error checking course ownership:', error)
+    return false
+  }
+}
+```
+
+---
+
+#### getCourseWithSections Function
+
+**Purpose:** Get course with all sections for creator dashboard
+
+**Location:** `features/cms/services/course.service.ts`
+
+**Implementation:**
+```typescript
+/**
+ * Get course with sections (for creator dashboard)
+ * 
+ * @param slug - Course slug
+ * @param userId - User ID for authorization
+ * @returns Course with sections or error
+ */
+export async function getCourseWithSections(
+  slug: string, 
+  userId: string
+): Promise<CourseServiceResult> {
+  try {
+    const course = await prisma.courses.findFirst({
+      where: { slug: slug },
+      include: {
+        sections: {
+          orderBy: { order: 'asc' },
+          include: {
+            _count: {
+              select: { lessons: true }
+            }
+          }
+        }
+      }
+    })
+
+    if (!course) {
+      return {
+        success: false,
+        error: 'Course not found'
+      }
+    }
+
+    // Check ownership
+    const hasOwnership = await checkCourseOwnership(course.id, userId)
+    if (!hasOwnership) {
+      return {
+        success: false,
+        error: 'Unauthorized: You do not own this course'
+      }
+    }
+
+    return {
+      success: true,
+      data: course
+    }
+  } catch (error) {
+    console.error('Error fetching course with sections:', error)
+    return {
+      success: false,
+      error: 'Failed to fetch course'
+    }
+  }
+}
+```
+
+---
+
 ### Content Validation
 
 #### validateLessonContent Function
@@ -1149,62 +1337,23 @@ export async function updateCourseCompletion(userId: string, courseId: string) {
 
 ### Authorization Logic
 
-#### checkCourseOwnership Function
+**Note:** Authorization logic is now centralized in Course Service Layer (see above). The functions below are deprecated in favor of the course service.
+
+#### Legacy checkCourseOwnership Function (Deprecated)
 
 **Purpose:** Verify if user owns a course or is admin
 
-**Location:** `lib/auth/authorization.ts`
+**Location:** `lib/auth/authorization.ts` (Deprecated - use `features/cms/services/course.service.ts` instead)
 
-**Implementation:**
-```typescript
-import { auth } from '@clerk/nextjs'
-import { prisma } from '@/lib/prisma'
-
-export async function checkCourseOwnership(courseId: string): Promise<boolean> {
-  const { userId } = auth()
-  
-  if (!userId) {
-    return false
-  }
-  
-  // Check if user is admin
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: { role: true }
-  })
-  
-  if (user?.role === 'ADMIN') {
-    return true
-  }
-  
-  // Check if user owns the course
-  const course = await prisma.course.findFirst({
-    where: {
-      id: courseId,
-      creatorId: userId
-    }
-  })
-  
-  return !!course
-}
-```
+**Migration Note:** This function has been moved to the Course Service layer for better modularity and reusability. Use `checkCourseOwnership` from `features/cms/services/course.service.ts` instead.
 
 ---
 
-#### requireCourseOwnership Function
+#### Legacy requireCourseOwnership Function (Deprecated)
 
 **Purpose:** Throw error if user doesn't own course (middleware helper)
 
-**Implementation:**
-```typescript
-export async function requireCourseOwnership(courseId: string): Promise<void> {
-  const hasOwnership = await checkCourseOwnership(courseId)
-  
-  if (!hasOwnership) {
-    throw new Error('Forbidden: You do not have permission to modify this course')
-  }
-}
-```
+**Migration Note:** This function is no longer needed. Section and Lesson services now use the Course Service directly for authorization checks.
 
 ---
 
@@ -1938,8 +2087,8 @@ yarn deploy
 
 ---
 
-**Document Version:** 2.0  
-**Last Updated:** 2026-03-08  
+**Document Version:** 2.1  
+**Last Updated:** 2026-03-10  
 **Status:** Ready for Implementation  
-**Next Phase:** Create tasks.md
+**Next Phase:** Implement Course Service
 
