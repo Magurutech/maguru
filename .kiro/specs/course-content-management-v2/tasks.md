@@ -249,7 +249,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - Set completedAt timestamp if 100%
     - _Requirements: 7.3, 7.4, 7.6_
 
-- [ ]* 5.6 Write property tests for progress calculation
+- [x] 5.6 Write property tests for progress calculation
     - **Property 2: Completion percentage accuracy**
     - *For any* valid total and completed lesson counts, percentage should equal (completed/total) × 100 rounded to 2 decimals
     - **Validates: Requirements 7.2**
@@ -262,27 +262,27 @@ This implementation plan breaks down the Course Content Management feature into 
     - _Requirements: 7.1, 7.2, 7.4, 7.7_
 
 
-- [ ] 6. Authorization and Security
-  - [ ] 6.1 Implement checkCourseOwnership function
+- [x] 6. Authorization and Security
+  - [x] 6.1 Implement checkCourseOwnership function
     - Verify user authentication via Clerk
     - Check if user is Admin (allow all)
     - Check if user owns the course
     - Return boolean result
     - _Requirements: 8.1, 8.2, 8.4, 8.7_
 
-- [ ] 6.2 Implement requireCourseOwnership middleware
+- [x] 6.2 Implement requireCourseOwnership middleware
     - Call checkCourseOwnership
     - Throw error if unauthorized
     - Use in all Creator endpoints
     - _Requirements: 8.1, 8.4, 8.5, 8.7_
 
-- [ ] 6.3 Implement link href validation
+- [x] 6.3 Implement link href validation
     - Validate URL format
     - Whitelist allowed protocols (http, https, mailto)
     - Reject javascript: and data: protocols
     - _Requirements: 3.3, 9.3_
 
-- [ ]* 6.4 Write unit tests for authorization
+- [x]* 6.4 Write unit tests for authorization
     - Test admin access to all courses
     - Test creator access to own courses only
     - Test creator denied access to other courses
@@ -290,34 +290,39 @@ This implementation plan breaks down the Course Content Management feature into 
     - _Requirements: 8.1-8.7_
 
 - [ ] 7. Tiptap Editor Component (Creator)
-  - [ ] 7.1 Create LessonEditor component
-    - Initialize Tiptap editor with StarterKit
-    - Set editable: true
-    - Implement editor.getJSON() on save
-    - Handle version increment
-    - Update lastEdit timestamp
+  - [x] 7.1 Create LessonEditor component
+    - ✓ Initialize Tiptap editor with StarterKit
+    - ✓ Set editable: true
+    - ✓ Implement editor.getJSON() on save
+    - ✓ Handle version increment
+    - ✓ Update lastEdit timestamp
+    - ✓ Created components/creator/LessonEditor.tsx
+    - ✓ Installed @tiptap/react, @tiptap/starter-kit, @tiptap/pm
     - _Requirements: 4.1, 4.8, 4.9_
 
-- [ ] 7.2 Create EditorToolbar component
-    - Add Bold button (Ctrl+B)
-    - Add Italic button (Ctrl+I)
-    - Add Inline Code button (Ctrl+E)
-    - Add Heading 1, 2, 3 buttons
-    - Add Bullet List button
-    - Add Ordered List button
-    - Add Link button (Ctrl+K)
-    - Add Code Block button
-    - Highlight active formatting
+- [x] 7.2 Create EditorToolbar component
+    - ✓ Add Bold button (Ctrl+B)
+    - ✓ Add Italic button (Ctrl+I)
+    - ✓ Add Inline Code button (Ctrl+E)
+    - ✓ Add Heading 1, 2, 3 buttons
+    - ✓ Add Bullet List button
+    - ✓ Add Ordered List button
+    - ✓ Add Link button (Ctrl+K)
+    - ✓ Add Code Block button
+    - ✓ Highlight active formatting
+    - ✓ Created components/creator/EditorToolbar.tsx
+    - ✓ Integrated into LessonEditor component
     - _Requirements: 4.2, 4.3, 4.4, 4.5, 4.6_
 
-- [ ] 7.3 Create LessonPreview component
-    - Initialize Tiptap editor with StarterKit
-    - Set editable: false
-    - Display read-only preview
-    - Use same extensions as editor
+- [x] 7.3 Create LessonPreview component
+    - ✓ Initialize Tiptap editor with StarterKit
+    - ✓ Set editable: false
+    - ✓ Display read-only preview
+    - ✓ Use same extensions as editor
+    - ✓ Created components/creator/LessonPreview.tsx
     - _Requirements: 4.7, 4.9_
 
-- [ ]* 7.4 Write component tests for editor
+- [ ] 7.4 Write component tests for editor
     - Test editor initialization
     - Test toolbar button functionality
     - Test getJSON() returns valid structure
