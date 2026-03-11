@@ -1,553 +1,340 @@
-# Code Quality Analysis Report
-## Feature: Course Content Management V2 (Tasks 1-7)
-## Date: 2026-03-11
+# Migration Guide: Old Course System → CMS V2
+
+**Created:** 2026-03-12  
+**Status:** Ready for Execution  
+**Priority:** CRITICAL - Required before Task 10
 
 ---
 
-## Executive Summary
+## Overview
 
-**Overall Assessment: Good Foundation with Minor Issues**
+This guide outlines the migration from the old markdown-based course system to the new database-based CMS V2 system.
 
-The codebase establishes a solid foundation with proper service layer pattern, comprehensive validation, and good test coverage. However, there are several areas for improvement including duplicate code, minor overengineering, and some code quality issues.
+### System Comparison
 
-**Key Metrics:**
-- **Files Analyzed**: 21 service/component/validation files
-- **Total LOC**: ~3,500 lines across CMS feature
-- **Test Coverage**: 137/137 passing (100%)
-- **Lint Status**: No errors
-- **Type Safety**: Strict TypeScript enabled
-
----
-
-## 1. DUPLICATE CODE ISSUES
-
-### 1.1 Duplicate Authorization Function
-
-**Severity: Medium**
-**Location:** Multiple files
-
-**Issue:** Authorization logic is duplicated across two files:
-
-```typescript
-// features/cms/services/authorization.service.ts
-export async function checkCourseOwnership(userId: string, courseId: string): Promise<boolean>
-```
-
-```typescript
-// features/cms/services/course.service.ts
-export async function checkCourseOwnership(courseId: string, userId?: string): Promise<boolean>
-```
-
-**Impact:**
-- Same function name but different parameter order
-- Both perform similar ownership checks
-- Maintaining both is error-prone
-
-**Recommendation:** Remove one and consolidate. Keep only `course.service.ts` version since it's more complete (includes Admin role check via Clerk API).
+| Aspect | Old System | New CMS V2 |
+|--------|-----------|------------|
+| **Storage** | File-based markdown | Database (Prisma + Supabase) |
+| **Content Format** | Markdown files | Tiptap JSON |
+| **Data Structure** | `CourseItem` | `Lesson` with `LessonContent` |
+| **Editor** | N/A (manual markdown) | Tiptap rich-text editor |
+| **Progress Tracking** | In-memory/localStorage | Database with `LessonProgress` |
+| **Navigation** | `CourseSidebar` | `CourseNavigation` (shadcn/ui) |
+| **Location** | `features/course/` | `features/cms/` |
 
 ---
 
-### 1.2 Duplicate Course Existence Checks
+## Migration Steps
 
-**Severity: Low**
-**Location:** `section.service.ts` lines 52-62
+### Step 1: Backup Old System (Optional)
 
-**Issue:** Course existence check appears twice in `createSection`:
+```bash
+# Create backup branch
+git checkout -b backup/old-course-system
 
-```typescript
-// First check (line 52-58)
-const course = await prisma.course.findUnique({
-  where: { id: courseId },
-})
+# Commit current state
+git add .
+git commit -m "backup: Archive old markdown-based course system"
 
-if (!course) {
-  throw new Error('Course not found')
-}
-
-if (!course) {  // Line 60 - DUPLICATE!
-  throw new Error('Course not found')
-}
+# Return to main branch
+git checkout main
 ```
 
-**Impact:** Redundant code, but functionally harmless due to early return.
+### Step 2: Remove Old System
 
-**Recommendation:** Remove the duplicate check (lines 60-62).
+```bash
+# Delete old course feature folder
+rm -rf features/course
 
----
+# Delete old learn page
+rm app/course/[slug]/learn/page.tsx
 
-### 1.3 Authorization Helper vs Service
-
-**Severity: Low**
-**Location:** `authorization.service.ts` and `authorization.helper.ts`
-
-**Issue:** `authorization.helper.ts` provides thin wrapper functions that call `authorizationService`:
-
-```typescript
-// authorization.helper.ts
-export async function checkCourseOwnership(userId: string, courseId: string): Promise<boolean> {
-  return authorizationService.checkCourseOwnershipByUserId(userId, courseId)
-}
+# Commit deletion
+git add .
+git commit -m "refactor: Remove old markdown-based course system"
 ```
 
-**Impact:** Creates unnecessary indirection layer. The helper file adds complexity without adding value.
+**Files to be deleted:**
+- `features/course/` (entire folder)
+  - `components/Sidebar/CourseSidebar.tsx`
+  - `components/ContentRenderer.tsx`
+  - `components/chatbot/`
+  - `hooks/useCourse.ts`
+  - `api/index.ts`
+  - All related types and utilities
 
-**Recommendation:**
-- Consider whether the helper functions add meaningful abstraction
-- If not, import `authorizationService` directly in API routes
-- This is minor overengineering but not critical.
+- `app/course/[slug]/learn/page.tsx` (current implementation)
 
----
+### Step 3: Implement New Learn Page (Task 11.1)
 
-## 2. DEAD CODE ISSUES
+**Location:** `app/course/[slug]/learn/page.tsx`
 
-### 2.1 Unused Verification Methods in Services
-
-**Severity: Medium**
-**Location:**
-- `section.service.ts` lines 267-281 (`verifySectionBelongsToCourse`)
-- `lesson.service.ts` lines 313-343 (`verifyLessonBelongsToSection`, `getCourseIdForLesson`)
-
-**Issue:** Helper methods are defined but never called:
-
+**Required Imports:**
 ```typescript
-// section.service.ts - lines 271-281
-async verifySectionBelongsToCourse(
-  sectionId: string,
-  courseId: string
-): Promise<boolean> {
-  const section = await prisma.section.findUnique({...})
-  return section?.courseId === courseId
-}
+import { CourseNavigation } from '@/features/cms/components/student/CourseNavigation'
+import { ProgressBar } from '@/features/cms/components/student/ProgressBar'
+import { LessonViewer } from '@/features/cms/components/student/LessonViewer'
+import { LessonNavigation } from '@/features/cms/components/student/LessonNavigation'
+import { getCourseWithSections } from '@/features/cms/services/course.service'
+import { getCourseProgress } from '@/features/cms/services/progress.service'
 ```
 
+**Page Structure:**
 ```typescript
-// lesson.service.ts - lines 317-343
-async verifyLessonBelongsToSection(
-  lessonId: string,
-  sectionId: string
-): Promise<boolean> { /* never called */ }
-```
-
-**Impact:**
-- Dead code that bloats files (~80 lines combined)
-- Creates maintenance burden for unused code
-- Tests don't cover these methods (no test cases found)
-
-**Recommendation:** Remove these three unused verification methods.
-
----
-
-### 2.2 Empty Helper File
-
-**Severity: Low**
-**Location:** `features/cms/types/index.ts`
-
-**Issue:** File only re-exports without adding value:
-
-```typescript
-// features/cms/types/index.ts
-export type {
-  Section,
-  SectionWithLessonCount,
-  CreateSectionInput,
-  UpdateSectionInput,
-  DeleteSectionResult,
-} from './section.types'
-```
-
-**Impact:** Unnecessary indirection. Could be omitted and import directly.
-
-**Recommendation:** Remove index.ts files in types/ subdirectories and import directly.
-
----
-
-## 3. OVERENGINEERING ISSUES
-
-### 3.1 Class-Based Service Pattern (Overhead)
-
-**Severity: Low**
-**Location:** All service files (`SectionService`, `LessonService`, `ProgressService`, `AuthorizationService`)
-
-**Issue:** Using class-based pattern with singleton export for simple stateless services:
-
-```typescript
-export class SectionService {
-  async createSection(...) { /* stateless operations */ }
-  async updateSection(...) { /* stateless operations */ }
-  async deleteSection(...) { /* stateless operations */ }
-  // ... more methods
-}
-// Export singleton
-export const sectionService = new SectionService()
-```
-
-**Impact:**
-- Class instantiation overhead for stateless functions
-- "Class" semantics imply state, but all methods are stateless
-- Singleton pattern adds complexity (new SectionService())
-
-**Recommendation:** Convert to object-based service pattern (simpler, more idiomatic for stateless services):
-
-```typescript
-export const sectionService = {
-  createSection: async () => { /* implementation */ },
-  updateSection: async () => { /* implementation */ },
-  deleteSection: async () => { /* implementation */ },
+export default async function LearnPage({ 
+  params 
+}: { 
+  params: { slug: string } 
+}) {
+  // 1. Fetch course data with sections and lessons
+  const course = await getCourseWithSections(params.slug)
+  
+  // 2. Fetch user progress
+  const userId = await getCurrentUserId() // from Clerk
+  const progress = await getCourseProgress(params.slug, userId)
+  
+  // 3. Determine current lesson (from URL query or last accessed)
+  const searchParams = useSearchParams()
+  const lessonId = searchParams.get('lesson') || getFirstLessonId(course)
+  const currentLesson = await getLessonById(lessonId)
+  
+  // 4. Calculate navigation (prev/next lessons)
+  const { previousLesson, nextLesson } = calculateNavigation(course, lessonId)
+  
+  return (
+    <div className="learn-page-layout">
+      {/* Sidebar with CourseNavigation */}
+      <aside className="sidebar">
+        <CourseNavigation 
+          sections={course.sections}
+          currentLessonId={lessonId}
+          onLessonClick={handleLessonClick}
+        />
+      </aside>
+      
+      {/* Main content area */}
+      <main className="main-content">
+        {/* Progress bar at top */}
+        <ProgressBar 
+          percentage={progress.percentage}
+          completedLessons={progress.completedLessons}
+          totalLessons={progress.totalLessons}
+        />
+        
+        {/* Lesson viewer */}
+        <LessonViewer 
+          lesson={currentLesson}
+          onMarkComplete={handleMarkComplete}
+          isCompleted={progress.completedLessons.includes(lessonId)}
+        />
+        
+        {/* Prev/Next navigation */}
+        <LessonNavigation 
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
+          onNavigate={handleNavigate}
+        />
+      </main>
+    </div>
+  )
 }
 ```
 
----
+### Step 4: Implement Server Actions (Task 11.2, 11.3)
 
-### 3.2 Unnecessary Indirection via Helper Functions
-
-**Severity: Low**
-**Location:** `authorization.helper.ts` (entire file)
-
-**Issue:** Wrapper functions that add no value:
+**Location:** `app/course/[slug]/learn/actions.ts`
 
 ```typescript
-// authorization.helper.ts
-export async function checkCourseOwnership(userId, courseId) {
-  return authorizationService.checkCourseOwnershipByUserId(userId, courseId)
-}
+'use server'
 
-export async function requireCourseOwnership(userId, courseId) {
-  const hasOwnership = await checkCourseOwnership(userId, courseId)
-  if (!hasOwnership) {
-    throw new Error('Forbidden: You do not have permission to modify this course')
+import { auth } from '@clerk/nextjs'
+import { markLessonComplete } from '@/features/cms/services/progress.service'
+import { revalidatePath } from 'next/cache'
+
+export async function handleMarkComplete(lessonId: string, courseSlug: string) {
+  const { userId } = auth()
+  if (!userId) throw new Error('Unauthorized')
+  
+  await markLessonComplete(userId, lessonId)
+  
+  // Revalidate to update progress bar
+  revalidatePath(`/course/${courseSlug}/learn`)
+  
+  return { success: true }
+}
+```
+
+### Step 5: Update Navigation (Task 11.2)
+
+**Client Component:** `app/course/[slug]/learn/LearnPageClient.tsx`
+
+```typescript
+'use client'
+
+import { useRouter, useSearchParams } from 'next/navigation'
+
+export function LearnPageClient({ 
+  course, 
+  currentLesson, 
+  progress 
+}: LearnPageClientProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  const handleLessonClick = (lessonId: string) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('lesson', lessonId)
+    router.push(`/course/${course.slug}/learn?${params.toString()}`)
+  }
+  
+  const handleNavigate = (lessonId: string) => {
+    handleLessonClick(lessonId)
+  }
+  
+  const handleMarkComplete = async () => {
+    await handleMarkComplete(currentLesson.id, course.slug)
+    // UI will update via revalidation
+  }
+  
+  return (
+    // ... render components with handlers
+  )
+}
+```
+
+---
+
+## Data Migration (If Needed)
+
+### If you have existing course data in markdown:
+
+**Option 1: Manual Migration**
+1. Create courses via creator dashboard
+2. Copy content from markdown to Tiptap editor
+3. Recreate section/lesson structure
+
+**Option 2: Automated Migration Script**
+```typescript
+// scripts/migrate-courses.ts
+import { readMarkdownFiles } from './utils'
+import { createCourse, createSection, createLesson } from '@/features/cms/services'
+
+async function migrateCourses() {
+  const courses = await readMarkdownFiles('./content/courses')
+  
+  for (const course of courses) {
+    // Create course
+    const newCourse = await createCourse({
+      title: course.title,
+      slug: course.slug,
+      creatorId: 'admin-user-id'
+    })
+    
+    // Create sections and lessons
+    for (const section of course.sections) {
+      const newSection = await createSection({
+        courseId: newCourse.id,
+        title: section.title,
+        order: section.order
+      })
+      
+      for (const lesson of section.lessons) {
+        // Convert markdown to Tiptap JSON
+        const tiptapContent = markdownToTiptap(lesson.content)
+        
+        await createLesson({
+          sectionId: newSection.id,
+          title: lesson.title,
+          content: {
+            content: tiptapContent,
+            version: 1,
+            lastEdit: new Date().toISOString()
+          },
+          order: lesson.order
+        })
+      }
+    }
   }
 }
 ```
 
-**Impact:**
-- API routes could directly import `authorizationService`
-- Creates unnecessary function call layer
-- Inconsistent with other patterns (no helpers for section/lesson services)
-
-**Recommendation:** Remove `authorization.helper.ts` and use `authorizationService` directly in API routes.
-
 ---
 
-### 3.3 String-Based Error Code Detection (Fragile)
+## Testing Migration
 
-**Severity: Medium**
-**Location:** API routes (multiple locations)
+### Validation Checklist
 
-**Issue:** Error type detection using string inclusion patterns:
+- [ ] Old system completely removed
+- [ ] New learn page renders without errors
+- [ ] Course navigation displays sections and lessons
+- [ ] Lesson content renders with Tiptap
+- [ ] Progress bar shows correct percentage
+- [ ] Mark as complete functionality works
+- [ ] Prev/Next navigation works
+- [ ] Progress persists after page refresh
+- [ ] Mobile responsive layout works
+- [ ] All tests passing (207/207)
 
-```typescript
-// route.ts lines 114-126
-if (
-  message.includes('required') ||
-  message.includes('must not exceed') ||
-  message.includes('must be a positive') ||
-  message.includes('already exists')
-) {
-  return NextResponse.json({
-    error: message,
-    code: 'VALIDATION_ERROR',
-  }, { status: 400 })
-}
-```
+### Test Commands
 
-**Impact:**
-- Fragile: if error message changes slightly, detection breaks
-- Typos in error strings will go undetected
-- Not maintainable
+```bash
+# Type checking
+yarn type-check
 
-**Recommendation:** Use custom Error classes with error codes:
+# Linting
+yarn lint
 
-```typescript
-class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
-    super(message)
-    this.field = field
-  }
-}
+# Unit tests
+yarn test:unit
 
-// In service:
-throw new ValidationError('Title is required', 'title')
-
-// In route:
-if (error instanceof ValidationError) {
-  return NextResponse.json({
-    error: error.message,
-    code: 'VALIDATION_ERROR',
-    details: { field: error.field }
-  }, { status: 400 })
-}
+# Build test
+yarn build
 ```
 
 ---
 
-## 4. CODE QUALITY ISSUES
+## Rollback Plan
 
-### 4.1 Inconsistent Error Handling Pattern
+If migration fails, rollback to old system:
 
-**Severity: Low**
-**Location:** Service layer
+```bash
+# Checkout backup branch
+git checkout backup/old-course-system
 
-**Issue:** Two different patterns for error handling:
+# Or revert commits
+git revert HEAD~2  # Revert last 2 commits
 
-```typescript
-// Pattern 1: Console.error + return object
-console.error('Error fetching course:', error)
-return {
-  success: false,
-  error: 'Failed to fetch course'
-}
-
-// Pattern 2: Throw Error directly
-throw new Error('Unauthorized: You do not own this course')
-```
-
-**Impact:**
-- Inconsistent error propagation
-- API routes must handle both patterns
-- Harder to maintain
-
-**Recommendation:** Standardize on throwing errors from services and let API routes catch uniformly.
-
----
-
-### 4.2 Console.error for Service Layer Errors
-
-**Severity: Low**
-**Location:** All service files
-
-**Issue:** Using `console.error` instead of proper logging:
-
-```typescript
-console.error('Error fetching course:', error)
-console.error('Error creating section:', error)
-```
-
-**Impact:**
-- No structured logging
-- Can't be filtered by severity/context
-- Production monitoring difficult
-
-**Recommendation:** Use the existing `logger` service from `services/logger.ts`:
-
-```typescript
-import { logger } from '@/services/logger'
-logger.error('CourseService', 'getCourseById', 'Course not found', error)
+# Restore old files
+git checkout HEAD~2 -- features/course
+git checkout HEAD~2 -- app/course/[slug]/learn/page.tsx
 ```
 
 ---
 
-### 4.3 Manual ID Generation Instead of Database Auto-Generate
+## Timeline
 
-**Severity: Low**
-**Location:** `section.service.ts` line 83, `lesson.service.ts` line 93
+| Task | Estimated Time | Priority |
+|------|---------------|----------|
+| Step 1: Backup | 5 minutes | Optional |
+| Step 2: Remove old system | 10 minutes | High |
+| Step 3: Implement new learn page | 2-3 hours | Critical |
+| Step 4: Implement server actions | 1 hour | Critical |
+| Step 5: Update navigation | 1 hour | Critical |
+| Testing and validation | 1 hour | High |
 
-**Issue:** Manually generating UUIDs:
-
-```typescript
-const section = await prisma.section.create({
-  data: {
-    id: crypto.randomUUID(),  // Manual generation
-    // ...
-  },
-})
-```
-
-**Impact:**
-- Redundant (Prisma can auto-generate)
-- Creates potential for collision
-- Not consistent with Prisma patterns
-
-**Recommendation:** Let Prisma handle ID generation:
-
-```typescript
-const section = await prisma.section.create({
-  data: {
-    // No id field - Prisma auto-generates
-    // ...
-  },
-})
-```
+**Total Estimated Time:** 5-6 hours
 
 ---
 
-### 4.4 Inconsistent Date/Timestamp Handling
+## Next Steps After Migration
 
-**Severity: Low**
-**Location:** Progress service and service layer
-
-**Issue:** Inconsistent timestamp handling:
-
-```typescript
-// In some places: new Date()
-// In others: new Date().toISOString()
-// In response objects: lessonProgress.completedAt?.toISOString() || null
-```
-
-**Impact:** Date objects and ISO strings mixed, potential for type mismatches.
-
-**Recommendation:** Standardize on storing ISO strings in database and using Date objects only in memory, or vice versa with clear conversion layer.
+1. ✅ Complete Task 11 (Student Learn Page Integration)
+2. ⏭️ Implement Task 10 (Creator Dashboard Integration)
+3. ⏭️ Implement Task 12 (Error Handling)
+4. ⏭️ Implement Task 13 (Performance Optimization)
 
 ---
 
-### 4.5 Magic Numbers in Validation Logic
-
-**Severity: Low**
-**Location:** Multiple service files
-
-**Issue:** Hard-coded validation thresholds:
-
-```typescript
-if (input.title.length > 200) { /* magic number */ }
-if (!Number.isInteger(input.order) || input.order < 1) { /* magic number */ }
-```
-
-**Impact:**
-- Business rules scattered across files
-- Changes require multiple file updates
-
-**Recommendation:** Extract constants to a validation config file:
-
-```typescript
-// lib/validation/constants.ts
-export const VALIDATION_LIMITS = {
-  TITLE_MAX_LENGTH: 200,
-  ORDER_MIN_VALUE: 1,
-  CONTENT_PREVIEW_LENGTH: 200,
-} as const
-```
-
----
-
-## 5. ARCHITECTURE STRENGTHS
-
-Despite the issues identified, the codebase has several strong architectural patterns:
-
-### 5.1 Service Layer Pattern
-- Clean separation of business logic from API routes
-- Consistent structure across all services
-- Easy to test (all services have comprehensive tests)
-
-### 5.2 Comprehensive Validation Layer
-- Zod-based validation for Tiptap JSON
-- Extensive edge case coverage (10/10 validation tests)
-- Type-safe validation at runtime
-
-### 5.3 Authorization Centralization
-- Course Service handles ownership checks
-- Role-based access control (Admin/Creator)
-- Reusable across section/lesson services
-
-### 5.4 Testing Excellence
-- 137/137 tests passing
-- Consistent mock patterns with jest-mock-extended
-- Both unit and component tests
-
-### 5.5 Progress Calculation Abstraction
-- Clean separation of calculation logic
-- Pure functions (no side effects)
-- Proper edge case handling (zero lessons)
-
----
-
-## 6. PRIORITIZED RECOMMENDATIONS
-
-| Priority | Issue | Impact | Effort |
-|-----------|-------|---------|----------|
-| **P1 - High** | Dead code: Unused verification methods | Medium | 2 hours |
-| **P1 - High** | Duplicate authorization function | Medium | 3 hours |
-| **P2 - Medium** | String-based error detection | High | 4 hours |
-| **P2 - Medium** | Manual UUID generation | Low | 1 hour |
-| **P2 - Medium** | Console.error instead of logger | Medium | 3 hours |
-| **P3 - Low** | Unnecessary helper indirection | Low | 2 hours |
-| **P3 - Low** | Class-based service pattern | Low | 6 hours |
-| **P3 - Low** | Empty type index files | Low | 1 hour |
-| **P3 - Low** | Duplicate course check | Low | 30 minutes |
-| **P3 - Low** | Magic numbers extraction | Low | 2 hours |
-
----
-
-## 7. CODE SMELLS DETECTED
-
-| Smell | Severity | Count | Locations |
-|--------|----------|-------|------------|
-| Dead Code | Medium | 3 methods | section.service.ts, lesson.service.ts |
-| Duplicate Code | Medium | 2 functions | course.service.ts, authorization.service.ts |
-| Duplicate Code | Low | 1 check | section.service.ts |
-| Overengineering | Low | 4 classes | All service files |
-| Fragile Error Handling | High | 10+ locations | All API routes |
-| Magic Numbers | Low | 15+ occurrences | All service files |
-| Console Logging | Medium | 15+ occurrences | All service files |
-| Manual UUID | Low | 2 locations | section.service.ts, lesson.service.ts |
-
----
-
-## 8. COMPLEXITY METRICS
-
-| Metric | Value | Status |
-|--------|---------|----------|
-| Average Service LOC | 380 lines | Acceptable |
-| Average Method Complexity | 3.5 | Good |
-| Test-to-Code Ratio | 0.04 (137 tests / 3,500 LOC) | Excellent |
-| Duplicate Code | ~5% of total | Needs improvement |
-| Dead Code | ~2% of total | Needs cleanup |
-
----
-
-## 9. SECURITY CONSIDERATIONS
-
-### 9.1 Missing Input Sanitization
-
-**Severity: High**
-**Location:** API routes (all POST endpoints)
-
-**Issue:** No explicit input sanitization before database operations:
-
-```typescript
-const body = await request.json()
-const { title, description, order } = body
-// No sanitization before passing to service
-```
-
-**Recommendation:** Add input sanitization layer to prevent XSS/injection:
-
-```typescript
-import { sanitize } from '@/lib/sanitize'
-
-const sanitized = {
-  title: sanitize(body.title),
-  description: body.description ? sanitize(body.description) : null,
-  order: body.order,
-}
-```
-
----
-
-## 10. POSITIVE OBSERVATIONS
-
-Despite the issues, there are many positive aspects:
-
-1. **Excellent Test Coverage**: 137/137 tests with comprehensive scenarios
-2. **Type Safety**: Strict TypeScript with no any types (except intentional Prisma cast)
-3. **Clear Documentation**: All files have JSDoc comments linking to requirements
-4. **Consistent Naming**: kebab-case files, PascalCase classes, camelCase functions
-5. **Proper Error Messages**: Descriptive, user-friendly error messages
-6. **Service Layer Pattern**: Good separation of concerns for maintainability
-
----
-
-## CONCLUSION
-
-The Course Content Management V2 codebase demonstrates **solid engineering practices** with a strong foundation for future development. The primary concerns are:
-
-1. **Dead Code Removal** - Priority cleanup of unused verification methods
-2. **Error Handling Standardization** - Move from fragile string detection to proper error classes
-3. **Input Sanitization** - Add security layer for user inputs
-
-**Overall Grade: B+ (Good foundation, needs cleanup and refinement)**
-
----
-
-*Generated by: /sc:improve analysis*
-*Analysis Date: 2026-03-11*
-*Files Analyzed: 21 files*
-*Lines of Code: ~3,500*
+**Document Version:** 1.0  
+**Last Updated:** 2026-03-12  
+**Status:** Ready for Execution

@@ -489,7 +489,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - Test deleting section (cascade)
     - _Requirements: 1.1-1.8, 2.1-2.9_
 
-- [ ] 11. Student Learn Page Integration
+- [-] 11. Student Learn Page Integration
   - [ ] 11.1 Create main learn page layout
     - Sidebar with CourseNavigation
     - Main content area with LessonViewer
