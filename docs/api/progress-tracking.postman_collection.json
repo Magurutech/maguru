@@ -1,0 +1,503 @@
+{
+  "info": {
+    "name": "Progress Tracking API",
+    "description": "API endpoints for tracking student lesson and course progress",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "progress-tracking-v1"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{clerk_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "clerk_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "lesson_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "course_slug",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Lesson Progress",
+      "item": [
+        {
+          "name": "Mark Lesson as Complete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('lessonId');",
+                  "    pm.expect(jsonData).to.have.property('userId');",
+                  "    pm.expect(jsonData).to.have.property('completed');",
+                  "    pm.expect(jsonData).to.have.property('completedAt');",
+                  "});",
+                  "",
+                  "pm.test(\"Lesson is marked as completed\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.completed).to.be.true;",
+                  "    pm.expect(jsonData.completedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}/complete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "lesson", "{{lesson_id}}", "complete"]
+            },
+            "description": "Mark a lesson as complete for the authenticated user.\n\nRequirements: 6.2, 6.3, 6.7, 6.8, 12.2\n\nSide Effects:\n- Creates or updates LessonProgress record\n- Triggers course completion recalculation\n- Updates course completion percentage"
+          },
+          "response": [
+            {
+              "name": "Success - Lesson Marked Complete",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}/complete",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "lesson", "{{lesson_id}}", "complete"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"lessonId\": \"lesson-uuid-123\",\n  \"userId\": \"user_2abc123def456\",\n  \"completed\": true,\n  \"completedAt\": \"2026-03-11T10:30:00.000Z\",\n  \"createdAt\": \"2026-03-11T10:30:00.000Z\"\n}"
+            },
+            {
+              "name": "Error - Unauthorized",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}/complete",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "lesson", "{{lesson_id}}", "complete"]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Unauthorized: Authentication required\"\n}"
+            },
+            {
+              "name": "Error - Lesson Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/lesson/invalid-lesson-id/complete",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "lesson", "invalid-lesson-id", "complete"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Lesson not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Lesson Progress",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('lessonId');",
+                  "    pm.expect(jsonData).to.have.property('userId');",
+                  "    pm.expect(jsonData).to.have.property('completed');",
+                  "    pm.expect(jsonData).to.have.property('completedAt');",
+                  "});",
+                  "",
+                  "pm.test(\"Completed is boolean\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.completed).to.be.a('boolean');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "lesson", "{{lesson_id}}"]
+            },
+            "description": "Get lesson progress status for authenticated user.\n\nRequirements: 6.5, 6.6\n\nReturns:\n- Completion status (completed boolean)\n- Completion timestamp (completedAt)\n- Returns default not-completed status if no progress record exists"
+          },
+          "response": [
+            {
+              "name": "Success - Lesson Completed",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "lesson", "{{lesson_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"lessonId\": \"lesson-uuid-123\",\n  \"userId\": \"user_2abc123def456\",\n  \"completed\": true,\n  \"completedAt\": \"2026-03-11T10:30:00.000Z\"\n}"
+            },
+            {
+              "name": "Success - Lesson Not Completed",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "lesson", "{{lesson_id}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"lessonId\": \"lesson-uuid-123\",\n  \"userId\": \"user_2abc123def456\",\n  \"completed\": false,\n  \"completedAt\": null\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints for tracking individual lesson completion"
+    },
+    {
+      "name": "Course Progress",
+      "item": [
+        {
+          "name": "Get Course Progress",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has required fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('courseId');",
+                  "    pm.expect(jsonData).to.have.property('userId');",
+                  "    pm.expect(jsonData).to.have.property('percentage');",
+                  "    pm.expect(jsonData).to.have.property('completedLessons');",
+                  "    pm.expect(jsonData).to.have.property('totalLessons');",
+                  "    pm.expect(jsonData).to.have.property('completed');",
+                  "    pm.expect(jsonData).to.have.property('completedAt');",
+                  "});",
+                  "",
+                  "pm.test(\"Percentage is between 0 and 100\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.percentage).to.be.at.least(0);",
+                  "    pm.expect(jsonData.percentage).to.be.at.most(100);",
+                  "});",
+                  "",
+                  "pm.test(\"Percentage calculation is correct\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.totalLessons > 0) {",
+                  "        var expectedPercentage = (jsonData.completedLessons / jsonData.totalLessons) * 100;",
+                  "        pm.expect(jsonData.percentage).to.be.closeTo(expectedPercentage, 0.01);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Completed flag is correct\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    if (jsonData.percentage === 100) {",
+                  "        pm.expect(jsonData.completed).to.be.true;",
+                  "        pm.expect(jsonData.completedAt).to.not.be.null;",
+                  "    } else {",
+                  "        pm.expect(jsonData.completed).to.be.false;",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progress/course/{{course_slug}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "course", "{{course_slug}}"]
+            },
+            "description": "Get course completion status for authenticated user.\n\nRequirements: 7.1, 7.2, 7.5, 7.6, 7.7\n\nReturns:\n- Completion percentage (0-100, rounded to 2 decimals)\n- Completed and total lesson counts\n- Completion flag (true if 100%)\n- Completion timestamp (if completed)"
+          },
+          "response": [
+            {
+              "name": "Success - Course In Progress",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/course/{{course_slug}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "course", "{{course_slug}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"courseId\": \"course-uuid-456\",\n  \"userId\": \"user_2abc123def456\",\n  \"percentage\": 66.67,\n  \"completedLessons\": 4,\n  \"totalLessons\": 6,\n  \"completed\": false,\n  \"completedAt\": null\n}"
+            },
+            {
+              "name": "Success - Course Completed",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/course/{{course_slug}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "course", "{{course_slug}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"courseId\": \"course-uuid-456\",\n  \"userId\": \"user_2abc123def456\",\n  \"percentage\": 100.00,\n  \"completedLessons\": 6,\n  \"totalLessons\": 6,\n  \"completed\": true,\n  \"completedAt\": \"2026-03-11T15:45:00.000Z\"\n}"
+            },
+            {
+              "name": "Success - Course Not Started",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/course/{{course_slug}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "course", "{{course_slug}}"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"courseId\": \"course-uuid-456\",\n  \"userId\": \"user_2abc123def456\",\n  \"percentage\": 0.00,\n  \"completedLessons\": 0,\n  \"totalLessons\": 6,\n  \"completed\": false,\n  \"completedAt\": null\n}"
+            },
+            {
+              "name": "Error - Course Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/progress/course/invalid-course",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "progress", "course", "invalid-course"]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"Course not found\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "Endpoints for tracking overall course completion"
+    },
+    {
+      "name": "Integration Test Scenarios",
+      "item": [
+        {
+          "name": "Scenario 1: Complete First Lesson",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Test that marking first lesson updates course progress",
+                  "pm.test(\"Lesson marked as complete\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.completed).to.be.true;",
+                  "});",
+                  "",
+                  "// Store lesson ID for next request",
+                  "pm.collectionVariables.set(\"test_lesson_id\", pm.response.json().lessonId);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progress/lesson/{{lesson_id}}/complete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "lesson", "{{lesson_id}}", "complete"]
+            },
+            "description": "Step 1: Mark the first lesson as complete"
+          },
+          "response": []
+        },
+        {
+          "name": "Scenario 2: Verify Course Progress Updated",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Course progress increased\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.completedLessons).to.be.above(0);",
+                  "    pm.expect(jsonData.percentage).to.be.above(0);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progress/course/{{course_slug}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "course", "{{course_slug}}"]
+            },
+            "description": "Step 2: Verify that course progress was updated after completing lesson"
+          },
+          "response": []
+        },
+        {
+          "name": "Scenario 3: Verify Lesson Status Persisted",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Lesson status persisted\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.completed).to.be.true;",
+                  "    pm.expect(jsonData.completedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progress/lesson/{{test_lesson_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progress", "lesson", "{{test_lesson_id}}"]
+            },
+            "description": "Step 3: Verify that lesson completion status was persisted"
+          },
+          "response": []
+        }
+      ],
+      "description": "End-to-end test scenarios for progress tracking"
+    }
+  ]
+}

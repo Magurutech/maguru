@@ -213,15 +213,15 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ All tests passing (26/26 tests)
     - _Requirements: 0.5, 0.8_
 
-- [ ] 5. Progress Tracking API
-  - [ ] 5.1 Implement POST /api/progress/lesson/[lessonId]/complete endpoint
+- [x] 5. Progress Tracking API
+  - [x] 5.1 Implement POST /api/progress/lesson/[lessonId]/complete endpoint
     - Verify user authentication
     - Create or update LessonProgress record
     - Set completed = true and completedAt timestamp
     - Trigger course completion recalculation
     - _Requirements: 6.2, 6.3, 6.7, 6.8, 12.2_
 
-- [ ] 5.2 Implement GET /api/progress/course/[slug] endpoint
+- [x] 5.2 Implement GET /api/progress/course/[slug] endpoint
     - Verify user authentication
     - Calculate total lessons in course
     - Count completed lessons for user
@@ -229,19 +229,19 @@ This implementation plan breaks down the Course Content Management feature into 
     - Return CourseCompletion data
     - _Requirements: 7.1, 7.2, 7.5, 7.6, 7.7_
 
-- [ ] 5.3 Implement GET /api/progress/lesson/[lessonId] endpoint
+- [x] 5.3 Implement GET /api/progress/lesson/[lessonId] endpoint
     - Verify user authentication
     - Fetch LessonProgress for user and lesson
     - Return completion status
     - _Requirements: 6.5, 6.6_
 
-- [ ] 5.4 Implement calculateCourseCompletion function
+- [x] 5.4 Implement calculateCourseCompletion function
     - Calculate percentage from completed/total lessons
     - Round to 2 decimal places
     - Set completed flag if 100%
     - _Requirements: 7.2, 7.4, 7.7_
 
-- [ ] 5.5 Implement updateCourseCompletion function
+- [x] 5.5 Implement updateCourseCompletion function
     - Query total lessons in course
     - Query completed lessons for user
     - Calculate completion percentage
