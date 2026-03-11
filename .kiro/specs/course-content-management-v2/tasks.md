@@ -322,21 +322,41 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Created components/creator/LessonPreview.tsx
     - _Requirements: 4.7, 4.9_
 
-- [ ] 7.4 Write component tests for editor
-    - Test editor initialization
-    - Test toolbar button functionality
-    - Test getJSON() returns valid structure
-    - Test preview renders same as editor
+- [x] 7.4 Write component tests for editor
+    - ✓ Test editor initialization with StarterKit
+    - ✓ Test editor initialization with initial content
+    - ✓ Test loading state when editor not ready
+    - ✓ Test save functionality with correct content structure
+    - ✓ Test editor.getJSON() returns valid Tiptap JSON
+    - ✓ Test version increment on save
+    - ✓ Test lastEdit timestamp update
+    - ✓ Test saving state and button disable during save
+    - ✓ Test cancel button rendering and functionality
+    - ✓ Test toolbar button functionality (Bold, Italic, Code, H1-H3, Lists, Link, Code Block)
+    - ✓ Test active state highlighting for toolbar buttons
+    - ✓ Test preview initialization with editable:false
+    - ✓ Test preview renders same content as editor
+    - ✓ Test preview handles complex content with marks
+    - ✓ Created comprehensive test suite at features/cms/components/creator/__tests__/LessonEditor.test.tsx
+    - ✓ All tests passing (39/39 component tests)
+    - ✓ Total test count: 137/137 tests passing
+    - ✓ No lint errors, no type errors
     - _Requirements: 4.1-4.9_
 
 - [ ] 8. Tiptap Viewer Component (Student)
-  - [ ] 8.1 Create LessonViewer component
-    - Initialize Tiptap editor with StarterKit
-    - Set editable: false
-    - Load content from lesson.content.content
-    - Display version and lastEdit metadata
-    - Add "Mark as Complete" button
-    - Show completion badge if completed
+  - [x] 8.1 Create LessonViewer component
+    - ✓ Initialize Tiptap editor with StarterKit
+    - ✓ Set editable: false
+    - ✓ Load content from lesson.content.content
+    - ✓ Display version and lastEdit metadata
+    - ✓ Add "Mark as Complete" button
+    - ✓ Show completion badge if completed
+    - ✓ Created features/cms/components/student/LessonViewer.tsx
+    - ✓ Created comprehensive test suite at features/cms/components/student/__tests__/LessonViewer.test.tsx
+    - ✓ All tests passing (21/21 tests)
+    - ✓ Total test count: 241/241 tests passing
+    - ✓ No lint errors, no type errors
+    - ✓ Installed @testing-library/user-event@14.6.1
     - _Requirements: 5.3, 5.4, 5.5, 6.1, 6.4, 6.5_
 
 - [ ]* 8.2 Write property tests for viewer rendering
