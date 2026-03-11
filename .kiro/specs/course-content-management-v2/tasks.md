@@ -343,7 +343,7 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ No lint errors, no type errors
     - _Requirements: 4.1-4.9_
 
-- [ ] 8. Tiptap Viewer Component (Student)
+- [x] 8. Tiptap Viewer Component (Student)
   - [x] 8.1 Create LessonViewer component
     - ✓ Initialize Tiptap editor with StarterKit
     - ✓ Set editable: false
@@ -359,12 +359,12 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Installed @testing-library/user-event@14.6.1
     - _Requirements: 5.3, 5.4, 5.5, 6.1, 6.4, 6.5_
 
-- [ ]* 8.2 Write property tests for viewer rendering
+- [x] 8.2 Write property tests for viewer rendering
     - **Property 3: WYSIWYG consistency**
     - *For any* valid Tiptap JSON content, EditorContent with editable:false should render identically to editable:true preview
     - **Validates: Requirements 5.4, 5.5**
 
-- [ ]* 8.3 Write component tests for viewer
+- [x] 8.3 Write component tests for viewer
     - Test content rendering with all node types
     - Test Mark as Complete button functionality
     - Test completion badge display
@@ -372,35 +372,82 @@ This implementation plan breaks down the Course Content Management feature into 
     - _Requirements: 5.3-5.6, 6.1, 6.4, 6.5_
 
 
-- [ ] 9. Course Navigation Components (Student)
-  - [ ] 9.1 Create CourseNavigation component
-    - Display sections with titles
-    - Display lessons within each section
-    - Show checkmark for completed lessons
-    - Highlight current lesson
-    - Handle lesson click navigation
+- [x] 9. Course Navigation Components (Student)
+  - [x] 9.1 Create CourseNavigation component
+    - ✓ Display sections with titles using shadcn/ui Sidebar
+    - ✓ Display lessons within each section with collapsible functionality
+    - ✓ Show checkmark for completed lessons
+    - ✓ Highlight current lesson with isActive state
+    - ✓ Handle lesson click navigation
+    - ✓ Created features/cms/components/student/CourseNavigation.tsx
+    - ✓ All tests passing (19/19 tests)
     - _Requirements: 5.1, 5.2, 6.4_
 
-- [ ] 9.2 Create ProgressBar component
-    - Display completion percentage
-    - Show completed/total lesson count
-    - Visual progress bar with fill
-    - Update when lesson marked complete
+- [x] 9.2 Create ProgressBar component
+    - ✓ Display completion percentage (0-100%)
+    - ✓ Show completed/total lesson count
+    - ✓ Visual progress bar with fill
+    - ✓ Clamps percentage between 0-100
+    - ✓ Proper ARIA attributes for accessibility
+    - ✓ Created features/cms/components/student/ProgressBar.tsx
+    - ✓ All tests passing (12/12 tests)
     - _Requirements: 7.1, 7.5_
 
-- [ ] 9.3 Implement lesson navigation (prev/next)
-    - Add previous lesson button
-    - Add next lesson button
-    - Disable previous on first lesson
-    - Disable next on last lesson
+- [x] 9.3 Implement lesson navigation (prev/next)
+    - ✓ Add previous lesson button with title
+    - ✓ Add next lesson button with title
+    - ✓ Disable previous on first lesson
+    - ✓ Disable next on last lesson
+    - ✓ Uses lucide-react icons (ChevronLeft, ChevronRight)
+    - ✓ Uses shadcn/ui Button component
+    - ✓ Created features/cms/components/student/LessonNavigation.tsx
+    - ✓ All tests passing (16/16 tests)
     - _Requirements: 5.7, 5.8, 5.9_
 
-- [ ]* 9.4 Write component tests for navigation
-    - Test section/lesson list rendering
-    - Test completion indicator display
-    - Test progress bar calculation
-    - Test prev/next button states
+- [x] 9.4 Write component tests for navigation
+    - ✓ Test section/lesson list rendering
+    - ✓ Test completion indicator display
+    - ✓ Test progress bar calculation
+    - ✓ Test prev/next button states
+    - ✓ Created comprehensive test suites for all three components
+    - ✓ All 47 tests passing (19 + 12 + 16)
+    - ✓ Total test count: 207/207 tests passing
     - _Requirements: 5.1, 5.2, 5.7-5.9, 6.4, 7.1, 7.5_
+
+---
+
+## ⚠️ CRITICAL: System Migration Required
+
+**Current State:**
+- ✅ All CMS components complete (Tasks 1-9)
+- ✅ New database-based system with Tiptap JSON
+- ❌ Learn page still uses OLD markdown-based system (`features/course`)
+
+**Migration Required Before Task 10:**
+
+1. **Clean up old system:**
+   - Delete `features/course` folder (old markdown-based system)
+   - Delete current `app/course/[slug]/learn/page.tsx` (uses old CourseSidebar)
+
+2. **Implement Task 11 FIRST** (before Task 10):
+   - Task 11.1: Create new learn page using CMS components
+   - Task 11.2: Implement lesson loading from database
+   - Task 11.3: Implement mark as complete functionality
+   - Task 11.4: Implement progress persistence
+
+**Rationale:**
+- Old system: File-based markdown with `CourseItem` structure
+- New system: Database-based Tiptap JSON with `Lesson` structure
+- Systems are incompatible and cannot coexist
+- Student experience (Task 11) should be validated before creator tools (Task 10)
+
+**Recommended Order:**
+1. ✅ Tasks 1-9 (Complete)
+2. 🔄 Task 11 (Student Learn Page) - DO THIS NEXT
+3. ⏭️ Task 10 (Creator Dashboard) - After Task 11
+4. ⏭️ Tasks 12-19 (Polish and deployment)
+
+---
 
 - [ ] 10. Creator Dashboard Integration
   - [ ] 10.1 Create SectionList component
@@ -689,8 +736,19 @@ yarn add @tiptap/react @tiptap/starter-kit @tiptap/pm @tiptap/html zod
 
 ---
 
-**Document Version:** 2.1  
-**Last Updated:** 2026-03-10  
-**Status:** Ready for Execution  
-**Next Step:** Implement Course Service (Task 2.5)
+**Document Version:** 2.2  
+**Last Updated:** 2026-03-12  
+**Status:** Phase 1 Complete (Tasks 1-9), Migration Decision Required  
+**Next Step:** Review migration documents and decide on Clean Slate approach
+
+---
+
+## 📚 Related Documents
+
+- **Quick Status:** `CURRENT_STATUS.md` - Overview and quick reference
+- **Decision Analysis:** `../../docs/rules/error.md` - Detailed migration decision analysis
+- **Status Report:** `../../docs/rules/report.md` - Complete status report with metrics
+- **Migration Guide:** `migration-guide.md` - Step-by-step migration instructions
+- **Requirements:** `requirements.md` - Original spec requirements
+- **Design:** `design.md` - Technical des
 
