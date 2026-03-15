@@ -7,17 +7,56 @@
  * Menampilkan tools dan fitur untuk content creation dan management.
  */
 
-import React from 'react'
+import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { PenTool, BookOpen, Video, FileText, BarChart3, Clock } from 'lucide-react'
+import { PenTool, BookOpen, Video, FileText, BarChart3, Clock, Settings } from 'lucide-react'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
+
+interface Course {
+  id: string
+  title: string
+  slug: string
+  description: string | null
+  status: string
+  createdAt: string
+  updatedAt: string
+}
 
 export default function CreatorDashboardPage() {
   const { user, isLoaded } = useUser()
+  const router = useRouter()
   const { role, isCreator } = useUserRole()
   const { canAccessCreator } = useRoleGuard()
   const { shouldShowLoader: roleLoading } = useRoleLoadingState()
+
+  const [courses, setCourses] = useState<Course[]>([])
+  const [loadingCourses, setLoadingCourses] = useState(true)
+
+  // Fetch creator's courses
+  useEffect(() => {
+    async function fetchCourses() {
+      if (!isLoaded || !canAccessCreator()) return
+
+      try {
+        setLoadingCourses(true)
+        // TODO: Replace with actual API endpoint that filters by creator
+        // For now, we'll use a placeholder
+        const res = await fetch('/api/creator/courses')
+        if (res.ok) {
+          const data = await res.json()
+          setCourses(data.courses || [])
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error)
+      } finally {
+        setLoadingCourses(false)
+      }
+    }
+
+    fetchCourses()
+  }, [isLoaded, canAccessCreator])
 
   if (!isLoaded || roleLoading) {
     return (
@@ -44,45 +83,15 @@ export default function CreatorDashboardPage() {
     )
   }
 
-  // Mock creator data
+  // Calculate stats from real data
   const creatorStats = {
-    totalCourses: 8,
-    publishedCourses: 6,
-    draftCourses: 2,
-    totalStudents: 1247,
-    monthlyEarnings: 4200000,
-    averageRating: 4.8,
+    totalCourses: courses.length,
+    publishedCourses: courses.filter(c => c.status === 'PUBLISHED').length,
+    draftCourses: courses.filter(c => c.status === 'DRAFT').length,
+    totalStudents: 0, // TODO: Calculate from enrollments
+    monthlyEarnings: 0, // TODO: Calculate from payments
+    averageRating: 0, // TODO: Calculate from reviews
   }
-
-  const recentCourses = [
-    {
-      id: 1,
-      title: 'Advanced React Patterns',
-      status: 'published',
-      students: 324,
-      revenue: 1200000,
-      lastUpdated: '2024-01-15',
-      rating: 4.9,
-    },
-    {
-      id: 2,
-      title: 'TypeScript for Beginners',
-      status: 'draft',
-      students: 0,
-      revenue: 0,
-      lastUpdated: '2024-01-14',
-      rating: 0,
-    },
-    {
-      id: 3,
-      title: 'Node.js API Development',
-      status: 'published',
-      students: 256,
-      revenue: 980000,
-      lastUpdated: '2024-01-13',
-      rating: 4.7,
-    },
-  ]
 
   const pendingTasks = [
     {
@@ -198,63 +207,75 @@ export default function CreatorDashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Recent Courses */}
+          {/* My Courses */}
           <div className="bg-white rounded-lg shadow-neu border border-beige-200">
             <div className="p-6 border-b border-beige-100">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-beige-900">Kursus Terbaru</h2>
-                <Button variant="outline" size="sm" className="border-beige-300 text-beige-700 hover:bg-beige-50">
+                <h2 className="text-xl font-semibold text-beige-900">Kursus Saya</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border-beige-300 text-beige-700 hover:bg-beige-50"
+                  onClick={() => router.push('/creator/courses')}
+                >
                   Lihat Semua
                 </Button>
               </div>
             </div>
 
             <div className="divide-y divide-beige-100">
-              {recentCourses.map((course) => (
-                <div key={course.id} className="p-6 hover:bg-beige-50 transition-colors duration-200">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-beige-900 mb-1">{course.title}</h3>
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            course.status === 'published'
-                              ? 'bg-hijau-100 text-hijau-800'
-                              : 'bg-kuning-100 text-kuning-800'
-                          }`}
-                        >
-                          {course.status}
-                        </span>
-                        {course.rating > 0 && (
-                          <span className="text-sm text-beige-500">
-                            {course.rating}⭐ ({course.students} siswa)
+              {loadingCourses ? (
+                <div className="p-6 text-center text-beige-600">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-beige-900 mx-auto mb-2"></div>
+                  Loading courses...
+                </div>
+              ) : courses.length === 0 ? (
+                <div className="p-6 text-center text-beige-600">
+                  <BookOpen className="w-12 h-12 mx-auto mb-2 text-beige-400" />
+                  <p>Belum ada kursus. Buat kursus pertama Anda!</p>
+                </div>
+              ) : (
+                courses.slice(0, 3).map((course) => (
+                  <div key={course.id} className="p-6 hover:bg-beige-50 transition-colors duration-200">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-beige-900 mb-1">{course.title}</h3>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              course.status === 'PUBLISHED'
+                                ? 'bg-hijau-100 text-hijau-800'
+                                : 'bg-kuning-100 text-kuning-800'
+                            }`}
+                          >
+                            {course.status}
                           </span>
+                        </div>
+                        {course.description && (
+                          <p className="text-sm text-beige-600 mt-2 line-clamp-2">
+                            {course.description}
+                          </p>
                         )}
                       </div>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="border-beige-300 text-beige-700 hover:bg-beige-100 hover:scale-105 transition-all duration-200"
+                          onClick={() => router.push(`/creator/courses/${course.slug}/manage`)}
+                        >
+                          <Settings className="h-4 w-4 mr-1" />
+                          Manage
+                        </Button>
+                      </div>
                     </div>
-                    <Button variant="outline" size="sm" className="border-beige-300 text-beige-700 hover:bg-beige-100 hover:scale-105 transition-all duration-200">
-                      Edit
-                    </Button>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-beige-600">Siswa: </span>
-                      <span className="font-medium text-beige-900">{course.students}</span>
-                    </div>
-                    <div>
-                      <span className="text-beige-600">Revenue: </span>
-                      <span className="font-medium text-beige-900">
-                        {course.revenue > 0 ? `Rp ${(course.revenue / 1000).toFixed(0)}K` : '-'}
-                      </span>
-                    </div>
+                    <p className="text-xs text-beige-500 mt-2">
+                      Terakhir diupdate: {new Date(course.updatedAt).toLocaleDateString('id-ID')}
+                    </p>
                   </div>
-
-                  <p className="text-xs text-beige-500 mt-2">
-                    Terakhir diupdate: {course.lastUpdated}
-                  </p>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 

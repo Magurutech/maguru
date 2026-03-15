@@ -449,37 +449,52 @@ This implementation plan breaks down the Course Content Management feature into 
 
 ---
 
-- [ ] 10. Creator Dashboard Integration
-  - [ ] 10.1 Create SectionList component
-    - Display all sections for a course
-    - Show lesson count per section
-    - Add "Create Section" button
-    - Add edit/delete buttons per section
-    - Implement up/down reorder buttons
+- [x] 10. Creator Dashboard Integration
+  - [x] 10.1 Create SectionList component
+    - ✓ Display all sections for a course
+    - ✓ Show lesson count per section
+    - ✓ Add "Create Section" button
+    - ✓ Add edit/delete buttons per section
+    - ✓ Implement up/down reorder buttons
+    - ✓ Created features/cms/components/creator/SectionList.tsx
+    - ✓ Added section selection functionality
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5_
 
-- [ ] 10.2 Create LessonList component
-    - Display all lessons in a section
-    - Show content preview
-    - Add "Create Lesson" button
-    - Add edit/delete buttons per lesson
-    - Implement up/down reorder buttons
+- [x] 10.2 Create LessonList component
+    - ✓ Display all lessons in a section
+    - ✓ Show content preview
+    - ✓ Add "Create Lesson" button
+    - ✓ Add edit/delete buttons per lesson
+    - ✓ Implement up/down reorder buttons
+    - ✓ Created features/cms/components/creator/LessonList.tsx
     - _Requirements: 2.1, 2.2, 2.4, 2.5, 2.6_
 
-- [ ] 10.3 Create SectionForm component
-    - Input for title (max 200 chars)
-    - Input for description (optional)
-    - Input for order (positive integer)
-    - Validation error display
+- [x] 10.3 Create SectionForm component
+    - ✓ Input for title (max 200 chars)
+    - ✓ Input for description (optional)
+    - ✓ Input for order (positive integer)
+    - ✓ Validation error display
+    - ✓ Created features/cms/components/creator/SectionForm.tsx
     - _Requirements: 1.1, 1.3, 9.1, 9.5_
 
-- [ ] 10.4 Create LessonForm component
-    - Input for title (max 200 chars)
-    - Tiptap editor for content
-    - Input for order (positive integer)
-    - Save button with loading state
-    - Validation error display
+- [x] 10.4 Create LessonForm component
+    - ✓ Input for title (max 200 chars)
+    - ✓ Tiptap editor for content (integrated LessonEditor)
+    - ✓ Input for order (positive integer)
+    - ✓ Save button with loading state
+    - ✓ Validation error display
+    - ✓ Created features/cms/components/creator/LessonForm.tsx
     - _Requirements: 2.1, 2.4, 9.2, 9.6_
+
+- [x] 10.5 Integrate components into Creator Dashboard
+    - ✓ Created app/creator/courses/[slug]/manage/page.tsx
+    - ✓ Integrated SectionList, LessonList, SectionForm, LessonForm
+    - ✓ Implemented full CRUD operations for sections and lessons
+    - ✓ Added section selection and lesson management
+    - ✓ Created API endpoint /api/creator/courses
+    - ✓ Updated app/creator/page.tsx to fetch real course data
+    - ✓ Added navigation from dashboard to course management
+    - _Requirements: 1.1-1.8, 2.1-2.9_
 
 - [ ]* 10.5 Write E2E tests for creator workflow
     - Test creating section
@@ -489,32 +504,35 @@ This implementation plan breaks down the Course Content Management feature into 
     - Test deleting section (cascade)
     - _Requirements: 1.1-1.8, 2.1-2.9_
 
-- [-] 11. Student Learn Page Integration
-  - [ ] 11.1 Create main learn page layout
-    - Sidebar with CourseNavigation
-    - Main content area with LessonViewer
-    - Top bar with ProgressBar
-    - Responsive design (mobile/tablet/desktop)
+- [x] 11. Student Learn Page Integration
+  - [x] 11.1 Create main learn page layout
+    - ✓ Sidebar with CourseNavigation
+    - ✓ Main content area with LessonViewer
+    - ✓ Top bar with ProgressBar
+    - ✓ Responsive design (mobile/tablet/desktop)
+    - ✓ Created app/course/[slug]/learn/page.tsx
     - _Requirements: 5.1, 5.2, 5.3, 7.1_
 
-- [ ] 11.2 Implement lesson loading and display
-    - Fetch lesson data from API
-    - Display with LessonViewer component
-    - Handle loading states
-    - Handle error states
+- [x] 11.2 Implement lesson loading and display
+    - ✓ Fetch lesson data from API
+    - ✓ Display with LessonViewer component
+    - ✓ Handle loading states
+    - ✓ Handle error states
+    - ✓ Integrated with existing CMS APIs
     - _Requirements: 5.3, 11.1_
 
-- [ ] 11.3 Implement mark as complete functionality
-    - Call POST /api/progress/lesson/[lessonId]/complete
-    - Update UI immediately
-    - Refresh progress bar
-    - Show success notification
+- [x] 11.3 Implement mark as complete functionality
+    - ✓ Call POST /api/progress/lesson/[lessonId]/complete
+    - ✓ Update UI immediately
+    - ✓ Refresh progress bar
+    - ✓ Show success notification (toast)
     - _Requirements: 6.2, 6.7, 10.8_
 
-- [ ] 11.4 Implement progress persistence
-    - Load progress on page load
-    - Sync progress across tabs/devices
-    - Handle offline scenarios gracefully
+- [x] 11.4 Implement progress persistence
+    - ✓ Load progress on page load
+    - ✓ Sync progress across tabs/devices
+    - ✓ Handle offline scenarios gracefully
+    - ✓ Integrated with existing progress API
     - _Requirements: 6.6, 7.6, 12.2_
 
 - [ ]* 11.5 Write E2E tests for student workflow

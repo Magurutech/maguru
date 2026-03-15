@@ -1,22 +1,74 @@
 import { NextResponse } from 'next/server'
-import { loadCourse } from '@/features/course/lib/courseUtils'
+import { currentUser } from '@clerk/nextjs/server'
+import { prisma } from '@/lib/prisma'
 
+/**
+ * GET /api/courses/[slug]
+ * 
+ * Get course information by slug (using title as slug for now).
+ * Used by creator dashboard to fetch course details.
+ */
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const user = await currentUser()
     const { slug } = await params
-    const course = await loadCourse(slug)
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // For now, use slug as course ID since schema doesn't have slug field
+    const course = await prisma.course.findFirst({
+      where: { id: slug },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        creatorId: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true
+      }
+    })
+
+    if (!course) {
+      return NextResponse.json(
+        { error: 'Course not found' },
+        { status: 404 }
+      )
+    }
+
+    // Check authorization
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: user.id },
+      select: { role: true }
+    })
+
+    const isOwner = course.creatorId === user.id
+    const isAdmin = dbUser?.role === 'ADMIN'
+
+    if (!isOwner && !isAdmin) {
+      return NextResponse.json(
+        { error: 'Forbidden: You do not own this course' },
+        { status: 403 }
+      )
+    }
 
     return NextResponse.json({
-      course
+      ...course,
+      slug: course.id // Use ID as slug for now
     })
   } catch (error) {
-    console.error(`Error fetching course:`, error)
+    console.error('Error fetching course:', error)
     return NextResponse.json(
-      { error: 'Course not found' },
-      { status: 404 }
+      { error: 'Failed to fetch course' },
+      { status: 500 }
     )
   }
 }

@@ -1,111 +1,138 @@
-✶ Insight ─────────────────────────────────────
-  Priority Framework: Trade-off analysis menunjukkan bahwa Quiz System (3-4 weeks, high complexity) harus     
-  prioritas tapi bergantung pada Content Management foundation (2-3 weeks, medium complexity). Tanpa
-  Section/Lesson models, Quiz tidak bisa di-attach ke course structure dengan baik. Risk Assessment: Tidak    
-  beralih langsung ke Quiz tanpa Content Foundation akan menyebabkan data inconsistency dan user experience   
-  yang patah (quiz tanpa materi untuk direview).
-  ─────────────────────────────────────────────────
+Baik, saya memahami situasinya! Mari saya lakukan analisis mendalam terlebih dahulu sebelum membuat spec plan baru.
 
-  ---
-  📊 Hasil Analisis Agen
+🔍 Analisis Situasi
+Berdasarkan 
+error.md
+ dan evaluasi Anda, saya identifikasi:
 
-  🔴 Masalah Teridentifikasi
+Gap Critical yang Ditemukan:
+Course Catalog - Student tidak bisa browse courses
+Course Enrollment - Student tidak bisa enroll ke course
+Creator Course List API - API /api/creator/courses masih placeholder
+Course Creation - Creator tidak bisa create course baru
+Dampak:
+❌ Student workflow BROKEN (harus tahu slug langsung)
+⚠️ Creator workflow PARTIAL (UI ada, API missing)
+🔴 Critical blocker untuk user experience yang lengkap
+🤔 Pertanyaan Klarifikasi Sebelum Membuat Spec
+Sebelum saya membuat spec plan baru, saya perlu klarifikasi beberapa hal:
 
-  ┌───────────────┬───────────────────────────────────────────────────────────────────────────────────────┐   
-  │     Issue     │                                        Detail                                         │   
-  ├───────────────┼───────────────────────────────────────────────────────────────────────────────────────┤   
-  │ Content Type  │ Prisma schema hanya punya 2 tabel (Course, Enrollment). Tidak ada Section, Lesson,    │   
-  │ Only          │ Progress, atau CourseCompletion. Tapi docs/course punya banyak konten markdown        │   
-  │               │ (file-based).                                                                         │   
-  ├───────────────┼───────────────────────────────────────────────────────────────────────────────────────┤   
-  │ AI Model      │ LangServe sudah punya 5 chains termasuk /quiz-feedback/stream, tapi sprint-2.md       │   
-  │ Ganda         │ rekomendasikan buat chains baru. Ini duplikasi dan kontraproduktif.                   │   
-  ├───────────────┼───────────────────────────────────────────────────────────────────────────────────────┤   
-  │ Prioritas     │ Rekomendasi bertentangan: Content First (2-3 minggu) vs Quiz First (3-4 minggu).      │   
-  │ Tidak Jelas   │ Sama-sama prioritas kritis tapi tidak jelas mana dulu.                                │   
-  └───────────────┴───────────────────────────────────────────────────────────────────────────────────────┘   
+1. Scope & Prioritas
+Pertanyaan: Fitur mana yang paling prioritas untuk diselesaikan terlebih dahulu?
 
-  ✅ Rekomendasi Agent
+Opsi A - Minimal Viable (Recommended):
 
-  Urutan Implementasi:
+✅ Course Catalog (browse courses)
+✅ Course Enrollment (enroll button)
+✅ Creator Course List API (fix placeholder)
+⏭️ Course Creation (defer ke fase berikutnya)
+Opsi B - Complete:
 
-  Phase 1 (Week 1-2): FOUNDATION - Content Management
-  Task: Update Prisma schema
-    - Add Section, Lesson, Progress, CourseCompletion models
-  Task: Migration (npx prisma migrate dev)
-  Task: Seed sample data (1-2 courses dengan sections & lessons)
-  Priority: 🔴 KRITIS
+✅ Semua fitur di atas
+✅ Course Creation (form untuk create course baru)
+✅ My Courses page (student dashboard)
+Rekomendasi saya: Opsi A dulu untuk unblock student workflow, baru Opsi B.
 
-  Phase 2 (Week 3-4): QUIZ SYSTEM CORE
-  Task: Quiz schema (Quizzes, QuizQuestions, QuizAnswers, QuizScores)
-  Task: Quiz Builder UI (Creator Dashboard)
-  Task: Quiz Taking UI (Student)
-  Task: Scoring Engine (70% pass threshold)
-  Task: LangServe integration (/quiz-feedback/stream)
-  Priority: 🟢 HIGH
+2. Struktur Spec Plan
+Pertanyaan: Bagaimana struktur spec plan yang Anda inginkan?
 
-  Phase 3 (Week 5): REVIEW FLOW
-  Task: Failed quiz detection (<70% score)
-  Task: Weak topics mapping
-  Task: Alternative content recommendations
-  Priority: 🟡 MEDIUM
+Opsi A - Spec Terpisah (Recommended):
 
-  Phase 4 (Week 6): DIAGNOSTIC TEST
-  Task: Diagnostic question bank (15-20 soal)
-  Task: Profiling algorithm
-  Task: Recommendation engine
-  Priority: 🟢 LOW (Opsional, bisa ditunda)
+error.md
+Opsi B - Extend Existing Spec:
 
-  📋 Key Trade-offs yang Dianalisis
+error.md
+Rekomendasi saya: Opsi A - Spec terpisah karena:
 
-  ┌─────────────────┬──────────────────────────────┬──────────────────────────────────────────────────────┐   
-  │      Aspek      │        Content First         │                      Quiz First                      │   
-  ├─────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────┤   
-  │ Time to MVP     │ 2-3 minggu                   │ 3-4 minggu                                           │   
-  ├─────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────┤   
-  │ Complexity      │ 🟢 Medium                    │ 🔴 High                                              │   
-  ├─────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────┤   
-  │ Risk            │ 🟢 Rendah (foundation solid) │ 🔴 Risiko tinggi (tanpa content = quiz tanpa bahan)  │   
-  ├─────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────┤   
-  │ User Value      │ Konten tersedia lebih awal   │ Quiz berfungsi tapi kosong                           │   
-  ├─────────────────┼──────────────────────────────┼──────────────────────────────────────────────────────┤   
-  │ Refactoring     │ 🟢 Rendah (migrasi           │ 🔴 Refactoring besar (ubah dari file-based →         │   
-  │ Risk            │ sederhana)                   │ database)                                            │   
-  └─────────────────┴──────────────────────────────┴──────────────────────────────────────────────────────┘   
+✅ Core CMS sudah complete & tested (207/207)
+✅ Scope jelas terpisah (Content Management vs Discovery)
+✅ Bisa parallel development
+✅ Tidak mengacak timeline Sprint 2
+3. Dependencies & Integration
+Pertanyaan: Apakah Course Discovery harus menunggu Tasks 12-19 (polish, performance) dari Core CMS selesai?
 
-  ---
-  🎯 Saran Keputusan
+Opsi A - Parallel Development:
 
-  Opsi A: Content First (Rekomendasi Agent) ✅
+Course Discovery bisa dimulai sekarang
+Core CMS polish (Tasks 12-19) bisa parallel
+Opsi B - Sequential:
 
-  Pro:
-  ✅ Foundation solid untuk semua fitur (Quiz, Review, Diagnostic)
-  ✅ User dapat mengakses konten lebih awal
-  ✅ Quiz bisa di-attach ke Lesson dengan granular
-  ✅ Progress tracking real-time dari awal
+Selesaikan Tasks 12-19 dulu
+Baru mulai Course Discovery
+Rekomendasi saya: Opsi A - Parallel, karena Course Discovery lebih critical untuk user experience.
 
-  Kontra:
-  ⏳ Tidak ada sistem assessment di 2-3 minggu pertama
-  🔴 Quiz feedback kurang bermakna tanpa konten kontekstual
+4. Course Creation Flow
+Pertanyaan: Untuk Course Creation, apakah perlu form lengkap atau minimal?
 
-  Opsi B: Quiz First (Alternatif)
+Minimal (Quick Start):
 
-  Pro:
-  ✅ Sistem assessment berfungsi di 2 minggu pertama
-  ✅ Early feedback loop berjalan
+Title
+Description
+Category (dropdown)
+Difficulty (dropdown)
+Status (Draft/Published)
+Lengkap (Full Featured):
 
-  Kontra:
-  🔴 User baru mengakses quiz tanpa konten dasar
-  🔴 Risk churn tinggi (siswa mencoba kosong)
-  🔴 Refactoring besar jika balik ke file-based
+Semua di atas +
+Thumbnail upload
+Duration estimate
+Prerequisites
+Learning objectives
+Tags
+Rekomendasi saya: Minimal dulu untuk unblock creator workflow.
 
-  ---
+5. Enrollment Logic
+Pertanyaan: Apakah enrollment perlu approval atau langsung?
 
-  ### ❓ Pertanyaan Keputusan untuk Anda:
+Opsi A - Direct Enrollment:
 
-  1. **Setuju Opsi A (Content First)?** - Foundation dulu baru Quiz
-  2. **Setuju Opsi B (Quiz First)?** - Assessment dulu, content bisa nanti
-  3. **Hibrid?** - Phase 1: Schema, Phase 2: Quiz berjalan paralel?
+Student klik "Enroll" → Langsung enrolled
+Cocok untuk free courses
+Opsi B - Approval Required:
 
-  **Agent Note:** Agent menganalisis trade-off dengan complex. Saya menyetujui Content First karena Quiz tanpa
-   konten kontekstual akan kurang bermakna.
+Student klik "Enroll" → Pending approval
+Creator approve/reject
+Cocok untuk paid/restricted courses
+Rekomendasi saya: Opsi A dulu (direct enrollment) untuk simplicity.
+
+📋 Rencana Langkah Kerja (Setelah Klarifikasi)
+Setelah Anda jawab pertanyaan di atas, saya akan:
+
+Phase 1: Requirements Gathering
+Buat requirements.md untuk Course Discovery
+Define user stories untuk:
+Student browse courses
+Student enroll to course
+Creator list own courses
+Creator create new course (optional)
+Define acceptance criteria (EARS format)
+Phase 2: Design Creation
+Buat design.md untuk Course Discovery
+Define:
+API endpoints structure
+Database schema (jika perlu tambahan)
+Component architecture
+Data flow diagrams
+Define correctness properties
+Phase 3: Task Planning
+Buat tasks.md untuk Course Discovery
+Break down menjadi actionable tasks:
+Backend API endpoints
+Frontend components
+Integration dengan Core CMS
+Testing strategy
+Phase 4: Review & Approval
+Present spec untuk review
+Iterate berdasarkan feedback
+Finalize spec
+🎯 Pertanyaan untuk Anda
+Sebelum saya mulai membuat spec, tolong konfirmasi:
+
+Scope: Opsi A (Minimal Viable) atau B (Complete)?
+Struktur: Opsi A (Spec Terpisah) atau B (Extend Existing)?
+Timeline: Opsi A (Parallel) atau B (Sequential)?
+Course Creation: Minimal atau Lengkap?
+Enrollment: Direct atau Approval Required?
+Atau jika Anda ingin saya langsung proceed dengan rekomendasi saya (semua Opsi A + Minimal), silakan konfirmasi dan saya akan mulai membuat spec!
+
+Bagaimana menurut Anda? Ada yang perlu saya klarifikasi lagi? 🤔
