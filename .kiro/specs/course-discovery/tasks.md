@@ -11,15 +11,15 @@
 
 | Task | Title | Priority | Status |
 |------|-------|----------|--------|
-| 1 | Database Migration | 🔴 Critical | ⬜ Pending |
-| 2 | GET /api/courses (Public Catalog API) | 🔴 Critical | ⬜ Pending |
-| 3 | POST /api/courses/[slug]/enroll | 🔴 Critical | ⬜ Pending |
-| 4 | GET /api/courses/my-courses | 🔴 Critical | ⬜ Pending |
-| 5 | POST /api/creator/courses (Create Course) | 🔴 Critical | ⬜ Pending |
-| 6 | PUT /api/creator/courses/[slug]/publish | 🟡 High | ⬜ Pending |
-| 7 | CourseCard Component | 🔴 Critical | ⬜ Pending |
-| 8 | Course Catalog Page (/course) | 🔴 Critical | ⬜ Pending |
-| 9 | My Courses Page (/student/courses) | 🟡 High | ⬜ Pending |
+| 1 | Database Migration | 🔴 Critical | ✅ Done |
+| 2 | GET /api/courses (Public Catalog API) | 🔴 Critical | ✅ Done |
+| 3 | POST /api/courses/[slug]/enroll | 🔴 Critical | ✅ Done |
+| 4 | GET /api/courses/my-courses | 🔴 Critical | ✅ Done |
+| 5 | POST /api/creator/courses (Create Course) | 🔴 Critical | ✅ Done |
+| 6 | PUT /api/creator/courses/[slug]/publish | 🟡 High | ✅ Done |
+| 7 | CourseCard Component | 🔴 Critical | ✅ Done |
+| 8 | Course Catalog Page (/course) | 🔴 Critical | ✅ Done |
+| 9 | My Courses Page (/student/courses) | 🟡 High | ✅ Done |
 | 10 | CourseCreationForm Component | 🟡 High | ⬜ Pending |
 | 11 | Course Creation Page (/creator/courses/create) | 🟡 High | ⬜ Pending |
 | 12 | Update Creator Dashboard (real data + stats) | 🟡 High | ⬜ Pending |
@@ -99,11 +99,11 @@
 
 ### Subtasks
 
-- [ ] 4.1 Buat file `app/api/courses/my-courses/route.ts`
-- [ ] 4.2 Implementasi GET handler dengan auth check, return 401 jika tidak authenticated
-- [ ] 4.3 Fetch semua enrollments untuk userId dengan include course data
-- [ ] 4.4 Untuk setiap enrollment, hitung completion percentage dari `lesson_progress` vs total lessons
-- [ ] 4.5 Return response: `{ enrollments: [{ id, course: {...}, enrolledAt, completed, progress }] }`
+- [x] 4.1 Buat file `app/api/courses/my-courses/route.ts`
+- [x] 4.2 Implementasi GET handler dengan auth check, return 401 jika tidak authenticated
+- [x] 4.3 Fetch semua enrollments untuk userId dengan include course data
+- [x] 4.4 Untuk setiap enrollment, hitung completion percentage dari `lesson_progress` vs total lessons
+- [x] 4.5 Return response: `{ enrollments: [{ id, course: {...}, enrolledAt, completed, progress }] }`
 
 **Files:**
 - `app/api/courses/my-courses/route.ts` (buat baru)
@@ -118,15 +118,15 @@
 
 ### Subtasks
 
-- [ ] 5.1 Tambah POST handler ke file `app/api/creator/courses/route.ts` yang sudah ada
-- [ ] 5.2 Auth check via `currentUser()`, return 401 jika tidak authenticated
-- [ ] 5.3 Parse request body: `{ title, description, category, difficulty, status }`
-- [ ] 5.4 Validasi required fields: title, description, category, difficulty, status — return 400 jika ada yang kosong
-- [ ] 5.5 Validasi title max 100 chars
-- [ ] 5.6 Validasi difficulty hanya "Pemula", "Menengah", atau "Mahir"
-- [ ] 5.7 Validasi status hanya "DRAFT" atau "PUBLISHED"
-- [ ] 5.8 Buat course: `prisma.course.create({ data: { id: uuid(), title, description, category, difficulty, status, creatorId: user.id, updatedAt: new Date() } })`
-- [ ] 5.9 Return 201 dengan course data yang baru dibuat
+- [x] 5.1 Tambah POST handler ke file `app/api/creator/courses/route.ts` yang sudah ada
+- [x] 5.2 Auth check via `currentUser()`, return 401 jika tidak authenticated
+- [x] 5.3 Parse request body: `{ title, description, category, difficulty, status }`
+- [x] 5.4 Validasi required fields: title, description, category, difficulty, status — return 400 jika ada yang kosong
+- [x] 5.5 Validasi title max 100 chars
+- [x] 5.6 Validasi difficulty hanya "Pemula", "Menengah", atau "Mahir"
+- [x] 5.7 Validasi status hanya "DRAFT" atau "PUBLISHED"
+- [x] 5.8 Buat course: `prisma.course.create({ data: { id: uuid(), title, description, category, difficulty, status, creatorId: user.id, updatedAt: new Date() } })`
+- [x] 5.9 Return 201 dengan course data yang baru dibuat
 
 **Files:**
 - `app/api/creator/courses/route.ts` (tambah POST handler)
@@ -139,13 +139,13 @@
 
 ### Subtasks
 
-- [ ] 6.1 Buat file `app/api/creator/courses/[slug]/publish/route.ts`
-- [ ] 6.2 Implementasi PUT handler dengan auth check, return 401 jika tidak authenticated
-- [ ] 6.3 Fetch course by ID, return 404 jika tidak ada
-- [ ] 6.4 Verifikasi ownership: `course.creatorId === user.id`, return 403 jika bukan owner
-- [ ] 6.5 Toggle status: jika DRAFT → PUBLISHED, jika PUBLISHED → DRAFT
-- [ ] 6.6 Update course: `prisma.course.update({ where: { id }, data: { status: newStatus, updatedAt: new Date() } })`
-- [ ] 6.7 Return 200 dengan `{ course: { id, title, status } }`
+- [x] 6.1 Buat file `app/api/creator/courses/[slug]/publish/route.ts`
+- [x] 6.2 Implementasi PUT handler dengan auth check, return 401 jika tidak authenticated
+- [x] 6.3 Fetch course by ID, return 404 jika tidak ada
+- [x] 6.4 Verifikasi ownership: `course.creatorId === user.id`, return 403 jika bukan owner
+- [x] 6.5 Toggle status: jika DRAFT → PUBLISHED, jika PUBLISHED → DRAFT
+- [x] 6.6 Update course: `prisma.course.update({ where: { id }, data: { status: newStatus, updatedAt: new Date() } })`
+- [x] 6.7 Return 200 dengan `{ course: { id, title, status } }`
 
 **Files:**
 - `app/api/creator/courses/[slug]/publish/route.ts` (buat baru)
@@ -158,14 +158,14 @@
 
 ### Subtasks
 
-- [ ] 7.1 Buat folder `features/course/components/` jika belum ada
-- [ ] 7.2 Buat file `features/course/components/CourseCard.tsx`
-- [ ] 7.3 Implementasi props: `course`, `enrolled`, `onEnroll`, `showManage`
-- [ ] 7.4 Tampilkan: title, description preview (truncate 150 chars), category badge, difficulty badge
-- [ ] 7.5 Jika `enrolled=true`: tampilkan "Lanjut Belajar" button (link ke learn page)
-- [ ] 7.6 Jika `enrolled=false`: tampilkan "Daftar Sekarang" button yang trigger `onEnroll`
-- [ ] 7.7 Jika `showManage=true`: tampilkan "Manage" button (untuk creator view)
-- [ ] 7.8 Gunakan Tailwind classes yang konsisten dengan design system yang ada (beige/merah/hijau/kuning)
+- [x] 7.1 Buat folder `features/course/components/` jika belum ada
+- [x] 7.2 Buat file `features/course/components/CourseCard.tsx`
+- [x] 7.3 Implementasi props: `course`, `enrolled`, `onEnroll`, `showManage`
+- [x] 7.4 Tampilkan: title, description preview (truncate 150 chars), category badge, difficulty badge
+- [x] 7.5 Jika `enrolled=true`: tampilkan "Lanjut Belajar" button (link ke learn page)
+- [x] 7.6 Jika `enrolled=false`: tampilkan "Daftar Sekarang" button yang trigger `onEnroll`
+- [x] 7.7 Jika `showManage=true`: tampilkan "Manage" button (untuk creator view)
+- [x] 7.8 Gunakan Tailwind classes yang konsisten dengan design system yang ada (beige/merah/hijau/kuning)
 
 **Files:**
 - `features/course/components/CourseCard.tsx` (buat baru)
@@ -178,15 +178,15 @@
 
 ### Subtasks
 
-- [ ] 8.1 Buat file `app/course/page.tsx` sebagai server component
-- [ ] 8.2 Baca searchParams: `page`, `category`, `difficulty`, `search`
-- [ ] 8.3 Fetch data dari `/api/courses` dengan query params yang sesuai
-- [ ] 8.4 Render grid CourseCard (3 kolom desktop, 2 tablet, 1 mobile)
-- [ ] 8.5 Buat filter sidebar/bar: dropdown category, dropdown difficulty
-- [ ] 8.6 Buat search input (client component dengan debounce 300ms, update URL params)
-- [ ] 8.7 Implementasi pagination controls (prev/next, page numbers)
-- [ ] 8.8 Implementasi empty state jika tidak ada courses
-- [ ] 8.9 Enroll action: client component yang call POST /api/courses/[slug]/enroll lalu refresh
+- [x] 8.1 Buat file `app/course/page.tsx` sebagai server component
+- [x] 8.2 Baca searchParams: `page`, `category`, `difficulty`, `search`
+- [x] 8.3 Fetch data dari `/api/courses` dengan query params yang sesuai
+- [x] 8.4 Render grid CourseCard (3 kolom desktop, 2 tablet, 1 mobile)
+- [x] 8.5 Buat filter sidebar/bar: dropdown category, dropdown difficulty
+- [x] 8.6 Buat search input (client component dengan debounce 300ms, update URL params)
+- [x] 8.7 Implementasi pagination controls (prev/next, page numbers)
+- [x] 8.8 Implementasi empty state jika tidak ada courses
+- [x] 8.9 Enroll action: client component yang call POST /api/courses/[slug]/enroll lalu refresh
 
 **Files:**
 - `app/course/page.tsx` (buat baru)
@@ -200,12 +200,12 @@
 
 ### Subtasks
 
-- [ ] 9.1 Buat file `app/student/courses/page.tsx` sebagai server component
-- [ ] 9.2 Auth check: redirect ke `/sign-in` jika tidak authenticated
-- [ ] 9.3 Fetch data dari `/api/courses/my-courses`
-- [ ] 9.4 Render grid enrolled CourseCard dengan progress percentage
-- [ ] 9.5 Tampilkan progress bar per course card
-- [ ] 9.6 Implementasi empty state dengan link ke `/course`
+- [x] 9.1 Buat file `app/student/courses/page.tsx` sebagai server component
+- [x] 9.2 Auth check: redirect ke `/sign-in` jika tidak authenticated
+- [x] 9.3 Fetch data dari `/api/courses/my-courses`
+- [x] 9.4 Render grid enrolled CourseCard dengan progress percentage
+- [x] 9.5 Tampilkan progress bar per course card
+- [x] 9.6 Implementasi empty state dengan link ke `/course`
 
 **Files:**
 - `app/student/courses/page.tsx` (buat baru)

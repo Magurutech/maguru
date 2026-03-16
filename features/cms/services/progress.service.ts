@@ -53,7 +53,6 @@ export class ProgressService {
         completedAt: new Date(),
       },
       create: {
-        id: crypto.randomUUID(),
         lessonId: lessonId,
         userId: userId,
         completed: true,
@@ -176,13 +175,11 @@ export class ProgressService {
     if (!courseCompletion) {
       courseCompletion = await prisma.course_completions.create({
         data: {
-          id: crypto.randomUUID(),
           courseId: course.id,
           userId: userId,
           percentage: percentage,
           completed: completed,
           completedAt: completed ? new Date() : null,
-          updatedAt: new Date(),
         },
       })
     }
@@ -252,13 +249,11 @@ export class ProgressService {
         updatedAt: new Date(),
       },
       create: {
-        id: crypto.randomUUID(),
         courseId: courseId,
         userId: userId,
         percentage: percentage,
         completed: completed,
         completedAt: completed ? new Date() : null,
-        updatedAt: new Date(),
       },
     })
   }
