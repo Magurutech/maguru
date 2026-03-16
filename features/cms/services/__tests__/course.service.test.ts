@@ -33,14 +33,14 @@ describe('CourseService', () => {
         status: 'DRAFT',
       }
 
-      prismaMock.course.findUnique.mockResolvedValue(mockCourse as Course)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as Course)
 
       const result = await getCourseById(mockCourseId)
 
       expect(result.success).toBe(true)
       expect(result.data).toEqual(mockCourse)
       expect(result.error).toBeUndefined()
-      expect(prismaMock.course.findUnique).toHaveBeenCalledWith({
+      expect(prismaMock.courses.findUnique).toHaveBeenCalledWith({
         where: { id: mockCourseId },
         select: {
           id: true,
@@ -53,7 +53,7 @@ describe('CourseService', () => {
 
     it('should return error with invalid id', async () => {
       // Requirement: 0.3
-      prismaMock.course.findUnique.mockResolvedValue(null)
+      prismaMock.courses.findUnique.mockResolvedValue(null)
 
       const result = await getCourseById('non-existent-id')
 
@@ -64,7 +64,7 @@ describe('CourseService', () => {
 
     it('should handle database errors gracefully', async () => {
       // Requirement: 0.6
-      prismaMock.course.findUnique.mockRejectedValue(new Error('Database error'))
+      prismaMock.courses.findUnique.mockRejectedValue(new Error('Database error'))
 
       const result = await getCourseById(mockCourseId)
 
@@ -92,12 +92,12 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findFirst.mockResolvedValue(mockCourse as Course)
+      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as Course)
 
       const result = await checkCourseOwnership(mockCourseId, mockUserId)
 
       expect(result).toBe(true)
-      expect(prismaMock.course.findFirst).toHaveBeenCalledWith({
+      expect(prismaMock.courses.findFirst).toHaveBeenCalledWith({
         where: {
           id: mockCourseId,
           creatorId: mockUserId,
@@ -122,7 +122,7 @@ describe('CourseService', () => {
 
       expect(result).toBe(true)
       // Should not check course ownership for admin
-      expect(prismaMock.course.findFirst).not.toHaveBeenCalled()
+      expect(prismaMock.courses.findFirst).not.toHaveBeenCalled()
     })
 
     it('should return false for non-owner', async () => {
@@ -137,7 +137,7 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findFirst.mockResolvedValue(null)
+      prismaMock.courses.findFirst.mockResolvedValue(null)
 
       const result = await checkCourseOwnership(mockCourseId, 'other-user-id')
 
@@ -180,7 +180,7 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findFirst.mockRejectedValue(new Error('Database error'))
+      prismaMock.courses.findFirst.mockRejectedValue(new Error('Database error'))
 
       const result = await checkCourseOwnership(mockCourseId, mockUserId)
 
@@ -240,8 +240,8 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findUnique.mockResolvedValue(mockCourseWithSections as Course)
-      prismaMock.course.findFirst.mockResolvedValue(mockCourse as Course)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourseWithSections as Course)
+      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as Course)
 
       const result = await getCourseWithSections(mockCourseId, mockUserId)
 
@@ -253,7 +253,7 @@ describe('CourseService', () => {
 
     it('should return error when course not found', async () => {
       // Requirement: 0.1
-      prismaMock.course.findUnique.mockResolvedValue(null)
+      prismaMock.courses.findUnique.mockResolvedValue(null)
 
       const result = await getCourseWithSections('non-existent-id', mockUserId)
 
@@ -282,8 +282,8 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findUnique.mockResolvedValue(mockCourse as Course)
-      prismaMock.course.findFirst.mockResolvedValue(null)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as Course)
+      prismaMock.courses.findFirst.mockResolvedValue(null)
 
       const result = await getCourseWithSections(mockCourseId, mockUserId)
 
@@ -312,7 +312,7 @@ describe('CourseService', () => {
         },
       })
 
-      prismaMock.course.findUnique.mockResolvedValue(mockCourse as Course)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as Course)
 
       const result = await getCourseWithSections(mockCourseId, mockAdminId)
 
@@ -322,7 +322,7 @@ describe('CourseService', () => {
 
     it('should handle database errors gracefully', async () => {
       // Requirement: 0.6
-      prismaMock.course.findUnique.mockRejectedValue(new Error('Database error'))
+      prismaMock.courses.findUnique.mockRejectedValue(new Error('Database error'))
 
       const result = await getCourseWithSections(mockCourseId, mockUserId)
 

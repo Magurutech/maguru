@@ -83,19 +83,19 @@ describe('LessonService', () => {
         updatedAt: new Date(),
       }
 //eslint-disable-next-line 
-      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
-      prismaMock.lesson.findUnique.mockResolvedValue(null) // No duplicate
-      prismaMock.lesson.create.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.sections.findUnique.mockResolvedValue(mockSection as any)
+      prismaMock.lessons.findUnique.mockResolvedValue(null) // No duplicate
+      prismaMock.lessons.create.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.createLesson(sectionId, input, mockUserId)
 
       expect(result).toEqual(mockLesson)
       expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
-      expect(prismaMock.section.findUnique).toHaveBeenCalledWith({
+      expect(prismaMock.sections.findUnique).toHaveBeenCalledWith({
         where: { id: sectionId },
         select: { id: true, courseId: true },
       })
-      expect(prismaMock.lesson.create).toHaveBeenCalled()
+      expect(prismaMock.lessons.create).toHaveBeenCalled()
     })
 
     it('should reject unauthorized user', async () => {
@@ -112,7 +112,7 @@ describe('LessonService', () => {
         courseId: mockCourseId,
       }
 //eslint-disable-next-line 
-      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
+      prismaMock.sections.findUnique.mockResolvedValue(mockSection as any)
       ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
 
       await expect(
@@ -208,7 +208,7 @@ describe('LessonService', () => {
         order: 1,
       }
 
-      prismaMock.section.findUnique.mockResolvedValue(null)
+      prismaMock.sections.findUnique.mockResolvedValue(null)
 
       await expect(
         lessonService.createLesson('nonexistent-section', input, mockUserId)
@@ -243,8 +243,8 @@ describe('LessonService', () => {
         updatedAt: new Date(),
       }
 //eslint-disable-next-line 
-      prismaMock.section.findUnique.mockResolvedValue(mockSection as any)
-      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.sections.findUnique.mockResolvedValue(mockSection as any)
+      prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
 
       await expect(
         lessonService.createLesson(sectionId, input, mockUserId)
@@ -276,14 +276,14 @@ describe('LessonService', () => {
         },
       ]
 
-      prismaMock.lesson.findMany.mockResolvedValue(mockLessons as unknown as never)
+      prismaMock.lessons.findMany.mockResolvedValue(mockLessons as unknown as never)
 
       const result = await lessonService.getLessonsBySection(sectionId)
 
       expect(result).toHaveLength(2)
       expect(result[0].title).toBe('Lesson 1')
       expect(result[0].contentPreview).toBe('Test content')
-      expect(prismaMock.lesson.findMany).toHaveBeenCalledWith({
+      expect(prismaMock.lessons.findMany).toHaveBeenCalledWith({
         where: { sectionId },
         orderBy: { order: 'asc' },
       })
@@ -316,7 +316,7 @@ describe('LessonService', () => {
         },
       ]
 
-      prismaMock.lesson.findMany.mockResolvedValue(mockLessons as unknown as never)
+      prismaMock.lessons.findMany.mockResolvedValue(mockLessons as unknown as never)
 
       const result = await lessonService.getLessonsBySection('section-1')
 
@@ -336,23 +336,23 @@ describe('LessonService', () => {
         order: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
-        section: {
+        sections: {
           id: 'section-1',
           title: 'Section 1',
           courseId: 'course-1',
         },
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.getLessonById(lessonId)
 
-      expect(result).toEqual(mockLesson)
+      expect(result).toEqual({ ...mockLesson, section: mockLesson.sections })
       expect(result?.section).toBeDefined()
-      expect(prismaMock.lesson.findUnique).toHaveBeenCalledWith({
+      expect(prismaMock.lessons.findUnique).toHaveBeenCalledWith({
         where: { id: lessonId },
         include: {
-          section: {
+          sections: {
             select: {
               id: true,
               title: true,
@@ -364,7 +364,7 @@ describe('LessonService', () => {
     })
 
     it('should return null for nonexistent lesson', async () => {
-      prismaMock.lesson.findUnique.mockResolvedValue(null)
+      prismaMock.lessons.findUnique.mockResolvedValue(null)
 
       const result = await lessonService.getLessonById('nonexistent')
 
@@ -381,7 +381,7 @@ describe('LessonService', () => {
       order: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
-      section: {
+      sections: {
         courseId: mockCourseId,
       },
     }
@@ -389,8 +389,8 @@ describe('LessonService', () => {
     it('should update lesson title', async () => {
       const input = { title: 'Updated Title' }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
-      prismaMock.lesson.update.mockResolvedValue({
+      prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.lessons.update.mockResolvedValue({
         ...existingLesson,
         title: input.title,
       } as unknown as never)
@@ -399,14 +399,14 @@ describe('LessonService', () => {
 
       expect(result.title).toBe('Updated Title')
       expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
-      expect(prismaMock.lesson.update).toHaveBeenCalled()
+      expect(prismaMock.lessons.update).toHaveBeenCalled()
     })
 
     it('should reject unauthorized user', async () => {
       // Requirement: 0.5, 0.8
       const input = { title: 'Updated Title' }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
       ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
 
       await expect(
@@ -431,15 +431,15 @@ describe('LessonService', () => {
 
       const input = { content: updatedContent }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
-      prismaMock.lesson.update.mockResolvedValue({
+      prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.lessons.update.mockResolvedValue({
         ...existingLesson,
         content: { ...updatedContent, version: 2 },
       } as unknown as never)
 
       await lessonService.updateLesson('lesson-1', input, mockUserId)
 
-      const updateCall = prismaMock.lesson.update.mock.calls[0][0]
+      const updateCall = prismaMock.lessons.update.mock.calls[0][0]
       const updatedContentData = updateCall.data.content as LessonContent
       
       expect(updatedContentData.version).toBe(2)
@@ -449,7 +449,7 @@ describe('LessonService', () => {
     it('should reject empty title', async () => {
       const input = { title: '' }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
 
       await expect(
         lessonService.updateLesson('lesson-1', input, mockUserId)
@@ -457,7 +457,7 @@ describe('LessonService', () => {
     })
 
     it('should reject when lesson does not exist', async () => {
-      prismaMock.lesson.findUnique.mockResolvedValue(null)
+      prismaMock.lessons.findUnique.mockResolvedValue(null)
 
       await expect(
         lessonService.updateLesson('nonexistent', { title: 'Test' }, mockUserId)
@@ -477,7 +477,7 @@ describe('LessonService', () => {
         updatedAt: new Date(),
       }
 
-      prismaMock.lesson.findUnique
+      prismaMock.lessons.findUnique
         .mockResolvedValueOnce(existingLesson as unknown as never) // First call: get existing
         .mockResolvedValueOnce(duplicateLesson as unknown as never) // Second call: check duplicate
 
@@ -499,22 +499,22 @@ describe('LessonService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
         _count: {
-          progress: 5,
+          lesson_progress: 5,
         },
-        section: {
+        sections: {
           courseId: mockCourseId,
         },
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
-      prismaMock.lesson.delete.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.delete.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.deleteLesson(lessonId, mockUserId)
 
       expect(result.message).toBe('Lesson deleted successfully')
       expect(result.deletedProgressRecords).toBe(5)
       expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
-      expect(prismaMock.lesson.delete).toHaveBeenCalledWith({
+      expect(prismaMock.lessons.delete).toHaveBeenCalledWith({
         where: { id: lessonId },
       })
     })
@@ -526,14 +526,14 @@ describe('LessonService', () => {
         id: lessonId,
         sectionId: 'section-1',
         _count: {
-          progress: 5,
+          lesson_progress: 5,
         },
-        section: {
+        sections: {
           courseId: mockCourseId,
         },
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
       ;(checkCourseOwnership as jest.Mock).mockResolvedValue(false)
 
       await expect(
@@ -542,7 +542,7 @@ describe('LessonService', () => {
     })
 
     it('should reject when lesson does not exist', async () => {
-      prismaMock.lesson.findUnique.mockResolvedValue(null)
+      prismaMock.lessons.findUnique.mockResolvedValue(null)
 
       await expect(lessonService.deleteLesson('nonexistent', mockUserId)).rejects.toThrow(
         'Lesson not found'
@@ -557,7 +557,7 @@ describe('LessonService', () => {
         sectionId: 'section-1',
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.verifyLessonBelongsToSection(
         'lesson-1',
@@ -573,7 +573,7 @@ describe('LessonService', () => {
         sectionId: 'section-2',
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.verifyLessonBelongsToSection(
         'lesson-1',
@@ -586,12 +586,12 @@ describe('LessonService', () => {
     it('should get course ID for lesson', async () => {
       const mockLesson = {
         id: 'lesson-1',
-        section: {
+        sections: {
           courseId: 'course-1',
         },
       }
 
-      prismaMock.lesson.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.getCourseIdForLesson('lesson-1')
 
