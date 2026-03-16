@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/prisma/lib/client'
 
 /**
  * GET /api/courses/[slug]
@@ -24,7 +24,7 @@ export async function GET(
     }
 
     // For now, use slug as course ID since schema doesn't have slug field
-    const course = await prisma.course.findFirst({
+    const course = await prisma.courses.findFirst({
       where: { id: slug },
       select: {
         id: true,
@@ -44,16 +44,10 @@ export async function GET(
       )
     }
 
-    // Check authorization
-    const dbUser = await prisma.user.findUnique({
-      where: { clerkId: user.id },
-      select: { role: true }
-    })
-
+    // Check authorization — only course owner can access
     const isOwner = course.creatorId === user.id
-    const isAdmin = dbUser?.role === 'ADMIN'
 
-    if (!isOwner && !isAdmin) {
+    if (!isOwner) {
       return NextResponse.json(
         { error: 'Forbidden: You do not own this course' },
         { status: 403 }

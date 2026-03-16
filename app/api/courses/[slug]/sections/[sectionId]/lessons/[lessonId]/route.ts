@@ -20,10 +20,10 @@ import { UpdateLessonInput } from '@/features/cms/types/lesson.types'
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string; sectionId: string; lessonId: string } }
+  { params }: { params: Promise<{ slug: string; sectionId: string; lessonId: string }> }
 ) {
   try {
-    const { lessonId } = params
+    const { lessonId } = await params
 
     // Get lesson with full content
     const lesson = await lessonService.getLessonById(lessonId)
@@ -53,7 +53,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string; sectionId: string; lessonId: string } }
+  { params }: { params: Promise<{ slug: string; sectionId: string; lessonId: string }> }
 ) {
   try {
     // Authentication check
@@ -65,7 +65,7 @@ export async function PUT(
       )
     }
 
-    const { lessonId } = params
+    const { lessonId } = await params
 
     // Get lesson to verify it exists and get courseId
     const existingLesson = await lessonService.getLessonById(lessonId)
@@ -148,7 +148,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string; sectionId: string; lessonId: string } }
+  { params }: { params: Promise<{ slug: string; sectionId: string; lessonId: string }> }
 ) {
   try {
     // Authentication check
@@ -160,7 +160,7 @@ export async function DELETE(
       )
     }
 
-    const { lessonId } = params
+    const { lessonId } = await params
 
     // Get lesson to verify it exists and get courseId
     const existingLesson = await lessonService.getLessonById(lessonId)

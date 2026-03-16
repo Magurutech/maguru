@@ -49,7 +49,7 @@ export class SectionService {
     }
 
     // Verify course exists (Course Service would be used in API layer)
-    const course = await prisma.course.findUnique({
+    const course = await prisma.courses.findUnique({
       where: { id: courseId },
     })
 
@@ -62,7 +62,7 @@ export class SectionService {
     }
 
     // Check for duplicate order
-    const existingSection = await prisma.section.findUnique({
+    const existingSection = await prisma.sections.findUnique({
       where: {
         courseId_order: {
           courseId,
@@ -78,7 +78,7 @@ export class SectionService {
     }
 
     // Create section
-    const section = await prisma.section.create({
+    const section = await prisma.sections.create({
       data: {
         id: crypto.randomUUID(),
         courseId,
@@ -100,7 +100,7 @@ export class SectionService {
   async getSectionsByCourse(
     courseId: string
   ): Promise<SectionWithLessonCount[]> {
-    const sections = await prisma.section.findMany({
+    const sections = await prisma.sections.findMany({
       where: { courseId },
       orderBy: { order: 'asc' },
       include: {
@@ -127,7 +127,7 @@ export class SectionService {
    * Requirements: 1.2
    */
   async getSectionById(sectionId: string): Promise<Section | null> {
-    const section = await prisma.section.findUnique({
+    const section = await prisma.sections.findUnique({
       where: { id: sectionId },
     })
 
@@ -145,7 +145,7 @@ export class SectionService {
     userId?: string
   ): Promise<Section> {
     // Check if section exists
-    const existingSection = await prisma.section.findUnique({
+    const existingSection = await prisma.sections.findUnique({
       where: { id: sectionId },
     })
 
@@ -183,7 +183,7 @@ export class SectionService {
 
       // Check for duplicate order (if order is changing)
       if (input.order !== existingSection.order) {
-        const duplicateSection = await prisma.section.findUnique({
+        const duplicateSection = await prisma.sections.findUnique({
           where: {
             courseId_order: {
               courseId: existingSection.courseId,
@@ -201,7 +201,7 @@ export class SectionService {
     }
 
     // Update section
-    const updatedSection = await prisma.section.update({
+    const updatedSection = await prisma.sections.update({
       where: { id: sectionId },
       data: {
         title: input.title?.trim(),
@@ -227,7 +227,7 @@ export class SectionService {
     userId?: string
   ): Promise<DeleteSectionResult> {
     // Check if section exists
-    const existingSection = await prisma.section.findUnique({
+    const existingSection = await prisma.sections.findUnique({
       where: { id: sectionId },
       include: {
         _count: {
@@ -254,7 +254,7 @@ export class SectionService {
     const lessonCount = existingSection._count.lessons
 
     // Delete section (cascade will delete lessons)
-    await prisma.section.delete({
+    await prisma.sections.delete({
       where: { id: sectionId },
     })
 
@@ -272,7 +272,7 @@ export class SectionService {
     sectionId: string,
     courseId: string
   ): Promise<boolean> {
-    const section = await prisma.section.findUnique({
+    const section = await prisma.sections.findUnique({
       where: { id: sectionId },
       select: { courseId: true },
     })

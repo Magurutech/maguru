@@ -26,7 +26,7 @@ export class AuthorizationService {
     // Admin check can be added when user role system is implemented
 
     // Check if user owns the course
-    const course = await prisma.course.findFirst({
+    const course = await prisma.courses.findFirst({
       where: {
         id: courseId,
         creatorId: userId,

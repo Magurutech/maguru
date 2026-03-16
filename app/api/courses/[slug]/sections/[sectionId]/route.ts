@@ -25,7 +25,7 @@ export async function PUT(
     const { slug, sectionId } = await params
 
     // Find course by slug
-    const course = await prisma.course.findFirst({
+    const course = await prisma.courses.findFirst({
       where: { title: slug },
       select: { id: true },
     })
@@ -167,7 +167,7 @@ export async function DELETE(
     const { slug, sectionId } = await params
 
     // Find course by slug
-    const course = await prisma.course.findFirst({
+    const course = await prisma.courses.findFirst({
       where: { title: slug },
       select: { id: true },
     })

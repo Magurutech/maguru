@@ -33,21 +33,30 @@ model courses {
   duration    String        @default("0 jam")
   rating      Float         @default(0.0)
   category    String        @db.VarChar(50)
+  difficulty  String?       @db.VarChar(50)
   creatorId   String        @db.VarChar(255)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime
   enrollments enrollments[]
   sections    sections[]
+
+  @@index([status])
+  @@index([category])
+  @@index([difficulty])
 }
 
 model enrollments {
-  id         String   @id
-  userId     String   @db.VarChar(255)
-  courseId   String   @db.VarChar(255)
-  enrolledAt DateTime @default(now())
-  courses    courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id          String    @id
+  userId      String    @db.VarChar(255)
+  courseId    String    @db.VarChar(255)
+  enrolledAt  DateTime  @default(now())
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  courses     courses   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
 }
 
 model lesson_progress {

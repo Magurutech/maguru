@@ -303,6 +303,7 @@ export default function CourseManagePage() {
     }
   }
 
+  //eslint-disable-next-line 
   const handleLessonFormSubmit = async (data: { title: string; content: any; order: number }) => {
     if (!selectedSection) return
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/prisma/lib/client'
 
 /**
  * GET /api/creator/courses
@@ -19,7 +19,7 @@ export async function GET() {
     }
 
     // Fetch courses owned by this creator
-    const courses = await prisma.course.findMany({
+    const courses = await prisma.courses.findMany({
       where: {
         creatorId: user.id
       },
@@ -42,7 +42,7 @@ export async function GET() {
     })
 
     return NextResponse.json({
-      courses: courses.map(course => ({
+      courses: courses.map((course) => ({
         ...course,
         slug: course.id, // Use ID as slug for now
         sectionCount: course._count.sections

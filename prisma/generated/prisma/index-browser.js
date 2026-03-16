@@ -120,52 +120,7 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.CourseScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  description: 'description',
-  thumbnail: 'thumbnail',
-  status: 'status',
-  students: 'students',
-  lessons: 'lessons',
-  duration: 'duration',
-  rating: 'rating',
-  category: 'category',
-  creatorId: 'creatorId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.SectionScalarFieldEnum = {
-  id: 'id',
-  courseId: 'courseId',
-  order: 'order',
-  title: 'title',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LessonScalarFieldEnum = {
-  id: 'id',
-  sectionId: 'sectionId',
-  order: 'order',
-  title: 'title',
-  content: 'content',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.LessonProgressScalarFieldEnum = {
-  id: 'id',
-  lessonId: 'lessonId',
-  userId: 'userId',
-  completed: 'completed',
-  completedAt: 'completedAt',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.CourseCompletionScalarFieldEnum = {
+exports.Prisma.Course_completionsScalarFieldEnum = {
   id: 'id',
   courseId: 'courseId',
   userId: 'userId',
@@ -176,11 +131,59 @@ exports.Prisma.CourseCompletionScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.EnrollmentScalarFieldEnum = {
+exports.Prisma.CoursesScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  thumbnail: 'thumbnail',
+  status: 'status',
+  students: 'students',
+  lessons: 'lessons',
+  duration: 'duration',
+  rating: 'rating',
+  category: 'category',
+  difficulty: 'difficulty',
+  creatorId: 'creatorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EnrollmentsScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   courseId: 'courseId',
-  enrolledAt: 'enrolledAt'
+  enrolledAt: 'enrolledAt',
+  completed: 'completed',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.Lesson_progressScalarFieldEnum = {
+  id: 'id',
+  lessonId: 'lessonId',
+  userId: 'userId',
+  completed: 'completed',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LessonsScalarFieldEnum = {
+  id: 'id',
+  sectionId: 'sectionId',
+  order: 'order',
+  title: 'title',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SectionsScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  order: 'order',
+  title: 'title',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -213,12 +216,12 @@ exports.CourseStatus = exports.$Enums.CourseStatus = {
 };
 
 exports.Prisma.ModelName = {
-  Course: 'Course',
-  Section: 'Section',
-  Lesson: 'Lesson',
-  LessonProgress: 'LessonProgress',
-  CourseCompletion: 'CourseCompletion',
-  Enrollment: 'Enrollment'
+  course_completions: 'course_completions',
+  courses: 'courses',
+  enrollments: 'enrollments',
+  lesson_progress: 'lesson_progress',
+  lessons: 'lessons',
+  sections: 'sections'
 };
 
 /**

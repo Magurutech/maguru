@@ -59,7 +59,7 @@ export interface CourseData {
  */
 export async function getCourseById(courseId: string): Promise<CourseServiceResult> {
   try {
-    const course = await prisma.course.findUnique({
+    const course = await prisma.courses.findUnique({
       where: { 
         id: courseId 
       },
@@ -122,7 +122,7 @@ export async function checkCourseOwnership(
     }
 
     // Check if user owns the course
-    const course = await prisma.course.findFirst({
+    const course = await prisma.courses.findFirst({
       where: {
         id: courseId,
         creatorId: actualUserId
@@ -150,7 +150,7 @@ export async function getCourseWithSections(
   userId: string
 ): Promise<CourseServiceResult> {
   try {
-    const course = await prisma.course.findUnique({
+    const course = await prisma.courses.findUnique({
       where: { id: courseId },
       include: {
         sections: {

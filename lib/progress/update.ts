@@ -29,35 +29,32 @@ import { calculateCourseCompletion } from './calculation'
  */
 export async function updateCourseCompletion(userId: string, courseId: string) {
   // Query total lessons in course
-  const totalLessons = await prisma.lesson.count({
+  const totalLessons = await prisma.lessons.count({
     where: {
-      section: {
+      sections: {
         courseId: courseId
       }
     }
   })
   
-  // Query completed lessons for user
-  const completedLessons = await prisma.lessonProgress.count({
+  const completedLessons = await prisma.lesson_progress.count({
     where: {
       userId: userId,
       completed: true,
-      lesson: {
-        section: {
+      lessons: {
+        sections: {
           courseId: courseId
         }
       }
     }
   })
   
-  // Calculate completion percentage
   const { percentage, completed } = calculateCourseCompletion({
     totalLessons,
     completedLessons
   })
   
-  // Upsert CourseCompletion record
-  const courseCompletion = await prisma.courseCompletion.upsert({
+  const courseCompletion = await prisma.course_completions.upsert({
     where: {
       courseId_userId: {
         courseId: courseId,
@@ -71,11 +68,13 @@ export async function updateCourseCompletion(userId: string, courseId: string) {
       updatedAt: new Date()
     },
     create: {
+      id: crypto.randomUUID(),
       courseId: courseId,
       userId: userId,
       percentage: percentage,
       completed: completed,
-      completedAt: completed ? new Date() : null
+      completedAt: completed ? new Date() : null,
+      updatedAt: new Date()
     }
   })
   

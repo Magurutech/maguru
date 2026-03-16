@@ -3,7 +3,7 @@
  * Type definitions for Lesson management
  */
 
-import { Lesson as PrismaLesson } from '@prisma/client'
+import { lessons as PrismaLesson } from '@/prisma/generated/prisma/client'
 
 /**
  * Tiptap Document Structure

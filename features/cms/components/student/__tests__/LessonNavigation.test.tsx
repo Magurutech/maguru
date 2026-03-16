@@ -19,6 +19,7 @@ jest.mock('lucide-react', () => ({
 
 // Mock shadcn/ui Button component
 jest.mock('@/components/ui/button', () => ({
+  //eslint-disable-next-line 
   Button: ({ children, onClick, disabled, variant, className, ...props }: any) => (
     <button 
       onClick={onClick} 

@@ -20,7 +20,7 @@ import { CreateLessonInput } from '@/features/cms/types/lesson.types'
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: { slug: string; sectionId: string } }
+  { params }: { params: Promise<{ slug: string; sectionId: string }> }
 ) {
   try {
     // Authentication check
@@ -32,7 +32,7 @@ export async function POST(
       )
     }
 
-    const { sectionId } = params
+    const { sectionId } = await params
 
     // Get section to verify it exists and get courseId
     const section = await sectionService.getSectionById(sectionId)
@@ -112,10 +112,10 @@ export async function POST(
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string; sectionId: string } }
+  { params }: { params: Promise<{ slug: string; sectionId: string }> }
 ) {
   try {
-    const { sectionId } = params
+    const { sectionId } = await params
 
     // Verify section exists
     const section = await sectionService.getSectionById(sectionId)

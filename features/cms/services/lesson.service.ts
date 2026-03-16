@@ -54,7 +54,7 @@ export class LessonService {
     }
 
     // Check if section exists and get courseId
-    const section = await prisma.section.findUnique({
+    const section = await prisma.sections.findUnique({
       where: { id: sectionId },
       select: { id: true, courseId: true },
     })
@@ -72,7 +72,7 @@ export class LessonService {
     }
 
     // Check for duplicate order
-    const existingLesson = await prisma.lesson.findUnique({
+    const existingLesson = await prisma.lessons.findUnique({
       where: {
         sectionId_order: {
           sectionId,
@@ -88,7 +88,7 @@ export class LessonService {
     }
 
     // Create lesson
-    const lesson = await prisma.lesson.create({
+    const lesson = await prisma.lessons.create({
       data: {
         id: crypto.randomUUID(),
         sectionId,
@@ -108,7 +108,7 @@ export class LessonService {
    * Requirements: 2.2, 8.3
    */
   async getLessonsBySection(sectionId: string): Promise<LessonWithPreview[]> {
-    const lessons = await prisma.lesson.findMany({
+    const lessons = await prisma.lessons.findMany({
       where: { sectionId },
       orderBy: { order: 'asc' },
     })
@@ -131,10 +131,10 @@ export class LessonService {
    * Requirements: 2.3, 3.4
    */
   async getLessonById(lessonId: string): Promise<LessonWithContent | null> {
-    const lesson = await prisma.lesson.findUnique({
+    const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       include: {
-        section: {
+        sections: {
           select: {
             id: true,
             title: true,
@@ -150,6 +150,7 @@ export class LessonService {
 
     return {
       ...lesson,
+      section: lesson.sections,
       content: lesson.content as unknown as LessonContent,
     }
   }
@@ -165,10 +166,10 @@ export class LessonService {
     userId?: string
   ): Promise<Lesson> {
     // Check if lesson exists and get courseId
-    const existingLesson = await prisma.lesson.findUnique({
+    const existingLesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       include: {
-        section: {
+        sections: {
           select: { courseId: true },
         },
       },
@@ -181,7 +182,7 @@ export class LessonService {
     // Check course ownership using Course Service
     if (userId) {
       const hasOwnership = await checkCourseOwnership(
-        existingLesson.section.courseId,
+        existingLesson.sections.courseId,
         userId
       )
       if (!hasOwnership) {
@@ -208,7 +209,7 @@ export class LessonService {
 
       // Check for duplicate order (if order is changing)
       if (input.order !== existingLesson.order) {
-        const duplicateLesson = await prisma.lesson.findUnique({
+        const duplicateLesson = await prisma.lessons.findUnique({
           where: {
             sectionId_order: {
               sectionId: existingLesson.sectionId,
@@ -247,7 +248,7 @@ export class LessonService {
     }
 
     // Update lesson
-    const updatedLesson = await prisma.lesson.update({
+    const updatedLesson = await prisma.lessons.update({
       where: { id: lessonId },
       data: {
         title: input.title?.trim(),
@@ -270,13 +271,13 @@ export class LessonService {
     userId?: string
   ): Promise<DeleteLessonResult> {
     // Check if lesson exists and get courseId
-    const existingLesson = await prisma.lesson.findUnique({
+    const existingLesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       include: {
         _count: {
-          select: { progress: true },
+          select: { lesson_progress: true },
         },
-        section: {
+        sections: {
           select: { courseId: true },
         },
       },
@@ -289,7 +290,7 @@ export class LessonService {
     // Check course ownership using Course Service
     if (userId) {
       const hasOwnership = await checkCourseOwnership(
-        existingLesson.section.courseId,
+        existingLesson.sections.courseId,
         userId
       )
       if (!hasOwnership) {
@@ -297,10 +298,10 @@ export class LessonService {
       }
     }
 
-    const progressCount = existingLesson._count.progress
+    const progressCount = existingLesson._count.lesson_progress
 
     // Delete lesson (cascade will delete progress records)
-    await prisma.lesson.delete({
+    await prisma.lessons.delete({
       where: { id: lessonId },
     })
 
@@ -318,7 +319,7 @@ export class LessonService {
     lessonId: string,
     sectionId: string
   ): Promise<boolean> {
-    const lesson = await prisma.lesson.findUnique({
+    const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       select: { sectionId: true },
     })
@@ -330,16 +331,16 @@ export class LessonService {
    * Get course ID for a lesson (for authorization checks)
    */
   async getCourseIdForLesson(lessonId: string): Promise<string | null> {
-    const lesson = await prisma.lesson.findUnique({
+    const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       include: {
-        section: {
+        sections: {
           select: { courseId: true },
         },
       },
     })
 
-    return lesson?.section.courseId || null
+    return lesson?.sections.courseId || null
   }
 
   /**
