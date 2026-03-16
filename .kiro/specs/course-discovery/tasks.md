@@ -33,13 +33,13 @@
 
 ### Subtasks
 
-- [ ] 1.1 Tambah field `difficulty String? @db.VarChar(50)` ke model `courses` di `prisma/schema.prisma`
-- [ ] 1.2 Tambah field `completed Boolean @default(false)` ke model `enrollments` di `prisma/schema.prisma`
-- [ ] 1.3 Tambah field `completedAt DateTime?` ke model `enrollments` di `prisma/schema.prisma`
-- [ ] 1.4 Tambah index `@@index([status])`, `@@index([category])`, `@@index([difficulty])` ke model `courses`
-- [ ] 1.5 Tambah index `@@index([userId])`, `@@index([courseId])` ke model `enrollments`
-- [ ] 1.6 Jalankan `npx prisma migrate dev --name add_course_discovery_fields`
-- [ ] 1.7 Jalankan `npx prisma generate` untuk update TypeScript types
+- [x] 1.1 Tambah field `difficulty String? @db.VarChar(50)` ke model `courses` di `prisma/schema.prisma`
+- [x] 1.2 Tambah field `completed Boolean @default(false)` ke model `enrollments` di `prisma/schema.prisma`
+- [x] 1.3 Tambah field `completedAt DateTime?` ke model `enrollments` di `prisma/schema.prisma`
+- [x] 1.4 Tambah index `@@index([status])`, `@@index([category])`, `@@index([difficulty])` ke model `courses`
+- [x] 1.5 Tambah index `@@index([userId])`, `@@index([courseId])` ke model `enrollments`
+- [x] 1.6 Jalankan `npx prisma migrate dev --name add_course_discovery_fields`
+- [x] 1.7 Jalankan `npx prisma generate` untuk update TypeScript types
 
 **Files:**
 - `prisma/schema.prisma`
@@ -57,14 +57,14 @@
 
 ### Subtasks
 
-- [ ] 2.1 Buat file `app/api/courses/route.ts`
-- [ ] 2.2 Implementasi GET handler dengan query params: `page`, `limit`, `category`, `difficulty`, `search`
-- [ ] 2.3 Filter hanya courses dengan `status: 'PUBLISHED'`
-- [ ] 2.4 Implementasi pagination (default: page=1, limit=12, max limit=50)
-- [ ] 2.5 Implementasi search: filter `title` atau `description` contains search term (case-insensitive)
-- [ ] 2.6 Include `_count` untuk sections dan lessons
-- [ ] 2.7 Jika user authenticated (via `currentUser()`), include field `enrolled: boolean` per course
-- [ ] 2.8 Return response shape: `{ courses: [], pagination: { page, limit, total, totalPages } }`
+- [x] 2.1 Buat file `app/api/courses/route.ts`
+- [x] 2.2 Implementasi GET handler dengan query params: `page`, `limit`, `category`, `difficulty`, `search`
+- [x] 2.3 Filter hanya courses dengan `status: 'PUBLISHED'`
+- [x] 2.4 Implementasi pagination (default: page=1, limit=12, max limit=50)
+- [x] 2.5 Implementasi search: filter `title` atau `description` contains search term (case-insensitive)
+- [x] 2.6 Include `_count` untuk sections dan lessons
+- [x] 2.7 Jika user authenticated (via `currentUser()`), include field `enrolled: boolean` per course
+- [x] 2.8 Return response shape: `{ courses: [], pagination: { page, limit, total, totalPages } }`
 
 **Files:**
 - `app/api/courses/route.ts` (buat baru — file yang ada adalah `[slug]/route.ts`)
@@ -79,14 +79,14 @@
 
 ### Subtasks
 
-- [ ] 3.1 Buat file `app/api/courses/[slug]/enroll/route.ts`
-- [ ] 3.2 Implementasi POST handler dengan auth check via `currentUser()`
-- [ ] 3.3 Return 401 jika user tidak authenticated
-- [ ] 3.4 Fetch course by ID (slug = course ID), return 404 jika tidak ada
-- [ ] 3.5 Return 403 jika course status adalah DRAFT
-- [ ] 3.6 Check existing enrollment, return 409 dengan message "Anda sudah terdaftar di kursus ini" jika sudah ada
-- [ ] 3.7 Buat enrollment record: `prisma.enrollment.create({ data: { userId, courseId, enrolledAt: new Date() } })`
-- [ ] 3.8 Return 201 dengan enrollment data
+- [x] 3.1 Buat file `app/api/courses/[slug]/enroll/route.ts`
+- [x] 3.2 Implementasi POST handler dengan auth check via `currentUser()`
+- [x] 3.3 Return 401 jika user tidak authenticated
+- [x] 3.4 Fetch course by ID (slug = course ID), return 404 jika tidak ada
+- [x] 3.5 Return 403 jika course status adalah DRAFT
+- [x] 3.6 Check existing enrollment, return 409 dengan message "Anda sudah terdaftar di kursus ini" jika sudah ada
+- [x] 3.7 Buat enrollment record: `prisma.enrollment.create({ data: { userId, courseId, enrolledAt: new Date() } })`
+- [x] 3.8 Return 201 dengan enrollment data
 
 **Files:**
 - `app/api/courses/[slug]/enroll/route.ts` (buat baru)
