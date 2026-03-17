@@ -4,32 +4,26 @@ import prisma from '@/prisma/lib/client'
 
 /**
  * GET /api/courses/[slug]
- * 
- * Get course information by slug (using title as slug for now).
- * Used by creator dashboard to fetch course details.
+ *
+ * Get course detail by ID (slug = course ID for now).
+ * - PUBLISHED courses: accessible by anyone (anonymous, student, creator)
+ * - DRAFT courses: only accessible by the course owner
  */
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const user = await currentUser()
     const { slug } = await params
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // For now, use slug as course ID since schema doesn't have slug field
     const course = await prisma.courses.findFirst({
       where: { id: slug },
       select: {
         id: true,
         title: true,
         description: true,
+        category: true,
+        difficulty: true,
         creatorId: true,
         status: true,
         createdAt: true,
@@ -44,19 +38,20 @@ export async function GET(
       )
     }
 
-    // Check authorization — only course owner can access
-    const isOwner = course.creatorId === user.id
-
-    if (!isOwner) {
-      return NextResponse.json(
-        { error: 'Forbidden: You do not own this course' },
-        { status: 403 }
-      )
+    // DRAFT courses are only visible to the owner
+    if (course.status === 'DRAFT') {
+      const user = await currentUser()
+      if (!user || course.creatorId !== user.id) {
+        return NextResponse.json(
+          { error: 'Course not found' },
+          { status: 404 }
+        )
+      }
     }
 
     return NextResponse.json({
       ...course,
-      slug: course.id // Use ID as slug for now
+      slug: course.id
     })
   } catch (error) {
     console.error('Error fetching course:', error)

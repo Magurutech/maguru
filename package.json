@@ -17,7 +17,10 @@
     "test:integration:all": "jest __tests__/integration --verbose --passWithNoTests",
     "test:e2e": "cross-env NODE_ENV=test  playwright test __tests__/playwright/course/course-creation.spec.ts --debug",
     "test:e2e:all": "cross-env NODE_ENV=test playwright test __tests__/playwright/",
-    "test:e2e:report": "playwright show-report services/playwright-report"
+    "test:e2e:report": "playwright show-report services/playwright-report",
+    "test:api:student": "newman run docs/api/student-course/student-course.postman_collection.json --environment docs/api/newman-env.json --reporters cli",
+    "test:api:creator": "newman run docs/api/creator-course/creator-course.postman_collection.json --environment docs/api/newman-env.json --reporters cli",
+    "test:api": "npm run test:api:student && npm run test:api:creator"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.1",
@@ -92,6 +95,7 @@
     "jest-environment-jsdom": "^30.1.2",
     "jest-mock-extended": "2.0.4",
     "msw": "^2.11.2",
+    "newman": "^6.2.2",
     "node-fetch": "3.3.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.1",

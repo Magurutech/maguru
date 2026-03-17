@@ -24,6 +24,10 @@
 | 11 | Course Creation Page (/creator/courses/create) | 🟡 High | ✅ Done |
 | 12 | Update Creator Dashboard (real data + stats) | 🟡 High | ✅ Done |
 | 13 | Enhance GET /api/creator/courses (stats) | 🟡 High | ✅ Done |
+| 14 | API Testing — Student Course (Postman) | 🟢 Medium | ✅ Done |
+| 15 | API Testing — Creator Course (Postman) | 🟢 Medium | ✅ Done |
+| 16 | E2E Tests — Student Pages | 🟢 Medium | ⬜ Todo |
+| 17 | E2E Tests — Creator Pages | 🟢 Medium | ⬜ Todo |
 
 ---
 
@@ -283,6 +287,78 @@
 
 ---
 
+## Task 14: API Testing — Student Course (Postman)
+
+**Requirements:** 1.x, 2.x, 3.x, 7.x
+
+### Subtasks
+
+- [x] 14.1 Buat file `docs/api/student-course/student-course.postman_collection.json`
+- [x] 14.2 Tambah request **GET /api/courses** — test catalog publik: status 200, response shape `{ courses, pagination }`, filter by category/difficulty/search
+- [x] 14.3 Tambah request **GET /api/courses/[slug]** — test 200 (found) dan 404 (not found)
+- [x] 14.4 Tambah request **POST /api/courses/[slug]/enroll** — test 201 (success), 401 (unauthenticated), 403 (course DRAFT), 409 (already enrolled)
+- [x] 14.5 Tambah request **GET /api/courses/my-courses** — test 200 dengan enrollment data, 401 (unauthenticated)
+
+**Files:**
+- `docs/api/student-course/student-course.postman_collection.json` (buat baru)
+
+---
+
+## Task 15: API Testing — Creator Course (Postman)
+
+**Requirements:** 4.x, 5.x, 6.x, 8.x
+
+### Subtasks
+
+- [x] 15.1 Buat file `docs/api/creator-course/creator-course.postman_collection.json`
+- [x] 15.2 Tambah request **GET /api/creator/courses** — test 200 dengan stats `{ totalCourses, publishedCourses, draftCourses }` dan enrollment count per course
+- [x] 15.3 Tambah request **POST /api/creator/courses** — test 201 (success), 400 (validation error: missing fields / invalid difficulty), 401 (unauthenticated)
+- [x] 15.4 Tambah request **PUT /api/creator/courses/[slug]/publish** — test toggle DRAFT→PUBLISHED dan PUBLISHED→DRAFT, 403 (bukan owner), 401 (unauthenticated)
+
+**Files:**
+- `docs/api/creator-course/creator-course.postman_collection.json` (buat baru)
+
+---
+
+## Task 16: E2E Tests — Student Pages
+
+**Requirements:** 1.x, 2.x, 3.x
+
+### Subtasks
+
+- [ ] 16.1 Buat file `__tests__/playwright/course/student/catalog.spec.ts`
+- [ ] 16.2 Test: catalog page `/course` loads dengan course cards (unauthenticated)
+- [ ] 16.3 Test: filter by category/difficulty mengupdate URL params dan re-render cards
+- [ ] 16.4 Test: klik "Daftar Sekarang" tanpa auth → redirect ke `/sign-in`
+- [ ] 16.5 Buat file `__tests__/playwright/course/student/my-courses.spec.ts`
+- [ ] 16.6 Test: akses `/student/courses` tanpa auth → redirect ke `/sign-in`
+- [ ] 16.7 Test: akses `/student/courses` dengan auth → tampilkan enrolled courses (gunakan Clerk auth state)
+
+**Files:**
+- `__tests__/playwright/course/student/catalog.spec.ts` (buat baru)
+- `__tests__/playwright/course/student/my-courses.spec.ts` (buat baru)
+
+---
+
+## Task 17: E2E Tests — Creator Pages
+
+**Requirements:** 4.x, 5.x, 6.x
+
+### Subtasks
+
+- [ ] 17.1 Buat file `__tests__/playwright/course/creator/dashboard.spec.ts`
+- [ ] 17.2 Test: creator dashboard `/creator` menampilkan stats (totalCourses, publishedCourses, draftCourses) dengan data real
+- [ ] 17.3 Test: creator dashboard menampilkan course list dengan enrollment count
+- [ ] 17.4 Buat file `__tests__/playwright/course/creator/create-course.spec.ts`
+- [ ] 17.5 Test: form validation — submit tanpa required fields menampilkan error messages
+- [ ] 17.6 Test: akses `/creator/courses/create` tanpa role creator → redirect atau 403
+
+**Files:**
+- `__tests__/playwright/course/creator/dashboard.spec.ts` (buat baru)
+- `__tests__/playwright/course/creator/create-course.spec.ts` (buat baru)
+
+---
+
 ## Implementation Order
 
 ```
@@ -297,11 +373,14 @@ Phase 3 (Components & Pages):
 
 Phase 4 (Creator UI):
   Task 10 → Task 11 → Task 12
+
+Phase 5 (Testing):
+  Task 14 → Task 15 → Task 16 → Task 17
 ```
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** 2026-03-16
-**Total Tasks:** 13
-**Total Subtasks:** 72
+**Document Version:** 1.1
+**Last Updated:** 2026-03-17
+**Total Tasks:** 17
+**Total Subtasks:** 93

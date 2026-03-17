@@ -1,262 +1,188 @@
+PS D:\.maguru\maguru> yarn test:api:creator
+yarn run v1.22.22
+$ newman run docs/api/creator-course/creator-course.postman_collection.json --environment docs/api/newman-env.json --reporters cli
+(node:27940) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
 
-  Let me analyze the questions in error.md and provide definitive answers:
+Creator Course API
 
-  ---
-  Question 1: Slug di Course Model
+□ 1. GET /api/creator/courses
+└ Get Creator Courses - Unauthenticated (401)
+  GET http://localhost:3000/api/creator/courses [401 Unauthorized, 542B, 119ms]
+  √  Status code is 401
+  √  Response has error
 
-  Answer: ✅ TIDAK PERLU tambah slug via migration
+└ Get Creator Courses - Success (200)
+  GET http://localhost:3000/api/creator/courses [401 Unauthorized, 542B, 56ms]
+  1. Status code is 200
+  2. Has courses and stats
+  3. Stats fields correct
+  4. Each course has required fields
 
-  Reasoning:
-  // Schema saat ini sudah punya:
-  model courses {
-    id        String   @id @default(uuid())
-    // ... other fields
-    status    CourseStatus @default(DRAFT)
-    category  String
-    // ...
-  }
+□ 2. POST /api/creator/courses
+└ Create Course - Unauthenticated (401)
+  POST http://localhost:3000/api/creator/courses [401 Unauthorized, 559B, 48ms]
+  √  Status code is 401
+  √  Has error
 
-  // Kita bisa generate slug dari title di runtime:
-  slug: {
-    create: {
-      slug: {
-        raw: {
-          generate: "lower(title.replaceAll(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''))"
-        },
-        onUpdate: true
-      }
-    }
-  }
+└ Create Course - Missing Required Fields (400)
+  POST http://localhost:3000/api/creator/courses [401 Unauthorized, 559B, 32ms]
+  5. Status code is 400
+  √  Has error
 
-  Simpler Approach (without schema change):
-  // Generate slug di Frontend saat create course:
-  const slug = title.toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
+└ Create Course - Invalid Difficulty (400)
+  POST http://localhost:3000/api/creator/courses [401 Unauthorized, 559B, 32ms]
+  6. Status code is 400
+  7. Error mentions difficulty
 
-  // Use slug di semua endpoints:
-  // GET /api/courses/[slug]  ← Generate on-the-fly
-  // POST /api/creator/courses  ← Create course first, generate slug, then PUT
+└ Create Course - Success (201)
+  POST http://localhost:3000/api/creator/courses [401 Unauthorized, 559B, 52ms]
+  8. Status code is 201
+  9. Has course data
+ 10. Status is DRAFT
 
-  Decision:
-  - ✅ Generate slug di frontend
-  - ✅ Store slug di database (simpler for queries)
-  - ✅ OR generate on-the-fly (simpler for now)
+□ 3. PUT /api/creator/courses/[slug]/publish
+└ Publish Course - Unauthenticated (401)
+  PUT http://localhost:3000/api/creator/courses/78322b16-3758-4861-9e79-e647b36d9ab5/publish [401 Unauthorized, 604B, 1071ms]
+  √  Status code is 401
+  √  Has error
 
-  Recommendation:
-  model Course {
-    // ... existing fields
-    slug String @unique  // ✅ Add this field via migration
-  }
+└ Publish Course - Not Owner (403)
+  PUT http://localhost:3000/api/creator/courses/78322b16-3758-4861-9e79-e647b36d9ab5/publish [401 Unauthorized, 604B, 51ms]
+ 11. Status code is 403
+  √  Has error
 
-  ---
-  Question 2: Difficulty Field
+└ Publish Course - DRAFT to PUBLISHED (200)
+  PUT http://localhost:3000/api/creator/courses/78322b16-3758-4861-9e79-e647b36d9ab5/publish
+ [401 Unauthorized, 604B, 35ms]
+ 12. Status code is 200
+ 13. Has course with status
+ 14. Status is PUBLISHED
 
-  Answer: ✅ TIDAK PERLU tambah difficulty
+└ Unpublish Course - PUBLISHED to DRAFT (200)
+  PUT http://localhost:3000/api/creator/courses/78322b16-3758-4861-9e79-e647b36d9ab5/publish
+ [401 Unauthorized, 604B, 33ms]
+ 15. Status code is 200
+ 16. Status is DRAFT
 
-  Reasoning:
-  model courses {
-    // ... existing fields
-    category String  // ✅ Field ini sudah ada
-    // difficulty tidak perlu
-  }
+┌─────────────────────────┬─────────────────────┬────────────────────┐
+│                         │            executed │             failed │
+├─────────────────────────┼─────────────────────┼────────────────────┤
+│              iterations │                   1 │                  0 │
+├─────────────────────────┼─────────────────────┼────────────────────┤
+│                requests │                  10 │                  0 │
+├─────────────────────────┼─────────────────────┼────────────────────┤
+│            test-scripts │                  10 │                  0 │
+├─────────────────────────┼─────────────────────┼────────────────────┤
+│      prerequest-scripts │                   0 │                  0 │
+├─────────────────────────┼─────────────────────┼────────────────────┤
+│              assertions │                  24 │                 16 │
+├─────────────────────────┴─────────────────────┴────────────────────┤
+│ total run duration: 2.4s                                           │
+├────────────────────────────────────────────────────────────────────┤
+│ total data received: 376B (approx)                                 │
+├────────────────────────────────────────────────────────────────────┤
+│ average response time: 152ms [min: 32ms, max: 1071ms, s.d.: 307ms] │
+└────────────────────────────────────────────────────────────────────┘
 
-  // Difficulty bisa ditambahkan lewat UI:
-  enum Difficulty {
-    BEGINNER
-    INTERMEDIATE
-    ADVANCED
-  }
+   #  failure          detail
 
-  // Atau simpel validation string:
-  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced'
+ 01.  AssertionError   Status code is 200
+                       expected response to have status code 200 but got 401
+                       at assertion:0 in test-script
+                       inside "1. GET /api/creator/courses / Get Creator Courses -
+                       Success (200)"
 
-  Current Schema is Sufficient:
-  - Category = "Programming" (bisa grouping difficulty)
-  - Difficulty = UI selection (bisa hardcode values)
+ 02.  AssertionError   Has courses and stats
+                       expected { error: 'Unauthorized' } to have property 'courses'        
+                       at assertion:1 in test-script
+                       inside "1. GET /api/creator/courses / Get Creator Courses -
+                       Success (200)"
 
-  Decision:
-  - ✅ Skip difficulty field
-  - ✅ Use category for filtering
-  - ✅ UI can show difficulty as badge if needed
+ 03.  AssertionError   Stats fields correct
+                       Target cannot be null or undefined.
+                       at assertion:2 in test-script
+                       inside "1. GET /api/creator/courses / Get Creator Courses -
+                       Success (200)"
 
-  ---
-  Question 3: creatorId di Course
+ 04.  TypeError        Each course has required fields
+                       Cannot read properties of undefined (reading 'length')
+                       at assertion:3 in test-script
+                       inside "1. GET /api/creator/courses / Get Creator Courses -
+                       Success (200)"
 
-  Answer: ✅ Clerk handle user authentication, database punya creatorId
+ 05.  AssertionError   Status code is 400
+                       expected response to have status code 400 but got 401
+                       at assertion:0 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Missing       
+                       Required Fields (400)"
 
-  Reasoning:
-  model courses {
-    creatorId String  // ✅ Sudah ada
-    // Relasi ke User model atau Clerk?
-  }
+ 06.  AssertionError   Status code is 400
+                       expected response to have status code 400 but got 401
+                       at assertion:0 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Invalid       
+                       Difficulty (400)"
 
-  // Option A: Relasi ke User model (jika ada)
-  model courses {
-    creatorId String
-    creator    User?    @relation(fields: [creatorId], references: [id])
-  }
+ 07.  AssertionError   Error mentions difficulty
+                       expected false to be true
+                       at assertion:1 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Invalid       
+                       Difficulty (400)"
 
-  // Option B: Tidak ada relasi (Clerk handle users)
-  // creatorId = Clerk user ID
-  // Username/Name diambil dari Clerk API
+ 08.  AssertionError   Status code is 201
+                       expected response to have status code 201 but got 401
+                       at assertion:0 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Success       
+                       (201)"
 
-  Decision:
-  - ✅ Schema tidak perlu relasi ke User model
-  - ✅ creatorId = Clerk user ID
-  - ✅ Username/Name fetched dari Clerk API (tidak dari database)
+ 09.  AssertionError   Has course data
+                       Target cannot be null or undefined.
+                       at assertion:1 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Success       
+                       (201)"
 
-  Verification:
-  // At login, Clerk provides user data:
-  const { user } = useUser()
-  // user.id = creatorId di course records
-  // user.fullName = "Creator Name"
+ 10.  TypeError        Status is DRAFT
+                       Cannot read properties of undefined (reading 'status')
+                       at assertion:2 in test-script
+                       inside "2. POST /api/creator/courses / Create Course - Success       
+                       (201)"
 
-  ---
-  Question 4: Enrollment completed Field
+ 11.  AssertionError   Status code is 403
+                       expected response to have status code 403 but got 401
+                       at assertion:0 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Publish
+                       Course - Not Owner (403)"
 
-  Answer: ✅ TIDAK PERLU tambah completed/completedAt
+ 12.  AssertionError   Status code is 200
+                       expected response to have status code 200 but got 401
+                       at assertion:0 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Publish
+                       Course - DRAFT to PUBLISHED (200)"
 
-  Reasoning:
-  model enrollments {
-    id        String @id
-    userId    String
-    courseId  String
-    enrolledAt DateTime @default(now())
-    completed Boolean @default(false)  // ✅ Ini sudah ada!
-    completedAt DateTime?             // ✅ Ini juga sudah ada!
-  }
+ 13.  AssertionError   Has course with status
+                       Target cannot be null or undefined.
+                       at assertion:1 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Publish
+                       Course - DRAFT to PUBLISHED (200)"
 
-  // Or just use CourseCompletion model:
-  model CourseCompletion {
-    userId    String
-    courseId  String
-    completed Boolean @default(false)
-    completedAt DateTime?  // ✅ Track course-level completion
-    @@unique([userId, courseId])
-  }
+ 14.  TypeError        Status is PUBLISHED
+                       Cannot read properties of undefined (reading 'status')
+                       at assertion:2 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Publish
+                       Course - DRAFT to PUBLISHED (200)"
 
-  Decision:
-  - ✅ Schema sudah complete
-  - ✅ No migration needed
-  - ✅ completed field berfungsi untuk tracking enrollment completion
+ 15.  AssertionError   Status code is 200
+                       expected response to have status code 200 but got 401
+                       at assertion:0 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Unpublish       
+                       Course - PUBLISHED to DRAFT (200)"
 
-  ---
-  Question 5: Naming Convention
-
-  Answer: ✅ Mengikuti existing pattern (snake_case)
-
-  Reasoning:
-  existing pattern:
-  - course_completions (snake_case)
-  - lesson_progress (snake_case)
-  - enrollments (camelCase - EXCEPTION)
-
-  Let's standardize to snake_case for consistency:
-  - enrollments → enrollment (snake_case)
-
-  Decision:
-  - ✅ Rename enrollments → enrollment
-  - ✅ Use snake_case for consistency
-  - ✅ Update all migrations and queries
-
-  ---
-  ✅ Final Answers Summary
-
-  ┌───────────────────────┬────────────────────────────────────┬────────────────────────────────────────┐    
-  │      Pertanyaan       │              Jawaban               │            Action Required             │    
-  ├───────────────────────┼────────────────────────────────────┼────────────────────────────────────────┤    
-  │ 1. Slug               │ ✅ Generate on-the-fly OR tambah   │ Optional: tambah field slug            │    
-  │                       │ field                              │                                        │    
-  ├───────────────────────┼────────────────────────────────────┼────────────────────────────────────────┤    
-  │ 2. Difficulty         │ ✅ Skip - pakai category           │ No action                              │    
-  ├───────────────────────┼────────────────────────────────────┼────────────────────────────────────────┤    
-  │ 3. creatorId          │ ✅ Clerk handle - no relasi        │ No action                              │    
-  ├───────────────────────┼────────────────────────────────────┼────────────────────────────────────────┤    
-  │ 4. Enrollment         │ ✅ Sudah ada di schema             │ No action                              │    
-  │ completed             │                                    │                                        │    
-  ├───────────────────────┼────────────────────────────────────┼────────────────────────────────────────┤    
-  │ 5. Naming convention  │ ✅ Gunakan snake_case              │ Migration: rename enrollments →        │    
-  │                       │                                    │ enrollment                             │    
-  └───────────────────────┴────────────────────────────────────┴────────────────────────────────────────┘    
-
-  ---
-  📋 Clarification: Apa yang PENDING?
-
-  ✅ Schema Complete (No Migration Needed)
-
-  model courses {
-    id        String   @id @default(uuid())
-    title     String
-    description String?
-    slug      String   @unique          // ✅ Saya rekomendasikan tambah
-    status    CourseStatus @default(DRAFT)
-    category  String
-    // difficulty = SKIP
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-  }
-
-  model enrollments {
-    id         String   @id @default(uuid())
-    userId     String
-    courseId   String
-    enrolledAt DateTime @default(now())
-    completed  Boolean  @default(false)
-    completedAt DateTime?
-    @@unique([userId, courseId])
-  }
-
-  enum CourseStatus {
-    DRAFT
-    PUBLISHED
-  }
-
-  ⚠️ Optional Additions
-
-  1. slug field - Rekomendasikan untuk query performance
-  2. no relasi ke User model - Clerk handle authentication
-  3. difficulty field - Bisa skip, use category
-
-  🗑️ No Action Needed
-
-  - completed field di enrollments → sudah ada
-  - enrollment tracking → sudah complete
-
-  ---
-  🎯 Apakah Spec Bisa Dibuat Sekarang?
-
-  Answer: ✅ YES, spec bisa dibuat sekarang
-
-  Detail:
-  - ✅ Schema sudah complete (no migration needed for core)
-  - ✅ Field slug → Add optional (rekomendasi saya)
-  - ✅ enrollment completed → Sudah ada
-  - ✅ No critical blockers
-
-  Recommendation:
-  1. Add optional slug field via migration (minimal)
-  2. Buat spec plan dengan naming convention snake_case
-  3. Implementasi bisa dimulai segera setelah spec final
-
-  ---
-  💡 Insight Tambahan
-
-  Simplifikasi Scope
-
-  Karena schema sudah complete, kita bisa simplifikasi:
-
-  TIDAK PERLU Migration:
-  ❌ enrollment completed field
-  ❌ difficulty field
-  ❌ relasi ke User model
-
-  PERLU Migration:
-  ✅ slug field (optional, rekomendasikan)
-  ✅ Rename enrollments → enrollment (consistency)
-
-  BISA Langsung Implementasi:
-  ✅ Course catalog
-  ✅ Course enrollment
-  ✅ Creator dashboard
-  ✅ Course creation
+ 16.  TypeError        Status is DRAFT
+                       Cannot read properties of undefined (reading 'status')
+                       at assertion:1 in test-script
+                       inside "3. PUT /api/creator/courses/[slug]/publish / Unpublish       
+                       Course - PUBLISHED to DRAFT (200)"
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.        
+PS D:\.maguru\maguru> 

@@ -1,0 +1,41 @@
+{
+  "id": "maguru-course-discovery",
+  "name": "Maguru - Course Discovery (Local)",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "authToken",
+      "value": "eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yejI3N0xHNUZ3WnZlT0pDeEo4WHpuNWVaVTIiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJleHAiOjE3NzM3MzQ1OTQsImZ2YSI6WzI5OCwtMV0sImlhdCI6MTc3MzczNDUzNCwiaXNzIjoiaHR0cHM6Ly9kb21pbmFudC1tYW50aXMtMTYuY2xlcmsuYWNjb3VudHMuZGV2IiwianRpIjoiNDIzN2VjMDQwZjdiYmY5YzUwNjQiLCJuYmYiOjE3NzM3MzQ1MjQsInJvbGUiOiJjcmVhdG9yIiwic2lkIjoic2Vzc18zQjNURm56SDlGSHdvNFZuYzRvVXh4UldBb3oiLCJzdHMiOiJhY3RpdmUiLCJzdWIiOiJ1c2VyXzJ6REx1MTN0dld1OGtRYUhVcm15TUJyRG1XQiIsInYiOjJ9.DF07Oboi1AAo8gkp1O3WVuVKhqyof70kD526Hj4aD5PPT4JdQ_sWInd9yJMotW0581dxoiotEsB8qgedIU8g2BuBIzQ8PmspqiO2hZeaxGFjk3CYR99j8UoaeFxQ8U_JpRoCvO-dtjZdgKl4CQCVtKHHRjS_y1gMos9NlTbhKK23wFhTgmgvuPflX1RizM-HG1wYKklm9Yp9xNQ6Vcktp9YfTcmwrbui4JywFrQaki-9z-YKQxYqg0pRf1u8k8oEGxpOAQGjqiCyM3RIgyL5TyWFNiqqVm7w5pWRHezCyMbJzN6ZdaJfafhmtmSt9Gv2xJDD4j3BON0IbpnNzSBFFQ",
+      "type": "secret",
+      "enabled": true,
+      "description": "Clerk __session cookie value — copy dari browser DevTools setelah login sebagai student/creator"
+    },
+    {
+      "key": "otherUserToken",
+      "value": "eyJhbGciOiJSUzI1NiIsImNhdCI6ImNsX0I3ZDRQRDExMUFBQSIsImtpZCI6Imluc18yejI3N0xHNUZ3WnZlT0pDeEo4WHpuNWVaVTIiLCJ0eXAiOiJKV1QifQ.eyJhenAiOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJleHAiOjE3NzM3MzQ1OTgsImZ2YSI6WzExMywtMV0sImlhdCI6MTc3MzczNDUzOCwiaXNzIjoiaHR0cHM6Ly9kb21pbmFudC1tYW50aXMtMTYuY2xlcmsuYWNjb3VudHMuZGV2IiwianRpIjoiM2RkYzViNTdjYmVmYThiZDBhMmQiLCJuYmYiOjE3NzM3MzQ1MjgsInJvbGUiOiJ1c2VyIiwic2lkIjoic2Vzc18zQjNwZXRjNmh4NjBIYVdPaUw5VG9XcGtSVUMiLCJzdHMiOiJhY3RpdmUiLCJzdWIiOiJ1c2VyXzJ6RU5MS0FpejMyUEdVdEs3STVTM3phU1BYciIsInYiOjJ9.fpJgynO4bjzV_W7aifBk27CwhBsSfbkclbXzjwTTej5cY9Ny39PMA28iN0j46ew4eYUZ_az6gq_DDAGATFWJYwYlsIJL8BojUS4vaHyDXwz9VhRYmaTd9fvtYCsOZXLcgZe6timnn4qUypQ4R5IR2MOB9CVL8zmp6_aLXwZ_j0-LKVvRFBBJHbPtfF7p03nEz8AHUzIQQeXFUf_qMpNr7tlK_Hb8KqYJD_WMMeKLQgok3GhJoZ10swzqelCSclV03DVuS5I9Ise3nXLWyOb7gvC2UUkugZSrNKEj1SRbZK-yoeEFMWgcilDNCt0TkAvI5ctw6Bme_4Tgm1nb9qxSzA",
+      "type": "secret",
+      "enabled": true,
+      "description": "Clerk __session cookie value untuk user lain (non-owner) — untuk test 403"
+    },
+    {
+      "key": "courseId",
+      "value": "78322b16-3758-4861-9e79-e647b36d9ab5",
+      "type": "default",
+      "enabled": true,
+      "description": "ID course dengan status PUBLISHED — ambil dari database"
+    },
+    {
+      "key": "draftCourseId",
+      "value": "81840ab5-d637-428d-bd3f-af2564381ad2",
+      "type": "default",
+      "enabled": true,
+      "description": "ID course dengan status DRAFT — ambil dari database"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}
