@@ -20,10 +20,10 @@
 | 7 | CourseCard Component | 🔴 Critical | ✅ Done |
 | 8 | Course Catalog Page (/course) | 🔴 Critical | ✅ Done |
 | 9 | My Courses Page (/student/courses) | 🟡 High | ✅ Done |
-| 10 | CourseCreationForm Component | 🟡 High | ⬜ Pending |
-| 11 | Course Creation Page (/creator/courses/create) | 🟡 High | ⬜ Pending |
-| 12 | Update Creator Dashboard (real data + stats) | 🟡 High | ⬜ Pending |
-| 13 | Enhance GET /api/creator/courses (stats) | 🟡 High | ⬜ Pending |
+| 10 | CourseCreationForm Component | 🟡 High | ✅ Done |
+| 11 | Course Creation Page (/creator/courses/create) | 🟡 High | ✅ Done |
+| 12 | Update Creator Dashboard (real data + stats) | 🟡 High | ✅ Done |
+| 13 | Enhance GET /api/creator/courses (stats) | 🟡 High | ✅ Done |
 
 ---
 
@@ -218,15 +218,15 @@
 
 ### Subtasks
 
-- [ ] 10.1 Buat folder `features/creator/components/` jika belum ada
-- [ ] 10.2 Buat file `features/creator/components/CourseCreationForm.tsx` sebagai client component
-- [ ] 10.3 Implementasi form fields: title (text input), description (textarea), category (text input), difficulty (select: Pemula/Menengah/Mahir), status (select: DRAFT/PUBLISHED)
-- [ ] 10.4 Implementasi client-side validation sebelum submit
-- [ ] 10.5 Implementasi submit handler: POST ke `/api/creator/courses`
-- [ ] 10.6 Tampilkan loading state pada submit button saat submitting
-- [ ] 10.7 Tampilkan inline error messages untuk validation errors
-- [ ] 10.8 Pada sukses: call `onSuccess(course)` callback
-- [ ] 10.9 Gunakan komponen UI yang sudah ada (`Button`, `Input`, dll dari `@/components/ui`)
+- [x] 10.1 Buat folder `features/creator/components/` jika belum ada
+- [x] 10.2 Buat file `features/creator/components/CourseCreationForm.tsx` sebagai client component
+- [x] 10.3 Implementasi form fields: title (text input), description (textarea), category (text input), difficulty (select: Pemula/Menengah/Mahir), status (select: DRAFT/PUBLISHED)
+- [x] 10.4 Implementasi client-side validation sebelum submit
+- [x] 10.5 Implementasi submit handler: POST ke `/api/creator/courses`
+- [x] 10.6 Tampilkan loading state pada submit button saat submitting
+- [x] 10.7 Tampilkan inline error messages untuk validation errors
+- [x] 10.8 Pada sukses: call `onSuccess(course)` callback
+- [x] 10.9 Gunakan komponen UI yang sudah ada (`Button`, `Input`, dll dari `@/components/ui`)
 
 **Files:**
 - `features/creator/components/CourseCreationForm.tsx` (buat baru)
@@ -239,10 +239,10 @@
 
 ### Subtasks
 
-- [ ] 11.1 Buat file `app/creator/courses/create/page.tsx`
-- [ ] 11.2 Auth check: redirect jika tidak authenticated atau bukan creator
-- [ ] 11.3 Render `CourseCreationForm` component
-- [ ] 11.4 Pada `onSuccess`: redirect ke `/creator/courses/[id]/manage`
+- [x] 11.1 Buat file `app/creator/courses/create/page.tsx`
+- [x] 11.2 Auth check: redirect jika tidak authenticated atau bukan creator
+- [x] 11.3 Render `CourseCreationForm` component
+- [x] 11.4 Pada `onSuccess`: redirect ke `/creator/courses/[id]/manage`
 
 **Files:**
 - `app/creator/courses/create/page.tsx` (buat baru)
@@ -255,11 +255,11 @@
 
 ### Subtasks
 
-- [ ] 12.1 Update `app/creator/page.tsx`: tambah "Buat Kursus Baru" button yang link ke `/creator/courses/create`
-- [ ] 12.2 Update stats display untuk gunakan data real dari API (totalCourses, publishedCourses, draftCourses)
-- [ ] 12.3 Tambah publish/unpublish toggle button di setiap course card di dashboard
-- [ ] 12.4 Toggle button call PUT `/api/creator/courses/[id]/publish` lalu refresh course list
-- [ ] 12.5 Update empty state untuk tampilkan "Buat Kursus Pertama" CTA
+- [x] 12.1 Update `app/creator/page.tsx`: tambah "Buat Kursus Baru" button yang link ke `/creator/courses/create`
+- [x] 12.2 Update stats display untuk gunakan data real dari API (totalCourses, publishedCourses, draftCourses)
+- [x] 12.3 Tambah publish/unpublish toggle button di setiap course card di dashboard
+- [x] 12.4 Toggle button call PUT `/api/creator/courses/[id]/publish` lalu refresh course list
+- [x] 12.5 Update empty state untuk tampilkan "Buat Kursus Pertama" CTA
 
 **Files:**
 - `app/creator/page.tsx` (update existing)
@@ -272,11 +272,11 @@
 
 ### Subtasks
 
-- [ ] 13.1 Update GET handler di `app/api/creator/courses/route.ts`
-- [ ] 13.2 Tambah `_count` untuk enrollments per course
-- [ ] 13.3 Tambah `difficulty` field ke response
-- [ ] 13.4 Hitung dan return stats: `{ totalCourses, publishedCourses, draftCourses }` di response
-- [ ] 13.5 Pastikan response tetap backward compatible dengan creator dashboard yang sudah ada
+- [x] 13.1 Update GET handler di `app/api/creator/courses/route.ts`
+- [x] 13.2 Tambah `_count` untuk enrollments per course
+- [x] 13.3 Tambah `difficulty` field ke response
+- [x] 13.4 Hitung dan return stats: `{ totalCourses, publishedCourses, draftCourses }` di response
+- [x] 13.5 Pastikan response tetap backward compatible dengan creator dashboard yang sudah ada
 
 **Files:**
 - `app/api/creator/courses/route.ts` (update existing GET handler)

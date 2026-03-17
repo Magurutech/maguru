@@ -10,8 +10,9 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { PenTool, BookOpen, Video, FileText, BarChart3, Clock, Settings } from 'lucide-react'
+import { PenTool, BookOpen, Video, FileText, BarChart3, Clock, Settings, Plus, Globe, EyeOff } from 'lucide-react'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
 
 interface Course {
@@ -20,8 +21,18 @@ interface Course {
   slug: string
   description: string | null
   status: string
+  category: string | null
+  difficulty: string | null
+  sectionCount: number
+  enrollmentCount: number
   createdAt: string
   updatedAt: string
+}
+
+interface DashboardStats {
+  totalCourses: number
+  publishedCourses: number
+  draftCourses: number
 }
 
 export default function CreatorDashboardPage() {
@@ -32,31 +43,45 @@ export default function CreatorDashboardPage() {
   const { shouldShowLoader: roleLoading } = useRoleLoadingState()
 
   const [courses, setCourses] = useState<Course[]>([])
+  const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, publishedCourses: 0, draftCourses: 0 })
   const [loadingCourses, setLoadingCourses] = useState(true)
+  const [togglingId, setTogglingId] = useState<string | null>(null)
 
-  // Fetch creator's courses
-  useEffect(() => {
-    async function fetchCourses() {
-      if (!isLoaded || !canAccessCreator()) return
-
-      try {
-        setLoadingCourses(true)
-        // TODO: Replace with actual API endpoint that filters by creator
-        // For now, we'll use a placeholder
-        const res = await fetch('/api/creator/courses')
-        if (res.ok) {
-          const data = await res.json()
-          setCourses(data.courses || [])
-        }
-      } catch (error) {
-        console.error('Error fetching courses:', error)
-      } finally {
-        setLoadingCourses(false)
+  async function fetchCourses() {
+    if (!isLoaded || !canAccessCreator()) return
+    try {
+      setLoadingCourses(true)
+      const res = await fetch('/api/creator/courses')
+      if (res.ok) {
+        const data = await res.json()
+        setCourses(data.courses || [])
+        if (data.stats) setStats(data.stats)
       }
+    } catch (error) {
+      console.error('Error fetching courses:', error)
+    } finally {
+      setLoadingCourses(false)
     }
+  }
 
+  useEffect(() => {
     fetchCourses()
-  }, [isLoaded, canAccessCreator])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoaded])
+
+  async function handleTogglePublish(courseId: string) {
+    setTogglingId(courseId)
+    try {
+      const res = await fetch(`/api/creator/courses/${courseId}/publish`, { method: 'PUT' })
+      if (res.ok) {
+        await fetchCourses()
+      }
+    } catch (error) {
+      console.error('Error toggling publish:', error)
+    } finally {
+      setTogglingId(null)
+    }
+  }
 
   if (!isLoaded || roleLoading) {
     return (
@@ -69,7 +94,6 @@ export default function CreatorDashboardPage() {
     )
   }
 
-  // Client-side role check
   if (!canAccessCreator()) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -83,35 +107,10 @@ export default function CreatorDashboardPage() {
     )
   }
 
-  // Calculate stats from real data
-  const creatorStats = {
-    totalCourses: courses.length,
-    publishedCourses: courses.filter(c => c.status === 'PUBLISHED').length,
-    draftCourses: courses.filter(c => c.status === 'DRAFT').length,
-    totalStudents: 0, // TODO: Calculate from enrollments
-    monthlyEarnings: 0, // TODO: Calculate from payments
-    averageRating: 0, // TODO: Calculate from reviews
-  }
-
   const pendingTasks = [
-    {
-      id: 1,
-      title: 'Review course feedback for "React Patterns"',
-      priority: 'high',
-      dueDate: '2024-01-16',
-    },
-    {
-      id: 2,
-      title: 'Complete TypeScript course outline',
-      priority: 'medium',
-      dueDate: '2024-01-18',
-    },
-    {
-      id: 3,
-      title: 'Record introduction video for Node.js course',
-      priority: 'low',
-      dueDate: '2024-01-20',
-    },
+    { id: 1, title: 'Review course feedback for "React Patterns"', priority: 'high', dueDate: '2024-01-16' },
+    { id: 2, title: 'Complete TypeScript course outline', priority: 'medium', dueDate: '2024-01-18' },
+    { id: 3, title: 'Record introduction video for Node.js course', priority: 'low', dueDate: '2024-01-20' },
   ]
 
   return (
@@ -119,17 +118,25 @@ export default function CreatorDashboardPage() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-merah-100 rounded-lg">
-              <PenTool className="w-6 h-6 text-merah-600" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-merah-100 rounded-lg">
+                <PenTool className="w-6 h-6 text-merah-600" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-beige-900 font-serif">Creator Studio</h1>
+                <p className="text-beige-600">
+                  Selamat berkarya, {user?.firstName || 'Creator'}! - Role:{' '}
+                  <span className="font-semibold capitalize text-merah-600">{role}</span>
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-beige-900 font-serif">Creator Studio</h1>
-              <p className="text-beige-600">
-                Selamat berkarya, {user?.firstName || 'Creator'}! - Role:{' '}
-                <span className="font-semibold capitalize text-merah-600">{role}</span>
-              </p>
-            </div>
+            <Link href="/creator/courses/create">
+              <Button className="bg-merah-500 hover:bg-merah-600 text-white flex items-center gap-2 shadow-lg hover:scale-105 transition-all duration-200">
+                <Plus className="w-4 h-4" />
+                Buat Kursus Baru
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -142,9 +149,9 @@ export default function CreatorDashboardPage() {
               </div>
               <div>
                 <p className="text-sm text-beige-600">Total Kursus</p>
-                <p className="text-2xl font-bold text-beige-900">{creatorStats.totalCourses}</p>
+                <p className="text-2xl font-bold text-beige-900">{stats.totalCourses}</p>
                 <p className="text-xs text-beige-500">
-                  {creatorStats.publishedCourses} published, {creatorStats.draftCourses} draft
+                  {stats.publishedCourses} published, {stats.draftCourses} draft
                 </p>
               </div>
             </div>
@@ -158,9 +165,9 @@ export default function CreatorDashboardPage() {
               <div>
                 <p className="text-sm text-beige-600">Total Siswa</p>
                 <p className="text-2xl font-bold text-beige-900">
-                  {creatorStats.totalStudents.toLocaleString()}
+                  {courses.reduce((sum, c) => sum + (c.enrollmentCount || 0), 0).toLocaleString()}
                 </p>
-                <p className="text-xs text-hijau-600">↗ +12% bulan ini</p>
+                <p className="text-xs text-hijau-600">dari semua kursus</p>
               </div>
             </div>
           </div>
@@ -172,12 +179,8 @@ export default function CreatorDashboardPage() {
               </div>
               <div>
                 <p className="text-sm text-beige-600">Pendapatan Bulan Ini</p>
-                <p className="text-2xl font-bold text-beige-900">
-                  Rp {(creatorStats.monthlyEarnings / 1000000).toFixed(1)}M
-                </p>
-                <p className="text-xs text-kuning-600">
-                  Rating rata-rata: {creatorStats.averageRating}⭐
-                </p>
+                <p className="text-2xl font-bold text-beige-900">Rp 0</p>
+                <p className="text-xs text-kuning-600">Segera hadir</p>
               </div>
             </div>
           </div>
@@ -187,10 +190,12 @@ export default function CreatorDashboardPage() {
         <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6 mb-8">
           <h2 className="text-xl font-semibold text-beige-900 mb-4">Aksi Cepat</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button className="h-20 flex flex-col items-center justify-center bg-merah-500 hover:bg-merah-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
-              <BookOpen className="w-6 h-6 mb-2" />
-              Buat Kursus Baru
-            </Button>
+            <Link href="/creator/courses/create">
+              <Button className="w-full h-20 flex flex-col items-center justify-center bg-merah-500 hover:bg-merah-600 hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+                <BookOpen className="w-6 h-6 mb-2" />
+                Buat Kursus Baru
+              </Button>
+            </Link>
             <Button variant="outline" className="h-20 flex flex-col items-center justify-center border-kuning-300 text-kuning-700 hover:bg-kuning-50 hover:border-kuning-500 hover:scale-105 transition-all duration-200">
               <Video className="w-6 h-6 mb-2" />
               Upload Video
@@ -212,9 +217,9 @@ export default function CreatorDashboardPage() {
             <div className="p-6 border-b border-beige-100">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-beige-900">Kursus Saya</h2>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="border-beige-300 text-beige-700 hover:bg-beige-50"
                   onClick={() => router.push('/creator/courses')}
                 >
@@ -230,48 +235,74 @@ export default function CreatorDashboardPage() {
                   Loading courses...
                 </div>
               ) : courses.length === 0 ? (
-                <div className="p-6 text-center text-beige-600">
-                  <BookOpen className="w-12 h-12 mx-auto mb-2 text-beige-400" />
-                  <p>Belum ada kursus. Buat kursus pertama Anda!</p>
+                <div className="p-8 text-center">
+                  <BookOpen className="w-12 h-12 mx-auto mb-3 text-beige-400" />
+                  <p className="text-beige-700 font-medium mb-1">Belum ada kursus</p>
+                  <p className="text-sm text-beige-500 mb-4">Mulai perjalanan mengajar Anda sekarang</p>
+                  <Link href="/creator/courses/create">
+                    <Button className="bg-merah-500 hover:bg-merah-600 text-white">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Buat Kursus Pertama
+                    </Button>
+                  </Link>
                 </div>
               ) : (
                 courses.slice(0, 3).map((course) => (
-                  <div key={course.id} className="p-6 hover:bg-beige-50 transition-colors duration-200">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-beige-900 mb-1">{course.title}</h3>
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              course.status === 'PUBLISHED'
-                                ? 'bg-hijau-100 text-hijau-800'
-                                : 'bg-kuning-100 text-kuning-800'
-                            }`}
-                          >
+                  <div key={course.id} className="p-5 hover:bg-beige-50 transition-colors duration-200">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-beige-900 mb-1 truncate">{course.title}</h3>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            course.status === 'PUBLISHED'
+                              ? 'bg-hijau-100 text-hijau-800'
+                              : 'bg-kuning-100 text-kuning-800'
+                          }`}>
                             {course.status}
                           </span>
+                          {course.difficulty && (
+                            <span className="px-2 py-0.5 rounded-full text-xs bg-beige-100 text-beige-700">
+                              {course.difficulty}
+                            </span>
+                          )}
+                          <span className="text-xs text-beige-500">
+                            {course.enrollmentCount} siswa
+                          </span>
                         </div>
-                        {course.description && (
-                          <p className="text-sm text-beige-600 mt-2 line-clamp-2">
-                            {course.description}
-                          </p>
-                        )}
                       </div>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="border-beige-300 text-beige-700 hover:bg-beige-100 hover:scale-105 transition-all duration-200"
+                      <div className="flex gap-1.5 shrink-0">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={togglingId === course.id}
+                          onClick={() => handleTogglePublish(course.id)}
+                          className={`text-xs px-2 py-1 h-auto transition-all duration-200 ${
+                            course.status === 'PUBLISHED'
+                              ? 'border-kuning-300 text-kuning-700 hover:bg-kuning-50'
+                              : 'border-hijau-300 text-hijau-700 hover:bg-hijau-50'
+                          }`}
+                        >
+                          {togglingId === course.id ? (
+                            <span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" />
+                          ) : course.status === 'PUBLISHED' ? (
+                            <><EyeOff className="h-3 w-3 mr-1" />Unpublish</>
+                          ) : (
+                            <><Globe className="h-3 w-3 mr-1" />Publish</>
+                          )}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="border-beige-300 text-beige-700 hover:bg-beige-100 hover:scale-105 transition-all duration-200 text-xs px-2 py-1 h-auto"
                           onClick={() => router.push(`/creator/courses/${course.slug}/manage`)}
                         >
-                          <Settings className="h-4 w-4 mr-1" />
+                          <Settings className="h-3 w-3 mr-1" />
                           Manage
                         </Button>
                       </div>
                     </div>
-
                     <p className="text-xs text-beige-500 mt-2">
-                      Terakhir diupdate: {new Date(course.updatedAt).toLocaleDateString('id-ID')}
+                      Diupdate: {new Date(course.updatedAt).toLocaleDateString('id-ID')}
                     </p>
                   </div>
                 ))
@@ -292,15 +323,13 @@ export default function CreatorDashboardPage() {
                     <div className="flex-1">
                       <h3 className="font-medium text-beige-900 mb-2">{task.title}</h3>
                       <div className="flex items-center gap-3">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            task.priority === 'high'
-                              ? 'bg-merah-100 text-merah-800'
-                              : task.priority === 'medium'
-                                ? 'bg-kuning-100 text-kuning-800'
-                                : 'bg-hijau-100 text-hijau-800'
-                          }`}
-                        >
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          task.priority === 'high'
+                            ? 'bg-merah-100 text-merah-800'
+                            : task.priority === 'medium'
+                              ? 'bg-kuning-100 text-kuning-800'
+                              : 'bg-hijau-100 text-hijau-800'
+                        }`}>
                           {task.priority}
                         </span>
                         <span className="text-sm text-beige-500 flex items-center gap-1">
@@ -328,15 +357,16 @@ export default function CreatorDashboardPage() {
         {/* Development Info */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-8 bg-beige-100 rounded-lg p-6 border border-beige-200">
-            <h3 className="font-semibold text-beige-900 mb-4">🎨 Creator Dashboard - Ancient Fantasy Asia Implementation</h3>
+            <h3 className="font-semibold text-beige-900 mb-4">🎨 Creator Dashboard - Phase 4 Complete</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div className="bg-white rounded p-3">
-                <strong className="text-hijau-600">✅ Completed:</strong>
+                <strong className="text-hijau-600">✅ Phase 4 Done:</strong>
                 <ul className="mt-1 text-beige-700">
-                  <li>• Ancient Fantasy Asia color migration</li>
-                  <li>• Neumorphic shadows implementation</li>
-                  <li>• Interactive hover states</li>
-                  <li>• Typography hierarchy</li>
+                  <li>• Real stats from API</li>
+                  <li>• Publish/unpublish toggle</li>
+                  <li>• Enrollment count per course</li>
+                  <li>• Buat Kursus Baru button</li>
+                  <li>• Empty state with CTA</li>
                 </ul>
               </div>
               <div className="bg-white rounded p-3">
@@ -348,11 +378,11 @@ export default function CreatorDashboardPage() {
                 </ul>
               </div>
               <div className="bg-white rounded p-3">
-                <strong className="text-kuning-600">🔄 Next Phase:</strong>
+                <strong className="text-kuning-600">📈 Stats:</strong>
                 <ul className="mt-1 text-beige-700">
-                  <li>• Extract reusable components</li>
-                  <li>• Backend integration</li>
-                  <li>• Real-time data feeds</li>
+                  <li>• Total: {stats.totalCourses}</li>
+                  <li>• Published: {stats.publishedCourses}</li>
+                  <li>• Draft: {stats.draftCourses}</li>
                 </ul>
               </div>
             </div>

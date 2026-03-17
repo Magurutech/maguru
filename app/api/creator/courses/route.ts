@@ -19,7 +19,7 @@ export async function GET() {
       )
     }
 
-    // Fetch courses owned by this creator
+    // Fetch courses owned by this creator with enrollment count and difficulty
     const courses = await prisma.courses.findMany({
       where: {
         creatorId: user.id
@@ -29,11 +29,14 @@ export async function GET() {
         title: true,
         description: true,
         status: true,
+        category: true,
+        difficulty: true,
         createdAt: true,
         updatedAt: true,
         _count: {
           select: {
-            sections: true
+            sections: true,
+            enrollments: true,
           }
         }
       },
@@ -42,12 +45,23 @@ export async function GET() {
       }
     })
 
+    // Aggregate stats (Requirements: 4.3, 8.2)
+    const totalCourses = courses.length
+    const publishedCourses = courses.filter(c => c.status === 'PUBLISHED').length
+    const draftCourses = courses.filter(c => c.status === 'DRAFT').length
+
     return NextResponse.json({
       courses: courses.map((course) => ({
         ...course,
-        slug: course.id, // Use ID as slug for now
-        sectionCount: course._count.sections
-      }))
+        slug: course.id,
+        sectionCount: course._count.sections,
+        enrollmentCount: course._count.enrollments,
+      })),
+      stats: {
+        totalCourses,
+        publishedCourses,
+        draftCourses,
+      }
     })
   } catch (error) {
     console.error('Error fetching creator courses:', error)

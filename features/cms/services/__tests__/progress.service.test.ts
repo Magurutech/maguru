@@ -113,6 +113,7 @@ describe('ProgressService', () => {
           completedAt: expect.any(Date),
         },
         create: {
+          id: expect.any(String),
           lessonId: mockLessonId,
           userId: mockUserId,
           completed: true,
@@ -312,11 +313,13 @@ describe('ProgressService', () => {
       expect(result.completed).toBe(false)
       expect(prismaMock.course_completions.create).toHaveBeenCalledWith({
         data: {
+          id: expect.any(String),
           courseId: mockCourseId,
           userId: mockUserId,
           percentage: 0,
           completed: false,
           completedAt: null,
+          updatedAt: expect.any(Date),
         },
       })
     })
