@@ -30,6 +30,7 @@ export function CourseList({
             size="sm"
             className="border-beige-300 text-beige-700 hover:bg-beige-50"
             onClick={onViewAll}
+            data-testid="view-all-courses-btn"
           >
             Lihat Semua
           </Button>

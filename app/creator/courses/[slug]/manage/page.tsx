@@ -309,6 +309,7 @@ export default function CourseManagePage() {
           size="sm"
           onClick={() => router.push('/creator/courses')}
           className="text-beige-600 hover:text-beige-900 hover:bg-beige-100 -ml-2"
+          data-testid="back-to-courses-btn"
         >
           <ArrowLeft className="h-4 w-4 mr-1.5" />
           Kursus
@@ -345,6 +346,7 @@ export default function CourseManagePage() {
           size="sm"
           disabled={publishing}
           onClick={handleTogglePublish}
+          data-testid="publish-toggle-btn"
           className={
             isPublished
               ? 'border-kuning-300 text-kuning-700 bg-kuning-50 hover:bg-kuning-100 border'
@@ -374,6 +376,7 @@ export default function CourseManagePage() {
               variant="ghost"
               className="h-7 px-2 text-xs text-merah-600 hover:bg-merah-50"
               onClick={() => { setEditingSection(null); setSectionFormOpen(true) }}
+              data-testid="add-section-btn"
             >
               <Plus className="h-3.5 w-3.5 mr-1" />
               Seksi
@@ -384,6 +387,7 @@ export default function CourseManagePage() {
             {/* Overview item */}
             <button
               onClick={() => setActiveView({ type: 'overview' })}
+              data-testid="sidebar-overview-btn"
               className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
                 activeView.type === 'overview'
                   ? 'bg-merah-50 text-merah-700 font-medium'

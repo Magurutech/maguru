@@ -89,7 +89,10 @@ export function CourseFilters() {
   const hasFilters = !!(searchValue || category || difficulty)
 
   function clearAll() {
+    // Cancel any pending debounced search update
+    if (debounceRef.current) clearTimeout(debounceRef.current)
     setSearchValue('')
+    // Push clean URL — no params at all
     router.push(pathname)
   }
 

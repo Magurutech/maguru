@@ -21,8 +21,8 @@ export default defineConfig({
   timeout: 120 * 1000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : 2, // 2 workers locally for faster execution, 1 in CI for stability
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : 2, // 2 workers - authorization tests are heavy with login/logout cycles
   outputDir: 'services/test-results',
   reporter: [
     ['html', { outputFolder: 'services/playwright-report' }],
@@ -45,6 +45,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        channel: 'chrome', // Use installed Chrome to avoid Windows spawn EPERM with headless shell
         // storageState removed - using modern Clerk testing approach with @clerk/testing
         // Tests will use setupClerkTestingToken() and clerk.signIn() helpers
         launchOptions: {

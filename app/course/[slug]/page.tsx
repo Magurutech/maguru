@@ -59,7 +59,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
   const enrolled = user ? await checkEnrollment(user.id, course.id) : false
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
+    <div className="min-h-screen bg-linear-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Back to catalog */}
         <Link

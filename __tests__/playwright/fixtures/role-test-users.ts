@@ -47,8 +47,6 @@ export const roleTestUsers = {
       '/dashboard', // User dashboard - semua role bisa akses
       '/admin', // Admin dashboard - hanya admin
       '/creator', // Creator dashboard - admin dan creator
-      '/settings',
-      '/profile',
     ],
     restrictedRoutes: [], // Admin dapat akses semua routes
   },
@@ -66,8 +64,6 @@ export const roleTestUsers = {
     allowedRoutes: [
       '/dashboard', // User dashboard - semua role bisa akses
       '/creator', // Creator dashboard - creator dan admin
-      '/settings',
-      '/profile',
     ],
     restrictedRoutes: ['/admin'], // Creator tidak bisa akses admin dashboard
   },
@@ -82,7 +78,7 @@ export const roleTestUsers = {
     role: 'user' as const,
     displayName: 'Regular Test User',
     dashboardUrl: '/dashboard',
-    allowedRoutes: ['/dashboard', '/settings', '/profile'], // User hanya akses dashboard umum
+    allowedRoutes: ['/dashboard'], // User hanya akses dashboard umum
     restrictedRoutes: ['/admin', '/creator'], // User tidak bisa akses admin dan creator dashboard
   },
 } as const

@@ -93,6 +93,7 @@ export default function CreatorCoursesPage() {
             variant="ghost"
             onClick={() => router.push('/creator')}
             className="mb-4 text-beige-600 hover:text-beige-900 hover:bg-beige-100 -ml-2"
+            data-testid="back-to-dashboard-btn"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Kembali ke Dashboard
@@ -116,7 +117,7 @@ export default function CreatorCoursesPage() {
 
         {/* Course Grid */}
         {courses.length === 0 ? (
-          <div className="bg-white rounded-xl border border-beige-200 shadow-neu p-16 text-center">
+          <div className="bg-white rounded-xl border border-beige-200 shadow-neu p-16 text-center" data-testid="empty-state">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-beige-300" />
             <h2 className="text-xl font-semibold text-beige-700 mb-2">Belum ada kursus</h2>
             <p className="text-beige-500 mb-6">Mulai perjalanan mengajar Anda sekarang</p>
@@ -128,7 +129,7 @@ export default function CreatorCoursesPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="course-grid">
             {courses.map((course) => (
               <CourseCard
                 key={course.id}

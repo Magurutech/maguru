@@ -26,7 +26,7 @@ export default async function MyCoursesPage() {
   const { enrollments } = await getMyEnrollments(user.id)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
+    <div className="min-h-screen bg-linear-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
         <div className="mb-8">

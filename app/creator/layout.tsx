@@ -20,16 +20,16 @@ interface CreatorLayoutProps {
 export default function CreatorLayout({ children }: CreatorLayoutProps) {
   return (
     <UserRoleProvider>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50">
+      <div className="min-h-screen bg-linear-gradient-to-br from-purple-50 via-violet-50 to-indigo-50">
         {/* Sidebar Navigation */}
         <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-40">
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="flex items-center space-x-3 p-6 border-b border-gray-200">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-linear-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-linear-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                 Maguru
               </span>
               <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
