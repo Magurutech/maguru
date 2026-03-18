@@ -26,8 +26,8 @@
 | 13 | Enhance GET /api/creator/courses (stats) | 🟡 High | ✅ Done |
 | 14 | API Testing — Student Course (Postman) | 🟢 Medium | ✅ Done |
 | 15 | API Testing — Creator Course (Postman) | 🟢 Medium | ✅ Done |
-| 16 | E2E Tests — Student Pages | 🟢 Medium | ⬜ Todo |
-| 17 | E2E Tests — Creator Pages | 🟢 Medium | ⬜ Todo |
+| 16 | E2E Tests — Student Pages | 🟢 Medium | ✅ Done |
+| 17 | E2E Tests — Creator Pages | 🟢 Medium | ✅ Done |
 
 ---
 
@@ -302,7 +302,7 @@
 **Files:**
 - `docs/api/student-course/student-course.postman_collection.json` (buat baru)
 
----
+--- 
 
 ## Task 15: API Testing — Creator Course (Postman)
 

@@ -9,7 +9,7 @@
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { useRoleGuard } from '@/features/auth'
-import { CourseCreationForm } from '@/features/creator/components/CourseCreationForm'
+import { CourseCreationForm } from '@/features/cms/components/creator/CourseCreationForm'
 import { BookOpen } from 'lucide-react'
 
 export default function CourseCreatePage() {

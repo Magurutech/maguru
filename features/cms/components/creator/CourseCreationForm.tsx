@@ -124,9 +124,12 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5" data-testid="course-creation-form">
       {serverError && (
-        <div className="rounded-md bg-merah-50 border border-merah-200 px-4 py-3 text-sm text-merah-700">
+        <div
+          data-testid="server-error"
+          className="rounded-md bg-merah-50 border border-merah-200 px-4 py-3 text-sm text-merah-700"
+        >
           {serverError}
         </div>
       )}
@@ -142,10 +145,12 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
           onChange={e => handleChange('title', e.target.value)}
           placeholder="Contoh: Belajar React dari Nol"
           maxLength={100}
+          data-testid="input-title"
+          aria-describedby={errors.title ? 'title-error' : undefined}
           className={errors.title ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
           disabled={submitting}
         />
-        {errors.title && <p className="text-xs text-merah-600">{errors.title}</p>}
+        {errors.title && <p id="title-error" data-testid="error-title" className="text-xs text-merah-600">{errors.title}</p>}
         <p className="text-xs text-beige-500">{form.title.length}/100 karakter</p>
       </div>
 
@@ -160,10 +165,12 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
           onChange={e => handleChange('description', e.target.value)}
           placeholder="Jelaskan apa yang akan dipelajari dalam kursus ini..."
           rows={4}
+          data-testid="input-description"
+          aria-describedby={errors.description ? 'description-error' : undefined}
           className={errors.description ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
           disabled={submitting}
         />
-        {errors.description && <p className="text-xs text-merah-600">{errors.description}</p>}
+        {errors.description && <p id="description-error" data-testid="error-description" className="text-xs text-merah-600">{errors.description}</p>}
       </div>
 
       {/* Category */}
@@ -176,10 +183,12 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
           value={form.category}
           onChange={e => handleChange('category', e.target.value)}
           placeholder="Contoh: Pemrograman Web, Data Science, Desain"
+          data-testid="input-category"
+          aria-describedby={errors.category ? 'category-error' : undefined}
           className={errors.category ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
           disabled={submitting}
         />
-        {errors.category && <p className="text-xs text-merah-600">{errors.category}</p>}
+        {errors.category && <p id="category-error" data-testid="error-category" className="text-xs text-merah-600">{errors.category}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -231,6 +240,7 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
       <Button
         type="submit"
         disabled={submitting}
+        data-testid="submit-course-btn"
         className="w-full bg-merah-500 hover:bg-merah-600 text-white font-semibold py-2.5 transition-all duration-200"
       >
         {submitting ? (

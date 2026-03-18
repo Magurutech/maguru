@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 import { BookOpen } from 'lucide-react'
-import { CourseFilters } from './CourseFilters'
-import { CoursePagination } from './CoursePagination'
-import { EnrollableCourseCard } from './EnrollButton'
+import { CourseFilters } from '../../features/cms/components/student/learn/CourseFilters'
+import { CoursePagination } from '../../features/cms/components/student/learn/CoursePagination'
+import { CourseCard } from '../../features/cms/components/student/CourseCard'
 
 /**
  * Course Catalog Page — /course
@@ -109,12 +109,13 @@ export default async function CourseCatalogPage({
           <EmptyState hasFilters={!!(params.search || params.category || params.difficulty)} />
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="course-grid">
               {courses.map((course) => (
-                <EnrollableCourseCard
+                <CourseCard
                   key={course.id}
                   course={course}
                   enrolled={course.enrolled}
+                  catalogMode
                 />
               ))}
             </div>
@@ -131,7 +132,7 @@ export default async function CourseCatalogPage({
 
 function EmptyState({ hasFilters }: { hasFilters: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
+    <div data-testid="empty-state" className="flex flex-col items-center justify-center py-24 text-center">
       <div className="flex items-center justify-center w-16 h-16 bg-beige-100 rounded-full mb-4">
         <BookOpen className="w-8 h-8 text-beige-400" />
       </div>

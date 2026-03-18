@@ -42,13 +42,21 @@ export function CourseFilters() {
 
   const [searchValue, setSearchValue] = useState(searchParams.get('search') ?? '')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isMountedRef = useRef(false)
 
   const category = searchParams.get('category') ?? ''
   const difficulty = searchParams.get('difficulty') ?? ''
 
+  // Use a ref so updateParams is always stable and never causes effect re-runs
+  const searchParamsRef = useRef(searchParams)
+  // Sync ref in a layout effect — avoids mutating ref during render
+  useEffect(() => {
+    searchParamsRef.current = searchParams
+  })
+
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParams.toString())
+      const params = new URLSearchParams(searchParamsRef.current.toString())
       Object.entries(updates).forEach(([key, value]) => {
         if (value) {
           params.set(key, value)
@@ -60,11 +68,15 @@ export function CourseFilters() {
       params.delete('page')
       router.push(`${pathname}?${params.toString()}`)
     },
-    [router, pathname, searchParams]
+    [router, pathname] // searchParams removed — read via ref instead
   )
 
-  // Debounced search
+  // Debounced search — skip on mount, only fire when user actually types
   useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true
+      return
+    }
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
       updateParams({ search: searchValue || null })
@@ -72,7 +84,7 @@ export function CourseFilters() {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
     }
-  }, [searchValue, updateParams])
+  }, [searchValue]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const hasFilters = !!(searchValue || category || difficulty)
 

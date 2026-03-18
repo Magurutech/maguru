@@ -3,49 +3,18 @@ import { currentUser } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CourseCard } from '@/features/course/components/CourseCard'
+import { CourseCard } from '@/features/cms/components/student/CourseCard'
+import { getMyEnrollments } from '@/features/cms/services/enrollment.service'
 
 /**
  * My Courses Page — /student/courses
  *
  * Server component. Auth-protected.
- * Fetches enrolled courses with progress from /api/courses/my-courses.
+ * Calls getMyEnrollments directly (no HTTP round-trip) to avoid
+ * losing the auth cookie on server-side fetch.
  *
  * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
  */
-
-interface EnrolledCourse {
-  id: string
-  enrolledAt: string
-  completed: boolean
-  completedAt: string | null
-  progress: number
-  course: {
-    id: string
-    title: string
-    description: string
-    category: string
-    difficulty: string | null
-    status: string
-    thumbnail: string | null
-  }
-}
-
-interface MyCoursesResponse {
-  enrollments: EnrolledCourse[]
-}
-
-async function fetchMyEnrollments(baseUrl: string): Promise<MyCoursesResponse> {
-  const res = await fetch(`${baseUrl}/api/courses/my-courses`, {
-    cache: 'no-store',
-  })
-
-  if (!res.ok) {
-    return { enrollments: [] }
-  }
-
-  return res.json()
-}
 
 export default async function MyCoursesPage() {
   const user = await currentUser()
@@ -54,9 +23,7 @@ export default async function MyCoursesPage() {
     redirect('/sign-in')
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const data = await fetchMyEnrollments(baseUrl)
-  const { enrollments } = data
+  const { enrollments } = await getMyEnrollments(user.id)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
@@ -78,7 +45,7 @@ export default async function MyCoursesPage() {
             <p className="text-sm text-beige-500 mb-6">
               {enrollments.length} kursus terdaftar
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="enrolled-courses-grid">
               {enrollments.map((enrollment) => (
                 <CourseCard
                   key={enrollment.id}
@@ -105,7 +72,7 @@ export default async function MyCoursesPage() {
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
+    <div data-testid="empty-state" className="flex flex-col items-center justify-center py-24 text-center">
       <div className="flex items-center justify-center w-16 h-16 bg-beige-100 rounded-full mb-4">
         <BookOpen className="w-8 h-8 text-beige-400" />
       </div>

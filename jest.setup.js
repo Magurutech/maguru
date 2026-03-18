@@ -235,6 +235,7 @@ jest.mock('lucide-react', () => ({
   Settings: () => <div data-testid="settings-icon">Settings Icon</div>,
   Menu: () => <div data-testid="menu-icon">Menu Icon</div>,
   X: () => <div data-testid="x-icon">X Icon</div>,
+  Search: () => <div data-testid="search-icon">Search Icon</div>,
   TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp Icon</div>,
   Award: () => <div data-testid="award-icon">Award Icon</div>,
   Quote: () => <div data-testid="quote-icon">Quote Icon</div>,
@@ -250,6 +251,50 @@ jest.mock('@/components/ui/button', () => ({
 
 jest.mock('@/components/ui/badge', () => ({
   Badge: jest.fn(({ children, ...props }) => React.createElement('span', props, children)),
+}))
+
+jest.mock('@/components/ui/input', () => ({
+  Input: jest.fn((props) => React.createElement('input', props)),
+}))
+
+jest.mock('@/components/ui/select', () => ({
+  Select: jest.fn(({ children, onValueChange, value }) => {
+    // Pass onValueChange down via context-like prop drilling through data attribute
+    return React.createElement(
+      'div',
+      { 'data-value': value, 'data-testid': 'select-root' },
+      React.Children.map(children, (child) =>
+        child ? React.cloneElement(child, { _onValueChange: onValueChange }) : child
+      )
+    )
+  }),
+  SelectTrigger: jest.fn(({ children, 'aria-label': ariaLabel, _onValueChange, ...props }) =>
+    React.createElement('button', { 'aria-label': ariaLabel, role: 'combobox', ...props }, children)
+  ),
+  SelectValue: jest.fn(({ placeholder }) =>
+    React.createElement('span', null, placeholder)
+  ),
+  SelectContent: jest.fn(({ children, _onValueChange }) =>
+    React.createElement(
+      'div',
+      { role: 'listbox' },
+      React.Children.map(children, (child) =>
+        child ? React.cloneElement(child, { _onValueChange }) : child
+      )
+    )
+  ),
+  SelectItem: jest.fn(({ children, value, _onValueChange, ...props }) =>
+    React.createElement(
+      'div',
+      {
+        role: 'option',
+        'data-value': value,
+        onClick: () => _onValueChange && _onValueChange(value),
+        ...props,
+      },
+      children
+    )
+  ),
 }))
 
 // Suppress console errors during tests

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { CourseCard, type CourseCardCourse } from '@/features/course/components/CourseCard'
+import { CourseCard, type CourseCardCourse } from '@/features/cms/components/student/CourseCard'
 
 /**
  * EnrollButton wrapper around CourseCard
@@ -50,7 +50,10 @@ export function EnrollableCourseCard({ course, enrolled: initialEnrolled }: Enro
 
       setEnrolled(true)
       toast.success(`Berhasil mendaftar ke "${course.title}"`)
-      router.push(`/course/${course.id}/learn`)
+      // Delay navigation slightly so the toast has time to render before unmount
+      setTimeout(() => {
+        router.push(`/course/${course.id}/learn`)
+      }, 800)
     } catch {
       toast.error('Terjadi kesalahan. Coba lagi.')
     } finally {
