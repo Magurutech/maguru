@@ -173,29 +173,39 @@ export default function CourseManagePage() {
   // ── Section handlers ───────────────────────────────────────────────────────
 
   const handleSectionFormSubmit = async (data: { title: string; description: string; order: number }) => {
-    if (editingSection) {
-      const res = await fetch(`/api/courses/${courseId}/sections/${editingSection.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Failed to update section')
-      const updated = await res.json()
-      setSections((prev) => prev.map((s) => (s.id === editingSection.id ? { ...s, ...updated } : s)))
-      toast.success('Seksi berhasil diperbarui')
-    } else {
-      const res = await fetch(`/api/courses/${courseId}/sections`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Failed to create section')
-      const created = await res.json()
-      setSections((prev) => [...prev, { ...created, lessonCount: 0 }])
-      toast.success('Seksi berhasil dibuat')
+    try {
+      if (editingSection) {
+        const res = await fetch(`/api/courses/${courseId}/sections/${editingSection.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal memperbarui seksi')
+        }
+        const updated = await res.json()
+        setSections((prev) => prev.map((s) => (s.id === editingSection.id ? { ...s, ...updated } : s)))
+        toast.success('Seksi berhasil diperbarui')
+      } else {
+        const res = await fetch(`/api/courses/${courseId}/sections`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal membuat seksi')
+        }
+        const created = await res.json()
+        setSections((prev) => [...prev, { ...created, lessonCount: 0 }])
+        toast.success('Seksi berhasil dibuat')
+      }
+      setSectionFormOpen(false)
+      setEditingSection(null)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
     }
-    setSectionFormOpen(false)
-    setEditingSection(null)
   }
 
   const handleDeleteSection = async (sectionId: string) => {
@@ -214,42 +224,52 @@ export default function CourseManagePage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLessonFormSubmit = async (data: { title: string; content: any; order: number }) => {
-    if (editingLesson) {
-      const { lesson, sectionId } = editingLesson
-      const res = await fetch(`/api/courses/${courseId}/sections/${sectionId}/lessons/${lesson.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Failed to update lesson')
-      const updated = await res.json()
-      setLessonsMap((prev) => ({
-        ...prev,
-        [sectionId]: (prev[sectionId] || []).map((l) => (l.id === lesson.id ? { ...l, ...updated } : l)),
-      }))
-      toast.success('Pelajaran berhasil diperbarui')
-    } else if (addingLessonToSection) {
-      const res = await fetch(`/api/courses/${courseId}/sections/${addingLessonToSection}/lessons`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      })
-      if (!res.ok) throw new Error('Failed to create lesson')
-      const created = await res.json()
-      setLessonsMap((prev) => ({
-        ...prev,
-        [addingLessonToSection]: [...(prev[addingLessonToSection] || []), created],
-      }))
-      setSections((prev) =>
-        prev.map((s) =>
-          s.id === addingLessonToSection ? { ...s, lessonCount: s.lessonCount + 1 } : s
+    try {
+      if (editingLesson) {
+        const { lesson, sectionId } = editingLesson
+        const res = await fetch(`/api/courses/${courseId}/sections/${sectionId}/lessons/${lesson.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal memperbarui pelajaran')
+        }
+        const updated = await res.json()
+        setLessonsMap((prev) => ({
+          ...prev,
+          [sectionId]: (prev[sectionId] || []).map((l) => (l.id === lesson.id ? { ...l, ...updated } : l)),
+        }))
+        toast.success('Pelajaran berhasil diperbarui')
+      } else if (addingLessonToSection) {
+        const res = await fetch(`/api/courses/${courseId}/sections/${addingLessonToSection}/lessons`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal membuat pelajaran')
+        }
+        const created = await res.json()
+        setLessonsMap((prev) => ({
+          ...prev,
+          [addingLessonToSection]: [...(prev[addingLessonToSection] || []), created],
+        }))
+        setSections((prev) =>
+          prev.map((s) =>
+            s.id === addingLessonToSection ? { ...s, lessonCount: s.lessonCount + 1 } : s
+          )
         )
-      )
-      toast.success('Pelajaran berhasil dibuat')
+        toast.success('Pelajaran berhasil dibuat')
+      }
+      setLessonFormOpen(false)
+      setEditingLesson(null)
+      setAddingLessonToSection(null)
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
     }
-    setLessonFormOpen(false)
-    setEditingLesson(null)
-    setAddingLessonToSection(null)
   }
 
   const handleDeleteLesson = async (sectionId: string, lessonId: string) => {

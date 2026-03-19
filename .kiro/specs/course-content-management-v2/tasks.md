@@ -414,41 +414,6 @@ This implementation plan breaks down the Course Content Management feature into 
     - ✓ Total test count: 207/207 tests passing
     - _Requirements: 5.1, 5.2, 5.7-5.9, 6.4, 7.1, 7.5_
 
----
-
-## ⚠️ CRITICAL: System Migration Required
-
-**Current State:**
-- ✅ All CMS components complete (Tasks 1-9)
-- ✅ New database-based system with Tiptap JSON
-- ❌ Learn page still uses OLD markdown-based system (`features/course`)
-
-**Migration Required Before Task 10:**
-
-1. **Clean up old system:**
-   - Delete `features/course` folder (old markdown-based system)
-   - Delete current `app/course/[slug]/learn/page.tsx` (uses old CourseSidebar)
-
-2. **Implement Task 11 FIRST** (before Task 10):
-   - Task 11.1: Create new learn page using CMS components
-   - Task 11.2: Implement lesson loading from database
-   - Task 11.3: Implement mark as complete functionality
-   - Task 11.4: Implement progress persistence
-
-**Rationale:**
-- Old system: File-based markdown with `CourseItem` structure
-- New system: Database-based Tiptap JSON with `Lesson` structure
-- Systems are incompatible and cannot coexist
-- Student experience (Task 11) should be validated before creator tools (Task 10)
-
-**Recommended Order:**
-1. ✅ Tasks 1-9 (Complete)
-2. 🔄 Task 11 (Student Learn Page) - DO THIS NEXT
-3. ⏭️ Task 10 (Creator Dashboard) - After Task 11
-4. ⏭️ Tasks 12-19 (Polish and deployment)
-
----
-
 - [x] 10. Creator Dashboard Integration
   - [x] 10.1 Create SectionList component
     - ✓ Display all sections for a course
@@ -545,27 +510,29 @@ This implementation plan breaks down the Course Content Management feature into 
     - _Requirements: 5.1-5.9, 6.1-6.8, 7.1-7.7_
 
 
-- [ ] 12. Error Handling and User Feedback
-  - [ ] 12.1 Implement consistent API error responses
-    - Return error object with message, code, details
-    - Use appropriate HTTP status codes
-    - Log errors server-side
+- [x] 12. Error Handling and User Feedback
+  - [x] 12.1 Implement consistent API error responses
+    - ✓ Created centralized error utility at lib/api/errors.ts
+    - ✓ Standardized format: { error, code, details? } across all routes
+    - ✓ Updated progress routes to use helpers (unauthorizedError, notFoundError, internalError)
+    - ✓ All routes now return consistent HTTP status codes
     - _Requirements: 10.1-10.6_
 
-- [ ] 12.2 Implement client-side error handling
-    - Display validation errors inline
-    - Show toast notifications for success/error
-    - Handle network errors gracefully
-    - Provide retry mechanisms
+  - [x] 12.2 Implement client-side error handling
+    - ✓ learn page: retry mechanism via retryCount state
+    - ✓ learn page: "Coba Lagi" button on error state
+    - ✓ manage page: form handlers now catch and toast API error messages
+    - ✓ Toast messages in Indonesian (Gagal memuat, Berhasil dibuat, etc.)
     - _Requirements: 10.1, 10.7, 10.8_
 
-- [ ] 12.3 Implement loading states
-    - Show spinners during API calls
-    - Disable buttons during save operations
-    - Show skeleton loaders for content
+  - [x] 12.3 Implement loading states
+    - ✓ learn page: skeleton loader for lesson content (lessonLoading state)
+    - ✓ learn page: completing state disables "Tandai Selesai" button during API call
+    - ✓ LessonViewer: completing prop disables button and shows "Menyimpan..."
+    - ✓ manage page: publishing spinner already present
     - _Requirements: 11.1, 11.2_
 
-- [ ]* 12.4 Write tests for error scenarios
+  - [ ]* 12.4 Write tests for error scenarios
     - Test validation error display
     - Test 401 unauthorized handling
     - Test 403 forbidden handling

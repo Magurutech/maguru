@@ -32,9 +32,10 @@ interface LessonViewerProps {
   }
   onMarkComplete?: () => Promise<void>
   isCompleted: boolean
+  completing?: boolean
 }
 
-export function LessonViewer({ lesson, onMarkComplete, isCompleted }: LessonViewerProps) {
+export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing = false }: LessonViewerProps) {
   const [error, setError] = useState<string | null>(null)
 
   const editor = useEditor({
@@ -86,11 +87,12 @@ export function LessonViewer({ lesson, onMarkComplete, isCompleted }: LessonView
       </div>
       {!isCompleted && onMarkComplete && (
         <button 
-          onClick={onMarkComplete} 
+          onClick={onMarkComplete}
+          disabled={completing}
           className="mark-complete-btn"
           aria-label="Mark this lesson as complete"
         >
-          Mark as Complete
+          {completing ? 'Menyimpan...' : 'Tandai Selesai'}
         </button>
       )}
       {isCompleted && (

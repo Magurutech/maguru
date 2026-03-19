@@ -59,6 +59,9 @@ export default function LearnPage() {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
+  const [lessonLoading, setLessonLoading] = useState(false)
+  const [completing, setCompleting] = useState(false)
 
   // Get lesson ID from URL query params
   const lessonId = searchParams.get('lesson')
@@ -69,6 +72,7 @@ export default function LearnPage() {
       try {
         setLoading(true)
         setError(null)
+        // retryCount is a dependency so retries re-trigger this effect
 
         // Fetch sections with lessons
         const sectionsRes = await fetch(`/api/courses/${slug}/sections`)
@@ -115,7 +119,7 @@ export default function LearnPage() {
     }
 
     fetchCourseData()
-  }, [slug, router, lessonId])
+  }, [slug, router, lessonId, retryCount])
 
   // Task 11.2: Fetch specific lesson content
   useEffect(() => {
@@ -123,6 +127,7 @@ export default function LearnPage() {
       if (!lessonId || sections.length === 0) return
 
       try {
+        setLessonLoading(true)
         // Find lesson in sections to get sectionId
         let sectionId: string | null = null
         let lessonData: Lesson | null = null
@@ -155,6 +160,8 @@ export default function LearnPage() {
       } catch (err) {
         console.error('Error fetching lesson:', err)
         setError(err instanceof Error ? err.message : 'Failed to load lesson')
+      } finally {
+        setLessonLoading(false)
       }
     }
 
@@ -163,9 +170,10 @@ export default function LearnPage() {
 
   // Task 11.3: Mark lesson as complete
   const handleMarkComplete = async () => {
-    if (!currentLesson) return
+    if (!currentLesson || completing) return
 
     try {
+      setCompleting(true)
       const res = await fetch(`/api/progress/lesson/${currentLesson.id}/complete`, {
         method: 'POST'
       })
@@ -193,10 +201,12 @@ export default function LearnPage() {
         percentage: ((prev.completedLessons + 1) / prev.totalLessons) * 100
       }))
 
-      toast.success('Lesson marked as complete!')
+      toast.success('Pelajaran berhasil diselesaikan!')
     } catch (err) {
       console.error('Error marking lesson complete:', err)
-      toast.error('Failed to mark lesson as complete')
+      toast.error('Gagal menyelesaikan pelajaran. Silakan coba lagi.')
+    } finally {
+      setCompleting(false)
     }
   }
 
@@ -236,14 +246,22 @@ export default function LearnPage() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
+        <div className="text-center space-y-3">
           <p className="text-red-600">{error}</p>
-          <button
-            onClick={() => router.push(`/course/${slug}`)}
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-          >
-            Back to Course
-          </button>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => setRetryCount((c) => c + 1)}
+              className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+            >
+              Coba Lagi
+            </button>
+            <button
+              onClick={() => router.push(`/course/${slug}`)}
+              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+            >
+              Kembali ke Kursus
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -281,12 +299,21 @@ export default function LearnPage() {
 
           {/* Lesson Content */}
           <div className="flex-1 overflow-y-auto p-6">
-            {currentLesson ? (
+            {lessonLoading ? (
+              <div className="space-y-4 animate-pulse">
+                <div className="h-8 bg-gray-200 rounded w-2/3" />
+                <div className="h-4 bg-gray-200 rounded w-full" />
+                <div className="h-4 bg-gray-200 rounded w-5/6" />
+                <div className="h-4 bg-gray-200 rounded w-4/6" />
+                <div className="h-32 bg-gray-200 rounded w-full mt-4" />
+              </div>
+            ) : currentLesson ? (
               <>
                 <LessonViewer
                   lesson={currentLesson}
                   onMarkComplete={handleMarkComplete}
                   isCompleted={currentLesson.completed}
+                  completing={completing}
                 />
 
                 {/* Lesson Navigation */}

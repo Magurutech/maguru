@@ -9,25 +9,25 @@
 
 ## Task Overview
 
-| Task | Title | Priority | Status |
-|------|-------|----------|--------|
-| 1 | Database Migration | 🔴 Critical | ✅ Done |
-| 2 | GET /api/courses (Public Catalog API) | 🔴 Critical | ✅ Done |
-| 3 | POST /api/courses/[slug]/enroll | 🔴 Critical | ✅ Done |
-| 4 | GET /api/courses/my-courses | 🔴 Critical | ✅ Done |
-| 5 | POST /api/creator/courses (Create Course) | 🔴 Critical | ✅ Done |
-| 6 | PUT /api/creator/courses/[slug]/publish | 🟡 High | ✅ Done |
-| 7 | CourseCard Component | 🔴 Critical | ✅ Done |
-| 8 | Course Catalog Page (/course) | 🔴 Critical | ✅ Done |
-| 9 | My Courses Page (/student/courses) | 🟡 High | ✅ Done |
-| 10 | CourseCreationForm Component | 🟡 High | ✅ Done |
-| 11 | Course Creation Page (/creator/courses/create) | 🟡 High | ✅ Done |
-| 12 | Update Creator Dashboard (real data + stats) | 🟡 High | ✅ Done |
-| 13 | Enhance GET /api/creator/courses (stats) | 🟡 High | ✅ Done |
-| 14 | API Testing — Student Course (Postman) | 🟢 Medium | ✅ Done |
-| 15 | API Testing — Creator Course (Postman) | 🟢 Medium | ✅ Done |
-| 16 | E2E Tests — Student Pages | 🟢 Medium | ✅ Done |
-| 17 | E2E Tests — Creator Pages | 🟢 Medium | ✅ Done |
+| Task | Title                                          | Priority　　| Status |
+| ------| ------------------------------------------------| -------------| --------|
+| 1    | Database Migration                             | 🔴 Critical | ✅ Done |
+| 2    | GET /api/courses (Public Catalog API)          | 🔴 Critical | ✅ Done |
+| 3    | POST /api/courses/[slug]/enroll                | 🔴 Critical | ✅ Done |
+| 4    | GET /api/courses/my-courses                    | 🔴 Critical | ✅ Done |
+| 5    | POST /api/creator/courses (Create Course)      | 🔴 Critical | ✅ Done |
+| 6    | PUT /api/creator/courses/[slug]/publish        | 🟡 High　　　| ✅ Done |
+| 7    | CourseCard Component                           | 🔴 Critical | ✅ Done |
+| 8    | Course Catalog Page (/course)                  | 🔴 Critical | ✅ Done |
+| 9    | My Courses Page (/student/courses)             | 🟡 High　　　| ✅ Done |
+| 10   | CourseCreationForm Component                   | 🟡 High　　　| ✅ Done |
+| 11   | Course Creation Page (/creator/courses/create) | 🟡 High　　　| ✅ Done |
+| 12   | Update Creator Dashboard (real data + stats)   | 🟡 High　　　| ✅ Done |
+| 13   | Enhance GET /api/creator/courses (stats)       | 🟡 High　　　| ✅ Done |
+| 14   | API Testing — Student Course (Postman)         | 🟢 Medium　　| ✅ Done |
+| 15   | API Testing — Creator Course (Postman)         | 🟢 Medium　　| ✅ Done |
+| 16   | E2E Tests — Student Pages                      | 🟢 Medium　　| ✅ Done |
+| 17   | E2E Tests — Creator Pages                      | 🟢 Medium　　| ✅ Done |
 
 ---
 
