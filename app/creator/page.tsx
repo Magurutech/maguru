@@ -7,7 +7,6 @@
  * Menampilkan tools dan fitur untuk content creation dan management.
  */
 
-import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
@@ -18,13 +17,8 @@ import {
   QuickActionsPanel,
   PendingTasksPanel,
 } from '@/features/cms/components/creator/dashboard'
-import type { CreatorCourse, PendingTask } from '@/features/cms/components/creator/dashboard'
-
-interface DashboardStats {
-  totalCourses: number
-  publishedCourses: number
-  draftCourses: number
-}
+import type { PendingTask } from '@/features/cms/components/creator/dashboard'
+import { useCreatorCourses } from '@/features/cms/hooks'
 
 export default function CreatorDashboardPage() {
   const { user, isLoaded } = useUser()
@@ -33,35 +27,7 @@ export default function CreatorDashboardPage() {
   const { canAccessCreator } = useRoleGuard()
   const { shouldShowLoader: roleLoading } = useRoleLoadingState()
 
-  const [courses, setCourses] = useState<CreatorCourse[]>([])
-  const [stats, setStats] = useState<DashboardStats>({ totalCourses: 0, publishedCourses: 0, draftCourses: 0 })
-  const [loadingCourses, setLoadingCourses] = useState(false)
-
-  async function fetchCourses() {
-    if (!isLoaded || roleLoading || !canAccessCreator()) {
-      return
-    }
-    try {
-      setLoadingCourses(true)
-      const res = await fetch('/api/creator/courses')
-      if (res.ok) {
-        const data = await res.json()
-        setCourses(data.courses || [])
-        if (data.stats) setStats(data.stats)
-      }
-    } catch (error) {
-      console.error('Error fetching courses:', error)
-    } finally {
-      setLoadingCourses(false)
-    }
-  }
-
-  useEffect(() => {
-    if (isLoaded && !roleLoading) {
-      fetchCourses()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, roleLoading, role])
+  const { courses, stats, isLoading: loadingCourses } = useCreatorCourses()
 
   if (!isLoaded || roleLoading) {
     return (

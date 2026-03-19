@@ -326,13 +326,13 @@
 
 ### Subtasks
 
-- [ ] 16.1 Buat file `__tests__/playwright/course/student/catalog.spec.ts`
-- [ ] 16.2 Test: catalog page `/course` loads dengan course cards (unauthenticated)
-- [ ] 16.3 Test: filter by category/difficulty mengupdate URL params dan re-render cards
-- [ ] 16.4 Test: klik "Daftar Sekarang" tanpa auth → redirect ke `/sign-in`
-- [ ] 16.5 Buat file `__tests__/playwright/course/student/my-courses.spec.ts`
-- [ ] 16.6 Test: akses `/student/courses` tanpa auth → redirect ke `/sign-in`
-- [ ] 16.7 Test: akses `/student/courses` dengan auth → tampilkan enrolled courses (gunakan Clerk auth state)
+- [x] 16.1 Buat file `__tests__/playwright/course/student/catalog.spec.ts`
+- [x] 16.2 Test: catalog page `/course` loads dengan course cards (unauthenticated)
+- [x] 16.3 Test: filter by category/difficulty mengupdate URL params dan re-render cards
+- [x] 16.4 Test: klik "Daftar Sekarang" tanpa auth → redirect ke `/sign-in`
+- [x] 16.5 Buat file `__tests__/playwright/course/student/my-courses.spec.ts`
+- [x] 16.6 Test: akses `/student/courses` tanpa auth → redirect ke `/sign-in`
+- [x] 16.7 Test: akses `/student/courses` dengan auth → tampilkan enrolled courses (gunakan Clerk auth state)
 
 **Files:**
 - `__tests__/playwright/course/student/catalog.spec.ts` (buat baru)
@@ -346,16 +346,59 @@
 
 ### Subtasks
 
-- [ ] 17.1 Buat file `__tests__/playwright/course/creator/dashboard.spec.ts`
-- [ ] 17.2 Test: creator dashboard `/creator` menampilkan stats (totalCourses, publishedCourses, draftCourses) dengan data real
-- [ ] 17.3 Test: creator dashboard menampilkan course list dengan enrollment count
-- [ ] 17.4 Buat file `__tests__/playwright/course/creator/create-course.spec.ts`
-- [ ] 17.5 Test: form validation — submit tanpa required fields menampilkan error messages
-- [ ] 17.6 Test: akses `/creator/courses/create` tanpa role creator → redirect atau 403
+- [x] 17.1 Buat file `__tests__/playwright/course/creator/dashboard.spec.ts`
+- [x] 17.2 Test: creator dashboard `/creator` menampilkan stats (totalCourses, publishedCourses, draftCourses) dengan data real
+- [x] 17.3 Test: creator dashboard menampilkan course list dengan enrollment count
+- [x] 17.4 Buat file `__tests__/playwright/course/creator/create-course.spec.ts`
+- [x] 17.5 Test: form validation — submit tanpa required fields menampilkan error messages
+- [x] 17.6 Test: akses `/creator/courses/create` tanpa role creator → redirect atau 403
 
 **Files:**
 - `__tests__/playwright/course/creator/dashboard.spec.ts` (buat baru)
 - `__tests__/playwright/course/creator/create-course.spec.ts` (buat baru)
+
+---
+
+## Task 18: Code Quality & Architecture Improvements
+
+**Tujuan:** Refactor kode hasil implementasi Task 1–17 agar lebih maintainable, mengurangi duplikasi, dan mengikuti pola arsitektur yang konsisten.
+
+### Subtasks
+
+- [x] 18.1 Buat `features/cms/types/course.types.ts` — centralize semua course-related types: `CourseCardCourse`, `CreatorCourse`, `EnrolledCourse`, `CourseFormData`, `CreatorStats`, `Pagination`, `CourseCatalogParams`
+- [x] 18.2 Update `features/cms/types/index.ts` — tambah re-export dari `course.types.ts`
+- [x] 18.3 Buat `features/cms/api/course.api.ts` — React Query query/mutation functions: `getCourses`, `getMyCourses`, `getCreatorCourses`, `enrollCourse`, `togglePublish`, `createCourse`
+- [x] 18.4 Buat `features/cms/hooks/useCreatorCourses.ts` — wrap React Query untuk data creator dashboard (menggantikan inline `fetchCourses` + `useState` + `useEffect` di `app/creator/page.tsx`)
+- [x] 18.5 Buat `features/cms/hooks/useCourseCatalogFilters.ts` — encapsulate debounce + URL params logic dari `CourseFilters.tsx`
+- [x] 18.6 Buat `features/cms/hooks/useEnrollment.ts` — encapsulate enroll POST + toast + redirect dari `EnrollButton.tsx`
+- [x] 18.7 Buat `features/cms/hooks/index.ts` — barrel export semua hooks baru
+- [x] 18.8 Refactor `app/creator/page.tsx` — gunakan `useCreatorCourses` hook, hapus interface `DashboardStats` lokal yang duplikat dengan `CreatorStats`
+- [x] 18.9 Refactor `features/cms/components/student/learn/CourseFilters.tsx` — gunakan `useCourseCatalogFilters` hook
+- [x] 18.10 Refactor `features/cms/components/student/learn/EnrollButton.tsx` — gunakan `useEnrollment` hook
+- [x] 18.11 Buat `features/cms/components/student/index.ts` — barrel export semua student components
+- [x] 18.12 Unify `DashboardStats` type — hapus interface lokal di `app/creator/page.tsx`, gunakan `CreatorStatask.ts` dari `features/cms/components/creator/dashboard`
+- [x] 18.13 Update semua import paths yang terpengaruh oleh centralisasi types
+- [x] 18.14 Hapus interface lokal `CourseFormData` di `features/cms/components/creator/CourseCreationForm.tsx`, ganti dengan import dari `@/features/cms/types`
+- [x] 18.15 Reconcile `CreatorCourse` — sesuaikan shape di `course.types.ts` agar include field `slug` dan `sectionCount` yang ada di `CourseListItem.tsx`, lalu hapus interface lokal di `CourseListItem.tsx` dan import dari `@/features/cms/types`
+- [x] 18.16 Refactor `app/course/page.tsx` — hapus inline types (`CourseItem`, `CoursesResponse`, `SearchParams`) dan fungsi `fetchCourses` lokal, gunakan types dari `@/features/cms/types`
+
+**Files (baru):**
+- `features/cms/types/course.types.ts`
+- `features/cms/api/course.api.ts`
+- `features/cms/hooks/useCreatorCourses.ts`
+- `features/cms/hooks/useCourseCatalogFilters.ts`
+- `features/cms/hooks/useEnrollment.ts`
+- `features/cms/hooks/index.ts`
+- `features/cms/components/student/index.ts`
+
+**Files (diupdate):**
+- `features/cms/types/index.ts`
+- `app/creator/page.tsx`
+- `features/cms/components/student/learn/CourseFilters.tsx`
+- `features/cms/components/student/learn/EnrollButton.tsx`
+- `features/cms/components/creator/CourseCreationForm.tsx`
+- `features/cms/components/creator/dashboard/CourseListItem.tsx`
+- `app/course/page.tsx`
 
 ---
 
@@ -376,11 +419,14 @@ Phase 4 (Creator UI):
 
 Phase 5 (Testing):
   Task 14 → Task 15 → Task 16 → Task 17
+
+Phase 6 (Refactor):
+  Task 18
 ```
 
 ---
 
-**Document Version:** 1.1
-**Last Updated:** 2026-03-17
-**Total Tasks:** 17
-**Total Subtasks:** 93
+**Document Version:** 1.3
+**Last Updated:** 2026-03-19
+**Total Tasks:** 18
+**Total Subtasks:** 109

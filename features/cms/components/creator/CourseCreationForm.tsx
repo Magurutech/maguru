@@ -18,14 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-
-interface CourseFormData {
-  title: string
-  description: string
-  category: string
-  difficulty: 'Pemula' | 'Menengah' | 'Mahir'
-  status: 'DRAFT' | 'PUBLISHED'
-}
+import type { CourseFormData } from '@/features/cms/types'
 
 interface CreatedCourse {
   id: string

@@ -41,6 +41,9 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
+    // Wait for data to load
+    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
     const emptyState = page.getByTestId('empty-state')
     const hasEmpty = await emptyState.isVisible().catch(() => false)
 
@@ -61,6 +64,9 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
+    // Wait for data to load — either course grid or empty state must appear
+    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
     const emptyState = page.getByTestId('empty-state')
     const hasEmpty = await emptyState.isVisible().catch(() => false)
 
@@ -70,10 +76,10 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     }
 
     const manageBtn = page.getByTestId('manage-course-btn').first()
-    await expect(manageBtn).toBeVisible()
+    await expect(manageBtn).toBeVisible({ timeout: 10000 })
     await manageBtn.click()
 
-    await page.waitForURL(/\/creator\/courses\/.+\/manage/, { timeout: 5000 })
+    await page.waitForURL(/\/creator\/courses\/.+\/manage/, { timeout: 10000 })
     expect(page.url()).toMatch(/\/creator\/courses\/.+\/manage/)
   })
 
@@ -81,8 +87,11 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
+    // Wait for data to load — header with "Buat Kursus Baru" renders after fetch completes
+    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
     const createBtn = page.getByRole('link', { name: /buat kursus baru/i }).first()
-    await expect(createBtn).toBeVisible()
+    await expect(createBtn).toBeVisible({ timeout: 10000 })
     await createBtn.click()
 
     await page.waitForURL('/creator/courses/create', { timeout: 5000 })
@@ -92,6 +101,9 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
   test('empty state shows "Buat Kursus Pertama" CTA', async ({ page }) => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
+
+    // Wait for data to load
+    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
 
     const emptyState = page.getByTestId('empty-state')
     const hasEmpty = await emptyState.isVisible().catch(() => false)
@@ -114,8 +126,11 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
+    // Wait for data to load — back button renders after loading skeleton resolves
+    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
     const backBtn = page.getByTestId('back-to-dashboard-btn')
-    await expect(backBtn).toBeVisible()
+    await expect(backBtn).toBeVisible({ timeout: 10000 })
     await backBtn.click()
 
     await page.waitForURL('/creator', { timeout: 5000 })

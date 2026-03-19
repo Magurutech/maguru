@@ -1,20 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-
-export interface CreatorCourse {
-  id: string
-  title: string
-  slug: string
-  description: string | null
-  status: string
-  category: string | null
-  difficulty: string | null
-  sectionCount: number
-  enrollmentCount: number
-  createdAt: string
-  updatedAt: string
-}
+import type { CreatorCourse } from '@/features/cms/types'
 
 interface CourseListItemProps {
   course: CreatorCourse

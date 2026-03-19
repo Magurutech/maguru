@@ -3,6 +3,7 @@ import { BookOpen } from 'lucide-react'
 import { CourseFilters } from '../../features/cms/components/student/learn/CourseFilters'
 import { CoursePagination } from '../../features/cms/components/student/learn/CoursePagination'
 import { CourseCard } from '../../features/cms/components/student/CourseCard'
+import type { CourseCardCourse, Pagination } from '@/features/cms/types'
 
 /**
  * Course Catalog Page — /course
@@ -13,6 +14,7 @@ import { CourseCard } from '../../features/cms/components/student/CourseCard'
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.8, 1.9, 1.10
  */
 
+// String-keyed searchParams from Next.js page props
 interface SearchParams {
   page?: string
   category?: string
@@ -20,26 +22,9 @@ interface SearchParams {
   search?: string
 }
 
-interface CourseItem {
-  id: string
-  title: string
-  description: string | null
-  category: string
-  difficulty: string | null
-  status: string
-  sectionCount?: number
-  lessonCount?: number
-  enrolled: boolean
-}
-
 interface CoursesResponse {
-  courses: CourseItem[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
+  courses: (CourseCardCourse & { enrolled: boolean })[]
+  pagination: Pagination
 }
 
 async function fetchCourses(params: SearchParams): Promise<CoursesResponse> {
@@ -49,7 +34,7 @@ async function fetchCourses(params: SearchParams): Promise<CoursesResponse> {
   if (params.difficulty) query.set('difficulty', params.difficulty)
   if (params.search) query.set('search', params.search)
 
-  // Use absolute URL for server-side fetch
+  // Absolute URL required for server-side fetch in Next.js
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   const res = await fetch(`${baseUrl}/api/courses?${query.toString()}`, {
     cache: 'no-store',

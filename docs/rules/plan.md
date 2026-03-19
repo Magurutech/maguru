@@ -1,553 +1,674 @@
-# Sprint Plan: Course Feature & Dashboard Integration
+# Plan Rule — Panduan Implementasi Task 18
 
-**Status**: Draft | **Priority**: High | **Effort**: Medium
-
----
-
-## 🎬 Apa yang Akan Kita Bangun?
-
-### Cerita Pengguna (User Story)
-
-```
-Bayangkan Budi, seorang user yang baru login ke Maguru:
-
-🔴 SAAT INI (Masalah):
-1. Budi buka dashboard → ERROR 404! 😱
-2. Budi klik course "Belajar React" → konten mock saja
-3. Budi selesai lesson 1 → progress hilang jika ganti browser
-4. Budi tidak punya riwayat course yang pernah diikuti
-
-🟢 NANTI (Setelah Sprint):
-1. Budi buka dashboard → Tampil statistik belajar ✨
-   ├─ "5 Kursus Diikuti"
-   ├─ "24 Jam Belajar"
-   └─ "2 Kursus Selesai"
-
-2. Budi klik course "Belajar React" → Langsung bisa belajar 📚
-   ├─ Otomatis terdaftar (enrollment)
-   ├─ Materi terstruktur (Bab 1, Bab 2, Bab 3)
-   └─ Setiap bab punya beberapa lessons
-
-3. Budi selesai lesson → Progress tersimpan di database 💾
-   └─ Bisa buka di device lain, progress tetap ada
-
-4. Budi kembali dashboard → Course muncul di "Lanjutkan Belajar"
-   └─ Progress bar: "75% selesai"
-```
-
-### Problem vs Solution
-
-| Problem | Solution | User Benefit |
-|---------|----------|--------------|
-| Dashboard error 404 | Buat API route | Dashboard bisa diakses |
-| Course cuma mock | Simpan di database | Course riil dengan materi lengkap |
-| Progress hilang | Simpan di database | Progress aman & sinkron di semua device |
-| Tidak ada riwayat | Enrollment system | User punya daftar course yang diikuti |
-
-### Visual Flow
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  USER JOURNEY                                               │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  1. Login → Dashboard                                       │
-│     └─ "Halo, Budi! 👋"                                     │
-│     └─ Stats: 5 course, 24 jam, 2 sertifikat               │
-│                                                             │
-│  2. Browse Courses → Klik "Belajar React"                  │
-│     └─ Auto-enroll ✅                                       │
-│                                                             │
-│  3. Learn Page                                              │
-│     ├─ Bab 1: Pengenalan                                   │
-│     │   ├─ Lesson 1: Apa itu React? ✅ (done)              │
-│     │   ├─ Lesson 2: Setup Environment 📖 (current)        │
-│     │   └─ Lesson 3: Components ⏳ (locked)                │
-│     ├─ Bab 2: State Management                             │
-│     └─ Bab 3: Hooks                                        │
-│                                                             │
-│  4. Mark Complete → Progress tersimpan                     │
-│     └─ Bisa lanjut di HP/laptop lain                       │
-│                                                             │
-│  5. Selesai 100% → Dapat Sertifikat 🏆                     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+Dokumen ini menjelaskan detail implementasi untuk setiap subtask di Task 18 (Code Quality & Architecture Improvements).
 
 ---
 
-## 📋 Requirements Summary
+## Konteks
 
-| Decision | Value |
-|----------|-------|
-| Content Structure | Option A: Course → Sections → Lessons → Content |
-| Progress Tracking | Minimal (completion, last accessed, percentage) |
-| Enrollment Flow | Flow A: Direct access with auto-enrollment |
-| Dashboard Priority | Priority 1 + 2 (User Stats + Course Progress) |
-| Effort Level | Medium |
+Task 18 adalah refactor pass setelah semua fitur selesai (Task 1–17). Tujuannya:
+- Menghilangkan duplikasi type definitions
+- Mengekstrak logic stateful ke custom hooks
+- Membuat API layer yang konsisten dengan React Query
+- Mempermudah testing dan maintenance ke depan
 
----
-
-## 🎯 Sprint Goals
-
-1. **Fix Dashboard 404 Error** - Create API route with mock data fallback
-2. **Database Schema** - Add course content structure & progress tracking
-3. **Course System** - Connect courses to users with enrollment & progress
-4. **Learn Page** - Connect to real database data
+Stack yang digunakan: Next.js 14 (App Router), TypeScript, React Query (`@tanstack/react-query`), Sonner (toast).
 
 ---
 
-## 📊 Schema Changes (Penjelasan Database)
+## 18.1 — `features/cms/types/course.types.ts`
 
-### Apa itu Database Schema?
+Buat file baru. Pindahkan dan konsolidasikan semua course-related types dari berbagai file:
 
-**Schema** = Struktur penyimpanan data di database. Bayangkan seperti lemari arsip:
+```ts
+// Dari features/cms/components/student/CourseCard.tsx
+export interface CourseCardCourse {
+  id: string
+  title: string
+  description: string | null
+  category: string
+  difficulty: string | null
+  status: string
+  sectionCount?: number
+  lessonCount?: number
+}
 
-```
-🗄️ Database Maguru
-├── 📁 Courses (Data kursus)
-├── 📁 Sections (Bab dalam kursus)
-├── 📁 Lessons (Materi dalam bab)
-├── 📁 Enrollments (Siapa ikut kursus apa)
-├── 📁 Progress (Sampai mana user belajar)
-└── 📁 CourseCompletions (Sertifikat/selesai)
-```
+// Dari features/cms/components/creator/dashboard/CourseListItem.tsx
+export interface CreatorCourse {
+  id: string
+  title: string
+  status: string
+  category: string
+  difficulty: string | null
+  enrollmentCount?: number
+  createdAt?: string | Date
+  updatedAt?: string | Date
+}
 
-### New Models to Add (Penjelasan)
+export interface EnrolledCourse {
+  id: string
+  course: CourseCardCourse
+  enrolledAt: string | Date
+  completed: boolean
+  progress: number
+}
 
-#### 1. **Section** = Bab dalam Course
+export interface CourseFormData {
+  title: string
+  description: string
+  category: string
+  difficulty: 'Pemula' | 'Menengah' | 'Mahir'
+  status: 'DRAFT' | 'PUBLISHED'
+}
 
-```
-Contoh Course: "Belajar React untuk Pemula"
-├── Section 1: "Pengenalan React"        ← Ini Section
-├── Section 2: "Components & Props"
-└── Section 3: "State Management"
+export interface Pagination {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+}
 
-Di Database:
-Section {
-  title: "Pengenalan React"
-  order: 1  ← Urutan tampil
-  courseId: "react-course-id"
+export interface CourseCatalogParams {
+  page?: number
+  limit?: number
+  category?: string
+  difficulty?: string
+  search?: string
 }
 ```
 
-#### 2. **Lesson** = Materi dalam Section
+> Catatan: `CreatorStats` tetap di `DashboardStats.tsx` karena sudah di-export dari sana dan dipakai luas. Cukup re-export dari `course.types.ts` jika perlu.
 
+---
+
+## 18.2 — `features/cms/types/index.ts`
+
+Tambah re-export di bawah export yang sudah ada:
+
+```ts
+export type {
+  CourseCardCourse,
+  CreatorCourse,
+  EnrolledCourse,
+  CourseFormData,
+  Pagination,
+  CourseCatalogParams,
+} from './course.types'
 ```
-Section: "Pengenalan React"
-├── Lesson 1: "Apa itu React?"           ← Ini Lesson
-├── Lesson 2: "Kenapa pakai React?"
-└── Lesson 3: "Setup Environment"
 
-Di Database:
-Lesson {
-  title: "Apa itu React?"
-  contentType: "video"  ← bisa: video, markdown, quiz
-  contentPath: "/courses/react/lesson1.md"
-  duration: "15 menit"
-  isOptional: false  ← wajib atau tidak
+---
+
+## 18.3 — `features/cms/api/course.api.ts`
+
+Buat query/mutation functions untuk React Query. Jangan buat hooks di sini — hanya pure async functions yang bisa di-compose.
+
+```ts
+import type {
+  CourseCardCourse,
+  CreatorCourse,
+  EnrolledCourse,
+  CourseFormData,
+  Pagination,
+  CourseCatalogParams,
+} from '../types/course.types'
+
+// ─── Response shapes ──────────────────────────────────────────────────────────
+
+export interface CourseCatalogResponse {
+  courses: (CourseCardCourse & { enrolled?: boolean })[]
+  pagination: Pagination
+}
+
+export interface CreatorCoursesResponse {
+  courses: CreatorCourse[]
+  stats: {
+    totalCourses: number
+    publishedCourses: number
+    draftCourses: number
+  }
+}
+
+export interface MyCoursesResponse {
+  enrollments: EnrolledCourse[]
+}
+
+// ─── Query functions (read) ───────────────────────────────────────────────────
+
+export async function getCourses(params: CourseCatalogParams = {}): Promise<CourseCatalogResponse> {
+  const query = new URLSearchParams()
+  if (params.page)       query.set('page',       String(params.page))
+  if (params.limit)      query.set('limit',      String(params.limit))
+  if (params.category)   query.set('category',   params.category)
+  if (params.difficulty) query.set('difficulty', params.difficulty)
+  if (params.search)     query.set('search',     params.search)
+
+  const res = await fetch(`/api/courses?${query.toString()}`)
+  if (!res.ok) throw new Error('Gagal memuat katalog kursus')
+  return res.json()
+}
+
+export async function getMyCourses(): Promise<MyCoursesResponse> {
+  const res = await fetch('/api/courses/my-courses')
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (!res.ok) throw new Error('Gagal memuat kursus saya')
+  return res.json()
+}
+
+export async function getCreatorCourses(): Promise<CreatorCoursesResponse> {
+  const res = await fetch('/api/creator/courses')
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (!res.ok) throw new Error('Gagal memuat data creator')
+  return res.json()
+}
+
+// ─── Mutation functions (write) ───────────────────────────────────────────────
+
+export async function enrollCourse(courseId: string): Promise<{ enrolled: boolean }> {
+  const res = await fetch(`/api/courses/${courseId}/enroll`, { method: 'POST' })
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (res.status === 403) throw new Error('DRAFT')
+  if (res.status === 409) throw new Error('ALREADY_ENROLLED')
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error ?? 'Gagal mendaftar ke kursus')
+  }
+  return { enrolled: true }
+}
+
+export async function togglePublish(courseId: string): Promise<{ status: string }> {
+  const res = await fetch(`/api/creator/courses/${courseId}/publish`, { method: 'PUT' })
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (res.status === 403) throw new Error('FORBIDDEN')
+  if (!res.ok) throw new Error('Gagal mengubah status kursus')
+  const data = await res.json()
+  return { status: data.course.status }
+}
+
+export async function createCourse(payload: CourseFormData): Promise<CreatorCourse> {
+  const res = await fetch('/api/creator/courses', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  if (res.status === 401) throw new Error('UNAUTHORIZED')
+  if (res.status === 400) {
+    const data = await res.json().catch(() => ({}))
+    throw new Error(data.error ?? 'Data tidak valid')
+  }
+  if (!res.ok) throw new Error('Gagal membuat kursus')
+  const data = await res.json()
+  return data.course
 }
 ```
 
-#### 3. **Progress** = Riwayat Belajar User
+> Catatan: Semua fungsi di sini adalah pure async — tidak ada `useState`, `useEffect`, atau React hooks. Ini memudahkan composability dan testing.
 
-```
-User: Budi sedang belajar React
-├── Lesson 1: ✅ Selesai (kemarin)
-├── Lesson 2: 📖 Sedang dibaca (sekarang)
-└── Lesson 3: ⏳ Belum mulai
+---
 
-Di Database:
-Progress {
-  userId: "budi-clerk-id"
-  lessonId: "lesson-2-id"
-  completed: false  ← belum selesai
-  lastAccessed: "2025-01-16 10:30"  ← terakhir dibuka
+## 18.4 — `features/cms/hooks/useCreatorCourses.ts`
+
+Wrap `getCreatorCourses` dengan React Query. Hook ini menggantikan pola `useState` + `useEffect` + `fetchCourses` yang ada di `app/creator/page.tsx`.
+
+```ts
+'use client'
+
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getCreatorCourses } from '../api/course.api'
+
+export const CREATOR_COURSES_KEY = ['creator', 'courses'] as const
+
+export function useCreatorCourses() {
+  const queryClient = useQueryClient()
+
+  const query = useQuery({
+    queryKey: CREATOR_COURSES_KEY,
+    queryFn: getCreatorCourses,
+    staleTime: 30_000, // 30 detik — data creator tidak perlu real-time
+  })
+
+  function refresh() {
+    queryClient.invalidateQueries({ queryKey: CREATOR_COURSES_KEY })
+  }
+
+  return {
+    courses: query.data?.courses ?? [],
+    stats: query.data?.stats ?? { totalCourses: 0, publishedCourses: 0, draftCourses: 0 },
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refresh,
+  }
 }
 ```
 
-#### 4. **CourseCompletion** = Sertifikat Kelulusan
+> Catatan: `refresh()` dipakai setelah toggle publish atau create course agar list ter-update tanpa full page reload.
 
-```
-Budi selesai kursus React:
-Di Database:
-CourseCompletion {
-  userId: "budi-clerk-id"
-  courseId: "react-course-id"
-  completedAt: "2025-01-20"
-  percentage: 100  ← lengkap 100%
+---
+
+## 18.5 — `features/cms/hooks/useCourseCatalogFilters.ts`
+
+Ekstrak debounce + URL params logic dari `CourseFilters.tsx`. Hook ini mengembalikan state dan handlers yang siap dipakai oleh komponen.
+
+```ts
+'use client'
+
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+
+export interface CatalogFilters {
+  search: string
+  category: string
+  difficulty: string
 }
 
-→ Budi dapat sertifikat! 🏆
-```
-
-### Schema Code (Technical Implementation)
-
-```prisma
-// Course Content Structure
-model Section {
-  id        String   @id @default(uuid())
-  courseId  String
-  title     String   @db.VarChar(200)
-  order     Int
-  createdAt DateTime @default(now())
-
-  // Relations
-  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  lessons   Lesson[]
-
-  @@map("sections")
+export interface UseCourseCatalogFiltersReturn {
+  filters: CatalogFilters
+  hasFilters: boolean
+  setSearch: (value: string) => void
+  setCategory: (value: string | null) => void
+  setDifficulty: (value: string | null) => void
+  clearAll: () => void
 }
 
-model Lesson {
-  id          String   @id @default(uuid())
-  sectionId   String
-  title       String   @db.VarChar(200)
-  description String?  @db.Text
-  contentType String   @db.VarChar(50) // markdown, video, quiz
-  contentPath String   @db.VarChar(500) // path to content file
-  duration    String?  @db.VarChar(50)
-  order       Int
-  isOptional  Boolean  @default(false)
-  createdAt   DateTime @default(now())
+export function useCourseCatalogFilters(): UseCourseCatalogFiltersReturn {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-  // Relations
-  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  progress    Progress[]
+  const [search, setSearchState] = useState(searchParams.get('search') ?? '')
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const isMountedRef = useRef(false)
+  const searchParamsRef = useRef(searchParams)
 
-  @@map("lessons")
+  useEffect(() => {
+    searchParamsRef.current = searchParams
+  })
+
+  const updateParams = useCallback(
+    (updates: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParamsRef.current.toString())
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value) params.set(key, value)
+        else params.delete(key)
+      })
+      params.delete('page')
+      router.push(`${pathname}?${params.toString()}`)
+    },
+    [router, pathname]
+  )
+
+  // Debounced search — skip on mount
+  useEffect(() => {
+    if (!isMountedRef.current) {
+      isMountedRef.current = true
+      return
+    }
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      updateParams({ search: search || null })
+    }, 300)
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  function setSearch(value: string) {
+    setSearchState(value)
+  }
+
+  function setCategory(value: string | null) {
+    updateParams({ category: value })
+  }
+
+  function setDifficulty(value: string | null) {
+    updateParams({ difficulty: value })
+  }
+
+  function clearAll() {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    setSearchState('')
+    router.push(pathname)
+  }
+
+  const category = searchParams.get('category') ?? ''
+  const difficulty = searchParams.get('difficulty') ?? ''
+  const hasFilters = !!(search || category || difficulty)
+
+  return {
+    filters: { search, category, difficulty },
+    hasFilters,
+    setSearch,
+    setCategory,
+    setDifficulty,
+    clearAll,
+  }
+}
+```
+
+---
+
+## 18.6 — `features/cms/hooks/useEnrollment.ts`
+
+Ekstrak enroll POST + toast + redirect dari `EnrollButton.tsx`.
+
+```ts
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { enrollCourse } from '../api/course.api'
+
+export interface UseEnrollmentOptions {
+  courseId: string
+  courseTitle: string
+  initialEnrolled?: boolean
 }
 
-// Progress Tracking
-model Progress {
-  id           String   @id @default(uuid())
-  userId       String   @db.VarChar(255) // Clerk User ID
-  lessonId     String
-  completed    Boolean  @default(false)
-  completedAt  DateTime?
-  lastAccessed DateTime?
+export function useEnrollment({ courseId, courseTitle, initialEnrolled = false }: UseEnrollmentOptions) {
+  const router = useRouter()
+  const [enrolled, setEnrolled] = useState(initialEnrolled)
+  const [enrolling, setEnrolling] = useState(false)
 
-  // Relations
-  lesson       Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  async function handleEnroll() {
+    setEnrolling(true)
+    try {
+      await enrollCourse(courseId)
+      setEnrolled(true)
+      toast.success(`Berhasil mendaftar ke "${courseTitle}"`)
+      setTimeout(() => {
+        router.push(`/course/${courseId}/learn`)
+      }, 800)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : ''
+      if (message === 'UNAUTHORIZED') {
+        toast.error('Silakan login terlebih dahulu')
+        router.push('/sign-in')
+      } else if (message === 'ALREADY_ENROLLED') {
+        setEnrolled(true)
+        router.push(`/course/${courseId}/learn`)
+      } else {
+        toast.error(message || 'Gagal mendaftar ke kursus')
+      }
+    } finally {
+      setEnrolling(false)
+    }
+  }
 
-  @@unique([userId, lessonId])
-  @@map("progress")
-}
-
-// Course Completion (for certificates)
-model CourseCompletion {
-  id           String   @id @default(uuid())
-  userId       String   @db.VarChar(255) // Clerk User ID
-  courseId     String
-  completedAt  DateTime @default(now())
-  percentage   Int
-
-  @@unique([userId, courseId])
-  @@map("course_completions")
-}
-
-// Update existing Course model
-model Course {
-  // ... existing fields
-  slug        String   @unique @db.VarChar(100) // NEW: for URL routing
-
-  // Relations
-  sections    Section[]
-  completions CourseCompletion[]
+  return { enrolled, enrolling, handleEnroll }
 }
 ```
 
 ---
 
-## 🔄 Implementation Flow (Penjelasan Tahapan)
+## 18.7 — `features/cms/hooks/index.ts`
 
-### Apa itu API Route?
+Barrel export semua hooks baru:
 
-**API Route** = Jembatan antara Frontend (React) dan Backend (Database)
-
-```
-Frontend (React)          API Route              Database (PostgreSQL)
-     ┌────┐                   ┌────┐                      ┌────┐
-     │User├── klik "Dashboard"│API │── query data ────→    │Data│
-     └────┘                   └────┘                      └────┘
-                                   │                          │
-     ┌────┐                      └────←── return data ────────┘
-     │User│←─ tampil dashboard
-     └────┘
-```
-
-### Phase 1: Database Schema (Day 1-2)
-
-```
-1. Update Prisma schema
-   ├── Add Section model
-   ├── Add Lesson model
-   ├── Add Progress model
-   ├── Add CourseCompletion model
-   └── Add slug field to Course
-
-2. Create migration
-   └── npx prisma migrate dev --name add_course_structure
-
-3. Seed sample data
-   ├── 1 course with 3 sections
-   ├── 2-3 lessons per section
-   └── Mixed content types (markdown, video)
-```
-
-**Deliverable**: Working database with course structure
-
----
-
-### Phase 2: API Routes (Day 2-3)
-
-**Apa yang dibuat?** API Routes = Backend yang melayani request dari frontend
-
-```
-/app/api/
-├── dashboard/[role]/route.ts          ← FIX 404 ERROR
-│   │
-│   └── FUNGSI: Mengambil data dashboard user
-│       ├─ Input: role (user/creator/admin)
-│       ├─ Output: { stats, recentCourses, recommendations }
-│       └─ Contoh: GET /api/dashboard/user
-│           → { "stats": [{"title": "Kursus Diikuti", "value": 5}] }
-│
-├── courses/route.ts                    ← List all courses
-│   │
-│   └── FUNGSI: Menampilkan semua course yang tersedia
-│       ├─ Input: -
-│       ├─ Output: { courses: [{ id, title, slug, thumbnail }] }
-│       └─ Contoh: GET /api/courses
-│           → [{ "title": "Belajar React", "slug": "react-basic" }]
-│
-├── courses/[slug]/route.ts             ← Single course detail
-│   │
-│   └── FUNGSI: Detail satu course + sections + lessons
-│       ├─ Input: slug (dari URL)
-│       ├─ Output: { course, sections[], lessons[] }
-│       └─ Contoh: GET /api/courses/react-basic
-│           → { "title": "Belajar React", "sections": [...] }
-│
-├── courses/[slug]/enroll/route.ts      ← Auto-enrollment
-│   │
-│   └── FUNGSI: Mendaftarkan user ke course (otomatis)
-│       ├─ Input: userId (dari Clerk), courseId
-│       ├─ Output: { success: true, enrolledAt: "..." }
-│       └─ Contoh: POST /api/courses/react-basic/enroll
-│           → User otomatis terdaftar, bisa langsung belajar
-│
-└── courses/[slug]/progress/route.ts    ← Progress tracking
-    │
-    └── FUNGSI: Simpan & ambil progress belajar
-        ├─ GET: Ambil progress user di course ini
-        │   → Output: { completedItems: ["l1", "l2"], percentage: 75 }
-        │
-        └── POST: Simpan lesson yang baru diselesaikan
-            → Input: { lessonId, completed: true }
-            → Output: { success: true }
-```
-
-**Deliverable**: All API routes working with database
-
----
-
-### Phase 3: Frontend Integration (Day 3-4)
-
-**Apa yang berubah?** Frontend yang tadinya pakai mock/data palsu → sekarang pakai data asli
-
-```
-Dashboard (app/dashboard/page.tsx):
-├── Connect to real API data
-│   └─ SEBELUM: Tampilkan mock data (data palsu)
-│   └─ SESUDAH: Panggil GET /api/dashboard/user
-│       → Data dari database
-│
-├── Show enrolled courses
-│   └─ SEBELUM: List course hardcode
-│   └─ SESUDAH: "Lanjutkan Belajar" muncul course yang sedang dipelajari
-│       → Dengan progress bar: "75% selesai"
-│
-├── Show progress stats
-│   └─ SEBELUM: Angka statis "5 kursus"
-│   └─ SESUDAH: Hitung real dari database
-│       → "5 kursus diikuti" (dari tabel Enrollments)
-│       → "24 jam belajar" (dari perhitungan)
-│
-└── Remove mock dependency
-    └─ Hapus pemanggilan getMockDashboardData()
-
-Learn Page (app/course/[slug]/learn/page.tsx):
-├── Fetch course structure from DB
-│   └─ SEBELUM: Course structure dari mock JSON
-│   └─ SESUDAH: GET /api/courses/react-basic
-│       → Sections & lessons dari database
-│
-├── Load lesson content from DB
-│   └─ SEBELUM: Konten dari file markdown hardcode
-│   └─ SESUDAH: Ambil contentPath, load file yang sesuai
-│
-├── Save progress to DB (not localStorage)
-│   └─ SEBELUM: localStorage.setItem("progress", ...)
-│   └─ SESUDAH: POST /api/courses/react-basic/progress
-│       → Simpan ke tabel Progress
-│       → Bisa akses dari device manapun!
-│
-└── Auto-enroll on first access
-    └─ User buka course → otomatis POST /api/courses/xxx/enroll
-        → Enrollment dibuat, user resmi "terdaftar"
-```
-
-**Deliverable**: Full course system working end-to-end
-
----
-
-### Phase 4: Polish & Testing (Day 4)
-
-**Apa yang dilakukan?** Memastikan semuanya berjalan dengan baik
-
-```
-Testing (User Flow):
-├── 1. User login → Dashboard muncul tanpa error
-│   └─ Cek: Stats tampil, course list muncul
-│
-├── 2. User klik course → Otomatis ter-enroll
-│   └─ Cek: Enrollment dibuat di database
-│
-├── 3. User pelajari lesson → Mark as complete
-│   └─ Cek: Progress tersimpan di database
-│
-├── 4. User refresh halaman → Progress tetap ada
-│   └─ Cek: Data tidak hilang
-│
-├── 5. User selesai 100% → Course completion tercatat
-│   └─ Cek: Tabel CourseCompletion terisi
-│
-└── 6. Error handling → Course tidak ada/user tidak login
-    └─ Cek: Pesan error friendly, bukan crash
-
-Data Migration (Satu Kali Saja):
-└── Pindahkan progress lama dari localStorage → Database
-    ├── Ambil data localStorage
-    ├── Loop setiap user
-    ├── Insert ke tabel Progress
-    └── Hapus localStorage (opsional, bisa backup dulu)
-```
-
-**Deliverable**: Production-ready course system
-
----
-
-## 📁 Task Breakdown (Penjelasan Detail)
-
-### High Priority (Critical Path - Harus Selesai Dulu)
-
-| # | Task | Apa yang Dibuat? | File | Estimasi |
-|---|------|-----------------|------|----------|
-| 1 | Create dashboard API route | API yang mengembalikan data dashboard | `app/api/dashboard/[role]/route.ts` | 30m |
-| 2 | Update Prisma schema | Tambah tabel: Section, Lesson, Progress, CourseCompletion | `prisma/schema.prisma` | 45m |
-| 3 | Run migration | Jalankan perubahan schema ke database | `prisma migrate dev` | 15m |
-| 4 | Create course list API | API untuk list semua course yang tersedia | `app/api/courses/route.ts` | 45m |
-| 5 | Create course detail API | API untuk detail satu course (slug-based) | `app/api/courses/[slug]/route.ts` | 45m |
-| 6 | Create enrollment API | API untuk mendaftarkan user ke course | `app/api/courses/[slug]/enroll/route.ts` | 30m |
-| 7 | Create progress API | API untuk simpan/ambil progress belajar | `app/api/courses/[slug]/progress/route.ts` | 45m |
-
-### Medium Priority (Setelah API Jadi)
-
-| # | Task | Apa yang Dibuat? | File | Estimasi |
-|---|------|-----------------|------|----------|
-| 8 | Update course API client | Update fungsi fetch course di frontend | `features/course/api.ts` | 30m |
-| 9 | Connect dashboard to real API | Ganti mock data → panggil API sungguhan | `app/dashboard/page.tsx` | 30m |
-| 10 | Connect learn page to DB | Learn page ambil data dari database | `app/course/[slug]/learn/page.tsx` | 45m |
-| 11 | Migrate localStorage progress | Pindahkan progress lama ke database | `lib/migrate-progress.ts` | 30m |
-
-### Low Priority (Nice to Have - Bisa Nanti)
-
-| # | Task | Apa yang Dibuat? | File | Estimasi |
-|---|------|-----------------|------|----------|
-| 12 | Seed sample course data | Isi database dengan contoh course untuk testing | `prisma/seed.ts` | 30m |
-| 13 | Add error boundaries | Komponen untuk handle error dengan graceful | - | 15m |
-| 14 | Write E2E tests | Test otomatis untuk flow enrollment & progress | `__tests__/playwright/` | 60m |
-
----
-
-## 🎯 Success Criteria (Cara Cek Sudah Selesai)
-
-### Checklist untuk Testing
-
-- [ ] **Dashboard bisa diakses tanpa error 404**
-  - Coba: Buka `/dashboard` → Halaman muncul, tidak ada error console
-
-- [ ] **User bisa akses halaman belajar (learn page)**
-  - Coba: Klik course → Buka halaman `/course/react-basic/learn`
-
-- [ ] **Progress tersimpan di database**
-  - Coba: Selesaikan 1 lesson → Refresh → Progress tetap ada (bukan hilang)
-
-- [ ] **Course yang diikuti muncul di dashboard**
-  - Coba: Buka course → Kembali ke dashboard → Course muncul di "Recent Courses"
-
-- [ ] **Course completion ter-tracking**
-  - Coba: Selesaikan semua lessons → Cek database: tabel CourseCompletion terisi
-
-- [ ] **Fungsi yang sudah ada tetap berjalan**
-  - Coba: Login, browse course, auth → Semua masih berfungsi normal
-
-### Cara Test Manual (Step-by-Step)
-
-```
-1. Buka terminal → yarn app
-2. Buka browser → http://localhost:3000
-3. Login dengan Clerk
-4. Buka /dashboard
-   └─ Expected: Dashboard muncul dengan stats
-
-5. Klik salah satu course
-   └─ Expected: Masuk ke halaman detail course
-
-6. Klik "Mulai Belajar"
-   └─ Expected: Masuk ke /course/[slug]/learn
-
-7. Klik "Mark as Complete" di lesson
-   └─ Expected: Progress tersimpan
-
-8. Refresh halaman
-   └─ Expected: Progress masih ada (tidak reset)
-
-9. Kembali ke dashboard
-   └─ Expected: Course muncul di "Recent Courses"
-
-10. Cek database (Prisma Studio)
-    └─ Expected: Data di tabel Progress, Enrollment terisi
+```ts
+export { useCreatorCourses, CREATOR_COURSES_KEY } from './useCreatorCourses'
+export type { UseCourseCatalogFiltersReturn, CatalogFilters } from './useCourseCatalogFilters'
+export { useCourseCatalogFilters } from './useCourseCatalogFilters'
+export { useEnrollment } from './useEnrollment'
+export type { UseEnrollmentOptions } from './useEnrollment'
 ```
 
 ---
 
-## ⚠️ Risks & Mitigation
+## 18.8 — Refactor `app/creator/page.tsx`
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Schema migration fails | High | Backup DB before migration |
-| API breaking changes | Medium | Version API routes |
-| localStorage data loss | Low | Migration script |
-| Course content missing | Medium | Seed sample data |
+Ganti `useState` + `useEffect` + `fetchCourses` dengan `useCreatorCourses`. Hapus interface `DashboardStats` lokal yang duplikat.
+
+Perubahan utama:
+1. Hapus `interface DashboardStats { ... }` lokal (duplikat dengan `CreatorStats` dari dashboard)
+2. Hapus `const [courses, setCourses]`, `const [stats, setStats]`, `const [loadingCourses, setLoadingCourses]`
+3. Hapus fungsi `fetchCourses` dan `useEffect` yang memanggilnya
+4. Tambah import `useCreatorCourses` dari `@/features/cms/hooks`
+5. Gunakan destructuring dari hook
+
+```ts
+// Sebelum
+import { useEffect, useState } from 'react'
+// ...
+interface DashboardStats { totalCourses: number; publishedCourses: number; draftCourses: number }
+// ...
+const [courses, setCourses] = useState<CreatorCourse[]>([])
+const [stats, setStats] = useState<DashboardStats>({ ... })
+const [loadingCourses, setLoadingCourses] = useState(false)
+async function fetchCourses() { ... }
+useEffect(() => { fetchCourses() }, [isLoaded, roleLoading, role])
+
+// Sesudah
+import { useCreatorCourses } from '@/features/cms/hooks'
+// ...
+const { courses, stats, isLoading: loadingCourses } = useCreatorCourses()
+```
+
+> Catatan: `useEffect` dan `useState` import bisa dihapus jika tidak dipakai lagi setelah refactor ini.
 
 ---
 
-## 📝 Notes
+## 18.9 — Refactor `features/cms/components/student/learn/CourseFilters.tsx`
 
-- **Current Progress**: Stored in localStorage, needs migration
-- **Mock Data**: Dashboard uses mock, will be replaced
-- **Clerk Integration**: Already working, reuse userId
-- **Content Storage**: File-based for now (contentPath), can move to DB later
+Ganti semua state dan logic internal dengan `useCourseCatalogFilters`.
+
+```tsx
+// Sebelum: ~30 baris state + logic
+const router = useRouter()
+const pathname = usePathname()
+const searchParams = useSearchParams()
+const [searchValue, setSearchValue] = useState(...)
+const debounceRef = useRef(...)
+// ... dst
+
+// Sesudah: 1 baris
+const { filters, hasFilters, setSearch, setCategory, setDifficulty, clearAll } = useCourseCatalogFilters()
+```
+
+Komponen hanya perlu meng-import hook dan meneruskan nilai ke JSX. Semua import `useRouter`, `usePathname`, `useSearchParams`, `useCallback`, `useEffect`, `useRef`, `useState` bisa dihapus dari file ini.
 
 ---
 
-## 🔗 Related Files
+## 18.10 — Refactor `features/cms/components/student/learn/EnrollButton.tsx`
 
-- `app/dashboard/page.tsx` - Dashboard page
-- `app/course/[slug]/learn/page.tsx` - Learn page
-- `features/dashboard/api.ts` - Dashboard API client
-- `features/course/api.ts` - Course API client
-- `prisma/schema.prisma` - Database schema
-- `features/dashboard/utils.ts` - Mock data generator
+Ganti state + handler internal dengan `useEnrollment`.
+
+```tsx
+// Sebelum
+const router = useRouter()
+const [enrolled, setEnrolled] = useState(initialEnrolled)
+const [enrolling, setEnrolling] = useState(false)
+async function handleEnroll() { ... fetch ... toast ... router.push ... }
+
+// Sesudah
+const { enrolled, enrolling, handleEnroll } = useEnrollment({
+  courseId: course.id,
+  courseTitle: course.title,
+  initialEnrolled,
+})
+```
+
+Import `useRouter`, `useState`, `toast`, dan `fetch` logic bisa dihapus dari file ini.
+
+---
+
+## 18.11 — `features/cms/components/student/index.ts`
+
+Buat barrel export untuk semua student components:
+
+```ts
+export { CourseCard } from './CourseCard'
+export type { CourseCardCourse } from './CourseCard'
+export { CourseNavigation } from './CourseNavigation'
+export { LessonNavigation } from './LessonNavigation'
+export { LessonViewer } from './LessonViewer'
+export { ProgressBar } from './ProgressBar'
+export { EnrollableCourseCard } from './learn/EnrollButton'
+export { CourseFilters } from './learn/CourseFilters'
+export { CoursePagination } from './learn/CoursePagination'
+```
+
+---
+
+## 18.12 — Unify `DashboardStats` type
+
+Interface `DashboardStats` di `app/creator/page.tsx` adalah duplikat dari `CreatorStats` di `features/cms/components/creator/dashboard/DashboardStats.tsx`.
+
+Setelah task 18.8 selesai (menggunakan `useCreatorCourses`), interface lokal ini tidak lagi dibutuhkan karena `stats` sudah bertipe `CreatorStats` dari hook. Pastikan tidak ada referensi ke interface lokal yang tersisa.
+
+Verifikasi: jalankan `tsc --noEmit` — tidak boleh ada error terkait type mismatch antara `stats` dari hook dan props `DashboardStats` component.
+
+---
+
+## 18.13 — Update import paths
+
+Setelah semua types dipindah ke `course.types.ts`, update import di file-file berikut:
+
+| File | Import lama | Import baru |
+|------|-------------|-------------|
+| `features/cms/components/student/learn/EnrollButton.tsx` | `import type { CourseCardCourse } from '../CourseCard'` | `import type { CourseCardCourse } from '@/features/cms/types'` |
+| `app/course/page.tsx` | import langsung dari component | `import type { ... } from '@/features/cms/types'` |
+| `app/student/courses/page.tsx` | import langsung dari component | `import type { EnrolledCourse } from '@/features/cms/types'` |
+| `features/cms/components/creator/CourseCreationForm.tsx` | interface lokal `CourseFormData` | `import type { CourseFormData } from '@/features/cms/types'` |
+
+> Catatan: Gunakan `@/features/cms/types` (via `index.ts`) bukan path langsung ke `course.types.ts` agar konsisten.
+
+---
+
+## Urutan Eksekusi Task 18
+
+```
+18.1 → 18.2   (types dulu, jadi fondasi)
+18.3           (api layer, depends on types)
+18.4 → 18.7   (hooks, depends on api)
+18.8           (refactor creator page, depends on 18.4)
+18.9           (refactor CourseFilters, depends on 18.5)
+18.10          (refactor EnrollButton, depends on 18.6)
+18.11          (barrel export, depends on 18.9 + 18.10)
+18.12          (cleanup types, depends on 18.8)
+18.13          (update imports, depends on semua di atas)
+18.14          (hapus CourseFormData lokal, depends on 18.1)
+18.15          (reconcile CreatorCourse, depends on 18.1)
+18.16          (refactor course catalog page, depends on 18.1 + 18.3)
+```
+
+Setiap subtask bisa diverifikasi dengan `tsc --noEmit` sebelum lanjut ke subtask berikutnya.
+
+---
+
+## 18.14 — Hapus `CourseFormData` lokal di `CourseCreationForm.tsx`
+
+File `features/cms/components/creator/CourseCreationForm.tsx` mendefinisikan interface `CourseFormData` sendiri. Setelah 18.1 selesai, interface ini sudah ada di `course.types.ts`.
+
+Perubahan:
+1. Hapus `interface CourseFormData { ... }` dari file ini
+2. Tambah import: `import type { CourseFormData } from '@/features/cms/types'`
+
+```ts
+// Hapus ini:
+interface CourseFormData {
+  title: string
+  description: string
+  category: string
+  difficulty: 'Pemula' | 'Menengah' | 'Mahir'
+  status: 'DRAFT' | 'PUBLISHED'
+}
+
+// Ganti dengan:
+import type { CourseFormData } from '@/features/cms/types'
+```
+
+> Catatan: `CreatedCourse` interface di file ini boleh tetap lokal karena hanya dipakai sebagai callback shape, bukan shared type.
+
+---
+
+## 18.15 — Reconcile `CreatorCourse` di `CourseListItem.tsx`
+
+`CourseListItem.tsx` export `CreatorCourse` dengan shape yang lebih lengkap dari yang direncanakan di `course.types.ts`:
+
+```ts
+// Di CourseListItem.tsx (existing — lebih lengkap)
+export interface CreatorCourse {
+  id: string
+  title: string
+  slug: string           // ← ada di sini, tidak di course.types.ts
+  description: string | null
+  status: string
+  category: string | null
+  difficulty: string | null
+  sectionCount: number   // ← ada di sini, tidak di course.types.ts
+  enrollmentCount: number
+  createdAt: string
+  updatedAt: string
+}
+```
+
+Solusi: update `course.types.ts` agar shape-nya match dengan yang sudah dipakai di codebase:
+
+```ts
+// Update di course.types.ts
+export interface CreatorCourse {
+  id: string
+  title: string
+  slug: string
+  description: string | null
+  status: string
+  category: string | null
+  difficulty: string | null
+  sectionCount: number
+  enrollmentCount: number
+  createdAt: string | Date
+  updatedAt: string | Date
+}
+```
+
+Kemudian di `CourseListItem.tsx`:
+1. Hapus `export interface CreatorCourse { ... }` lokal
+2. Tambah import: `import type { CreatorCourse } from '@/features/cms/types'`
+3. Update `dashboard/index.ts` — hapus `export type { CreatorCourse } from './CourseListItem'`, ganti dengan re-export dari types
+
+```ts
+// Di features/cms/components/creator/dashboard/index.ts
+// Hapus:
+export type { CreatorCourse } from './CourseListItem'
+// Tambah (atau biarkan mengalir dari features/cms/types):
+export type { CreatorCourse } from '@/features/cms/types'
+```
+
+> Catatan: Pastikan `app/creator/page.tsx` import `CreatorCourse` dari `@/features/cms/types` setelah ini, bukan dari dashboard index.
+
+---
+
+## 18.16 — Refactor `app/course/page.tsx`
+
+File ini mendefinisikan 3 inline interfaces dan 1 fungsi fetch lokal yang seharusnya sudah ada di api layer setelah 18.1 dan 18.3 selesai.
+
+**Hapus:**
+```ts
+// Hapus semua ini dari app/course/page.tsx
+interface SearchParams { ... }
+interface CourseItem { ... }
+interface CoursesResponse { ... }
+async function fetchCourses(params: SearchParams): Promise<CoursesResponse> { ... }
+```
+
+**Ganti dengan:**
+```ts
+import type { CourseCatalogParams } from '@/features/cms/types'
+// CoursesResponse sudah ada di features/cms/api/course.api.ts sebagai CourseCatalogResponse
+```
+
+Karena `app/course/page.tsx` adalah server component, ia tidak bisa langsung pakai `getCourses` dari `course.api.ts` (yang menggunakan relative `/api/...` URL). Solusinya: tetap buat fungsi fetch lokal tapi gunakan types yang sudah terpusat:
+
+```ts
+import type { CourseCatalogParams, CourseCardCourse, Pagination } from '@/features/cms/types'
+
+// Fungsi fetch tetap ada tapi tidak mendefinisikan types sendiri
+async function fetchCourses(params: CourseCatalogParams): Promise<{
+  courses: (CourseCardCourse & { enrolled?: boolean })[]
+  pagination: Pagination
+}> {
+  // ... implementasi sama, hanya types yang berubah
+}
+```
+
+> Catatan: Ini adalah trade-off yang disengaja — server components tidak bisa reuse client-side fetch functions karena URL harus absolute. Yang dihilangkan adalah duplikasi type definitions, bukan duplikasi fetch logic.

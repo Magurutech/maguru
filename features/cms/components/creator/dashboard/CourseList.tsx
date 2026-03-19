@@ -2,7 +2,8 @@ import React from 'react'
 import Link from 'next/link'
 import { BookOpen, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CourseListItem, type CreatorCourse } from './CourseListItem'
+import { CourseListItem } from './CourseListItem'
+import type { CreatorCourse } from '@/features/cms/types'
 
 interface CourseListProps {
   courses: CreatorCourse[]

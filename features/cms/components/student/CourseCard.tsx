@@ -3,6 +3,7 @@ import { BookOpen, BarChart3, Layers } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
+import type { CourseCardCourse } from '@/features/cms/types'
 
 /**
  * CourseCard Component
@@ -15,16 +16,7 @@ import { Progress } from '@/components/ui/progress'
  * Requirements: 1.5, 1.6, 1.7, 4.2
  */
 
-export interface CourseCardCourse {
-  id: string
-  title: string
-  description: string | null
-  category: string
-  difficulty: string | null
-  status: string
-  sectionCount?: number
-  lessonCount?: number
-}
+export type { CourseCardCourse }
 
 interface CourseCardProps {
   course: CourseCardCourse

@@ -10,3 +10,12 @@ export type {
   UpdateSectionInput,
   DeleteSectionResult,
 } from './section.types'
+
+export type {
+  CourseCardCourse,
+  CreatorCourse,
+  EnrolledCourse,
+  CourseFormData,
+  Pagination,
+  CourseCatalogParams,
+} from './course.types'

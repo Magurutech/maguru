@@ -1,7 +1,7 @@
 export { StatsCard } from './StatsCard'
 export { ActionButton } from './ActionButton'
 export { CourseListItem } from './CourseListItem'
-export type { CreatorCourse } from './CourseListItem'
+export type { CreatorCourse } from '@/features/cms/types'
 export { CourseList } from './CourseList'
 export { DashboardStats } from './DashboardStats'
 export type { CreatorStats } from './DashboardStats'
