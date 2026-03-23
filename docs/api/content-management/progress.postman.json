@@ -1,0 +1,227 @@
+{
+  "info": {
+    "name": "Content Management - Progress API",
+    "description": "API testing collection for Course Content Management - Progress endpoints\n\nFeature: Course Content Management\nRequirements: Task 13.3",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus yang student sudah enrolled — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
+    { "key": "lessonId", "value": "", "type": "string", "description": "ID lesson yang valid dalam kursus tersebut" },
+    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — student yang sudah enrolled" }
+  ],
+  "item": [
+    {
+      "name": "1. POST /api/progress/lesson/[lessonId]/complete",
+      "item": [
+        {
+          "name": "Mark Lesson Complete - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has completed true and completedAt\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('completed', true);",
+                  "    pm.expect(json).to.have.property('completedAt');",
+                  "    pm.expect(json.completedAt).to.not.be.null;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "lesson", "{{lessonId}}", "complete"]
+            },
+            "description": "Tandai lesson sebagai selesai. Response: { completed: true, completedAt }."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Lesson Complete - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}/complete",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "lesson", "{{lessonId}}", "complete"]
+            },
+            "description": "Tanpa auth — expects 401."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. GET /api/progress/course/[courseSlug]",
+      "item": [
+        {
+          "name": "Get Course Progress - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has progress fields\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('percentage');",
+                  "    pm.expect(json).to.have.property('completedLessons');",
+                  "    pm.expect(json).to.have.property('totalLessons');",
+                  "    pm.expect(json.percentage).to.be.a('number');",
+                  "    pm.expect(json.percentage).to.be.within(0, 100);",
+                  "    pm.expect(json.completedLessons).to.be.at.most(json.totalLessons);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/course/{{courseSlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "course", "{{courseSlug}}"]
+            },
+            "description": "Ambil progress keseluruhan kursus. Response: { percentage, completedLessons, totalLessons }."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course Progress - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/course/{{courseSlug}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "course", "{{courseSlug}}"]
+            },
+            "description": "Tanpa auth — expects 401."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. GET /api/progress/lesson/[lessonId]",
+      "item": [
+        {
+          "name": "Get Lesson Progress - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "lesson", "{{lessonId}}"]
+            },
+            "description": "Tanpa auth — expects 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lesson Progress - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has completed boolean\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('completed');",
+                  "    pm.expect(json.completed).to.be.a('boolean');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "progress", "lesson", "{{lessonId}}"]
+            },
+            "description": "Ambil status progress satu lesson. Response: { completed: boolean }. Jalankan setelah Mark Complete."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

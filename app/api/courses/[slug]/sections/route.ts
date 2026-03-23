@@ -24,9 +24,9 @@ export async function POST(
     // Get slug from params
     const { slug } = await params
 
-    // Find course by ID (slug = course ID)
-    const course = await prisma.courses.findFirst({
-      where: { id: slug },
+    // Find course by slug
+    const course = await prisma.courses.findUnique({
+      where: { slug },
       select: { id: true },
     })
 
@@ -161,9 +161,9 @@ export async function GET(
     // Get slug from params
     const { slug } = await params
 
-    // Find course by ID (slug = course ID)
-    const course = await prisma.courses.findFirst({
-      where: { id: slug },
+    // Find course by slug
+    const course = await prisma.courses.findUnique({
+      where: { slug },
       select: { id: true, status: true },
     })
 

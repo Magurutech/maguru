@@ -190,7 +190,7 @@ describe('LessonViewer Component', () => {
         />
       )
 
-      expect(screen.getByText('Mark as Complete')).toBeInTheDocument()
+      expect(screen.getByText('Tandai Selesai')).toBeInTheDocument()
     })
 
     it('should not display "Mark as Complete" button when completed', () => {
@@ -202,7 +202,7 @@ describe('LessonViewer Component', () => {
         />
       )
 
-      expect(screen.queryByText('Mark as Complete')).not.toBeInTheDocument()
+      expect(screen.queryByText('Tandai Selesai')).not.toBeInTheDocument()
     })
 
     it('should not display "Mark as Complete" button when onMarkComplete is not provided', () => {
@@ -213,7 +213,7 @@ describe('LessonViewer Component', () => {
         />
       )
 
-      expect(screen.queryByText('Mark as Complete')).not.toBeInTheDocument()
+      expect(screen.queryByText('Tandai Selesai')).not.toBeInTheDocument()
     })
 
     it('should call onMarkComplete when button is clicked', async () => {
@@ -228,7 +228,7 @@ describe('LessonViewer Component', () => {
         />
       )
 
-      const button = screen.getByText('Mark as Complete')
+      const button = screen.getByText('Tandai Selesai')
       await user.click(button)
 
       await waitFor(() => {

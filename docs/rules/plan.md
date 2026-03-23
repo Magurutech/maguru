@@ -1,674 +1,509 @@
-# Plan Rule — Panduan Implementasi Task 18
+# Testing Plan: Course Content Management V2
 
-Dokumen ini menjelaskan detail implementasi untuk setiap subtask di Task 18 (Code Quality & Architecture Improvements).
-
----
-
-## Konteks
-
-Task 18 adalah refactor pass setelah semua fitur selesai (Task 1–17). Tujuannya:
-- Menghilangkan duplikasi type definitions
-- Mengekstrak logic stateful ke custom hooks
-- Membuat API layer yang konsisten dengan React Query
-- Mempermudah testing dan maintenance ke depan
-
-Stack yang digunakan: Next.js 14 (App Router), TypeScript, React Query (`@tanstack/react-query`), Sonner (toast).
+**Feature:** Course Content Management  
+**Sprint:** Sprint 2 — Content First  
+**Tasks:** 13 (Postman), 14 (E2E Creator), 15 (E2E Student), 16 (Manual Docs)  
+**Created:** 2026-03-19
 
 ---
 
-## 18.1 — `features/cms/types/course.types.ts`
+## Overview
 
-Buat file baru. Pindahkan dan konsolidasikan semua course-related types dari berbagai file:
+Testing dilakukan sebelum performance optimization (Task 17) untuk memastikan semua API dan user workflow berfungsi dengan benar. Tiga lapisan testing:
 
-```ts
-// Dari features/cms/components/student/CourseCard.tsx
-export interface CourseCardCourse {
-  id: string
-  title: string
-  description: string | null
-  category: string
-  difficulty: string | null
-  status: string
-  sectionCount?: number
-  lessonCount?: number
-}
+1. **Postman Collections** — API contract testing per endpoint group
+2. **Playwright E2E** — User workflow testing (Creator + Student)
+3. **Manual Test Doc** — Checklist untuk QA manual
 
-// Dari features/cms/components/creator/dashboard/CourseListItem.tsx
-export interface CreatorCourse {
-  id: string
-  title: string
-  status: string
-  category: string
-  difficulty: string | null
-  enrollmentCount?: number
-  createdAt?: string | Date
-  updatedAt?: string | Date
-}
+---
 
-export interface EnrolledCourse {
-  id: string
-  course: CourseCardCourse
-  enrolledAt: string | Date
-  completed: boolean
-  progress: number
-}
+## Task 13: Postman Collections
 
-export interface CourseFormData {
-  title: string
-  description: string
-  category: string
-  difficulty: 'Pemula' | 'Menengah' | 'Mahir'
-  status: 'DRAFT' | 'PUBLISHED'
-}
+### File Structure
 
-export interface Pagination {
-  page: number
-  limit: number
-  total: number
-  totalPages: number
-}
-
-export interface CourseCatalogParams {
-  page?: number
-  limit?: number
-  category?: string
-  difficulty?: string
-  search?: string
-}
+```
+docs/api/content-management/
+├── sections.postman_collection.json
+├── lessons.postman_collection.json
+└── progress.postman_collection.json
 ```
 
-> Catatan: `CreatorStats` tetap di `DashboardStats.tsx` karena sudah di-export dari sana dan dipakai luas. Cukup re-export dari `course.types.ts` jika perlu.
-
----
-
-## 18.2 — `features/cms/types/index.ts`
-
-Tambah re-export di bawah export yang sudah ada:
-
-```ts
-export type {
-  CourseCardCourse,
-  CreatorCourse,
-  EnrolledCourse,
-  CourseFormData,
-  Pagination,
-  CourseCatalogParams,
-} from './course.types'
-```
-
----
-
-## 18.3 — `features/cms/api/course.api.ts`
-
-Buat query/mutation functions untuk React Query. Jangan buat hooks di sini — hanya pure async functions yang bisa di-compose.
-
-```ts
-import type {
-  CourseCardCourse,
-  CreatorCourse,
-  EnrolledCourse,
-  CourseFormData,
-  Pagination,
-  CourseCatalogParams,
-} from '../types/course.types'
-
-// ─── Response shapes ──────────────────────────────────────────────────────────
-
-export interface CourseCatalogResponse {
-  courses: (CourseCardCourse & { enrolled?: boolean })[]
-  pagination: Pagination
-}
-
-export interface CreatorCoursesResponse {
-  courses: CreatorCourse[]
-  stats: {
-    totalCourses: number
-    publishedCourses: number
-    draftCourses: number
-  }
-}
-
-export interface MyCoursesResponse {
-  enrollments: EnrolledCourse[]
-}
-
-// ─── Query functions (read) ───────────────────────────────────────────────────
-
-export async function getCourses(params: CourseCatalogParams = {}): Promise<CourseCatalogResponse> {
-  const query = new URLSearchParams()
-  if (params.page)       query.set('page',       String(params.page))
-  if (params.limit)      query.set('limit',      String(params.limit))
-  if (params.category)   query.set('category',   params.category)
-  if (params.difficulty) query.set('difficulty', params.difficulty)
-  if (params.search)     query.set('search',     params.search)
-
-  const res = await fetch(`/api/courses?${query.toString()}`)
-  if (!res.ok) throw new Error('Gagal memuat katalog kursus')
-  return res.json()
-}
-
-export async function getMyCourses(): Promise<MyCoursesResponse> {
-  const res = await fetch('/api/courses/my-courses')
-  if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (!res.ok) throw new Error('Gagal memuat kursus saya')
-  return res.json()
-}
-
-export async function getCreatorCourses(): Promise<CreatorCoursesResponse> {
-  const res = await fetch('/api/creator/courses')
-  if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (!res.ok) throw new Error('Gagal memuat data creator')
-  return res.json()
-}
-
-// ─── Mutation functions (write) ───────────────────────────────────────────────
-
-export async function enrollCourse(courseId: string): Promise<{ enrolled: boolean }> {
-  const res = await fetch(`/api/courses/${courseId}/enroll`, { method: 'POST' })
-  if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (res.status === 403) throw new Error('DRAFT')
-  if (res.status === 409) throw new Error('ALREADY_ENROLLED')
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    throw new Error(data.error ?? 'Gagal mendaftar ke kursus')
-  }
-  return { enrolled: true }
-}
-
-export async function togglePublish(courseId: string): Promise<{ status: string }> {
-  const res = await fetch(`/api/creator/courses/${courseId}/publish`, { method: 'PUT' })
-  if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (res.status === 403) throw new Error('FORBIDDEN')
-  if (!res.ok) throw new Error('Gagal mengubah status kursus')
-  const data = await res.json()
-  return { status: data.course.status }
-}
-
-export async function createCourse(payload: CourseFormData): Promise<CreatorCourse> {
-  const res = await fetch('/api/creator/courses', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-  if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (res.status === 400) {
-    const data = await res.json().catch(() => ({}))
-    throw new Error(data.error ?? 'Data tidak valid')
-  }
-  if (!res.ok) throw new Error('Gagal membuat kursus')
-  const data = await res.json()
-  return data.course
-}
-```
-
-> Catatan: Semua fungsi di sini adalah pure async — tidak ada `useState`, `useEffect`, atau React hooks. Ini memudahkan composability dan testing.
-
----
-
-## 18.4 — `features/cms/hooks/useCreatorCourses.ts`
-
-Wrap `getCreatorCourses` dengan React Query. Hook ini menggantikan pola `useState` + `useEffect` + `fetchCourses` yang ada di `app/creator/page.tsx`.
-
-```ts
-'use client'
-
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getCreatorCourses } from '../api/course.api'
-
-export const CREATOR_COURSES_KEY = ['creator', 'courses'] as const
-
-export function useCreatorCourses() {
-  const queryClient = useQueryClient()
-
-  const query = useQuery({
-    queryKey: CREATOR_COURSES_KEY,
-    queryFn: getCreatorCourses,
-    staleTime: 30_000, // 30 detik — data creator tidak perlu real-time
-  })
-
-  function refresh() {
-    queryClient.invalidateQueries({ queryKey: CREATOR_COURSES_KEY })
-  }
-
-  return {
-    courses: query.data?.courses ?? [],
-    stats: query.data?.stats ?? { totalCourses: 0, publishedCourses: 0, draftCourses: 0 },
-    isLoading: query.isLoading,
-    isError: query.isError,
-    refresh,
-  }
-}
-```
-
-> Catatan: `refresh()` dipakai setelah toggle publish atau create course agar list ter-update tanpa full page reload.
-
----
-
-## 18.5 — `features/cms/hooks/useCourseCatalogFilters.ts`
-
-Ekstrak debounce + URL params logic dari `CourseFilters.tsx`. Hook ini mengembalikan state dan handlers yang siap dipakai oleh komponen.
-
-```ts
-'use client'
-
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
-
-export interface CatalogFilters {
-  search: string
-  category: string
-  difficulty: string
-}
-
-export interface UseCourseCatalogFiltersReturn {
-  filters: CatalogFilters
-  hasFilters: boolean
-  setSearch: (value: string) => void
-  setCategory: (value: string | null) => void
-  setDifficulty: (value: string | null) => void
-  clearAll: () => void
-}
-
-export function useCourseCatalogFilters(): UseCourseCatalogFiltersReturn {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-
-  const [search, setSearchState] = useState(searchParams.get('search') ?? '')
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const isMountedRef = useRef(false)
-  const searchParamsRef = useRef(searchParams)
-
-  useEffect(() => {
-    searchParamsRef.current = searchParams
-  })
-
-  const updateParams = useCallback(
-    (updates: Record<string, string | null>) => {
-      const params = new URLSearchParams(searchParamsRef.current.toString())
-      Object.entries(updates).forEach(([key, value]) => {
-        if (value) params.set(key, value)
-        else params.delete(key)
-      })
-      params.delete('page')
-      router.push(`${pathname}?${params.toString()}`)
-    },
-    [router, pathname]
-  )
-
-  // Debounced search — skip on mount
-  useEffect(() => {
-    if (!isMountedRef.current) {
-      isMountedRef.current = true
-      return
-    }
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    debounceRef.current = setTimeout(() => {
-      updateParams({ search: search || null })
-    }, 300)
-    return () => {
-      if (debounceRef.current) clearTimeout(debounceRef.current)
-    }
-  }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  function setSearch(value: string) {
-    setSearchState(value)
-  }
-
-  function setCategory(value: string | null) {
-    updateParams({ category: value })
-  }
-
-  function setDifficulty(value: string | null) {
-    updateParams({ difficulty: value })
-  }
-
-  function clearAll() {
-    if (debounceRef.current) clearTimeout(debounceRef.current)
-    setSearchState('')
-    router.push(pathname)
-  }
-
-  const category = searchParams.get('category') ?? ''
-  const difficulty = searchParams.get('difficulty') ?? ''
-  const hasFilters = !!(search || category || difficulty)
-
-  return {
-    filters: { search, category, difficulty },
-    hasFilters,
-    setSearch,
-    setCategory,
-    setDifficulty,
-    clearAll,
-  }
-}
-```
-
----
-
-## 18.6 — `features/cms/hooks/useEnrollment.ts`
-
-Ekstrak enroll POST + toast + redirect dari `EnrollButton.tsx`.
-
-```ts
-'use client'
-
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { enrollCourse } from '../api/course.api'
-
-export interface UseEnrollmentOptions {
-  courseId: string
-  courseTitle: string
-  initialEnrolled?: boolean
-}
-
-export function useEnrollment({ courseId, courseTitle, initialEnrolled = false }: UseEnrollmentOptions) {
-  const router = useRouter()
-  const [enrolled, setEnrolled] = useState(initialEnrolled)
-  const [enrolling, setEnrolling] = useState(false)
-
-  async function handleEnroll() {
-    setEnrolling(true)
-    try {
-      await enrollCourse(courseId)
-      setEnrolled(true)
-      toast.success(`Berhasil mendaftar ke "${courseTitle}"`)
-      setTimeout(() => {
-        router.push(`/course/${courseId}/learn`)
-      }, 800)
-    } catch (err) {
-      const message = err instanceof Error ? err.message : ''
-      if (message === 'UNAUTHORIZED') {
-        toast.error('Silakan login terlebih dahulu')
-        router.push('/sign-in')
-      } else if (message === 'ALREADY_ENROLLED') {
-        setEnrolled(true)
-        router.push(`/course/${courseId}/learn`)
-      } else {
-        toast.error(message || 'Gagal mendaftar ke kursus')
-      }
-    } finally {
-      setEnrolling(false)
-    }
-  }
-
-  return { enrolled, enrolling, handleEnroll }
-}
-```
-
----
-
-## 18.7 — `features/cms/hooks/index.ts`
-
-Barrel export semua hooks baru:
-
-```ts
-export { useCreatorCourses, CREATOR_COURSES_KEY } from './useCreatorCourses'
-export type { UseCourseCatalogFiltersReturn, CatalogFilters } from './useCourseCatalogFilters'
-export { useCourseCatalogFilters } from './useCourseCatalogFilters'
-export { useEnrollment } from './useEnrollment'
-export type { UseEnrollmentOptions } from './useEnrollment'
-```
-
----
-
-## 18.8 — Refactor `app/creator/page.tsx`
-
-Ganti `useState` + `useEffect` + `fetchCourses` dengan `useCreatorCourses`. Hapus interface `DashboardStats` lokal yang duplikat.
-
-Perubahan utama:
-1. Hapus `interface DashboardStats { ... }` lokal (duplikat dengan `CreatorStats` dari dashboard)
-2. Hapus `const [courses, setCourses]`, `const [stats, setStats]`, `const [loadingCourses, setLoadingCourses]`
-3. Hapus fungsi `fetchCourses` dan `useEffect` yang memanggilnya
-4. Tambah import `useCreatorCourses` dari `@/features/cms/hooks`
-5. Gunakan destructuring dari hook
-
-```ts
-// Sebelum
-import { useEffect, useState } from 'react'
-// ...
-interface DashboardStats { totalCourses: number; publishedCourses: number; draftCourses: number }
-// ...
-const [courses, setCourses] = useState<CreatorCourse[]>([])
-const [stats, setStats] = useState<DashboardStats>({ ... })
-const [loadingCourses, setLoadingCourses] = useState(false)
-async function fetchCourses() { ... }
-useEffect(() => { fetchCourses() }, [isLoaded, roleLoading, role])
-
-// Sesudah
-import { useCreatorCourses } from '@/features/cms/hooks'
-// ...
-const { courses, stats, isLoading: loadingCourses } = useCreatorCourses()
-```
-
-> Catatan: `useEffect` dan `useState` import bisa dihapus jika tidak dipakai lagi setelah refactor ini.
-
----
-
-## 18.9 — Refactor `features/cms/components/student/learn/CourseFilters.tsx`
-
-Ganti semua state dan logic internal dengan `useCourseCatalogFilters`.
-
-```tsx
-// Sebelum: ~30 baris state + logic
-const router = useRouter()
-const pathname = usePathname()
-const searchParams = useSearchParams()
-const [searchValue, setSearchValue] = useState(...)
-const debounceRef = useRef(...)
-// ... dst
-
-// Sesudah: 1 baris
-const { filters, hasFilters, setSearch, setCategory, setDifficulty, clearAll } = useCourseCatalogFilters()
-```
-
-Komponen hanya perlu meng-import hook dan meneruskan nilai ke JSX. Semua import `useRouter`, `usePathname`, `useSearchParams`, `useCallback`, `useEffect`, `useRef`, `useState` bisa dihapus dari file ini.
-
----
-
-## 18.10 — Refactor `features/cms/components/student/learn/EnrollButton.tsx`
-
-Ganti state + handler internal dengan `useEnrollment`.
-
-```tsx
-// Sebelum
-const router = useRouter()
-const [enrolled, setEnrolled] = useState(initialEnrolled)
-const [enrolling, setEnrolling] = useState(false)
-async function handleEnroll() { ... fetch ... toast ... router.push ... }
-
-// Sesudah
-const { enrolled, enrolling, handleEnroll } = useEnrollment({
-  courseId: course.id,
-  courseTitle: course.title,
-  initialEnrolled,
+### 13.1 sections.postman_collection.json
+
+Collection variables:
+- `baseUrl` = `http://localhost:3000`
+- `courseSlug` = slug kursus yang ada di DB
+- `sectionId` = ID section (diisi dari response POST)
+- `authToken` = Clerk session token creator
+
+Requests:
+
+| Method                                 | Endpoint                                             | Expected                              | Notes                                 |                                                    |
+| ----------------------------------------| ------------------------------------------------------| ---------------------------------------| ---------------------------------------| ----------------------------------------------------|
+| POST                                   | i/courses/{{courseSlug}}/sections`                   | 201                                   | body: `{ title, description, order }` |                                                    |
+| GET                                    | courses/{{courseSlug}}/sections`                     | 200                                   | response: array ordered by `order`    |                                                    |
+|                                        | api/courses/{{courseSlug}}/sections/{{sectionId}}`   | 200                                   | body: `{ title }`                     |                                                    |
+| DEL                                    | `/api/courses/{{courseSlug}}/sections/{{sectionId}}` | 200                                   | response: `{ deletedLessons: N }`     |                                                    |
+| POS                                    | pi/courses/{{courseSlug}}/sections`                  | 401                                   | tanpa Authorization header            |                                                    |
+| POST                                   | rses/{{courseSlug}}/sections`                        | 403                                   | auth sebagai user bukan owner         |                                                    |
+|                                        | pi/courses/{{courseSlug}}/sections/nonexistent-id`   | 404                                   | section tidak ada                     |                                                    |
+| `/api/courses/{{courseSlug}}/sections` | 409                                                  | order yang sudah dipakai section lain |                                       |                                                    |
+|                                        |                                                      |                                       |                                       | script untuk POST (set `sectionId` dari response): |
+```jav
+pm.test("Section created", () => {
+  pm.response.to.have.status(201)
+  const json = pm.response.json()
+  pm.collectionVariables.set("sectionId", json.id)
 })
 ```
 
-Import `useRouter`, `useState`, `toast`, dan `fetch` logic bisa dihapus dari file ini.
+### 13.2 lessons.postman_collection.json
 
----
+Collection variables:
+- `baseUrl`, `courseSlug`, `sectionId`, `lessonId`, `authToken`
 
-## 18.11 — `features/cms/components/student/index.ts`
-
-Buat barrel export untuk semua student components:
-
-```ts
-export { CourseCard } from './CourseCard'
-export type { CourseCardCourse } from './CourseCard'
-export { CourseNavigation } from './CourseNavigation'
-export { LessonNavigation } from './LessonNavigation'
-export { LessonViewer } from './LessonViewer'
-export { ProgressBar } from './ProgressBar'
-export { EnrollableCourseCard } from './learn/EnrollButton'
-export { CourseFilters } from './learn/CourseFilters'
-export { CoursePagination } from './learn/CoursePagination'
-```
-
----
-
-## 18.12 — Unify `DashboardStats` type
-
-Interface `DashboardStats` di `app/creator/page.tsx` adalah duplikat dari `CreatorStats` di `features/cms/components/creator/dashboard/DashboardStats.tsx`.
-
-Setelah task 18.8 selesai (menggunakan `useCreatorCourses`), interface lokal ini tidak lagi dibutuhkan karena `stats` sudah bertipe `CreatorStats` dari hook. Pastikan tidak ada referensi ke interface lokal yang tersisa.
-
-Verifikasi: jalankan `tsc --noEmit` — tidak boleh ada error terkait type mismatch antara `stats` dari hook dan props `DashboardStats` component.
-
----
-
-## 18.13 — Update import paths
-
-Setelah semua types dipindah ke `course.types.ts`, update import di file-file berikut:
-
-| File | Import lama | Import baru |
-|------|-------------|-------------|
-| `features/cms/components/student/learn/EnrollButton.tsx` | `import type { CourseCardCourse } from '../CourseCard'` | `import type { CourseCardCourse } from '@/features/cms/types'` |
-| `app/course/page.tsx` | import langsung dari component | `import type { ... } from '@/features/cms/types'` |
-| `app/student/courses/page.tsx` | import langsung dari component | `import type { EnrolledCourse } from '@/features/cms/types'` |
-| `features/cms/components/creator/CourseCreationForm.tsx` | interface lokal `CourseFormData` | `import type { CourseFormData } from '@/features/cms/types'` |
-
-> Catatan: Gunakan `@/features/cms/types` (via `index.ts`) bukan path langsung ke `course.types.ts` agar konsisten.
-
----
-
-## Urutan Eksekusi Task 18
-
-```
-18.1 → 18.2   (types dulu, jadi fondasi)
-18.3           (api layer, depends on types)
-18.4 → 18.7   (hooks, depends on api)
-18.8           (refactor creator page, depends on 18.4)
-18.9           (refactor CourseFilters, depends on 18.5)
-18.10          (refactor EnrollButton, depends on 18.6)
-18.11          (barrel export, depends on 18.9 + 18.10)
-18.12          (cleanup types, depends on 18.8)
-18.13          (update imports, depends on semua di atas)
-18.14          (hapus CourseFormData lokal, depends on 18.1)
-18.15          (reconcile CreatorCourse, depends on 18.1)
-18.16          (refactor course catalog page, depends on 18.1 + 18.3)
-```
-
-Setiap subtask bisa diverifikasi dengan `tsc --noEmit` sebelum lanjut ke subtask berikutnya.
-
----
-
-## 18.14 — Hapus `CourseFormData` lokal di `CourseCreationForm.tsx`
-
-File `features/cms/components/creator/CourseCreationForm.tsx` mendefinisikan interface `CourseFormData` sendiri. Setelah 18.1 selesai, interface ini sudah ada di `course.types.ts`.
-
-Perubahan:
-1. Hapus `interface CourseFormData { ... }` dari file ini
-2. Tambah import: `import type { CourseFormData } from '@/features/cms/types'`
-
-```ts
-// Hapus ini:
-interface CourseFormData {
-  title: string
-  description: string
-  category: string
-  difficulty: 'Pemula' | 'Menengah' | 'Mahir'
-  status: 'DRAFT' | 'PUBLISHED'
-}
-
-// Ganti dengan:
-import type { CourseFormData } from '@/features/cms/types'
-```
-
-> Catatan: `CreatedCourse` interface di file ini boleh tetap lokal karena hanya dipakai sebagai callback shape, bukan shared type.
-
----
-
-## 18.15 — Reconcile `CreatorCourse` di `CourseListItem.tsx`
-
-`CourseListItem.tsx` export `CreatorCourse` dengan shape yang lebih lengkap dari yang direncanakan di `course.types.ts`:
-
-```ts
-// Di CourseListItem.tsx (existing — lebih lengkap)
-export interface CreatorCourse {
-  id: string
-  title: string
-  slug: string           // ← ada di sini, tidak di course.types.ts
-  description: string | null
-  status: string
-  category: string | null
-  difficulty: string | null
-  sectionCount: number   // ← ada di sini, tidak di course.types.ts
-  enrollmentCount: number
-  createdAt: string
-  updatedAt: string
+Valid Tiptap JSON body (dipakai di semua lesson requests):
+```json
+{
+  "title": "Intro to TypeScript",
+  "order": 1,
+  "content": {
+    "type": "doc",
+    "version": 1,
+    "lastEdit": "2026-03-19T00:00:00.000Z",
+    "content": [
+      {
+        "type": "paragraph",
+        "content": [{ "type": "text", "text": "Hello world" }]
+      }
+    ]
+  }
 }
 ```
 
-Solusi: update `course.types.ts` agar shape-nya match dengan yang sudah dipakai di codebase:
+Requests:
 
-```ts
-// Update di course.types.ts
-export interface CreatorCourse {
-  id: string
-  title: string
-  slug: string
-  description: string | null
-  status: string
-  category: string | null
-  difficulty: string | null
-  sectionCount: number
-  enrollmentCount: number
-  createdAt: string | Date
-  updatedAt: string | Date
-}
+| Method                                                    | Endpoint                  | Expected                       | Notes            |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| -----------------------------------------------------------| ---------------------------| --------------------------------| ------------------| -----| -----| -----| ---------------------------------------------------------| -----| -------------------| ----------------------| -----| -------------------------| -----------------------| -----| ------------------------------------| -------------| -----| ------------| -------| -----| -------------|
+| POST                                                      |                           |                                |                  |     |     |     | /courses/{{courseSlug}}/sections/{{sectionId}}/lessons` | 201 | valid Tiptap JSON |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| pi/courses/{{courseSlug}}/sections/{{sectionId}}/lessons` | 200                       | list dengan content preview    |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| ./lessons/{{lessonId}}`                                   | 200                       | full content + section info    |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| PUT                                                       |                           |                                |                  |     |     |     |                                                         |     |                   | essons/{{lessonId}}` | 200 | version harus increment |                       |     |                                    |             |     |            |       |     |             |
+| DELE                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         | lessons/{{lessonId}}` | 200 | response: `{ deletedProgress: N }` |             |     |            |       |     |             |
+| ./lessons`                                                | 400                       | content.type bukan "doc"       |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| `.../lessons`                                             | 400                       | content.version missing atau 0 |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+| POST                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    | ../lessons` | 401 | tanpa auth |       |     |             |
+| POST                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            | sons` | 403 | bukan owner |
+| T                                                         | `.../lessons/nonexistent` | 404                            | lesson tidak ada |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+
+Testk version increment:
+```javascript
+pm.test("Version incremented", () => {
+  const before = pm.collectionVariables.get("lessonVersion")
+  const after = pm.response.json().content.version
+  pm.expect(after).to.equal(Number(before) + 1)
+})
 ```
 
-Kemudian di `CourseListItem.tsx`:
-1. Hapus `export interface CreatorCourse { ... }` lokal
-2. Tambah import: `import type { CreatorCourse } from '@/features/cms/types'`
-3. Update `dashboard/index.ts` — hapus `export type { CreatorCourse } from './CourseListItem'`, ganti dengan re-export dari types
+### 13.3 progress.postman_collection.json
 
-```ts
-// Di features/cms/components/creator/dashboard/index.ts
-// Hapus:
-export type { CreatorCourse } from './CourseListItem'
-// Tambah (atau biarkan mengalir dari features/cms/types):
-export type { CreatorCourse } from '@/features/cms/types'
+Collection variables:
+- `baseUrl`, `courseSlug`, `lessonId`, `authToken` (student token)
+
+Requests:
+
+| Method                                    | Endpoint | Expected                           | Notes |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            |                               |     |            |
+| -------------------------------------------| ----------| ------------------------------------| -------| -----| -----| -----| ---------------------------------| -----| --------------------------------------------------| -----------------------------| -----| --------------------------| ----------------------------------------| -----| ------------| -------------------------------| -----| ------------|
+| pi/progress/lesson/{{lessonId}}/complete` | 200      | `{ completed: true, completedAt }` |       |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            |                               |     |            |
+| GET                                       |          |                                    |       |     |     |     | progress/course/{{courseSlug}}` | 200 | `{ percentage, completedLessons, totalLessons }` |                             |     |                          |                                        |     |            |                               |     |            |
+| GET                                       |          |                                    |       |     |     |     |                                 |     |                                                  | ogress/lesson/{{lessonId}}` | 200 | `{ completed: boolean }` |                                        |     |            |                               |     |            |
+| POS                                       |          |                                    |       |     |     |     |                                 |     |                                                  |                             |     |                          | progress/lesson/{{lessonId}}/complete` | 401 | tanpa auth |                               |     |            |
+| GET                                       |          |                                    |       |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            | ogress/course/{{courseSlug}}` | 401 | tanpa auth |
+
+---Task 14: E2E Tests — Creator Workflow
+
+### File
+
+`__tests__/playwright/content/creator/manage-course.spec.ts`
+
+### Setup Pattern
+
+Ikuti pola yang sama dengan `course-list.spec.ts` — gunakan `clerk.signIn()` dari `@clerk/testing/playwright` dan `waitForPageLoad()` dari utils.
+
+```typescript
+import { test, expect } from '@playwright/test'
+import { clerk } from '@clerk/testing/playwright'
+import { testUsers } from '../../fixtures/test-users'
+import { waitForPageLoad } from '../../utils/test-helpers'
+
+const MANAGE_URL = /\/creator\/courses\/.+\/manage/
+
+test.describe('Creator Manage Course — Authenticated', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/')
+    await clerk.signIn({
+      page,
+      signInParams: {
+        strategy: 'password',
+        identifier: testUsers.creatorUser.identifier,
+        password: testUsers.creatorUser.password,
+      },
+    })
+  })
+  // ... tests
+})
 ```
 
-> Catatan: Pastikan `app/creator/page.tsx` import `CreatorCourse` dari `@/features/cms/types` setelah ini, bukan dari dashboard index.
+### Test Scenarios
+
+**14.2 — Halaman manage tampil**
+```typescript
+test('manage page loads with section list', async ({ page }) => {
+  await page.goto('/creator/courses')
+  await waitForPageLoad(page)
+  await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
+  const manageBtn = page.getByTestId('manage-course-btn').first()
+  const hasManage = await manageBtn.isVisible().catch(() => false)
+  if (!hasManage) { console.log('ℹ️ No courses, skipping'); return }
+
+  await manageBtn.click()
+  await page.waitForURL(MANAGE_URL, { timeout: 10000 })
+  await expect(page.locator('h1, h2')).toBeVisible()
+})
+```
+
+**14.3 — Buat section baru**
+```typescript
+test('create new section appears in list', async ({ page }) => {
+  await page.goto('/creator/courses')
+  await waitForPageLoad(page)
+  await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+
+  const manageBtn = page.getByTestId('manage-course-btn').first()
+  if (!await manageBtn.isVisible().catch(() => false)) { return }
+  await manageBtn.click()
+  await page.waitForURL(MANAGE_URL, { timeout: 10000 })
+
+  const addSectionBtn = page.getByRole('button', { name: /\+ seksi|tambah seksi/i })
+  await expect(addSectionBtn).toBeVisible({ timeout: 10000 })
+  await addSectionBtn.click()
+
+  await page.getByLabel(/judul seksi/i).fill('Seksi Test E2E')
+  await page.getByLabel(/urutan/i).fill('99')
+  await page.getByRole('button', { name: /simpan|buat/i }).click()
+
+  await expect(page.locator('body')).toContainText('Seksi Test E2E', { timeout: 8000 })
+})
+```
+
+**14.4 — Buat lesson dengan Tiptap content**
+```typescript
+test('create lesson saves with Tiptap content', async ({ page }) => {
+  // Navigate to manage page (same setup as above)
+  // ...
+
+  const addLessonBtn = page.getByRole('button', { name: /\+ pelajaran|tambah pelajaran/i }).first()
+  await expect(addLessonBtn).toBeVisible({ timeout: 10000 })
+  await addLessonBtn.click()
+
+  await page.getByLabel(/judul pelajaran/i).fill('Pelajaran Test E2E')
+  // Tiptap editor — type into contenteditable
+  const editor = page.locator('.ProseMirror').first()
+  await editor.click()
+  await editor.type('Konten pelajaran test')
+
+  await page.getByRole('button', { name: /simpan/i }).click()
+  await expect(page.locator('body')).toContainText('Pelajaran Test E2E', { timeout: 8000 })
+})
+```
+
+**14.5 — Edit lesson, version increment**
+```typescript
+test('edit lesson content increments version', async ({ page }) => {
+  // Navigate to manage page, click existing lesson edit button
+  const editBtn = page.getByTestId('edit-lesson-btn').first()
+  await expect(editBtn).toBeVisible({ timeout: 10000 })
+
+  const versionBefore = await page.getByTestId('lesson-version').textContent()
+  await editBtn.click()
+
+  const editor = page.locator('.ProseMirror').first()
+  await editor.click()
+  await editor.press('Control+a')
+  await editor.type('Konten yang diupdate')
+
+  await page.getByRole('button', { name: /simpan/i }).click()
+  await page.waitForTimeout(1000)
+
+  const versionAfter = await page.getByTestId('lesson-version').textContent()
+  expect(Number(versionAfter)).toBeGreaterThan(Number(versionBefore))
+})
+```
+
+**14.6 — Reorder section**
+```typescript
+test('reorder section changes order in UI', async ({ page }) => {
+  // Requires at least 2 sections
+  const sections = page.getByTestId('section-item')
+  const count = await sections.count()
+  if (count < 2) { console.log('ℹ️ Need 2+ sections, skipping'); return }
+
+  const firstTitle = await sections.first().getByTestId('section-title').textContent()
+  await sections.first().getByTestId('move-down-btn').click()
+  await page.waitForTimeout(500)
+
+  const newFirstTitle = await sections.first().getByTestId('section-title').textContent()
+  expect(newFirstTitle).not.toBe(firstTitle)
+})
+```
+
+**14.7 — Delete section cascade**
+```typescript
+test('delete section removes it and its lessons', async ({ page }) => {
+  const sections = page.getByTestId('section-item')
+  const countBefore = await sections.count()
+  if (countBefore === 0) { return }
+
+  await sections.last().getByTestId('delete-section-btn').click()
+  // Confirm dialog
+  await page.getByRole('button', { name: /hapus|konfirmasi/i }).click()
+  await page.waitForTimeout(1000)
+
+  const countAfter = await page.getByTestId('section-item').count()
+  expect(countAfter).toBe(countBefore - 1)
+})
+```
+
+**14.8 — Unauthenticated redirect**
+```typescript
+test.describe('Creator Manage — Access Control', () => {
+  test.use({ storageState: { cookies: [], origins: [] } })
+
+  test('unauthenticated redirects to sign-in', async ({ page }) => {
+    await page.goto('/creator/courses/test-slug/manage')
+    await waitForPageLoad(page)
+    await expect(page).toHaveURL(/sign-in/)
+  })
+})
+```
 
 ---
 
-## 18.16 — Refactor `app/course/page.tsx`
+## Task 15: E2E Tests — Student Learn Workflow
 
-File ini mendefinisikan 3 inline interfaces dan 1 fungsi fetch lokal yang seharusnya sudah ada di api layer setelah 18.1 dan 18.3 selesai.
+### File
 
-**Hapus:**
-```ts
-// Hapus semua ini dari app/course/page.tsx
-interface SearchParams { ... }
-interface CourseItem { ... }
-interface CoursesResponse { ... }
-async function fetchCourses(params: SearchParams): Promise<CoursesResponse> { ... }
+`__tests__/playwright/content/student/learn.spec.ts`
+
+### Setup Pattern
+
+Sama dengan catalog.spec.ts — gunakan `clerk.signIn()` dengan `testUsers.regularUser`.
+
+### Test Scenarios
+
+**15.2 — Halaman learn tampil dengan sidebar**
+```typescript
+test('learn page loads with sidebar sections', async ({ page }) => {
+  // Navigate to a course the student is enrolled in
+  await page.goto('/student/courses')
+  await waitForPageLoad(page)
+
+  const learnBtn = page.getByRole('link', { name: /lanjut belajar/i }).first()
+  const hasLearn = await learnBtn.isVisible().catch(() => false)
+  if (!hasLearn) { console.log('ℹ️ No enrolled courses, skipping'); return }
+
+  await learnBtn.click()
+  await page.waitForURL(/\/learn/, { timeout: 10000 })
+
+  // Sidebar visible
+  await expect(page.getByTestId('course-navigation')).toBeVisible({ timeout: 10000 })
+  // Progress bar visible
+  await expect(page.getByTestId('progress-bar')).toBeVisible()
+})
 ```
 
-**Ganti dengan:**
-```ts
-import type { CourseCatalogParams } from '@/features/cms/types'
-// CoursesResponse sudah ada di features/cms/api/course.api.ts sebagai CourseCatalogResponse
+**15.3 — Klik lesson render Tiptap content**
+```typescript
+test('clicking lesson renders Tiptap content', async ({ page }) => {
+  // (after navigating to learn page)
+  const lessonLink = page.getByTestId('lesson-nav-item').first()
+  const hasLesson = await lessonLink.isVisible().catch(() => false)
+  if (!hasLesson) { return }
+
+  await lessonLink.click()
+  await page.waitForTimeout(1000)
+
+  // Tiptap viewer renders content
+  await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 8000 })
+})
 ```
 
-Karena `app/course/page.tsx` adalah server component, ia tidak bisa langsung pakai `getCourses` dari `course.api.ts` (yang menggunakan relative `/api/...` URL). Solusinya: tetap buat fungsi fetch lokal tapi gunakan types yang sudah terpusat:
+**15.4 — Mark complete, checkmark muncul**
+```typescript
+test('mark complete shows checkmark in sidebar', async ({ page }) => {
+  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
+  const hasBtn = await markCompleteBtn.isVisible().catch(() => false)
+  if (!hasBtn) { return }
 
-```ts
-import type { CourseCatalogParams, CourseCardCourse, Pagination } from '@/features/cms/types'
-
-// Fungsi fetch tetap ada tapi tidak mendefinisikan types sendiri
-async function fetchCourses(params: CourseCatalogParams): Promise<{
-  courses: (CourseCardCourse & { enrolled?: boolean })[]
-  pagination: Pagination
-}> {
-  // ... implementasi sama, hanya types yang berubah
-}
+  await markCompleteBtn.click()
+  // Button should change to completed state
+  await expect(page.getByTestId('lesson-completed-badge')).toBeVisible({ timeout: 8000 })
+  // Checkmark in sidebar
+  await expect(page.getByTestId('lesson-nav-item').first().getByTestId('completed-check')).toBeVisible()
+})
 ```
 
-> Catatan: Ini adalah trade-off yang disengaja — server components tidak bisa reuse client-side fetch functions karena URL harus absolute. Yang dihilangkan adalah duplikasi type definitions, bukan duplikasi fetch logic.
+**15.5 — Progress bar update**
+```typescript
+test('progress bar updates after mark complete', async ({ page }) => {
+  const progressBar = page.getByTestId('progress-bar')
+  const percentageBefore = await progressBar.getAttribute('aria-valuenow')
+
+  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
+  if (!await markCompleteBtn.isVisible().catch(() => false)) { return }
+  await markCompleteBtn.click()
+
+  await page.waitForTimeout(1500)
+  const percentageAfter = await progressBar.getAttribute('aria-valuenow')
+  expect(Number(percentageAfter)).toBeGreaterThanOrEqual(Number(percentageBefore))
+})
+```
+
+**15.6 — Navigasi next lesson**
+```typescript
+test('next lesson button loads next lesson', async ({ page }) => {
+  const nextBtn = page.getByTestId('next-lesson-btn')
+  const isEnabled = await nextBtn.isEnabled().catch(() => false)
+  if (!isEnabled) { console.log('ℹ️ Already on last lesson, skipping'); return }
+
+  const currentUrl = page.url()
+  await nextBtn.click()
+  await page.waitForTimeout(1000)
+
+  expect(page.url()).not.toBe(currentUrl)
+})
+```
+
+**15.7 — Progress persists setelah refresh**
+```typescript
+test('progress persists after page refresh', async ({ page }) => {
+  // Mark a lesson complete first
+  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
+  if (await markCompleteBtn.isVisible().catch(() => false)) {
+    await markCompleteBtn.click()
+    await page.waitForTimeout(1000)
+  }
+
+  await page.reload()
+  await waitForPageLoad(page)
+
+  // Completed badge should still be visible
+  await expect(page.getByTestId('lesson-completed-badge')).toBeVisible({ timeout: 8000 })
+})
+```
+
+**15.8 — Unauthenticated redirect**
+```typescript
+test.describe('Student Learn — Access Control', () => {
+  test.use({ storageState: { cookies: [], origins: [] } })
+
+  test('unauthenticated redirects to sign-in', async ({ page }) => {
+    await page.goto('/course/test-slug/learn')
+    await waitForPageLoad(page)
+    await expect(page).toHaveURL(/sign-in/)
+  })
+})
+```
+
+---
+
+## Task 16: Manual Test Documentation
+
+### File
+
+`docs/testing/manual-test-content-management.md`
+
+### Structure (ikuti format `manual-test-course-discovery.md`)
+
+```
+# Manual Test Checklist: Course Content Management
+
+## Persiapan
+- Aplikasi berjalan di http://localhost:3000
+- DB memiliki minimal 1 course PUBLISHED dengan sections dan lessons
+- Akun creator tersedia
+- Akun student tersedia dan sudah enrolled ke course tersebut
+
+## 1. Creator Workflow
+### 1.1 Buat Section
+### 1.2 Buat Lesson dengan Tiptap Content
+### 1.3 Edit Lesson (version increment)
+### 1.4 Reorder Section
+### 1.5 Delete Section (cascade)
+
+## 2. Student Workflow
+### 2.1 Navigasi ke Lesson
+### 2.2 Baca Konten Tiptap
+### 2.3 Mark Complete
+### 2.4 Progress Bar Update
+### 2.5 Navigasi Prev/Next
+### 2.6 Progress Persistence (refresh)
+
+## 3. Authorization
+### 3.1 Unauthenticated Access
+### 3.2 Creator Akses Course Milik Orang Lain
+### 3.3 Student Akses Creator Endpoint
+
+## 4. Error Scenarios
+### 4.1 Invalid Tiptap JSON
+### 4.2 Duplicate Section Order
+### 4.3 Section/Lesson Tidak Ada (404)
+### 4.4 Server Error Handling
+
+## Catatan Test
+| No | Temuan | Severity | Status |
+```
+
+---
+
+## Execution Order
+
+```
+Task 13 (Postman) — tidak ada dependency, bisa dikerjakan paralel
+  └── 13.1 sections → 13.2 lessons → 13.3 progress
+
+Task 14 (E2E Creator) — butuh app running + test user creator
+  └── 14.1 setup file → 14.2-14.8 tests
+
+Task 15 (E2E Student) — butuh app running + test user student enrolled
+  └── 15.1 setup file → 15.2-15.8 tests
+
+Task 16 (Manual Docs) — bisa dikerjakan kapan saja
+  └── 16.1 buat file → 16.2-16.5 isi checklist
+```
+
+### Dependencies
+
+- Task 14 & 15 butuh `__tests__/playwright/fixtures/test-users.ts` dan `__tests__/playwright/utils/test-helpers.ts` yang sudah ada
+- Task 14 & 15 butuh `playwright.config.ts` yang sudah dikonfigurasi (sudah ada)
+- Postman collections butuh server running di `http://localhost:3000`
+- E2E tests butuh `CLERK_SECRET_KEY` dan test user credentials di `.env.test`
+
+### Run Commands
+
+```bash
+# Run E2E tests (single run, no watch)
+yarn playwright test __tests__/playwright/content/
+
+# Run specific spec
+yarn playwright test __tests__/playwright/content/creator/manage-course.spec.ts
+
+# Run with UI
+yarn playwright test --ui
+```
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** 2026-03-19

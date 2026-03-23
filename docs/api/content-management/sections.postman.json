@@ -1,0 +1,407 @@
+{
+  "info": {
+    "name": "Content Management - Sections API",
+    "description": "API testing collection for Course Content Management - Section endpoints\n\nFeature: Course Content Management\nRequirements: Task 13.1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus PUBLISHED milik creator — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
+    { "key": "draftCourseSlug", "value": "", "type": "string", "description": "Slug kursus DRAFT milik creator — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
+    { "key": "sectionId", "value": "", "type": "string", "description": "ID section — auto-filled dari response POST" },
+    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — creator (course owner)" },
+    { "key": "otherUserToken", "value": "", "type": "string", "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403" }
+  ],
+  "item": [
+    {
+      "name": "1. POST /api/courses/[slug]/sections",
+      "item": [
+        {
+          "name": "Create Section - Success (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has section data\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json).to.have.property('title');",
+                  "    pm.expect(json).to.have.property('order');",
+                  "    pm.collectionVariables.set('sectionId', json.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pengenalan TypeScript\",\n  \"description\": \"Dasar-dasar TypeScript untuk pemula\",\n  \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Buat section baru. Simpan sectionId dari response untuk request berikutnya."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Section - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Section Tanpa Auth\",\n  \"order\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Tanpa Authorization header — expects 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Section - Not Owner (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Section dari Non-Owner\",\n  \"order\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Auth sebagai user bukan owner — expects 403."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Section - Duplicate Order (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Section Duplikat Order\",\n  \"order\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Order yang sudah dipakai section lain — expects 409. Jalankan setelah Create Section Success."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. GET /api/courses/[slug]/sections",
+      "item": [
+        {
+          "name": "Get Sections - Published Course, No Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is array ordered by order field\", function () {",
+                  "    var sections = pm.response.json();",
+                  "    pm.expect(sections).to.be.an('array');",
+                  "    for (var i = 1; i < sections.length; i++) {",
+                  "        pm.expect(sections[i].order).to.be.at.least(sections[i - 1].order);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"Each section has required fields\", function () {",
+                  "    var sections = pm.response.json();",
+                  "    if (sections.length > 0) {",
+                  "        pm.expect(sections[0]).to.have.property('id');",
+                  "        pm.expect(sections[0]).to.have.property('title');",
+                  "        pm.expect(sections[0]).to.have.property('order');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "PUBLISHED course tanpa auth — public access, expects 200."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sections - Draft Course, No Auth (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{draftCourseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{draftCourseSlug}}", "sections"]
+            },
+            "description": "DRAFT course tanpa auth — expects 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sections - Draft Course, With Owner Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response is array\", function () {",
+                  "    pm.expect(pm.response.json()).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{draftCourseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{draftCourseSlug}}", "sections"]
+            },
+            "description": "DRAFT course dengan owner auth — expects 200."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. PUT /api/courses/[slug]/sections/[sectionId]",
+      "item": [
+        {
+          "name": "Update Section - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has updated title\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('title');",
+                  "    pm.expect(json.title).to.eql('Pengenalan TypeScript - Updated');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Pengenalan TypeScript - Updated\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}"]
+            },
+            "description": "Update section title. Jalankan setelah Create Section Success."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Section - Not Found (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Section Tidak Ada\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/nonexistent-id-00000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "nonexistent-id-00000000"]
+            },
+            "description": "Section tidak ada — expects 404."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. DELETE /api/courses/[slug]/sections/[sectionId]",
+      "item": [
+        {
+          "name": "Delete Section - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has deletedLessons count\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('deletedLessons');",
+                  "    pm.expect(json.deletedLessons).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}"]
+            },
+            "description": "Hapus section beserta semua lessons di dalamnya (cascade). Response: { deletedLessons: N }."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

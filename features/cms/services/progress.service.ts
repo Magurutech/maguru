@@ -128,10 +128,10 @@ export class ProgressService {
     courseSlug: string,
     userId: string
   ): Promise<CourseProgressResponse> {
-    // Find course by slug (using title field)
-    const course = await prisma.courses.findFirst({
+    // Find course by slug
+    const course = await prisma.courses.findUnique({
       where: {
-        title: courseSlug,
+        slug: courseSlug,
       },
     })
 

@@ -16,8 +16,8 @@ export async function GET(
   try {
     const { slug } = await params
 
-    const course = await prisma.courses.findFirst({
-      where: { id: slug },
+    const course = await prisma.courses.findUnique({
+      where: { slug },
       select: {
         id: true,
         title: true,
@@ -51,7 +51,7 @@ export async function GET(
 
     return NextResponse.json({
       ...course,
-      slug: course.id
+      slug: slug
     })
   } catch (error) {
     console.error('Error fetching course:', error)

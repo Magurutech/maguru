@@ -15,6 +15,32 @@ import { CourseStatus } from '@/prisma/generated/prisma'
 const VALID_DIFFICULTIES = ['Pemula', 'Menengah', 'Mahir'] as const
 const VALID_STATUSES = ['DRAFT', 'PUBLISHED'] as const
 
+/**
+ * Generate a URL-friendly slug from a title.
+ * Converts to lowercase, replaces spaces with dashes, strips non-alphanumeric chars.
+ */
+export function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .slice(0, 150)
+}
+
+/**
+ * Ensure slug is unique — appends a short random suffix if collision detected.
+ */
+async function ensureUniqueSlug(baseSlug: string): Promise<string> {
+  const existing = await prisma.courses.findUnique({ where: { slug: baseSlug } })
+  if (!existing) return baseSlug
+
+  // Append 6-char random suffix
+  const suffix = crypto.randomUUID().replace(/-/g, '').slice(0, 6)
+  return `${baseSlug.slice(0, 143)}-${suffix}`
+}
+
 export interface CreateCourseInput {
   title: string
   description: string
@@ -25,6 +51,7 @@ export interface CreateCourseInput {
 
 export interface CreateCourseResult {
   id: string
+  slug: string
   title: string
   description: string
   category: string
@@ -76,6 +103,7 @@ export async function createCourse(
   const course = await prisma.courses.create({
     data: {
       id: crypto.randomUUID(),
+      slug: await ensureUniqueSlug(generateSlug(title.trim())),
       title: title.trim(),
       description: description.trim(),
       category: category.trim(),
@@ -86,6 +114,7 @@ export async function createCourse(
     },
     select: {
       id: true,
+      slug: true,
       title: true,
       description: true,
       category: true,

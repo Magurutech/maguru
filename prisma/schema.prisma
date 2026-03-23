@@ -24,6 +24,7 @@ model course_completions {
 
 model courses {
   id          String        @id
+  slug        String        @unique @db.VarChar(150)
   title       String        @db.VarChar(100)
   description String
   thumbnail   String?       @db.VarChar(255)

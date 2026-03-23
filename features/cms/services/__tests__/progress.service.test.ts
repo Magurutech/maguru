@@ -252,7 +252,7 @@ describe('ProgressService', () => {
         updatedAt: new Date(),
       }
 
-      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as never)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as never)
       prismaMock.lessons.count.mockResolvedValue(10) // Total lessons
       prismaMock.lesson_progress.count.mockResolvedValue(5) // Completed lessons
       prismaMock.course_completions.findUnique.mockResolvedValue(mockCourseCompletion as never)
@@ -269,15 +269,15 @@ describe('ProgressService', () => {
         completedAt: null,
       })
 
-      expect(prismaMock.courses.findFirst).toHaveBeenCalledWith({
+      expect(prismaMock.courses.findUnique).toHaveBeenCalledWith({
         where: {
-          title: mockCourseSlug,
+          slug: mockCourseSlug,
         },
       })
     })
 
     it('should throw error when course does not exist', async () => {
-      prismaMock.courses.findFirst.mockResolvedValue(null)
+      prismaMock.courses.findUnique.mockResolvedValue(null)
 
       await expect(
         progressService.getCourseProgress(mockCourseSlug, mockUserId)
@@ -301,7 +301,7 @@ describe('ProgressService', () => {
         updatedAt: new Date(),
       }
 
-      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as never)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as never)
       prismaMock.lessons.count.mockResolvedValue(10)
       prismaMock.lesson_progress.count.mockResolvedValue(0)
       prismaMock.course_completions.findUnique.mockResolvedValue(null)
@@ -341,7 +341,7 @@ describe('ProgressService', () => {
         updatedAt: new Date(),
       }
 
-      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as never)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as never)
       prismaMock.lessons.count.mockResolvedValue(10)
       prismaMock.lesson_progress.count.mockResolvedValue(10)
       prismaMock.course_completions.findUnique.mockResolvedValue(completedCourseCompletion as never)
@@ -371,7 +371,7 @@ describe('ProgressService', () => {
         updatedAt: new Date(),
       }
 
-      prismaMock.courses.findFirst.mockResolvedValue(mockCourse as never)
+      prismaMock.courses.findUnique.mockResolvedValue(mockCourse as never)
       prismaMock.lessons.count.mockResolvedValue(0)
       prismaMock.lesson_progress.count.mockResolvedValue(0)
       prismaMock.course_completions.findUnique.mockResolvedValue(mockCourseCompletion as never)

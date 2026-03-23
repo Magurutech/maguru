@@ -97,7 +97,7 @@ export interface LessonContent {
 }
 
 /**
- * Lesson with content preview
+ * Lesson list item (without content)
  * Requirements: 2.2
  */
 export interface LessonWithPreview {
@@ -105,7 +105,6 @@ export interface LessonWithPreview {
   sectionId: string
   order: number
   title: string
-  contentPreview: string // First 200 chars of plain text
   createdAt: Date
   updatedAt: Date
 }

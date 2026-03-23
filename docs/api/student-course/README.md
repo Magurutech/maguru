@@ -12,12 +12,12 @@ Panduan testing untuk Student Course API — endpoint publik yang digunakan stud
 
 ### API Endpoints
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/courses` | Optional | Public course catalog dengan filter & pagination |
-| GET | `/api/courses/[slug]` | Optional | Course detail by ID |
-| POST | `/api/courses/[slug]/enroll` | Required | Enroll ke kursus |
-| GET | `/api/courses/my-courses` | Required | Daftar kursus yang diikuti student |
+| Method | Endpoint                     | Auth     | Description                                      |
+| --------| ------------------------------| ----------| --------------------------------------------------|
+| GET    | `/api/courses`               | Optional | Public course catalog dengan filter & pagination |
+| GET    | `/api/courses/[slug]`        | Optional | Course detail by ID                              |
+| POST   | `/api/courses/[slug]/enroll` | Required | Enroll ke kursus                                 |
+| GET    | `/api/courses/my-courses`    | Required | Daftar kursus yang diikuti student               |
 
 ---
 
@@ -34,11 +34,11 @@ yarn dev
 
 ```sql
 -- Cek courses yang ada
-SELECT id, title, status, difficulty, category FROM courses LIMIT 10;
+SELECT id, slug, title, status, difficulty, category FROM courses LIMIT 10;
 
 -- Catat:
--- courseId      = ID course dengan status PUBLISHED
--- draftCourseId = ID course dengan status DRAFT
+-- courseSlug      = slug course dengan status PUBLISHED (e.g. belajar-typescript-dari-nol)
+-- draftCourseSlug = slug course dengan status DRAFT
 ```
 
 ### 3. Dapatkan Auth Token (Clerk)
@@ -64,8 +64,8 @@ SELECT id, title, status, difficulty, category FROM courses LIMIT 10;
 | Variable | Nilai | Keterangan |
 |----------|-------|------------|
 | `baseUrl` | `http://localhost:3000` | URL server lokal |
-| `courseId` | _(isi dari database)_ | ID course PUBLISHED |
-| `draftCourseId` | _(isi dari database)_ | ID course DRAFT |
+| `courseSlug` | _(isi dari database)_ | Slug course PUBLISHED — human-readable (e.g. `belajar-typescript-dari-nol`), bukan UUID |
+| `draftCourseSlug` | _(isi dari database)_ | Slug course DRAFT — human-readable, bukan UUID |
 | `authToken` | _(isi dari Clerk)_ | Session token student |
 
 ---
@@ -277,7 +277,7 @@ GET /api/courses?page=1&limit=6
 #### 2.1 Get Course Detail — Success
 
 ```
-GET /api/courses/{{courseId}}
+GET /api/courses/{{courseSlug}}
 ```
 
 **Checklist:**
@@ -328,7 +328,7 @@ GET /api/courses/non-existent-course-id-00000000
 #### 3.1 Enroll — Unauthenticated
 
 ```
-POST /api/courses/{{courseId}}/enroll
+POST /api/courses/{{courseSlug}}/enroll
 (tanpa Authorization header)
 ```
 
@@ -348,7 +348,7 @@ POST /api/courses/{{courseId}}/enroll
 #### 3.2 Enroll — DRAFT Course
 
 ```
-POST /api/courses/{{draftCourseId}}/enroll
+POST /api/courses/{{draftCourseSlug}}/enroll
 Authorization: Bearer {{authToken}}
 ```
 
@@ -368,7 +368,7 @@ Authorization: Bearer {{authToken}}
 #### 3.3 Enroll — Success
 
 ```
-POST /api/courses/{{courseId}}/enroll
+POST /api/courses/{{courseSlug}}/enroll
 Authorization: Bearer {{authToken}}
 ```
 
@@ -394,7 +394,7 @@ Authorization: Bearer {{authToken}}
 #### 3.4 Enroll — Already Enrolled
 
 ```
-POST /api/courses/{{courseId}}/enroll
+POST /api/courses/{{courseSlug}}/enroll
 Authorization: Bearer {{authToken}}
 (jalankan ulang request yang sama setelah 3.3 berhasil)
 ```
@@ -482,8 +482,8 @@ npm install -g newman
 newman run docs/api/student-course/student-course.postman_collection.json \
   --env-var "baseUrl=http://localhost:3000" \
   --env-var "authToken=YOUR_TOKEN" \
-  --env-var "courseId=YOUR_COURSE_ID" \
-  --env-var "draftCourseId=YOUR_DRAFT_ID"
+  --env-var "courseSlug=YOUR_COURSE_SLUG" \
+  --env-var "draftCourseSlug=YOUR_DRAFT_SLUG"
 ```
 
 ---
@@ -493,8 +493,8 @@ newman run docs/api/student-course/student-course.postman_collection.json \
 | Error | Penyebab | Solusi |
 |-------|----------|--------|
 | 401 pada enroll | Token tidak valid / expired | Re-login dan copy token baru |
-| 403 pada enroll | Course masih DRAFT | Gunakan `courseId` yang PUBLISHED |
-| 404 pada detail | Course ID tidak ada | Cek database, update variable `courseId` |
+| 403 pada enroll | Course masih DRAFT | Gunakan `courseSlug` yang PUBLISHED |
+| 404 pada detail | Course slug tidak ada | Cek database, update variable `courseSlug` |
 | 409 pada enroll | Sudah pernah enroll | Normal — ini yang ditest di 3.4 |
 | Connection refused | Server tidak running | Jalankan `yarn dev` |
 

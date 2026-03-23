@@ -2533,6 +2533,7 @@ export namespace Prisma {
 
   export type CoursesMinAggregateOutputType = {
     id: string | null
+    slug: string | null
     title: string | null
     description: string | null
     thumbnail: string | null
@@ -2550,6 +2551,7 @@ export namespace Prisma {
 
   export type CoursesMaxAggregateOutputType = {
     id: string | null
+    slug: string | null
     title: string | null
     description: string | null
     thumbnail: string | null
@@ -2567,6 +2569,7 @@ export namespace Prisma {
 
   export type CoursesCountAggregateOutputType = {
     id: number
+    slug: number
     title: number
     description: number
     thumbnail: number
@@ -2598,6 +2601,7 @@ export namespace Prisma {
 
   export type CoursesMinAggregateInputType = {
     id?: true
+    slug?: true
     title?: true
     description?: true
     thumbnail?: true
@@ -2615,6 +2619,7 @@ export namespace Prisma {
 
   export type CoursesMaxAggregateInputType = {
     id?: true
+    slug?: true
     title?: true
     description?: true
     thumbnail?: true
@@ -2632,6 +2637,7 @@ export namespace Prisma {
 
   export type CoursesCountAggregateInputType = {
     id?: true
+    slug?: true
     title?: true
     description?: true
     thumbnail?: true
@@ -2736,6 +2742,7 @@ export namespace Prisma {
 
   export type CoursesGroupByOutputType = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail: string | null
@@ -2772,6 +2779,7 @@ export namespace Prisma {
 
   export type coursesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    slug?: boolean
     title?: boolean
     description?: boolean
     thumbnail?: boolean
@@ -2792,6 +2800,7 @@ export namespace Prisma {
 
   export type coursesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    slug?: boolean
     title?: boolean
     description?: boolean
     thumbnail?: boolean
@@ -2809,6 +2818,7 @@ export namespace Prisma {
 
   export type coursesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    slug?: boolean
     title?: boolean
     description?: boolean
     thumbnail?: boolean
@@ -2826,6 +2836,7 @@ export namespace Prisma {
 
   export type coursesSelectScalar = {
     id?: boolean
+    slug?: boolean
     title?: boolean
     description?: boolean
     thumbnail?: boolean
@@ -2841,7 +2852,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
+  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
   export type coursesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enrollments?: boolean | courses$enrollmentsArgs<ExtArgs>
     sections?: boolean | courses$sectionsArgs<ExtArgs>
@@ -2858,6 +2869,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      slug: string
       title: string
       description: string
       thumbnail: string | null
@@ -3297,6 +3309,7 @@ export namespace Prisma {
    */
   interface coursesFieldRefs {
     readonly id: FieldRef<"courses", 'String'>
+    readonly slug: FieldRef<"courses", 'String'>
     readonly title: FieldRef<"courses", 'String'>
     readonly description: FieldRef<"courses", 'String'>
     readonly thumbnail: FieldRef<"courses", 'String'>
@@ -8228,6 +8241,7 @@ export namespace Prisma {
 
   export const CoursesScalarFieldEnum: {
     id: 'id',
+    slug: 'slug',
     title: 'title',
     description: 'description',
     thumbnail: 'thumbnail',
@@ -8510,6 +8524,7 @@ export namespace Prisma {
     OR?: coursesWhereInput[]
     NOT?: coursesWhereInput | coursesWhereInput[]
     id?: StringFilter<"courses"> | string
+    slug?: StringFilter<"courses"> | string
     title?: StringFilter<"courses"> | string
     description?: StringFilter<"courses"> | string
     thumbnail?: StringNullableFilter<"courses"> | string | null
@@ -8529,6 +8544,7 @@ export namespace Prisma {
 
   export type coursesOrderByWithRelationInput = {
     id?: SortOrder
+    slug?: SortOrder
     title?: SortOrder
     description?: SortOrder
     thumbnail?: SortOrderInput | SortOrder
@@ -8548,6 +8564,7 @@ export namespace Prisma {
 
   export type coursesWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    slug?: string
     AND?: coursesWhereInput | coursesWhereInput[]
     OR?: coursesWhereInput[]
     NOT?: coursesWhereInput | coursesWhereInput[]
@@ -8566,10 +8583,11 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"courses"> | Date | string
     enrollments?: EnrollmentsListRelationFilter
     sections?: SectionsListRelationFilter
-  }, "id">
+  }, "id" | "slug">
 
   export type coursesOrderByWithAggregationInput = {
     id?: SortOrder
+    slug?: SortOrder
     title?: SortOrder
     description?: SortOrder
     thumbnail?: SortOrderInput | SortOrder
@@ -8595,6 +8613,7 @@ export namespace Prisma {
     OR?: coursesScalarWhereWithAggregatesInput[]
     NOT?: coursesScalarWhereWithAggregatesInput | coursesScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"courses"> | string
+    slug?: StringWithAggregatesFilter<"courses"> | string
     title?: StringWithAggregatesFilter<"courses"> | string
     description?: StringWithAggregatesFilter<"courses"> | string
     thumbnail?: StringNullableWithAggregatesFilter<"courses"> | string | null
@@ -8953,6 +8972,7 @@ export namespace Prisma {
 
   export type coursesCreateInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -8972,6 +8992,7 @@ export namespace Prisma {
 
   export type coursesUncheckedCreateInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -8991,6 +9012,7 @@ export namespace Prisma {
 
   export type coursesUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9010,6 +9032,7 @@ export namespace Prisma {
 
   export type coursesUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9029,6 +9052,7 @@ export namespace Prisma {
 
   export type coursesCreateManyInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -9046,6 +9070,7 @@ export namespace Prisma {
 
   export type coursesUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9063,6 +9088,7 @@ export namespace Prisma {
 
   export type coursesUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9577,6 +9603,7 @@ export namespace Prisma {
 
   export type coursesCountOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     title?: SortOrder
     description?: SortOrder
     thumbnail?: SortOrder
@@ -9600,6 +9627,7 @@ export namespace Prisma {
 
   export type coursesMaxOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     title?: SortOrder
     description?: SortOrder
     thumbnail?: SortOrder
@@ -9617,6 +9645,7 @@ export namespace Prisma {
 
   export type coursesMinOrderByAggregateInput = {
     id?: SortOrder
+    slug?: SortOrder
     title?: SortOrder
     description?: SortOrder
     thumbnail?: SortOrder
@@ -10523,6 +10552,7 @@ export namespace Prisma {
 
   export type coursesCreateWithoutEnrollmentsInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -10541,6 +10571,7 @@ export namespace Prisma {
 
   export type coursesUncheckedCreateWithoutEnrollmentsInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -10575,6 +10606,7 @@ export namespace Prisma {
 
   export type coursesUpdateWithoutEnrollmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10593,6 +10625,7 @@ export namespace Prisma {
 
   export type coursesUncheckedUpdateWithoutEnrollmentsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10807,6 +10840,7 @@ export namespace Prisma {
 
   export type coursesCreateWithoutSectionsInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -10825,6 +10859,7 @@ export namespace Prisma {
 
   export type coursesUncheckedCreateWithoutSectionsInput = {
     id: string
+    slug: string
     title: string
     description: string
     thumbnail?: string | null
@@ -10888,6 +10923,7 @@ export namespace Prisma {
 
   export type coursesUpdateWithoutSectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10906,6 +10942,7 @@ export namespace Prisma {
 
   export type coursesUncheckedUpdateWithoutSectionsInput = {
     id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     thumbnail?: NullableStringFieldUpdateOperationsInput | string | null

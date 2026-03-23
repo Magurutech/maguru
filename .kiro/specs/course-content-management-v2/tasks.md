@@ -540,55 +540,116 @@ This implementation plan breaks down the Course Content Management feature into 
     - Test 500 server error handling
     - _Requirements: 10.1-10.6_
 
-- [ ] 13. Performance Optimization
-  - [ ] 13.1 Implement database query optimization
+- [x] 13. API Testing — Content Management (Postman)
+  - [x] 13.1 Buat `docs/api/content-management/sections.postman_collection.json`
+    - POST /api/courses/[slug]/sections → 201 created
+    - GET /api/courses/[slug]/sections → 200 dengan ordered list
+    - PUT /api/courses/[slug]/sections/[sectionId] → 200 updated
+    - DELETE /api/courses/[slug]/sections/[sectionId] → 200 dengan deletedLessons count
+    - POST tanpa auth → 401 Unauthorized
+    - POST dengan user bukan owner → 403 Forbidden
+    - GET/PUT/DELETE section tidak ada → 404 Not Found
+    - POST dengan order yang sudah ada → 409 Conflict
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 8.1, 8.2, 9.1_
+
+- [x] 13.2 Buat `docs/api/content-management/lessons.postman_collection.json`
+    - POST /api/courses/[slug]/sections/[sectionId]/lessons → 201 created
+    - GET /api/courses/[slug]/sections/[sectionId]/lessons → 200 dengan list
+    - GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] → 200 full content
+    - PUT /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] → 200, version increment
+    - DELETE /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId] → 200 dengan deletedProgress count
+    - POST dengan invalid Tiptap JSON → 400 Bad Request
+    - POST tanpa auth → 401 Unauthorized
+    - POST dengan user bukan owner → 403 Forbidden
+    - GET/PUT/DELETE lesson tidak ada → 404 Not Found
+    - _Requirements: 2.1, 2.4, 2.5, 3.1, 3.2, 8.1, 9.2, 9.3_
+
+- [x] 13.3 Buat `docs/api/content-management/progress.postman_collection.json`
+    - POST /api/progress/lesson/[lessonId]/complete → 200 completed
+    - GET /api/progress/course/[slug] → 200 dengan percentage dan completedLessons
+    - GET /api/progress/lesson/[lessonId] → 200 dengan completion status
+    - POST tanpa auth → 401 Unauthorized
+    - GET tanpa auth → 401 Unauthorized
+    - _Requirements: 6.2, 6.5, 7.1, 7.2_
+
+- [ ] 14. E2E Tests — Creator Workflow
+  - [ ] 14.1 Buat `__tests__/playwright/content/creator/manage-course.spec.ts`
+  - [ ] 14.2 Test: akses `/creator/courses/[slug]/manage` dengan auth creator → halaman tampil dengan section list
+  - [ ] 14.3 Test: klik "+ Seksi" → dialog terbuka, isi form, submit → section baru muncul di list
+  - [ ] 14.4 Test: klik "+ Pelajaran" pada section → dialog terbuka, isi title + Tiptap content, submit → lesson tersimpan
+  - [ ] 14.5 Test: klik edit lesson → form terbuka dengan existing content, ubah content, save → version increment terlihat
+  - [ ] 14.6 Test: klik tombol reorder section (up/down) → urutan section berubah di UI
+  - [ ] 14.7 Test: klik delete section → konfirmasi dialog, confirm → section dan lessons-nya hilang dari list
+  - [ ] 14.8 Test: akses `/creator/courses/[slug]/manage` tanpa auth → redirect ke `/sign-in`
+  - _Requirements: 1.1, 1.3, 1.4, 1.5, 2.1, 2.4, 2.5, 8.1, 8.4_
+
+- [ ] 15. E2E Tests — Student Learn Workflow
+  - [ ] 15.1 Buat `__tests__/playwright/content/student/learn.spec.ts`
+  - [ ] 15.2 Test: akses `/course/[slug]/learn` dengan auth student yang enrolled → halaman tampil dengan sidebar sections dan lesson list
+  - [ ] 15.3 Test: klik lesson di sidebar → konten Tiptap ter-render di area utama
+  - [ ] 15.4 Test: klik "Tandai Selesai" → lesson marked complete, checkmark muncul di sidebar
+  - [ ] 15.5 Test: progress bar update setelah mark complete (persentase naik)
+  - [ ] 15.6 Test: klik tombol navigasi "Pelajaran Berikutnya" → lesson berikutnya ter-load
+  - [ ] 15.7 Test: refresh halaman → progress tetap tersimpan (checkmark masih ada)
+  - [ ] 15.8 Test: akses `/course/[slug]/learn` tanpa auth → redirect ke `/sign-in`
+  - _Requirements: 5.1, 5.2, 5.3, 5.7, 6.1, 6.2, 6.4, 7.1, 7.5_
+
+- [ ] 16. Manual Test Documentation
+  - [ ] 16.1 Buat `docs/testing/manual-test-content-management.md`
+  - [ ] 16.2 Checklist Creator workflow: buat section, buat lesson dengan Tiptap content, edit lesson, reorder section, delete section (cascade)
+  - [ ] 16.3 Checklist Student workflow: navigasi ke lesson, baca konten, mark complete, cek progress bar, navigasi prev/next, refresh persistence
+  - [ ] 16.4 Checklist Authorization: unauthenticated access, creator akses course milik orang lain, student akses creator endpoint
+  - [ ] 16.5 Checklist Error scenarios: invalid Tiptap JSON, duplicate section order, lesson/section tidak ada (404), server error handling
+
+- [ ] 17. Performance Optimization
+  - [ ] 17.1 Implement database query optimization
     - Add indexes to Section, Lesson, LessonProgress, CourseCompletion
     - Use select to fetch only needed fields
     - Use include for efficient joins
     - Implement pagination for large lesson lists
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 13.2 Implement client-side caching
+- [ ] 17.2 Implement client-side caching
     - Use React Query for API response caching
     - Cache lesson content for 5 minutes
     - Invalidate cache on content updates
     - Prefetch next lesson on current lesson view
     - _Requirements: 11.1, 11.2, 11.6_
 
-- [ ] 13.3 Optimize Tiptap rendering
+- [ ] 17.3 Optimize Tiptap rendering
     - Lazy load Tiptap editor
     - Debounce editor updates
     - Optimize re-renders with React.memo
     - _Requirements: 11.6_
 
-- [ ]* 13.4 Write performance tests
+- [ ]* 17.4 Write performance tests
     - Test lesson load time < 500ms (p95)
     - Test content save time < 1s (p95)
     - Test progress calculation < 300ms (p95)
     - Test Tiptap rendering < 200ms for 10k chars
     - _Requirements: 11.1-11.6_
 
-- [ ] 14. Data Persistence and Transactions
-  - [ ] 14.1 Implement transaction support for multi-record operations
+- [ ] 18. Data Persistence and Transactions
+  - [ ] 18.1 Implement transaction support for multi-record operations
     - Use Prisma transactions for section delete (cascade)
     - Use transactions for lesson delete (cascade)
     - Use transactions for progress update + completion recalc
     - Implement rollback on failure
     - _Requirements: 12.3, 12.4, 12.5_
 
-- [ ] 14.2 Implement data integrity checks
+- [ ] 18.2 Implement data integrity checks
     - Verify referential integrity on delete
     - Prevent orphaned records
     - Validate foreign key constraints
     - _Requirements: 12.5, 12.6, 12.7_
 
-- [ ]* 14.3 Write tests for data persistence
+- [ ]* 18.3 Write tests for data persistence
     - Test transaction rollback on error
     - Test cascade delete behavior
     - Test referential integrity maintenance
     - _Requirements: 12.1-12.7_
 
-- [ ] 15. Checkpoint - Ensure all tests pass
+- [ ] 19. Checkpoint - Ensure all tests pass
   - Run all unit tests
   - Run all integration tests
   - Run all E2E tests
@@ -598,8 +659,8 @@ This implementation plan breaks down the Course Content Management feature into 
   - Ask the user if questions arise
 
 
-- [ ] 16. Styling and UI Polish
-  - [ ] 16.1 Create Tiptap content styles
+- [ ] 20. Styling and UI Polish
+  - [ ] 20.1 Create Tiptap content styles
     - Style headings (h1, h2, h3)
     - Style paragraphs and text
     - Style lists (bullet and ordered)
@@ -609,14 +670,14 @@ This implementation plan breaks down the Course Content Management feature into 
     - Ensure consistent spacing
     - _Requirements: 5.5_
 
-- [ ] 16.2 Style creator editor interface
+- [ ] 20.2 Style creator editor interface
     - Style toolbar buttons
     - Style editor container
     - Style preview panel
     - Add hover states and transitions
     - Ensure responsive design
 
-- [ ] 16.3 Style student learn page
+- [ ] 20.3 Style student learn page
     - Style navigation sidebar
     - Style lesson content area
     - Style progress bar
@@ -624,54 +685,54 @@ This implementation plan breaks down the Course Content Management feature into 
     - Style completion badge
     - Ensure mobile responsiveness
 
-- [ ] 16.4 Implement dark mode support (optional)
+- [ ] 20.4 Implement dark mode support (optional)
     - Add dark mode styles for editor
     - Add dark mode styles for viewer
     - Add dark mode toggle
 
-- [ ] 17. Documentation and Deployment
-  - [ ] 17.1 Create API documentation
+- [ ] 21. Documentation and Deployment
+  - [ ] 21.1 Create API documentation
     - Document all endpoints with examples
     - Document request/response formats
     - Document error codes
     - Document authentication requirements
 
-- [ ] 17.2 Create component documentation
+- [ ] 21.2 Create component documentation
     - Document component props and usage
     - Add Storybook stories for components
     - Document Tiptap integration patterns
 
-- [ ] 17.3 Create deployment guide
+- [ ] 21.3 Create deployment guide
     - Document environment variables
     - Document database migration steps
     - Document seed data setup
     - Create deployment checklist
 
-- [ ] 17.4 Run database migrations
+- [ ] 21.4 Run database migrations
     - Create migration for new tables
     - Verify migration on staging
     - Run migration on production
     - Verify data integrity
 
-- [ ] 18. Final Integration and Testing
-  - [ ] 18.1 Integration testing
+- [ ] 22. Final Integration and Testing
+  - [ ] 22.1 Integration testing
     - Test complete creator workflow end-to-end
     - Test complete student workflow end-to-end
     - Test cross-browser compatibility
     - Test mobile responsiveness
 
-- [ ] 18.2 User acceptance testing
+- [ ] 22.2 User acceptance testing
     - Test with real course content
     - Test with multiple concurrent users
     - Verify performance under load
     - Collect user feedback
 
-- [ ] 18.3 Bug fixes and polish
+- [ ] 22.3 Bug fixes and polish
     - Fix any bugs found during testing
     - Polish UI/UX based on feedback
     - Optimize performance bottlenecks
 
-- [ ] 19. Final Checkpoint - Production Ready
+- [ ] 23. Final Checkpoint - Production Ready
   - All tests passing
   - All documentation complete
   - Performance metrics met

@@ -282,7 +282,7 @@ describe('LessonService', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0].title).toBe('Lesson 1')
-      expect(result[0].contentPreview).toBe('Test content')
+      expect(result[0]).not.toHaveProperty('contentPreview')
       expect(prismaMock.lessons.findMany).toHaveBeenCalledWith({
         where: { sectionId },
         orderBy: { order: 'asc' },
@@ -320,8 +320,8 @@ describe('LessonService', () => {
 
       const result = await lessonService.getLessonsBySection('section-1')
 
-      expect(result[0].contentPreview.length).toBeLessThanOrEqual(203) // 200 + '...'
-      expect(result[0].contentPreview).toContain('...')
+      expect(result[0]).not.toHaveProperty('contentPreview')
+      expect(result[0].title).toBe('Lesson 1')
     })
   })
 
@@ -347,8 +347,11 @@ describe('LessonService', () => {
 
       const result = await lessonService.getLessonById(lessonId)
 
-      expect(result).toEqual({ ...mockLesson, section: mockLesson.sections })
+      // sections key dihapus dari result, diganti dengan section
+      const { sections: _sections, ...lessonWithoutSections } = mockLesson
+      expect(result).toEqual({ ...lessonWithoutSections, section: mockLesson.sections })
       expect(result?.section).toBeDefined()
+      expect(result).not.toHaveProperty('sections')
       expect(prismaMock.lessons.findUnique).toHaveBeenCalledWith({
         where: { id: lessonId },
         include: {

@@ -32,7 +32,7 @@ export async function POST(
     const { slug } = await params
 
     const course = await prisma.courses.findUnique({
-      where: { id: slug },
+      where: { slug },
       select: { id: true, status: true, title: true },
     })
 

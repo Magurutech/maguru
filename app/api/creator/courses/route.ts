@@ -26,6 +26,7 @@ export async function GET() {
       },
       select: {
         id: true,
+        slug: true,
         title: true,
         description: true,
         status: true,
@@ -53,7 +54,6 @@ export async function GET() {
     return NextResponse.json({
       courses: courses.map((course) => ({
         ...course,
-        slug: course.id,
         sectionCount: course._count.sections,
         enrollmentCount: course._count.enrollments,
       })),

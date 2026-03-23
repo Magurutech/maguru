@@ -133,6 +133,7 @@ exports.Prisma.Course_completionsScalarFieldEnum = {
 
 exports.Prisma.CoursesScalarFieldEnum = {
   id: 'id',
+  slug: 'slug',
   title: 'title',
   description: 'description',
   thumbnail: 'thumbnail',

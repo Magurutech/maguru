@@ -118,9 +118,6 @@ export class LessonService {
       sectionId: lesson.sectionId,
       order: lesson.order,
       title: lesson.title,
-      contentPreview: this.extractContentPreview(
-        lesson.content as unknown as LessonContent
-      ),
       createdAt: lesson.createdAt,
       updatedAt: lesson.updatedAt,
     }))
@@ -148,9 +145,11 @@ export class LessonService {
       return null
     }
 
+    const { sections, ...lessonData } = lesson
+
     return {
-      ...lesson,
-      section: lesson.sections,
+      ...lessonData,
+      section: sections,
       content: lesson.content as unknown as LessonContent,
     }
   }

@@ -14,13 +14,13 @@
       "key": "courseId",
       "value": "",
       "type": "string",
-      "description": "Set this to a valid PUBLISHED course ID from your database"
+      "description": "Set this to a valid PUBLISHED course slug from your database (e.g. belajar-typescript-dari-nol) — human-readable, bukan UUID"
     },
     {
       "key": "draftCourseId",
       "value": "",
       "type": "string",
-      "description": "Set this to a valid DRAFT course ID from your database"
+      "description": "Set this to a valid DRAFT course slug from your database (e.g. belajar-typescript-dari-nol) — human-readable, bukan UUID"
     },
     {
       "key": "authToken",
