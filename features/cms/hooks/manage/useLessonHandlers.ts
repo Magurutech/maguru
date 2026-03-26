@@ -53,9 +53,8 @@ export function useLessonHandlers({
     setExpandedSections(next)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleLessonSubmit = async (
-    data: { title: string; content: any; order: number },
+    data: { title: string; content: unknown; order: number },
     editingLesson: { lesson: ManagedLesson; sectionId: string } | null,
     addingLessonToSection: string | null,
     onDone: () => void

@@ -37,8 +37,7 @@ interface ManageContextValue {
   openAddLesson: (sectionId: string) => Promise<void>
   openEditLesson: (lesson: ManagedLesson, sectionId: string) => void
   closeLessonDialog: () => void
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleLessonSubmit: (data: { title: string; content: any; order: number }) => Promise<void>
+  handleLessonSubmit: (data: { title: string; content: unknown; order: number }) => Promise<void>
 }
 
 const ManageContext = createContext<ManageContextValue | null>(null)
@@ -94,8 +93,7 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
     setEditingLesson(null)
     setAddingLessonToSection(null)
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleLessonSubmit = async (data: { title: string; content: any; order: number }) =>
+  const handleLessonSubmit = async (data: { title: string; content: unknown; order: number }) =>
     submitLesson(data, editingLesson, addingLessonToSection, closeLessonDialog)
 
   return (

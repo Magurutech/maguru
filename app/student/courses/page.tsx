@@ -51,6 +51,7 @@ export default async function MyCoursesPage() {
                   key={enrollment.id}
                   course={{
                     id: enrollment.course.id,
+                    slug: enrollment.course.slug,
                     title: enrollment.course.title,
                     description: enrollment.course.description,
                     category: enrollment.course.category,

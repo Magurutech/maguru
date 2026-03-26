@@ -18,6 +18,7 @@ export interface EnrolledCourse {
   progress: number
   course: {
     id: string
+    slug: string
     title: string
     description: string
     category: string
@@ -46,6 +47,7 @@ export async function getMyEnrollments(userId: string): Promise<MyCoursesResult>
       courses: {
         select: {
           id: true,
+          slug: true,
           title: true,
           description: true,
           category: true,
@@ -97,6 +99,7 @@ export async function getMyEnrollments(userId: string): Promise<MyCoursesResult>
       progress,
       course: {
         id: enrollment.courses.id,
+        slug: enrollment.courses.slug,
         title: enrollment.courses.title,
         description: enrollment.courses.description,
         category: enrollment.courses.category,

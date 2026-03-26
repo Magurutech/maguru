@@ -9,7 +9,7 @@
 
 import React from 'react'
 import { UserRoleProvider } from '@/features/auth'
-import { PenTool, BookOpen, Video, FileText, BarChart3, Users, Settings } from 'lucide-react'
+import { PenTool, BookOpen, Video, FileText, Users } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
