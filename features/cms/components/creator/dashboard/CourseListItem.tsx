@@ -15,7 +15,7 @@ export function CourseListItem({ course }: CourseListItemProps) {
 
   return (
     <Link
-      href={`/creator/courses/${course.id}/manage`}
+      href={`/creator/courses/${course.slug}/manage`}
       className="block p-5 hover:bg-beige-50 transition-colors duration-200 group"
       data-testid="creator-course-item"
       data-course-id={course.id}

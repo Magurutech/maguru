@@ -37,6 +37,7 @@ export function LessonNavigation({
             onClick={() => onNavigate(previousLesson.id)}
             className="previous-button"
             aria-label={`Previous lesson: ${previousLesson.title}`}
+            data-testid="prev-lesson-btn"
           >
             <ChevronLeft className="h-4 w-4 mr-2" aria-hidden="true" />
             <span className="button-text">
@@ -50,6 +51,7 @@ export function LessonNavigation({
             disabled
             className="previous-button"
             aria-label="No previous lesson"
+            data-testid="prev-lesson-btn"
           >
             <ChevronLeft className="h-4 w-4 mr-2" aria-hidden="true" />
             <span className="button-text">
@@ -64,6 +66,7 @@ export function LessonNavigation({
             onClick={() => onNavigate(nextLesson.id)}
             className="next-button"
             aria-label={`Next lesson: ${nextLesson.title}`}
+            data-testid="next-lesson-btn"
           >
             <span className="button-text">
               <span className="button-label">Next</span>
@@ -77,6 +80,7 @@ export function LessonNavigation({
             disabled
             className="next-button"
             aria-label="No next lesson"
+            data-testid="next-lesson-btn"
           >
             <span className="button-text">
               <span className="button-label">Next</span>

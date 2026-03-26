@@ -46,6 +46,7 @@ export async function GET(request: Request) {
         where,
         select: {
           id: true,
+          slug: true,
           title: true,
           description: true,
           category: true,
@@ -82,6 +83,7 @@ export async function GET(request: Request) {
 
     const result = courses.map((course) => ({
       id: course.id,
+      slug: course.slug,
       title: course.title,
       description: course.description ? course.description.slice(0, 150) : null,
       category: course.category,

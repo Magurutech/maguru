@@ -138,7 +138,7 @@ export function CourseCard({
       <div className="px-5 pb-5 pt-0 flex gap-2">
         {showManage ? (
           <Link
-            href={`/creator/courses/${course.id}/manage`}
+            href={`/creator/courses/${course.slug}/manage`}
             className="flex-1"
             onClick={(e) => e.stopPropagation()}
           >
@@ -155,7 +155,7 @@ export function CourseCard({
         ) : catalogMode ? (
           enrolled ? (
             <Link
-              href={`/course/${course.id}/learn`}
+              href={`/course/${course.slug}/learn`}
               className="flex-1"
               onClick={(e) => e.stopPropagation()}
             >
@@ -169,7 +169,7 @@ export function CourseCard({
             </Link>
           ) : null
         ) : enrolled ? (
-          <Link href={`/course/${course.id}/learn`} className="flex-1">
+          <Link href={`/course/${course.slug}/learn`} className="flex-1">
             <Button
               size="sm"
               data-testid="continue-learning-btn"
@@ -197,7 +197,7 @@ export function CourseCard({
   if (catalogMode) {
     return (
       <Link
-        href={`/course/${course.id}`}
+        href={`/course/${course.slug}`}
         data-testid="course-card"
         data-course-id={course.id}
         data-course-status={course.status}

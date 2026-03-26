@@ -245,13 +245,14 @@ export default function LearnPage() {
   // Error state
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen" data-testid="error-state">
         <div className="text-center space-y-3">
           <p className="text-red-600">{error}</p>
           <div className="flex gap-3 justify-center">
             <button
               onClick={() => setRetryCount((c) => c + 1)}
               className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+              data-testid="retry-btn"
             >
               Coba Lagi
             </button>
@@ -298,9 +299,9 @@ export default function LearnPage() {
           </div>
 
           {/* Lesson Content */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto p-6" data-testid="main-content-area">
             {lessonLoading ? (
-              <div className="space-y-4 animate-pulse">
+              <div className="space-y-4 animate-pulse" data-testid="lesson-loading-skeleton">
                 <div className="h-8 bg-gray-200 rounded w-2/3" />
                 <div className="h-4 bg-gray-200 rounded w-full" />
                 <div className="h-4 bg-gray-200 rounded w-5/6" />
@@ -309,12 +310,14 @@ export default function LearnPage() {
               </div>
             ) : currentLesson ? (
               <>
+                <div data-testid="lesson-content-area">
                 <LessonViewer
                   lesson={currentLesson}
                   onMarkComplete={handleMarkComplete}
                   isCompleted={currentLesson.completed}
                   completing={completing}
                 />
+                </div>
 
                 {/* Lesson Navigation */}
                 <div className="mt-8">

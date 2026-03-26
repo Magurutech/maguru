@@ -7,6 +7,7 @@
 // From features/cms/components/student/CourseCard.tsx
 export interface CourseCardCourse {
   id: string
+  slug: string
   title: string
   description: string | null
   category: string

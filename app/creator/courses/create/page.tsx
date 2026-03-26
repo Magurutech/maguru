@@ -21,7 +21,7 @@ export default function CourseCreatePage() {
   // Wait until Clerk is loaded AND role is definitively resolved (not null, not loading)
   if (!isLoaded || roleLoading || !roleReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-beige-50 to-kuning-50">
+      <div className="min-h-screen flex items-center justify-center bg-linear-gradient-to-br from-beige-50 to-kuning-50">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-merah-500 border-t-transparent" />
       </div>
     )
@@ -33,7 +33,7 @@ export default function CourseCreatePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">
+    <div className="min-h-screen bg-linear-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-neu border border-beige-200 p-6 mb-6">

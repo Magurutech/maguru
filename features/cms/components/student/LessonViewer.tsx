@@ -79,9 +79,9 @@ export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing =
 
   return (
     <div className="lesson-viewer">
-      <h1>{lesson.title}</h1>
+      <h1 data-testid="lesson-title">{lesson.title}</h1>
       <EditorContent editor={editor} className="lesson-content" />
-      <div className="lesson-meta">
+      <div className="lesson-meta" data-testid="lesson-metadata">
         <span>Version: {lesson.content.version}</span>
         <span>Last updated: {new Date(lesson.content.lastEdit).toLocaleDateString()}</span>
       </div>
@@ -91,12 +91,13 @@ export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing =
           disabled={completing}
           className="mark-complete-btn"
           aria-label="Mark this lesson as complete"
+          data-testid="mark-complete-btn"
         >
           {completing ? 'Menyimpan...' : 'Tandai Selesai'}
         </button>
       )}
       {isCompleted && (
-        <div className="completed-badge" role="status" aria-label="Lesson completed">
+        <div className="completed-badge" role="status" aria-label="Lesson completed" data-testid="completion-badge">
           ✓ Completed
         </div>
       )}

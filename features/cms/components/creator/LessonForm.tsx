@@ -139,6 +139,7 @@ export function LessonForm({
             maxLength={200}
             aria-invalid={!!errors.title}
             aria-describedby={errors.title ? 'title-error' : undefined}
+            data-testid="lesson-title-input"
           />
           {errors.title && (
             <p id="title-error" className="error-message" role="alert">
@@ -165,6 +166,7 @@ export function LessonForm({
             step={1}
             aria-invalid={!!errors.order}
             aria-describedby={errors.order ? 'order-error' : undefined}
+            data-testid="lesson-order-input"
           />
           {errors.order && (
             <p id="order-error" className="error-message" role="alert">
@@ -205,6 +207,7 @@ export function LessonForm({
         <Button
           type="submit"
           disabled={isSubmitting}
+          data-testid="lesson-form-submit"
         >
           {isSubmitting ? 'Saving...' : isEditing ? 'Update Lesson' : 'Create Lesson'}
         </Button>

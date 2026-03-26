@@ -55,6 +55,7 @@ export function CourseNavigation({
             key={section.id} 
             defaultOpen 
             className="group/collapsible"
+            data-testid={`nav-section-${section.id}`}
           >
             <SidebarGroup>
               <SidebarGroupLabel asChild>
@@ -79,11 +80,13 @@ export function CourseNavigation({
                             isActive={isActive}
                             className="lesson-menu-item"
                             aria-current={isActive ? 'page' : undefined}
+                            data-testid={`nav-lesson-${lesson.id}`}
                           >
                             {lesson.completed && (
                               <Check 
                                 className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" 
                                 aria-label="Completed"
+                                data-testid={`lesson-completed-${lesson.id}`}
                               />
                             )}
                             <span className="flex-1">{lesson.title}</span>

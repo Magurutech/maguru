@@ -61,7 +61,7 @@ export default function CreatorDashboardPage() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <DashboardHeader firstName={user?.firstName} role={role} />
 
         <DashboardStats

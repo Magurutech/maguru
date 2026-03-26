@@ -113,6 +113,7 @@ export function SectionForm({
             maxLength={200}
             aria-invalid={!!errors.title}
             aria-describedby={errors.title ? 'title-error' : undefined}
+            data-testid="section-title-input"
           />
           {errors.title && (
             <p id="title-error" className="error-message" role="alert">
@@ -152,6 +153,7 @@ export function SectionForm({
             step={1}
             aria-invalid={!!errors.order}
             aria-describedby={errors.order ? 'order-error' : undefined}
+            data-testid="section-order-input"
           />
           {errors.order && (
             <p id="order-error" className="error-message" role="alert">
@@ -176,6 +178,7 @@ export function SectionForm({
         <Button
           type="submit"
           disabled={isSubmitting}
+          data-testid="section-form-submit"
         >
           {isSubmitting ? 'Saving...' : isEditing ? 'Update Section' : 'Create Section'}
         </Button>

@@ -90,49 +90,9 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                   </Button>
                 </Link>
 
-                <Link href="/creator/analytics">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"
-                  >
-                    <BarChart3 className="mr-3 h-4 w-4" />
-                    Analytics
-                  </Button>
-                </Link>
 
-                <Link href="/creator/settings">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"
-                  >
-                    <Settings className="mr-3 h-4 w-4" />
-                    Settings
-                  </Button>
-                </Link>
               </div>
 
-              {/* Creator Stats */}
-              <div className="mt-8 p-4 bg-purple-50 rounded-lg">
-                <h3 className="text-sm font-semibold text-purple-900 mb-3">Creator Stats</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Active Courses</span>
-                    <span className="font-semibold text-purple-900">6</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Total Students</span>
-                    <span className="font-semibold text-purple-900">1,247</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Avg Rating</span>
-                    <span className="font-semibold text-purple-900">4.8⭐</span>
-                  </div>
-                  <div className="w-full bg-purple-200 rounded-full h-2 mt-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                  <p className="text-xs text-purple-600 text-center mt-1">85% Course Completion</p>
-                </div>
-              </div>
 
               {/* Quick Actions */}
               <div className="mt-6">
@@ -142,16 +102,12 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                     <BookOpen className="w-3 h-3 mr-2" />
                     New Course
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Video className="w-3 h-3 mr-2" />
-                    Upload Video
-                  </Button>
                 </div>
               </div>
             </nav>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-200">
+            <div className="p-2 border-t border-gray-200">
               <p className="text-xs text-gray-500 text-center">Creator Studio v1.5</p>
               <p className="text-xs text-gray-400 text-center mt-1">© 2024 Maguru</p>
             </div>

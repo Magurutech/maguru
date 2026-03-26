@@ -10,20 +10,20 @@ import { BookOpen, ArrowRight } from 'lucide-react'
  * CourseEnrollButton
  *
  * Used on the course overview/detail page.
- * - Not enrolled: shows "Daftar Sekarang", calls POST /api/courses/[id]/enroll
- * - Enrolled: shows "Lanjut Belajar", links to /course/[id]/learn
+ * - Not enrolled: shows "Daftar Sekarang", calls POST /api/courses/[slug]/enroll
+ * - Enrolled: shows "Lanjut Belajar", links to /course/[slug]/learn
  *
  * Requirements: 2.1, 2.2, 2.7
  */
 
 interface CourseEnrollButtonProps {
-  courseId: string
+  courseSlug: string
   courseTitle: string
   initialEnrolled: boolean
 }
 
 export function CourseEnrollButton({
-  courseId,
+  courseSlug,
   courseTitle,
   initialEnrolled,
 }: CourseEnrollButtonProps) {
@@ -34,7 +34,7 @@ export function CourseEnrollButton({
   async function handleEnroll() {
     setEnrolling(true)
     try {
-      const res = await fetch(`/api/courses/${courseId}/enroll`, { method: 'POST' })
+      const res = await fetch(`/api/courses/${courseSlug}/enroll`, { method: 'POST' })
 
       if (res.status === 401) {
         toast.error('Silakan login terlebih dahulu')
@@ -44,7 +44,7 @@ export function CourseEnrollButton({
 
       if (res.status === 409) {
         setEnrolled(true)
-        router.push(`/course/${courseId}/learn`)
+        router.push(`/course/${courseSlug}/learn`)
         return
       }
 
@@ -57,7 +57,7 @@ export function CourseEnrollButton({
       setEnrolled(true)
       toast.success(`Berhasil mendaftar ke "${courseTitle}"`)
       setTimeout(() => {
-        router.push(`/course/${courseId}/learn`)
+        router.push(`/course/${courseSlug}/learn`)
       }, 800)
     } catch {
       toast.error('Terjadi kesalahan. Coba lagi.')
@@ -71,7 +71,7 @@ export function CourseEnrollButton({
       <Button
         size="lg"
         data-testid="continue-learning-btn"
-        onClick={() => router.push(`/course/${courseId}/learn`)}
+        onClick={() => router.push(`/course/${courseSlug}/learn`)}
         className="bg-hijau-500 hover:bg-hijau-600 text-white hover:scale-105 transition-all duration-200 px-8"
       >
         <BookOpen className="w-4 h-4 mr-2" />

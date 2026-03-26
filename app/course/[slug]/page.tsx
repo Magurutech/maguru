@@ -75,7 +75,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
           {/* Hero: title, description, stats, CTA */}
           <CourseOverviewHero course={course} sections={sections}>
             <CourseEnrollButton
-              courseId={course.id}
+              courseSlug={course.slug}
               courseTitle={course.title}
               initialEnrolled={enrolled}
             />

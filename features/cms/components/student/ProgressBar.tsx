@@ -25,12 +25,12 @@ export function ProgressBar({ percentage, completedLessons, totalLessons }: Prog
   const clampedPercentage = Math.min(Math.max(percentage, 0), 100)
   
   return (
-    <div className="progress-bar-container" role="region" aria-label="Course progress">
+    <div className="progress-bar-container" role="region" aria-label="Course progress" data-testid="progress-bar-container">
       <div className="progress-info">
-        <span className="progress-text">
+        <span className="progress-text" data-testid="progress-count">
           {completedLessons} / {totalLessons} lessons completed
         </span>
-        <span className="progress-percentage" aria-live="polite">
+        <span className="progress-percentage" aria-live="polite" data-testid="progress-percentage">
           {clampedPercentage.toFixed(0)}%
         </span>
       </div>
@@ -46,6 +46,7 @@ export function ProgressBar({ percentage, completedLessons, totalLessons }: Prog
           className="progress-fill" 
           style={{ width: `${clampedPercentage}%` }}
           aria-hidden="true"
+          data-testid="progress-bar-fill"
         />
       </div>
     </div>

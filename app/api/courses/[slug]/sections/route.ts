@@ -204,8 +204,20 @@ export async function GET(
       }
     }
 
-    // Get sections using service
-    const sections = await sectionService.getSectionsByCourse(course.id)
+    // Get sections with lessons for overview page
+    const sections = await prisma.sections.findMany({
+      where: { courseId: course.id },
+      orderBy: { order: 'asc' },
+      select: {
+        id: true,
+        title: true,
+        order: true,
+        lessons: {
+          orderBy: { order: 'asc' },
+          select: { id: true, title: true, order: true },
+        },
+      },
+    })
 
     return NextResponse.json({ sections })
   } catch (error) {
