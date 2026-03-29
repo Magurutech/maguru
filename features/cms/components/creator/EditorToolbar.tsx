@@ -1,101 +1,63 @@
 'use client'
 
-import { Editor } from '@tiptap/react'
+import type { Editor } from '@tiptap/react'
 
-/**
- * EditorToolbar Component
- * 
- * Toolbar with formatting buttons for Tiptap editor.
- * Provides all formatting options specified in requirements.
- * 
- * Requirements: 4.2, 4.3, 4.4, 4.5, 4.6
- * Task: 7.2
- */
+// Simple Editor UI components
+import { MarkButton } from '@/components/tiptap-ui/mark-button'
+import { HeadingDropdownMenu } from '@/components/tiptap-ui/heading-dropdown-menu'
+import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
+import { CodeBlockButton } from '@/components/tiptap-ui/code-block-button'
+import { LinkPopover } from '@/components/tiptap-ui/link-popover'
+import { UndoRedoButton } from '@/components/tiptap-ui/undo-redo-button'
+
+// Simple Editor primitives
+import {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from '@/components/tiptap-ui-primitive/toolbar'
 
 interface EditorToolbarProps {
   editor: Editor | null
 }
 
+/**
+ * EditorToolbar — uses Simple Editor (Tiptap) components.
+ * All buttons are properly synced with editor state via EditorContext.
+ * Requires EditorContext.Provider to be set up in the parent component.
+ */
 export function EditorToolbar({ editor }: EditorToolbarProps) {
   if (!editor) return null
 
   return (
-    <div className="editor-toolbar">
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive('bold') ? 'is-active' : ''}
-        title="Bold (Ctrl+B)"
-      >
-        Bold
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive('italic') ? 'is-active' : ''}
-        title="Italic (Ctrl+I)"
-      >
-        Italic
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        className={editor.isActive('code') ? 'is-active' : ''}
-        title="Inline Code (Ctrl+E)"
-      >
-        Code
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
-        title="Heading 1"
-      >
-        H1
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
-        title="Heading 2"
-      >
-        H2
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
-        title="Heading 3"
-      >
-        H3
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? 'is-active' : ''}
-        title="Bullet List"
-      >
-        Bullet List
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive('orderedList') ? 'is-active' : ''}
-        title="Ordered List"
-      >
-        Ordered List
-      </button>
-      <button
-        onClick={() => {
-          const url = window.prompt('Enter URL:')
-          if (url) {
-            editor.chain().focus().setLink({ href: url }).run()
-          }
-        }}
-        className={editor.isActive('link') ? 'is-active' : ''}
-        title="Link (Ctrl+K)"
-      >
-        Link
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={editor.isActive('codeBlock') ? 'is-active' : ''}
-        title="Code Block"
-      >
-        Code Block
-      </button>
-    </div>
+    <Toolbar>
+      <ToolbarGroup>
+        <UndoRedoButton action="undo" />
+        <UndoRedoButton action="redo" />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <HeadingDropdownMenu modal={false} levels={[1, 2, 3]} />
+        <ListDropdownMenu modal={false} types={['bulletList', 'orderedList']} />
+        <CodeBlockButton />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <MarkButton type="bold" />
+        <MarkButton type="italic" />
+        <MarkButton type="strike" />
+        <MarkButton type="code" />
+      </ToolbarGroup>
+
+      <ToolbarSeparator />
+
+      <ToolbarGroup>
+        <LinkPopover />
+      </ToolbarGroup>
+    </Toolbar>
   )
 }

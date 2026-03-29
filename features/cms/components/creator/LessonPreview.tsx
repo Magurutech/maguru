@@ -21,7 +21,8 @@ export function LessonPreview({ content }: LessonPreviewProps) {
   const editor = useEditor({
     extensions: [StarterKit],
     content: content,
-    editable: false,  // Read-only mode
+    editable: false,
+    immediatelyRender: false,
   })
 
   if (!editor) {

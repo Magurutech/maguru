@@ -35,6 +35,7 @@ export function LessonEditor({ initialContent, onSave, onCancel }: LessonEditorP
     extensions: [StarterKit],
     content: initialContent,
     editable: true,
+    immediatelyRender: false,
   })
 
   const handleSave = async () => {

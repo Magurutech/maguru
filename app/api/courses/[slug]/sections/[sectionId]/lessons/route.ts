@@ -23,7 +23,6 @@ export async function POST(
   { params }: { params: Promise<{ slug: string; sectionId: string }> }
 ) {
   try {
-    // Authentication check
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json(
@@ -34,7 +33,7 @@ export async function POST(
 
     const { sectionId } = await params
 
-    // Get section to verify it exists and get courseId
+    // Fetch section once — reuse courseId for both auth check and createLesson
     const section = await sectionService.getSectionById(sectionId)
     if (!section) {
       return NextResponse.json(
@@ -43,19 +42,14 @@ export async function POST(
       )
     }
 
-    // Authorization check - verify user owns the course or is admin
     const hasOwnership = await checkCourseOwnership(userId, section.courseId)
     if (!hasOwnership) {
       return NextResponse.json(
-        {
-          error: 'Forbidden: You do not have permission to modify this course',
-          code: 'FORBIDDEN',
-        },
+        { error: 'Forbidden: You do not have permission to modify this course', code: 'FORBIDDEN' },
         { status: 403 }
       )
     }
 
-    // Parse request body
     const body = await request.json()
     const input: CreateLessonInput = {
       title: body.title,
@@ -63,15 +57,14 @@ export async function POST(
       order: body.order,
     }
 
-    // Create lesson
-    const lesson = await lessonService.createLesson(sectionId, input)
+    // Pass courseId to avoid duplicate section lookup inside createLesson
+    const lesson = await lessonService.createLesson(sectionId, input, undefined, section.courseId)
 
     return NextResponse.json(lesson, { status: 201 })
   } catch (error) {
     console.error('Error creating lesson:', error)
 
     if (error instanceof Error) {
-      // Validation errors
       if (
         error.message.includes('required') ||
         error.message.includes('must not exceed') ||
@@ -79,29 +72,14 @@ export async function POST(
         error.message.includes('already exists') ||
         error.message.includes('Invalid lesson content')
       ) {
-        return NextResponse.json(
-          {
-            error: error.message,
-            code: 'VALIDATION_ERROR',
-          },
-          { status: 400 }
-        )
+        return NextResponse.json({ error: error.message, code: 'VALIDATION_ERROR' }, { status: 400 })
       }
-
-      // Not found errors
       if (error.message.includes('not found')) {
-        return NextResponse.json(
-          { error: error.message, code: 'NOT_FOUND' },
-          { status: 404 }
-        )
+        return NextResponse.json({ error: error.message, code: 'NOT_FOUND' }, { status: 404 })
       }
     }
 
-    // Generic server error
-    return NextResponse.json(
-      { error: 'Internal server error', code: 'INTERNAL_ERROR' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Internal server error', code: 'INTERNAL_ERROR' }, { status: 500 })
   }
 }
 
@@ -109,30 +87,29 @@ export async function POST(
  * GET /api/courses/[slug]/sections/[sectionId]/lessons
  * List all lessons in a section
  * Requirements: 2.2, 8.3
+ *
+ * Optimized: single JOIN query — validates section existence and fetches lessons
+ * in one round-trip. Selects only needed fields (excludes heavy `content` JSON).
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ slug: string; sectionId: string }> }
 ) {
   try {
     const { sectionId } = await params
 
-    // Verify section exists
-    const section = await sectionService.getSectionById(sectionId)
-    if (!section) {
+    const lessons = await lessonService.getLessonsBySectionWithValidation(sectionId)
+
+    if (lessons === null) {
       return NextResponse.json(
         { error: 'Section not found', code: 'NOT_FOUND' },
         { status: 404 }
       )
     }
 
-    // Get lessons with preview
-    const lessons = await lessonService.getLessonsBySection(sectionId)
-
     return NextResponse.json({ lessons })
   } catch (error) {
     console.error('Error fetching lessons:', error)
-
     return NextResponse.json(
       { error: 'Internal server error', code: 'INTERNAL_ERROR' },
       { status: 500 }

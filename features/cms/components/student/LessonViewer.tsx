@@ -40,8 +40,10 @@ export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing =
 
   const editor = useEditor({
     extensions: [StarterKit],
-    content: lesson.content.content,  // Tiptap JSON from database
-    editable: false,                  // Read-only for students
+    content: lesson.content.content,
+    editable: false,
+    immediatelyRender: false,
+    shouldRerenderOnTransaction: false,
     editorProps: {
       attributes: {
         class: 'tiptap prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none',

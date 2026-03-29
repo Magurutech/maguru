@@ -103,6 +103,62 @@ export function useLessonHandlers({
     }
   }
 
+  /**
+   * Submit lesson from inline panel (Confluence-style editor).
+   * Returns created/updated lesson id on success, null on failure.
+   */
+  const submitLessonFromPanel = async (
+    sectionId: string,
+    data: { title: string; content: unknown },
+    lessonId?: string
+  ): Promise<string | null> => {
+    try {
+      if (lessonId) {
+        // Edit mode
+        const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal memperbarui pelajaran')
+        }
+        const updated = await res.json()
+        setLessonsMap((prev) => ({
+          ...prev,
+          [sectionId]: (prev[sectionId] || []).map((l) => l.id === lessonId ? { ...l, ...updated } : l),
+        }))
+        toast.success('Pelajaran berhasil diperbarui')
+        return lessonId
+      } else {
+        // Create mode — order auto-calculated by backend
+        const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}))
+          throw new Error(err.error || 'Gagal membuat pelajaran')
+        }
+        const created = await res.json()
+        setLessonsMap((prev) => ({
+          ...prev,
+          [sectionId]: [...(prev[sectionId] || []), created],
+        }))
+        setSections((prev) =>
+          prev.map((s) => s.id === sectionId ? { ...s, lessonCount: s.lessonCount + 1 } : s)
+        )
+        toast.success('Pelajaran berhasil dibuat')
+        return created.id
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
+      return null
+    }
+  }
+
   const handleDeleteLesson = async (sectionId: string, lessonId: string) => {
     if (!confirm('Hapus pelajaran ini?')) return
     const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`, {
@@ -127,6 +183,7 @@ export function useLessonHandlers({
     expandedSections,
     toggleSection,
     handleLessonSubmit,
+    submitLessonFromPanel,
     handleDeleteLesson,
   }
 }

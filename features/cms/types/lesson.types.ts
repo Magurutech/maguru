@@ -140,7 +140,7 @@ export type Lesson = PrismaLesson
 export interface CreateLessonInput {
   title: string
   content: LessonContent
-  order: number
+  order?: number  // Optional — auto-calculated as max+1 if not provided
 }
 
 /**

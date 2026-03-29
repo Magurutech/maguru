@@ -1717,7 +1717,7 @@ export namespace Prisma {
   type course_completionsGetPayload<S extends boolean | null | undefined | course_completionsDefaultArgs> = $Result.GetResult<Prisma.$course_completionsPayload, S>
 
   type course_completionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<course_completionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<course_completionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: Course_completionsCountAggregateInputType | true
     }
 
@@ -2161,6 +2161,7 @@ export namespace Prisma {
      * Filter, which course_completions to fetch.
      */
     where: course_completionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2179,6 +2180,7 @@ export namespace Prisma {
      * Filter, which course_completions to fetch.
      */
     where: course_completionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2227,6 +2229,7 @@ export namespace Prisma {
      * Filter by unique combinations of course_completions.
      */
     distinct?: Course_completionsScalarFieldEnum | Course_completionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2275,6 +2278,7 @@ export namespace Prisma {
      * Filter by unique combinations of course_completions.
      */
     distinct?: Course_completionsScalarFieldEnum | Course_completionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2318,6 +2322,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: Course_completionsScalarFieldEnum | Course_completionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2336,6 +2341,7 @@ export namespace Prisma {
      * The data needed to create a course_completions.
      */
     data: XOR<course_completionsCreateInput, course_completionsUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2388,6 +2394,7 @@ export namespace Prisma {
      * Choose, which course_completions to update.
      */
     where: course_completionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2458,6 +2465,7 @@ export namespace Prisma {
      * In case the course_completions was found with the provided `where` argument, update it with this data.
      */
     update: XOR<course_completionsUpdateInput, course_completionsUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2476,6 +2484,7 @@ export namespace Prisma {
      * Filter which course_completions to delete.
      */
     where: course_completionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -2890,7 +2899,7 @@ export namespace Prisma {
   type coursesGetPayload<S extends boolean | null | undefined | coursesDefaultArgs> = $Result.GetResult<Prisma.$coursesPayload, S>
 
   type coursesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<coursesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<coursesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: CoursesCountAggregateInputType | true
     }
 
@@ -3347,6 +3356,7 @@ export namespace Prisma {
      * Filter, which courses to fetch.
      */
     where: coursesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3369,6 +3379,7 @@ export namespace Prisma {
      * Filter, which courses to fetch.
      */
     where: coursesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3421,6 +3432,7 @@ export namespace Prisma {
      * Filter by unique combinations of courses.
      */
     distinct?: CoursesScalarFieldEnum | CoursesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3473,6 +3485,7 @@ export namespace Prisma {
      * Filter by unique combinations of courses.
      */
     distinct?: CoursesScalarFieldEnum | CoursesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3520,6 +3533,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: CoursesScalarFieldEnum | CoursesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3542,6 +3556,7 @@ export namespace Prisma {
      * The data needed to create a courses.
      */
     data: XOR<coursesCreateInput, coursesUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3598,6 +3613,7 @@ export namespace Prisma {
      * Choose, which courses to update.
      */
     where: coursesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3672,6 +3688,7 @@ export namespace Prisma {
      * In case the courses was found with the provided `where` argument, update it with this data.
      */
     update: XOR<coursesUpdateInput, coursesUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -3694,6 +3711,7 @@ export namespace Prisma {
      * Filter which courses to delete.
      */
     where: coursesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4011,7 +4029,7 @@ export namespace Prisma {
   type enrollmentsGetPayload<S extends boolean | null | undefined | enrollmentsDefaultArgs> = $Result.GetResult<Prisma.$enrollmentsPayload, S>
 
   type enrollmentsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<enrollmentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<enrollmentsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: EnrollmentsCountAggregateInputType | true
     }
 
@@ -4458,6 +4476,7 @@ export namespace Prisma {
      * Filter, which enrollments to fetch.
      */
     where: enrollmentsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4480,6 +4499,7 @@ export namespace Prisma {
      * Filter, which enrollments to fetch.
      */
     where: enrollmentsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4532,6 +4552,7 @@ export namespace Prisma {
      * Filter by unique combinations of enrollments.
      */
     distinct?: EnrollmentsScalarFieldEnum | EnrollmentsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4584,6 +4605,7 @@ export namespace Prisma {
      * Filter by unique combinations of enrollments.
      */
     distinct?: EnrollmentsScalarFieldEnum | EnrollmentsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4631,6 +4653,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: EnrollmentsScalarFieldEnum | EnrollmentsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4653,6 +4676,7 @@ export namespace Prisma {
      * The data needed to create a enrollments.
      */
     data: XOR<enrollmentsCreateInput, enrollmentsUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4713,6 +4737,7 @@ export namespace Prisma {
      * Choose, which enrollments to update.
      */
     where: enrollmentsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4791,6 +4816,7 @@ export namespace Prisma {
      * In case the enrollments was found with the provided `where` argument, update it with this data.
      */
     update: XOR<enrollmentsUpdateInput, enrollmentsUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4813,6 +4839,7 @@ export namespace Prisma {
      * Filter which enrollments to delete.
      */
     where: enrollmentsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5082,7 +5109,7 @@ export namespace Prisma {
   type lesson_progressGetPayload<S extends boolean | null | undefined | lesson_progressDefaultArgs> = $Result.GetResult<Prisma.$lesson_progressPayload, S>
 
   type lesson_progressCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<lesson_progressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<lesson_progressFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: Lesson_progressCountAggregateInputType | true
     }
 
@@ -5529,6 +5556,7 @@ export namespace Prisma {
      * Filter, which lesson_progress to fetch.
      */
     where: lesson_progressWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5551,6 +5579,7 @@ export namespace Prisma {
      * Filter, which lesson_progress to fetch.
      */
     where: lesson_progressWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5603,6 +5632,7 @@ export namespace Prisma {
      * Filter by unique combinations of lesson_progresses.
      */
     distinct?: Lesson_progressScalarFieldEnum | Lesson_progressScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5655,6 +5685,7 @@ export namespace Prisma {
      * Filter by unique combinations of lesson_progresses.
      */
     distinct?: Lesson_progressScalarFieldEnum | Lesson_progressScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5702,6 +5733,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: Lesson_progressScalarFieldEnum | Lesson_progressScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5724,6 +5756,7 @@ export namespace Prisma {
      * The data needed to create a lesson_progress.
      */
     data: XOR<lesson_progressCreateInput, lesson_progressUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5784,6 +5817,7 @@ export namespace Prisma {
      * Choose, which lesson_progress to update.
      */
     where: lesson_progressWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5862,6 +5896,7 @@ export namespace Prisma {
      * In case the lesson_progress was found with the provided `where` argument, update it with this data.
      */
     update: XOR<lesson_progressUpdateInput, lesson_progressUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5884,6 +5919,7 @@ export namespace Prisma {
      * Filter which lesson_progress to delete.
      */
     where: lesson_progressWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6200,7 +6236,7 @@ export namespace Prisma {
   type lessonsGetPayload<S extends boolean | null | undefined | lessonsDefaultArgs> = $Result.GetResult<Prisma.$lessonsPayload, S>
 
   type lessonsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<lessonsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<lessonsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: LessonsCountAggregateInputType | true
     }
 
@@ -6649,6 +6685,7 @@ export namespace Prisma {
      * Filter, which lessons to fetch.
      */
     where: lessonsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6671,6 +6708,7 @@ export namespace Prisma {
      * Filter, which lessons to fetch.
      */
     where: lessonsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6723,6 +6761,7 @@ export namespace Prisma {
      * Filter by unique combinations of lessons.
      */
     distinct?: LessonsScalarFieldEnum | LessonsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6775,6 +6814,7 @@ export namespace Prisma {
      * Filter by unique combinations of lessons.
      */
     distinct?: LessonsScalarFieldEnum | LessonsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6822,6 +6862,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: LessonsScalarFieldEnum | LessonsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6844,6 +6885,7 @@ export namespace Prisma {
      * The data needed to create a lessons.
      */
     data: XOR<lessonsCreateInput, lessonsUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6904,6 +6946,7 @@ export namespace Prisma {
      * Choose, which lessons to update.
      */
     where: lessonsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6982,6 +7025,7 @@ export namespace Prisma {
      * In case the lessons was found with the provided `where` argument, update it with this data.
      */
     update: XOR<lessonsUpdateInput, lessonsUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7004,6 +7048,7 @@ export namespace Prisma {
      * Filter which lessons to delete.
      */
     where: lessonsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7348,7 +7393,7 @@ export namespace Prisma {
   type sectionsGetPayload<S extends boolean | null | undefined | sectionsDefaultArgs> = $Result.GetResult<Prisma.$sectionsPayload, S>
 
   type sectionsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<sectionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<sectionsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: SectionsCountAggregateInputType | true
     }
 
@@ -7797,6 +7842,7 @@ export namespace Prisma {
      * Filter, which sections to fetch.
      */
     where: sectionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7819,6 +7865,7 @@ export namespace Prisma {
      * Filter, which sections to fetch.
      */
     where: sectionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7871,6 +7918,7 @@ export namespace Prisma {
      * Filter by unique combinations of sections.
      */
     distinct?: SectionsScalarFieldEnum | SectionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7923,6 +7971,7 @@ export namespace Prisma {
      * Filter by unique combinations of sections.
      */
     distinct?: SectionsScalarFieldEnum | SectionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7970,6 +8019,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: SectionsScalarFieldEnum | SectionsScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7992,6 +8042,7 @@ export namespace Prisma {
      * The data needed to create a sections.
      */
     data: XOR<sectionsCreateInput, sectionsUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8052,6 +8103,7 @@ export namespace Prisma {
      * Choose, which sections to update.
      */
     where: sectionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8130,6 +8182,7 @@ export namespace Prisma {
      * In case the sections was found with the provided `where` argument, update it with this data.
      */
     update: XOR<sectionsUpdateInput, sectionsUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8152,6 +8205,7 @@ export namespace Prisma {
      * Filter which sections to delete.
      */
     where: sectionsWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8237,6 +8291,14 @@ export namespace Prisma {
   };
 
   export type Course_completionsScalarFieldEnum = (typeof Course_completionsScalarFieldEnum)[keyof typeof Course_completionsScalarFieldEnum]
+
+
+  export const RelationLoadStrategy: {
+    query: 'query',
+    join: 'join'
+  };
+
+  export type RelationLoadStrategy = (typeof RelationLoadStrategy)[keyof typeof RelationLoadStrategy]
 
 
   export const CoursesScalarFieldEnum: {

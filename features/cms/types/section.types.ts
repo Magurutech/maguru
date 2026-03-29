@@ -20,7 +20,7 @@ export interface SectionWithLessonCount extends Section {
 export interface CreateSectionInput {
   title: string
   description?: string
-  order: number
+  order?: number  // Optional — auto-calculated as max+1 if not provided
 }
 
 export interface UpdateSectionInput {

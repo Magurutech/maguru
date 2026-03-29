@@ -13,6 +13,7 @@ import type { ManagedSection, ManagedLesson, ActiveView } from '@/features/cms/h
 
 interface ManageContextValue {
   course: ReturnType<typeof useCourseManage>['course']
+  setCourse: ReturnType<typeof useCourseManage>['setCourse']
   sections: ReturnType<typeof useCourseManage>['sections']
   loading: boolean
   error: string | null
@@ -25,19 +26,28 @@ interface ManageContextValue {
   toggleSection: (sectionId: string) => void
   handleDeleteSection: (sectionId: string) => void
   handleDeleteLesson: (sectionId: string, lessonId: string) => void
+  // Delete section confirmation
+  pendingDeleteSectionId: string | null
+  confirmDeleteSection: () => Promise<void>
+  cancelDeleteSection: () => void
+  // Inline section creation
+  isAddingSection: boolean
+  newSectionTitle: string
+  setNewSectionTitle: (title: string) => void
+  startAddingSection: () => void
+  cancelAddingSection: () => void
+  confirmAddSection: () => Promise<void>
+  updateSectionTitle: (sectionId: string, newTitle: string, oldTitle: string) => Promise<void>
+  // Edit section dialog
   sectionFormOpen: boolean
   editingSection: ManagedSection | null
-  openAddSection: () => void
   openEditSection: (section: ManagedSection) => void
   closeSectionDialog: () => void
   handleSectionSubmit: (data: { title: string; description: string; order: number }) => Promise<void>
-  lessonFormOpen: boolean
-  editingLesson: { lesson: ManagedLesson; sectionId: string } | null
-  addingLessonToSection: string | null
-  openAddLesson: (sectionId: string) => Promise<void>
+  // Lesson panel (Confluence-style — no dialog)
+  openAddLesson: (sectionId: string) => void
   openEditLesson: (lesson: ManagedLesson, sectionId: string) => void
-  closeLessonDialog: () => void
-  handleLessonSubmit: (data: { title: string; content: unknown; order: number }) => Promise<void>
+  submitLessonFromPanel: (sectionId: string, data: { title: string; content: unknown }, lessonId?: string) => Promise<string | null>
 }
 
 const ManageContext = createContext<ManageContextValue | null>(null)
@@ -51,59 +61,122 @@ export function useManageContext() {
 // ── Provider ───────────────────────────────────────────────────────────────
 
 export function ManageProvider({ courseSlug, children }: { courseSlug: string; children: ReactNode }) {
-  const { course, sections, setSections, loading, error, publishing, handleTogglePublish } =
+  const { course, setCourse, sections, setSections, loading, error, publishing, handleTogglePublish } =
     useCourseManage(courseSlug)
 
   const { activeView, setActiveView } = useManageView()
 
   const {
     lessonsMap, setLessonsMap, expandedSections,
-    toggleSection, handleLessonSubmit: submitLesson, handleDeleteLesson,
+    toggleSection, submitLessonFromPanel, handleDeleteLesson,
   } = useLessonHandlers({ courseSlug, setSections, activeView, setActiveView })
 
-  const { handleSectionSubmit: submitSection, handleDeleteSection } = useSectionHandlers({
+  const { handleSectionSubmit: submitSection, handleDeleteSection: triggerDelete, executeDeleteSection } = useSectionHandlers({
     courseSlug, setSections, setLessonsMap, activeView, setActiveView,
   })
 
-  const [sectionFormOpen, setSectionFormOpen] = useState(false)
-  const [lessonFormOpen, setLessonFormOpen] = useState(false)
-  const [editingSection, setEditingSection] = useState<ManagedSection | null>(null)
-  const [editingLesson, setEditingLesson] = useState<{ lesson: ManagedLesson; sectionId: string } | null>(null)
-  const [addingLessonToSection, setAddingLessonToSection] = useState<string | null>(null)
+  // ── Delete section confirmation ──────────────────────────────────────────
+  const [pendingDeleteSectionId, setPendingDeleteSectionId] = useState<string | null>(null)
 
-  const openAddSection = () => { setEditingSection(null); setSectionFormOpen(true) }
+  const handleDeleteSection = (sectionId: string) => {
+    triggerDelete(sectionId, () => setPendingDeleteSectionId(sectionId))
+  }
+  const confirmDeleteSection = async () => {
+    if (!pendingDeleteSectionId) return
+    const id = pendingDeleteSectionId
+    setPendingDeleteSectionId(null)
+    await executeDeleteSection(id)
+  }
+  const cancelDeleteSection = () => setPendingDeleteSectionId(null)
+
+  // ── Inline section creation ──────────────────────────────────────────────
+  const [isAddingSection, setIsAddingSection] = useState(false)
+  const [newSectionTitle, setNewSectionTitle] = useState('')
+
+  const startAddingSection = () => {
+    if (!isAddingSection) { setNewSectionTitle(''); setIsAddingSection(true) }
+  }
+  const cancelAddingSection = () => { setIsAddingSection(false); setNewSectionTitle('') }
+  const confirmAddSection = async () => {
+    const title = newSectionTitle.trim()
+    if (!title) { cancelAddingSection(); return }
+
+    const tempId = `temp-${Date.now()}`
+    const optimisticSection: ManagedSection = { id: tempId, title, description: null, order: 9999, lessonCount: 0 }
+    setIsAddingSection(false)
+    setNewSectionTitle('')
+    setSections((prev) => [...prev, optimisticSection])
+
+    try {
+      const res = await fetch(`/api/courses/${courseSlug}/sections`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || 'Gagal membuat seksi')
+      }
+      const created = await res.json()
+      setSections((prev) => prev.map((s) => s.id === tempId ? { ...created, lessonCount: 0 } : s))
+    } catch (err) {
+      setSections((prev) => prev.filter((s) => s.id !== tempId))
+      const { toast } = await import('sonner')
+      toast.error(err instanceof Error ? err.message : 'Gagal membuat seksi')
+    }
+  }
+
+  const updateSectionTitle = async (sectionId: string, newTitle: string, oldTitle: string) => {
+    setSections((prev) => prev.map((s) => s.id === sectionId ? { ...s, title: newTitle } : s))
+    try {
+      const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: newTitle }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || 'Gagal memperbarui seksi')
+      }
+      const { toast } = await import('sonner')
+      toast.success('Seksi berhasil diperbarui')
+    } catch (err) {
+      setSections((prev) => prev.map((s) => s.id === sectionId ? { ...s, title: oldTitle } : s))
+      const { toast } = await import('sonner')
+      toast.error(err instanceof Error ? err.message : 'Gagal memperbarui seksi')
+    }
+  }
+
+  // ── Edit section dialog ──────────────────────────────────────────────────
+  const [sectionFormOpen, setSectionFormOpen] = useState(false)
+  const [editingSection, setEditingSection] = useState<ManagedSection | null>(null)
+
   const openEditSection = (s: ManagedSection) => { setEditingSection(s); setSectionFormOpen(true) }
   const closeSectionDialog = () => { setSectionFormOpen(false); setEditingSection(null) }
   const handleSectionSubmit = async (data: { title: string; description: string; order: number }) =>
     submitSection(data, editingSection, closeSectionDialog)
 
-  const openAddLesson = async (sectionId: string) => {
-    if (!expandedSections.has(sectionId)) await toggleSection(sectionId)
-    setAddingLessonToSection(sectionId)
-    setEditingLesson(null)
-    setLessonFormOpen(true)
+  // ── Lesson panel (Confluence-style) ─────────────────────────────────────
+  const openAddLesson = (sectionId: string) => {
+    // Expand section in sidebar if not already
+    if (!expandedSections.has(sectionId)) toggleSection(sectionId)
+    setActiveView({ type: 'lesson-editor', sectionId })
   }
+
   const openEditLesson = (lesson: ManagedLesson, sectionId: string) => {
-    setEditingLesson({ lesson, sectionId })
-    setAddingLessonToSection(null)
-    setLessonFormOpen(true)
+    setActiveView({ type: 'lesson-editor', sectionId, lessonId: lesson.id })
   }
-  const closeLessonDialog = () => {
-    setLessonFormOpen(false)
-    setEditingLesson(null)
-    setAddingLessonToSection(null)
-  }
-  const handleLessonSubmit = async (data: { title: string; content: unknown; order: number }) =>
-    submitLesson(data, editingLesson, addingLessonToSection, closeLessonDialog)
 
   return (
     <ManageContext.Provider value={{
-      course, sections, loading, error, publishing, handleTogglePublish,
+      course, setCourse, sections, loading, error, publishing, handleTogglePublish,
       activeView, setActiveView,
       lessonsMap, expandedSections, toggleSection, handleDeleteSection, handleDeleteLesson,
-      sectionFormOpen, editingSection, openAddSection, openEditSection, closeSectionDialog, handleSectionSubmit,
-      lessonFormOpen, editingLesson, addingLessonToSection,
-      openAddLesson, openEditLesson, closeLessonDialog, handleLessonSubmit,
+      pendingDeleteSectionId, confirmDeleteSection, cancelDeleteSection,
+      isAddingSection, newSectionTitle, setNewSectionTitle,
+      startAddingSection, cancelAddingSection, confirmAddSection, updateSectionTitle,
+      sectionFormOpen, editingSection, openEditSection, closeSectionDialog, handleSectionSubmit,
+      openAddLesson, openEditLesson, submitLessonFromPanel,
     }}>
       {children}
     </ManageContext.Provider>

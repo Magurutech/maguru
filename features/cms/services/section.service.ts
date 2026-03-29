@@ -35,11 +35,6 @@ export class SectionService {
       throw new Error('Section title must not exceed 200 characters')
     }
 
-    // Validate order
-    if (!Number.isInteger(input.order) || input.order < 1) {
-      throw new Error('Section order must be a positive integer')
-    }
-
     // Check course ownership using Course Service
     if (userId) {
       const hasOwnership = await checkCourseOwnership(courseId, userId)
@@ -48,7 +43,7 @@ export class SectionService {
       }
     }
 
-    // Verify course exists (Course Service would be used in API layer)
+    // Verify course exists
     const course = await prisma.courses.findUnique({
       where: { id: courseId },
     })
@@ -57,24 +52,25 @@ export class SectionService {
       throw new Error('Course not found')
     }
 
-    if (!course) {
-      throw new Error('Course not found')
-    }
-
-    // Check for duplicate order
-    const existingSection = await prisma.sections.findUnique({
-      where: {
-        courseId_order: {
-          courseId,
-          order: input.order,
-        },
-      },
-    })
-
-    if (existingSection) {
-      throw new Error(
-        `Section with order ${input.order} already exists in this course`
-      )
+    // Auto-calculate order: max existing order + 1, or 1 if no sections yet
+    let order = input.order
+    if (order === undefined || order === null) {
+      const maxOrderResult = await prisma.sections.aggregate({
+        where: { courseId },
+        _max: { order: true },
+      })
+      order = (maxOrderResult._max.order ?? 0) + 1
+    } else {
+      // If order explicitly provided, validate and check for duplicates
+      if (!Number.isInteger(order) || order < 1) {
+        throw new Error('Section order must be a positive integer')
+      }
+      const existingSection = await prisma.sections.findUnique({
+        where: { courseId_order: { courseId, order } },
+      })
+      if (existingSection) {
+        throw new Error(`Section with order ${order} already exists in this course`)
+      }
     }
 
     // Create section
@@ -84,7 +80,7 @@ export class SectionService {
         courseId,
         title: input.title.trim(),
         description: input.description?.trim() || null,
-        order: input.order,
+        order,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -120,6 +116,74 @@ export class SectionService {
       updatedAt: section.updatedAt,
       lessonCount: section._count.lessons,
     }))
+  }
+
+  /**
+   * Get courseId by slug — used by POST handler to avoid direct Prisma in route.
+   * Returns null if course does not exist.
+   */
+  async getCourseIdBySlug(slug: string): Promise<string | null> {
+    const course = await prisma.courses.findUnique({
+      where: { slug },
+      select: { id: true },
+    })
+    return course?.id ?? null
+  }
+
+  /**
+   * Get sections by course slug in a single JOIN query.
+   * Returns null if course does not exist.
+   * Also returns course status for authorization checks in the API layer.
+   *
+   * Optimized: single SQL JOIN — course lookup + sections + lesson count
+   * in one round-trip using relationLoadStrategy: "join".
+   * Requirements: 1.2, 8.3
+   */
+  async getSectionsByCourseSlug(slug: string): Promise<{
+    courseId: string
+    courseStatus: string
+    sections: SectionWithLessonCount[]
+  } | null> {
+    const course = await prisma.courses.findUnique({
+      where: { slug },
+      relationLoadStrategy: 'join',
+      select: {
+        id: true,
+        status: true,
+        sections: {
+          orderBy: { order: 'asc' },
+          select: {
+            id: true,
+            courseId: true,
+            title: true,
+            description: true,
+            order: true,
+            createdAt: true,
+            updatedAt: true,
+            _count: {
+              select: { lessons: true },
+            },
+          },
+        },
+      },
+    })
+
+    if (!course) return null
+
+    return {
+      courseId: course.id,
+      courseStatus: course.status,
+      sections: course.sections.map((s) => ({
+        id: s.id,
+        courseId: s.courseId,
+        title: s.title,
+        description: s.description,
+        order: s.order,
+        createdAt: s.createdAt,
+        updatedAt: s.updatedAt,
+        lessonCount: s._count.lessons,
+      })),
+    }
   }
 
   /**

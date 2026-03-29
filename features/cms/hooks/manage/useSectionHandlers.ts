@@ -57,8 +57,11 @@ export function useSectionHandlers({
     }
   }
 
-  const handleDeleteSection = async (sectionId: string) => {
-    if (!confirm('Hapus seksi ini? Semua pelajaran di dalamnya juga akan dihapus.')) return
+  const handleDeleteSection = async (sectionId: string, onConfirm: () => void) => {
+    onConfirm()
+  }
+
+  const executeDeleteSection = async (sectionId: string) => {
     const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}`, { method: 'DELETE' })
     if (!res.ok) { toast.error('Gagal menghapus seksi'); return }
     setSections((prev) => prev.filter((s) => s.id !== sectionId))
@@ -69,5 +72,5 @@ export function useSectionHandlers({
     toast.success('Seksi berhasil dihapus')
   }
 
-  return { handleSectionSubmit, handleDeleteSection }
+  return { handleSectionSubmit, handleDeleteSection, executeDeleteSection }
 }

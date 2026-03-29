@@ -24,11 +24,14 @@ export class LessonService {
    * Create a new lesson within a section
    * Requirements: 2.1, 2.7, 2.8, 3.1, 9.2, 9.3, 9.6, 9.9
    * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
+   *
+   * @param courseId - Optional: pass if already known to skip an extra DB query
    */
   async createLesson(
     sectionId: string,
     input: CreateLessonInput,
-    userId?: string
+    userId?: string,
+    courseId?: string
   ): Promise<Lesson> {
     // Validate title
     if (!input.title || input.title.trim().length === 0) {
@@ -37,11 +40,6 @@ export class LessonService {
 
     if (input.title.length > 200) {
       throw new Error('Lesson title must not exceed 200 characters')
-    }
-
-    // Validate order
-    if (!Number.isInteger(input.order) || input.order < 1) {
-      throw new Error('Lesson order must be a positive integer')
     }
 
     // Validate LessonContent structure
@@ -53,38 +51,44 @@ export class LessonService {
       )
     }
 
-    // Check if section exists and get courseId
-    const section = await prisma.sections.findUnique({
-      where: { id: sectionId },
-      select: { id: true, courseId: true },
-    })
-
-    if (!section) {
-      throw new Error('Section not found')
+    // Resolve courseId — skip DB query if already provided by caller
+    let resolvedCourseId = courseId
+    if (!resolvedCourseId) {
+      const section = await prisma.sections.findUnique({
+        where: { id: sectionId },
+        select: { id: true, courseId: true },
+      })
+      if (!section) throw new Error('Section not found')
+      resolvedCourseId = section.courseId
     }
 
     // Check course ownership using Course Service
     if (userId) {
-      const hasOwnership = await checkCourseOwnership(section.courseId, userId)
+      const hasOwnership = await checkCourseOwnership(resolvedCourseId, userId)
       if (!hasOwnership) {
         throw new Error('Unauthorized: You do not own this course')
       }
     }
 
-    // Check for duplicate order
-    const existingLesson = await prisma.lessons.findUnique({
-      where: {
-        sectionId_order: {
-          sectionId,
-          order: input.order,
-        },
-      },
-    })
-
-    if (existingLesson) {
-      throw new Error(
-        `Lesson with order ${input.order} already exists in this section`
-      )
+    // Auto-calculate order: max existing order + 1, or 1 if no lessons yet
+    let order = input.order
+    if (order === undefined || order === null) {
+      const maxOrderResult = await prisma.lessons.aggregate({
+        where: { sectionId },
+        _max: { order: true },
+      })
+      order = (maxOrderResult._max.order ?? 0) + 1
+    } else {
+      // If order explicitly provided, validate and check for duplicates
+      if (!Number.isInteger(order) || order < 1) {
+        throw new Error('Lesson order must be a positive integer')
+      }
+      const existingLesson = await prisma.lessons.findUnique({
+        where: { sectionId_order: { sectionId, order } },
+      })
+      if (existingLesson) {
+        throw new Error(`Lesson with order ${order} already exists in this section`)
+      }
     }
 
     // Create lesson
@@ -93,8 +97,8 @@ export class LessonService {
         id: crypto.randomUUID(),
         sectionId,
         title: input.title.trim(),
-        content: input.content as unknown as never, // Prisma Json type
-        order: input.order,
+        content: input.content as unknown as never,
+        order,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -111,16 +115,54 @@ export class LessonService {
     const lessons = await prisma.lessons.findMany({
       where: { sectionId },
       orderBy: { order: 'asc' },
+      select: {
+        id: true,
+        sectionId: true,
+        order: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        // content intentionally excluded — not needed for list view
+      },
     })
 
-    return lessons.map((lesson) => ({
-      id: lesson.id,
-      sectionId: lesson.sectionId,
-      order: lesson.order,
-      title: lesson.title,
-      createdAt: lesson.createdAt,
-      updatedAt: lesson.updatedAt,
-    }))
+    return lessons
+  }
+
+  /**
+   * Get lessons for a section in a single query, validating section existence.
+   * Returns null if section does not exist.
+   *
+   * Uses relationLoadStrategy: "join" → single SQL JOIN query instead of 2 queries.
+   * Selects only needed fields (excludes heavy `content` JSON).
+   * Requirements: 2.2, 8.3
+   */
+  async getLessonsBySectionWithValidation(
+    sectionId: string
+  ): Promise<LessonWithPreview[] | null> {
+    const section = await prisma.sections.findUnique({
+      where: { id: sectionId },
+      relationLoadStrategy: 'join', // single SQL JOIN — one round-trip to DB
+      select: {
+        id: true,
+        lessons: {
+          orderBy: { order: 'asc' },
+          select: {
+            id: true,
+            sectionId: true,
+            order: true,
+            title: true,
+            createdAt: true,
+            updatedAt: true,
+            // content intentionally excluded — heavy JSON not needed for list view
+          },
+        },
+      },
+    })
+
+    if (!section) return null
+
+    return section.lessons
   }
 
   /**

@@ -9,7 +9,6 @@
 import { NextResponse } from 'next/server'
 import { sectionService } from '@/features/cms/services/section.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
-import prisma from '@/prisma/lib/client'
 
 /**
  * POST /api/courses/[slug]/sections
@@ -21,21 +20,13 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    // Get slug from params
     const { slug } = await params
 
-    // Find course by slug
-    const course = await prisma.courses.findUnique({
-      where: { slug },
-      select: { id: true },
-    })
-
-    if (!course) {
+    // Resolve courseId via service — no direct Prisma in route
+    const courseId = await sectionService.getCourseIdBySlug(slug)
+    if (!courseId) {
       return NextResponse.json(
-        { 
-          error: 'Course not found',
-          code: 'NOT_FOUND'
-        },
+        { error: 'Course not found', code: 'NOT_FOUND' },
         { status: 404 }
       )
     }
@@ -43,7 +34,7 @@ export async function POST(
     // Check authentication and authorization
     try {
       await authorizationService.requireAuthentication()
-      await authorizationService.requireCourseOwnership(course.id)
+      await authorizationService.requireCourseOwnership(courseId)
     } catch (authError) {
       const message = (authError as Error).message
       if (message.includes('Unauthorized')) {
@@ -66,7 +57,7 @@ export async function POST(
 
     // Parse request body
     const body = await request.json()
-    const { title, description, order } = body
+    const { title, description } = body
 
     // Validate required fields
     if (!title) {
@@ -83,25 +74,10 @@ export async function POST(
       )
     }
 
-    if (order === undefined || order === null) {
-      return NextResponse.json(
-        {
-          error: 'Validation failed',
-          code: 'VALIDATION_ERROR',
-          details: {
-            field: 'order',
-            message: 'Order is required',
-          },
-        },
-        { status: 400 }
-      )
-    }
-
-    // Create section using service
-    const section = await sectionService.createSection(course.id, {
+    // Create section using service (order is auto-calculated)
+    const section = await sectionService.createSection(courseId, {
       title,
       description,
-      order,
     })
 
     return NextResponse.json(section, { status: 201 })
@@ -154,80 +130,41 @@ export async function POST(
  * Requirements: 1.2, 8.3
  */
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    // Get slug from params
     const { slug } = await params
 
-    // Find course by slug
-    const course = await prisma.courses.findUnique({
-      where: { slug },
-      select: { id: true, status: true },
-    })
+    // Single JOIN query via service — course + sections + lessonCount in one round-trip
+    const result = await sectionService.getSectionsByCourseSlug(slug)
 
-    if (!course) {
+    if (!result) {
       return NextResponse.json(
-        { 
-          error: 'Course not found',
-          code: 'NOT_FOUND'
-        },
+        { error: 'Course not found', code: 'NOT_FOUND' },
         { status: 404 }
       )
     }
 
-    // For published courses, allow public access
-    // For draft courses, require authentication and ownership
-    if (course.status === 'DRAFT') {
+    // Draft courses require auth + ownership
+    if (result.courseStatus === 'DRAFT') {
       try {
         await authorizationService.requireAuthentication()
-        await authorizationService.requireCourseOwnership(course.id)
+        await authorizationService.requireCourseOwnership(result.courseId)
       } catch (authError) {
         const message = (authError as Error).message
         if (message.includes('Unauthorized')) {
-          return NextResponse.json(
-            { 
-              error: message,
-              code: 'UNAUTHORIZED'
-            },
-            { status: 401 }
-          )
+          return NextResponse.json({ error: message, code: 'UNAUTHORIZED' }, { status: 401 })
         }
-        return NextResponse.json(
-          { 
-            error: message,
-            code: 'FORBIDDEN'
-          },
-          { status: 403 }
-        )
+        return NextResponse.json({ error: message, code: 'FORBIDDEN' }, { status: 403 })
       }
     }
 
-    // Get sections with lessons for overview page
-    const sections = await prisma.sections.findMany({
-      where: { courseId: course.id },
-      orderBy: { order: 'asc' },
-      select: {
-        id: true,
-        title: true,
-        order: true,
-        lessons: {
-          orderBy: { order: 'asc' },
-          select: { id: true, title: true, order: true },
-        },
-      },
-    })
-
-    return NextResponse.json({ sections })
+    return NextResponse.json({ sections: result.sections })
   } catch (error) {
     console.error('Error fetching sections:', error)
-
     return NextResponse.json(
-      {
-        error: 'Internal server error',
-        code: 'INTERNAL_ERROR',
-      },
+      { error: 'Internal server error', code: 'INTERNAL_ERROR' },
       { status: 500 }
     )
   }

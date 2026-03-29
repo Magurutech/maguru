@@ -1,49 +1,36 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { SectionForm } from '@/features/cms/components/creator/SectionForm'
-import { LessonForm } from '@/features/cms/components/creator/LessonForm'
+import { Trash2 } from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 import { useManageContext } from '../../../Context/creator/ManageContext'
 
 export function ManageDialogs() {
   const {
-    sectionFormOpen, editingSection,
-    closeSectionDialog, handleSectionSubmit,
-    lessonFormOpen, editingLesson,
-    closeLessonDialog, handleLessonSubmit,
+    pendingDeleteSectionId, confirmDeleteSection, cancelDeleteSection,
+    sections,
   } = useManageContext()
 
-  return (
-    <>
-      <Dialog open={sectionFormOpen} onOpenChange={(open) => !open && closeSectionDialog()}>
-        <DialogContent className="max-w-2xl" data-testid="section-form-dialog">
-          <DialogHeader>
-            <DialogTitle>{editingSection ? 'Edit Seksi' : 'Buat Seksi Baru'}</DialogTitle>
-          </DialogHeader>
-          <SectionForm
-            initialData={
-              editingSection
-                ? { title: editingSection.title, description: editingSection.description || '', order: editingSection.order }
-                : undefined
-            }
-            onSubmit={handleSectionSubmit}
-            onCancel={closeSectionDialog}
-            isEditing={!!editingSection}
-          />
-        </DialogContent>
-      </Dialog>
+  const sectionToDelete = sections.find((s) => s.id === pendingDeleteSectionId)
 
-      <Dialog open={lessonFormOpen} onOpenChange={(open) => !open && closeLessonDialog()}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" data-testid="lesson-form-dialog">
-          <DialogHeader>
-            <DialogTitle>{editingLesson ? 'Edit Pelajaran' : 'Buat Pelajaran Baru'}</DialogTitle>
-          </DialogHeader>
-          <LessonForm
-            initialData={editingLesson?.lesson || undefined}
-            onSubmit={handleLessonSubmit}
-            onCancel={closeLessonDialog}
-            isEditing={!!editingLesson}
-          />
-        </DialogContent>
-      </Dialog>
-    </>
+  return (
+    <Dialog open={!!pendingDeleteSectionId} onOpenChange={(open) => !open && cancelDeleteSection()}>
+      <DialogContent className="max-w-sm" data-testid="delete-section-dialog">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Trash2 className="h-4 w-4 text-merah-500" />
+            Hapus Seksi
+          </DialogTitle>
+          <DialogDescription>
+            Hapus seksi{sectionToDelete ? ` "${sectionToDelete.title}"` : ''}?
+            Semua pelajaran di dalamnya juga akan dihapus dan tidak bisa dikembalikan.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={cancelDeleteSection}>Batal</Button>
+          <Button variant="destructive" onClick={confirmDeleteSection} data-testid="confirm-delete-section-btn">
+            Ya, Hapus
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }

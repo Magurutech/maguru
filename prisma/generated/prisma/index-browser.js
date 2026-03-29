@@ -131,6 +131,11 @@ exports.Prisma.Course_completionsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RelationLoadStrategy = {
+  query: 'query',
+  join: 'join'
+};
+
 exports.Prisma.CoursesScalarFieldEnum = {
   id: 'id',
   slug: 'slug',

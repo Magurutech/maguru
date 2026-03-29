@@ -6,12 +6,10 @@ import { Label } from '@/components/ui/label'
 
 /**
  * SectionForm Component
- * 
- * Form for creating and editing sections.
- * Validates title, description, and order fields.
- * 
- * Requirements: 1.1, 1.3, 9.1, 9.5
- * Task: 10.3
+ * Used only for editing existing sections (title only).
+ * Creating sections is now done inline in the sidebar.
+ *
+ * Requirements: 1.3, 9.1
  */
 
 interface SectionFormData {
@@ -21,166 +19,60 @@ interface SectionFormData {
 }
 
 interface SectionFormProps {
-  initialData?: Partial<SectionFormData>
+  initialData?: { title?: string }
   onSubmit: (data: SectionFormData) => Promise<void>
   onCancel: () => void
   isEditing?: boolean
 }
 
-export function SectionForm({
-  initialData,
-  onSubmit,
-  onCancel,
-  isEditing = false
-}: SectionFormProps) {
-  const [formData, setFormData] = useState<SectionFormData>({
-    title: initialData?.title || '',
-    description: initialData?.description || '',
-    order: initialData?.order || 1
-  })
-  const [errors, setErrors] = useState<Partial<Record<keyof SectionFormData, string>>>({})
+export function SectionForm({ initialData, onSubmit, onCancel, isEditing = false }: SectionFormProps) {
+  const [title, setTitle] = useState(initialData?.title || '')
+  const [error, setError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof SectionFormData, string>> = {}
-
-    // Validate title
-    if (!formData.title.trim()) {
-      newErrors.title = 'Title is required'
-    } else if (formData.title.length > 200) {
-      newErrors.title = 'Title must not exceed 200 characters'
-    }
-
-    // Validate order
-    if (formData.order < 1) {
-      newErrors.order = 'Order must be a positive integer'
-    }
-    if (!Number.isInteger(formData.order)) {
-      newErrors.order = 'Order must be an integer'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
+    if (!title.trim()) { setError('Judul tidak boleh kosong'); return }
+    if (title.length > 200) { setError('Judul maksimal 200 karakter'); return }
 
     setIsSubmitting(true)
     try {
-      await onSubmit(formData)
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      setErrors({ title: 'Failed to save section. Please try again.' })
+      // Pass through with placeholder values for description/order — backend handles order
+      await onSubmit({ title: title.trim(), description: '', order: 0 })
+    } catch {
+      setError('Gagal menyimpan seksi. Coba lagi.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleChange = (field: keyof SectionFormData, value: string | number) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-    // Clear error for this field
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }))
-    }
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="section-form">
-      <div className="form-header">
-        <h2 className="text-2xl font-bold">
-          {isEditing ? 'Edit Section' : 'Create Section'}
-        </h2>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-1.5">
+        <Label htmlFor="section-title">
+          Judul Seksi <span className="text-red-600">*</span>
+        </Label>
+        <input
+          id="section-title"
+          type="text"
+          value={title}
+          onChange={(e) => { setTitle(e.target.value); setError('') }}
+          className="w-full border border-beige-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-merah-300"
+          placeholder="Masukkan judul seksi"
+          maxLength={200}
+          autoFocus
+          data-testid="section-title-input"
+        />
+        {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
+        <p className="text-xs text-beige-400">{title.length}/200 karakter</p>
       </div>
 
-      <div className="form-fields">
-        {/* Title Field */}
-        <div className="form-field">
-          <Label htmlFor="title">
-            Title <span className="text-red-600">*</span>
-          </Label>
-          <input
-            id="title"
-            type="text"
-            value={formData.title}
-            onChange={(e) => handleChange('title', e.target.value)}
-            className={`form-input ${errors.title ? 'error' : ''}`}
-            placeholder="Enter section title"
-            maxLength={200}
-            aria-invalid={!!errors.title}
-            aria-describedby={errors.title ? 'title-error' : undefined}
-            data-testid="section-title-input"
-          />
-          {errors.title && (
-            <p id="title-error" className="error-message" role="alert">
-              {errors.title}
-            </p>
-          )}
-          <p className="field-hint">
-            {formData.title.length}/200 characters
-          </p>
-        </div>
-
-        {/* Description Field */}
-        <div className="form-field">
-          <Label htmlFor="description">Description (Optional)</Label>
-          <textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => handleChange('description', e.target.value)}
-            className="form-textarea"
-            placeholder="Enter section description"
-            rows={4}
-          />
-        </div>
-
-        {/* Order Field */}
-        <div className="form-field">
-          <Label htmlFor="order">
-            Order <span className="text-red-600">*</span>
-          </Label>
-          <input
-            id="order"
-            type="number"
-            value={formData.order}
-            onChange={(e) => handleChange('order', parseInt(e.target.value) || 1)}
-            className={`form-input ${errors.order ? 'error' : ''}`}
-            min={1}
-            step={1}
-            aria-invalid={!!errors.order}
-            aria-describedby={errors.order ? 'order-error' : undefined}
-            data-testid="section-order-input"
-          />
-          {errors.order && (
-            <p id="order-error" className="error-message" role="alert">
-              {errors.order}
-            </p>
-          )}
-          <p className="field-hint">
-            Position of this section in the course (must be a positive integer)
-          </p>
-        </div>
-      </div>
-
-      <div className="form-actions">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={isSubmitting}
-        >
-          Cancel
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          Batal
         </Button>
-        <Button
-          type="submit"
-          disabled={isSubmitting}
-          data-testid="section-form-submit"
-        >
-          {isSubmitting ? 'Saving...' : isEditing ? 'Update Section' : 'Create Section'}
+        <Button type="submit" disabled={isSubmitting} data-testid="section-form-submit">
+          {isSubmitting ? 'Menyimpan...' : isEditing ? 'Simpan Perubahan' : 'Buat Seksi'}
         </Button>
       </div>
     </form>
