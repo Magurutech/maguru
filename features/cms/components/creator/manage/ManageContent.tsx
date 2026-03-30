@@ -5,17 +5,24 @@ import { Edit, Check, X, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useEditor, EditorContent, JSONContent, Extension, EditorContext } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { StarterKit } from '@tiptap/starter-kit'
+import { TextAlign } from '@tiptap/extension-text-align'
+import { Highlight } from '@tiptap/extension-highlight'
+import { Typography } from '@tiptap/extension-typography'
+import { Superscript } from '@tiptap/extension-superscript'
+import { Subscript } from '@tiptap/extension-subscript'
+import { Selection } from '@tiptap/extensions'
 import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
 import { useManageContext } from '../../../Context/creator/ManageContext'
 
-// Simple Editor node styles
+// Simple Editor node styles — same as simple-editor.tsx
 import '@/components/tiptap-node/heading-node/heading-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/code-block-node/code-block-node.scss'
 import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 // ── Inline description editor ──────────────────────────────────────────────
 
@@ -100,10 +107,29 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
   })
 
   const editor = useEditor({
-    extensions: [StarterKit, HeadingShortcuts],
-    content: { type: 'doc', content: [] },
-    editable: true,
     immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        autocomplete: 'off',
+        autocorrect: 'off',
+        autocapitalize: 'off',
+        'aria-label': 'Tulis konten pelajaran di sini.',
+        class: 'simple-editor',
+      },
+    },
+    extensions: [
+      StarterKit.configure({
+        link: { openOnClick: false, enableClickSelection: true },
+      }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Highlight.configure({ multicolor: true }),
+      Typography,
+      Superscript,
+      Subscript,
+      Selection,
+      HeadingShortcuts,
+    ],
+    content: { type: 'doc', content: [] },
   })
 
   useEffect(() => {
@@ -154,7 +180,7 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
             <ArrowLeft className="h-4 w-4" />Kembali
           </button>
           <div className="flex-1 min-w-0">
-            <EditorToolbar editor={editor} />
+            <EditorToolbar />
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Button variant="outline" size="sm" onClick={handleCancel} disabled={saving} className="border-beige-300 text-beige-700">
@@ -181,10 +207,11 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
 
       <hr className="border-beige-200 mb-4" />
 
-    <div className="min-h-100 cursor-text" onClick={() => editor?.commands.focus()}>
+    <div className="min-h-100 cursor-text max-w-full" onClick={() => editor?.commands.focus()}>
         <EditorContent
           editor={editor}
-      className="prose prose-beige max-w-none [&_.tiptap]:outline-none [&_.tiptap]:min-h-100 [&_.tiptap]:text-beige-800"
+          role="presentation"
+          className="simple-editor-content max-w-full [&_.tiptap]:min-h-200 [&_.tiptap]:px-0"
         />
       </div>
     </div>

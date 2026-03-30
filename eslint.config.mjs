@@ -14,8 +14,23 @@ const config = [
       'coverage/**',
       '.swc/**',
       'tsconfig.tsbuildinfo',
-      'prisma/generated/**',  // Ignore Prisma generated files
-      '**/*.wasm-base64.js',  // Ignore WASM base64 files
+      'prisma/generated/**',
+      '**/*.wasm-base64.js',
+      // Tiptap Simple Editor template — third-party generated code
+      'components/tiptap-templates/**',
+      'components/tiptap-ui/**',
+      'components/tiptap-ui-primitive/**',
+      'components/tiptap-node/**',
+      'components/tiptap-icons/**',
+      'hooks/use-composed-ref.ts',
+      'hooks/use-cursor-visibility.ts',
+      'hooks/use-element-rect.ts',
+      'hooks/use-is-breakpoint.ts',
+      'hooks/use-menu-navigation.ts',
+      'hooks/use-tiptap-editor.ts',
+      'hooks/use-window-size.ts',
+      'hooks/use-unmount.ts',
+      'lib/tiptap-utils.ts',
     ],
   },
 
