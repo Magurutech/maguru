@@ -120,13 +120,18 @@ export class LessonService {
         sectionId: true,
         order: true,
         title: true,
+        content: true,
         createdAt: true,
         updatedAt: true,
-        // content intentionally excluded — not needed for list view
       },
     })
 
-    return lessons
+    return lessons.map((l) => {
+      const lessonContent = l.content as unknown as LessonContent | null
+      const contentPreview = lessonContent ? this.extractContentPreview(lessonContent) : ''
+      const { content: _content, ...rest } = l
+      return { ...rest, contentPreview }
+    })
   }
 
   /**
@@ -142,7 +147,7 @@ export class LessonService {
   ): Promise<LessonWithPreview[] | null> {
     const section = await prisma.sections.findUnique({
       where: { id: sectionId },
-      relationLoadStrategy: 'join', // single SQL JOIN — one round-trip to DB
+      relationLoadStrategy: 'join',
       select: {
         id: true,
         lessons: {
@@ -152,9 +157,9 @@ export class LessonService {
             sectionId: true,
             order: true,
             title: true,
+            content: true,
             createdAt: true,
             updatedAt: true,
-            // content intentionally excluded — heavy JSON not needed for list view
           },
         },
       },
@@ -162,7 +167,12 @@ export class LessonService {
 
     if (!section) return null
 
-    return section.lessons
+    return section.lessons.map((l) => {
+      const lessonContent = l.content as unknown as LessonContent | null
+      const contentPreview = lessonContent ? this.extractContentPreview(lessonContent) : ''
+      const { content: _content, ...rest } = l
+      return { ...rest, contentPreview }
+    })
   }
 
   /**
@@ -311,13 +321,10 @@ export class LessonService {
     lessonId: string,
     userId?: string
   ): Promise<DeleteLessonResult> {
-    // Check if lesson exists and get courseId
+    // Single query: get only what's needed for auth check
     const existingLesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
-      include: {
-        _count: {
-          select: { lesson_progress: true },
-        },
+      select: {
         sections: {
           select: { courseId: true },
         },
@@ -328,7 +335,6 @@ export class LessonService {
       throw new Error('Lesson not found')
     }
 
-    // Check course ownership using Course Service
     if (userId) {
       const hasOwnership = await checkCourseOwnership(
         existingLesson.sections.courseId,
@@ -339,16 +345,14 @@ export class LessonService {
       }
     }
 
-    const progressCount = existingLesson._count.lesson_progress
-
-    // Delete lesson (cascade will delete progress records)
+    // Delete lesson — cascade deletes lesson_progress records automatically
     await prisma.lessons.delete({
       where: { id: lessonId },
     })
 
     return {
       message: 'Lesson deleted successfully',
-      deletedProgressRecords: progressCount,
+      deletedProgressRecords: 0, // cascade handled by DB, count not needed
     }
   }
 
@@ -387,9 +391,8 @@ export class LessonService {
   /**
    * Extract plain text preview from Tiptap JSON content
    * Requirements: 2.2
-   * @private
    */
-  private extractContentPreview(content: LessonContent): string {
+  extractContentPreview(content: LessonContent): string {
     const extractText = (nodes: TiptapNode[]): string => {
       let text = ''
       

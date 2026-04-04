@@ -1,105 +1,88 @@
-# Integrate the Tiptap Editor
+# Tiptap Concepts
 
-Build a rich-text editor that fits your product with exactly the features you need. Tiptap wraps the proven ProseMirror library in a modern, framework-agnostic API and gives you extensions and features for everything.
+## [](#structure)Structure
 
-## [](#what-is-tiptap)What is Tiptap?
+ProseMirror works with a strict [Schema](/docs/editor/core-concepts/schema), which defines the allowed structure of a document. A document is a tree of headings, paragraphs and other elements, called nodes. Marks can be attached to a node, e. g. to emphasize part of it. [Commands](/docs/editor/api/commands) change that document programmatically.
 
-Tiptap is a headless rich-text editor framework that lets you build a custom editor completely tailored to your and your customers' needs. It's built on top of ProseMirror, a battle-tested library for building rich-text editors on the web. Under the hood Tiptap heavily relies on [Events](/docs/editor/api/events), [Commands](/docs/editor/api/commands), and [Extensions](/docs/editor/extensions/overview) to provide a flexible and powerful API for building editors.
+## [](#state)State
 
-## [](#why-pick-tiptap)Why pick Tiptap?
+The document is stored in a state. Changes are applied as transactions to the state. The state has details about the current content, cursor position and selection. You can hook into [events](/docs/editor/api/events), for example to alter transactions before they get applied.
 
--   **Modular by default:** Add only the extensions you need, from bold and links to complex tables and slash-menus. Keep the bundle small and your schema under control.
--   **Headless first** Plug Tiptap into React, Vue, Svelte, plain JS, or any other framework. Or integrate with React [UI Components and templates](/docs/ui-components/getting-started/overview)
--   **Open source & Pro extensions:** Tiptap's open source is published on GitHub under the MIT license. When you need advanced features like comments or AI commands drop in paid Tiptap extensions.
+## [](#content)Content
 
-Want to get started with Tiptap? Follow our [installation guide](/docs/editor/getting-started/install) to set up your first editor with Tiptap.
+The document is stored internally as a [ProseMirror node](https://prosemirror.net/docs/ref/#model.Node), and can be retrieved as a Tiptap JSON object calling `editor.getJSON()`.
 
-## Get started faster with ready-made components and templates
+Tiptap JSON is the recommended format for storing the document and working with it. Below is an example Tiptap JSON document:
 
-Plug in our library of ready-made React components and full-featured templates to get a polished Editor and customize from there.
+```
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": "center"
+      },
+      "content": [
+        { "type": "text", "text": "Hello, " },
+        {
+          "type": "text",
+          "text": "world",
+          "marks": [{ "type": "bold" }, { "type": "italic" }]
+        },
+        { "type": "text", "text": "!" }
+      ]
+    }
+  ]
+}
+```
 
-[![Image](/docs/_next/static/media/simple-editor-template-preview.8939b448.jpg)
+A Tiptap JSON document is a tree of nodes. Some nodes can have children, but only text nodes (those with `type: 'text'`) can contain text. Text nodes and other inline nodes can have marks applied to them. Some nodes and marks can have attributes.
 
-### Templates
+## [](#extensions)Extensions
 
-Get started fast with a prebuilt editor that includes commonly used features.
+Extensions add [nodes](/docs/editor/extensions/nodes), [marks](/docs/editor/extensions/marks) and/or [functionalities](/docs/editor/extensions/functionality) to the editor. A lot of those extensions bound their commands to common [keyboard shortcuts](/docs/editor/core-concepts/keyboard-shortcuts).
 
-](/docs/ui-components/templates/simple-editor)[![Image](/docs/_next/static/media/components-preview.620aba07.jpg)
+## [](#vocabulary)Vocabulary
 
-### Components
+ProseMirror has its own vocabulary and you’ll stumble upon all those words now and then. Here is a short overview of the most common words we use in the documentation.
 
-Already using Tiptap? Drop in just the pieces you need.
+Word
 
-](/docs/ui-components/components/overview)
+Description
 
-### [](#extend-your-editor)Extend your editor
+Schema
 
-Extend your Tiptap Editor with open source or Pro extensions. The Tiptap suite adds more sophisticated features and comes with a 30-day free trial through your [Tiptap Cloud dashboard](https://cloud.tiptap.dev/v2/billing).
+Configures the structure your content can have.
 
--   Start with [`StarterKit`](/docs/editor/extensions/functionality/starterkit) – a battery-included set of core marks and nodes.
--   Add [functional extensions](/docs/editor/extensions/functionality) – character counters, placeholders, history.
--   Add [content extensions](/docs/editor/extensions/overview) – images, tables, diagrams, custom nodes.
--   Create your own by following our [custom extension guide](/docs/editor/extensions/custom-extensions).
+Document
 
-## Add Version History, Comments or drop in an AI agent
+The actual content in your editor.
 
-Create a Tiptap account, open your dashboard, and start the 30 day trial to test every paid feature Tiptap has to offer.
+State
 
--   30 day trial: No credit card required
--   Editor features: Integrate all Pro and Cloud Extensions.
--   All paid features: Test Collaboration, Comments, Version history and more.
--   AI features: Integrate AI features in your editor.
+Everything to describe the current content and selection of your editor.
 
-[
+Transaction
 
-Start trial
+A change to the state (updated selection, content, …)
 
-](https://cloud.tiptap.dev/register)
+Extension
 
-## Editor resources
+Registers new functionality.
 
-[Browse guides](/docs/guides)
+Node
 
-[
+A type of content, for example a heading or a paragraph.
 
-First Steps
+Mark
 
-### How to set up and configure the Tiptap editor?
+Can be applied to nodes, for example for inline formatting.
 
-Editor
+Command
 
+Execute an action inside the editor, that somehow changes the state.
 
+Decoration
 
-](/docs/editor/getting-started/configure)[
-
-First Steps
-
-### How to integrate Pro Extensions?
-
-EditorCollaboration
-
-
-
-](/docs/guides/pro-extensions)[
-
-First Steps
-
-### How to make your Editor collaborative?
-
-EditorCollaboration
-
-
-
-](/docs/collaboration/getting-started/install)[
-
-Styling
-
-### 
-
-How to apply styling to the headless Tiptap Editor
-
-Editor
-
-
-
-](/docs/editor/getting-started/style-editor)
+Styling on top of the document, for example to highlight mistakes.

@@ -6,6 +6,7 @@ import {
   useLessonHandlers,
   useSectionHandlers,
   useManageView,
+  useReorderHandlers,
 } from '@/features/cms/hooks/manage'
 import type { ManagedSection, ManagedLesson, ActiveView } from '@/features/cms/hooks/manage'
 
@@ -30,6 +31,10 @@ interface ManageContextValue {
   pendingDeleteSectionId: string | null
   confirmDeleteSection: () => Promise<void>
   cancelDeleteSection: () => void
+  // Delete lesson confirmation
+  pendingDeleteLesson: { sectionId: string; lessonId: string; title: string } | null
+  confirmDeleteLesson: () => Promise<void>
+  cancelDeleteLesson: () => void
   // Inline section creation
   isAddingSection: boolean
   newSectionTitle: string
@@ -48,6 +53,9 @@ interface ManageContextValue {
   openAddLesson: (sectionId: string) => void
   openEditLesson: (lesson: ManagedLesson, sectionId: string) => void
   submitLessonFromPanel: (sectionId: string, data: { title: string; content: unknown }, lessonId?: string) => Promise<string | null>
+  // Reorder
+  reorderSections: (newSections: ManagedSection[]) => Promise<void>
+  reorderLessons: (sectionId: string, newLessons: ManagedLesson[]) => Promise<void>
 }
 
 const ManageContext = createContext<ManageContextValue | null>(null)
@@ -68,11 +76,15 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
 
   const {
     lessonsMap, setLessonsMap, expandedSections,
-    toggleSection, submitLessonFromPanel, handleDeleteLesson,
+    toggleSection, submitLessonFromPanel, deleteLessonOptimistic,
   } = useLessonHandlers({ courseSlug, setSections, activeView, setActiveView })
 
   const { handleSectionSubmit: submitSection, handleDeleteSection: triggerDelete, executeDeleteSection } = useSectionHandlers({
     courseSlug, setSections, setLessonsMap, activeView, setActiveView,
+  })
+
+  const { reorderSections, reorderLessons } = useReorderHandlers({
+    courseSlug, setSections, setLessonsMap,
   })
 
   // ── Delete section confirmation ──────────────────────────────────────────
@@ -88,6 +100,21 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
     await executeDeleteSection(id)
   }
   const cancelDeleteSection = () => setPendingDeleteSectionId(null)
+
+  // ── Delete lesson confirmation ───────────────────────────────────────────
+  const [pendingDeleteLesson, setPendingDeleteLesson] = useState<{ sectionId: string; lessonId: string; title: string } | null>(null)
+
+  const handleDeleteLesson = (sectionId: string, lessonId: string) => {
+    const lesson = lessonsMap[sectionId]?.find((l) => l.id === lessonId)
+    setPendingDeleteLesson({ sectionId, lessonId, title: lesson?.title ?? '' })
+  }
+  const confirmDeleteLesson = async () => {
+    if (!pendingDeleteLesson) return
+    const { sectionId, lessonId } = pendingDeleteLesson
+    setPendingDeleteLesson(null)
+    await deleteLessonOptimistic(sectionId, lessonId)
+  }
+  const cancelDeleteLesson = () => setPendingDeleteLesson(null)
 
   // ── Inline section creation ──────────────────────────────────────────────
   const [isAddingSection, setIsAddingSection] = useState(false)
@@ -173,10 +200,12 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
       activeView, setActiveView,
       lessonsMap, expandedSections, toggleSection, handleDeleteSection, handleDeleteLesson,
       pendingDeleteSectionId, confirmDeleteSection, cancelDeleteSection,
+      pendingDeleteLesson, confirmDeleteLesson, cancelDeleteLesson,
       isAddingSection, newSectionTitle, setNewSectionTitle,
       startAddingSection, cancelAddingSection, confirmAddSection, updateSectionTitle,
       sectionFormOpen, editingSection, openEditSection, closeSectionDialog, handleSectionSubmit,
       openAddLesson, openEditLesson, submitLessonFromPanel,
+      reorderSections, reorderLessons,
     }}>
       {children}
     </ManageContext.Provider>

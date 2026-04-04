@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { lessonService } from '@/features/cms/services/lesson.service'
-import { checkCourseOwnership } from '@/features/cms/services/authorization.helper'
+import { authorizationService } from '@/features/cms/services/authorization.service'
 import { UpdateLessonInput } from '@/features/cms/types/lesson.types'
 
 /**
@@ -77,7 +77,7 @@ export async function PUT(
     }
 
     // Authorization check - verify user owns the course or is admin
-    const hasOwnership = await checkCourseOwnership(
+    const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(
       userId,
       existingLesson.section.courseId
     )
@@ -102,7 +102,11 @@ export async function PUT(
     // Update lesson
     const updatedLesson = await lessonService.updateLesson(lessonId, input)
 
-    return NextResponse.json(updatedLesson)
+    // Extract contentPreview for immediate UI update (avoid re-fetch)
+    const lessonContent = updatedLesson.content as unknown as import('@/features/cms/types/lesson.types').LessonContent | null
+    const contentPreview = lessonContent ? lessonService.extractContentPreview(lessonContent) : ''
+
+    return NextResponse.json({ ...updatedLesson, contentPreview })
   } catch (error) {
     console.error('Error updating lesson:', error)
 
@@ -172,7 +176,7 @@ export async function DELETE(
     }
 
     // Authorization check - verify user owns the course or is admin
-    const hasOwnership = await checkCourseOwnership(
+    const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(
       userId,
       existingLesson.section.courseId
     )

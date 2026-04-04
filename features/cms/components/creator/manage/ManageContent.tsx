@@ -1,9 +1,15 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
-import { Edit, Check, X, ArrowLeft } from 'lucide-react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { Edit, Check, X, ArrowLeft, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { useEditor, EditorContent, JSONContent, Extension, EditorContext } from '@tiptap/react'
 import { StarterKit } from '@tiptap/starter-kit'
 import { TextAlign } from '@tiptap/extension-text-align'
@@ -14,7 +20,7 @@ import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
 import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
-import { useManageContext } from '../../../Context/creator/ManageContext'
+import { useManageContext } from '../../../context/creator/ManageContext'
 
 // Simple Editor node styles — same as simple-editor.tsx
 import '@/components/tiptap-node/heading-node/heading-node.scss'
@@ -74,7 +80,91 @@ function DescriptionEditor({
   )
 }
 
-// Custom keyboard shortcuts for headings (Ctrl+Shift+1/2/3)
+// ── Lesson Viewer Panel (read-only, full Tiptap render) ───────────────────
+
+function LessonViewerPanel({ sectionId, lessonId }: { sectionId: string; lessonId: string }) {
+  const { openEditLesson, lessonsMap } = useManageContext()
+  const [loading, setLoading] = useState(true)
+  const [title, setTitle] = useState(() => {
+    // Initialize from cache synchronously to avoid setState-in-effect
+    return lessonsMap[sectionId]?.find((l) => l.id === lessonId)?.title ?? ''
+  })
+
+  const editor = useEditor({
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class: 'simple-editor',
+        'aria-label': 'Konten pelajaran',
+      },
+    },
+    extensions: [
+      StarterKit.configure({
+        link: { openOnClick: false },
+      }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Highlight.configure({ multicolor: true }),
+      Typography,
+      Superscript,
+      Subscript,
+      Selection,
+    ],
+    content: { type: 'doc', content: [] },
+    editable: false,
+  })
+
+  useEffect(() => {
+    if (!editor) return
+
+    fetch(`/api/courses/_/sections/${sectionId}/lessons/${lessonId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setTitle(data.title || '')
+        if (data.content?.content) {
+          editor.commands.setContent(data.content.content as JSONContent)
+        }
+      })
+      .catch((e) => {
+        console.error('[LessonViewerPanel] failed to load lesson', e)
+        toast.error('Gagal memuat konten pelajaran')
+      })
+      .finally(() => setLoading(false))
+  }, [lessonId, sectionId, editor])
+
+  const lesson = lessonsMap[sectionId]?.find((l) => l.id === lessonId)
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-merah-500" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="w-full max-w-none">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold text-beige-900 leading-tight">{title}</h1>
+        {lesson && (
+          <Button size="sm" variant="outline" className="border-beige-300 text-beige-700 hover:bg-beige-50 shrink-0"
+            onClick={() => openEditLesson(lesson, sectionId)}>
+            <Edit className="h-3.5 w-3.5 mr-1.5" />Edit Pelajaran
+          </Button>
+        )}
+      </div>
+      <hr className="border-beige-200 mb-6" />
+      <div className="lesson-editor-body">
+        <EditorContent
+          editor={editor}
+          role="presentation"
+          className="simple-editor-content max-w-full [&_.tiptap]:px-0"
+        />
+      </div>
+    </div>
+  )
+}
+// ── Editor extensions (module-level) ──────────────────────────────────────
+
 const HeadingShortcuts = Extension.create({
   name: 'headingShortcuts',
   addKeyboardShortcuts() {
@@ -100,11 +190,25 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
     return ''
   })
   const [saving, setSaving] = useState(false)
-  const [loadingLesson, setLoadingLesson] = useState(() => {
-    if (!lessonId) return false
-    const cached = lessonsMap[sectionId]?.find((l) => l.id === lessonId)
-    return !cached  // only show loading if not in cache
-  })
+  const [loadingLesson, setLoadingLesson] = useState(!!lessonId) // always load in edit mode
+
+  // Ref bridge so SaveShortcut extension always calls latest handleSave
+  const saveRef = useRef<() => void>(() => {})
+
+  // Extension instance stored in state (initialized once, never changes)
+  const [saveShortcutExtension] = useState(() =>
+    Extension.create({
+      name: 'saveShortcut',
+      addKeyboardShortcuts() {
+        return {
+          'Mod-Enter': () => {
+            saveRef.current()
+            return true
+          },
+        }
+      },
+    })
+  )
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -128,27 +232,33 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
       Subscript,
       Selection,
       HeadingShortcuts,
+      saveShortcutExtension,
     ],
     content: { type: 'doc', content: [] },
   })
 
   useEffect(() => {
     if (!isEditMode || !lessonId || !editor) return
-    const cached = lessonsMap[sectionId]?.find((l) => l.id === lessonId)
-    if (cached) return  // already initialized from lazy state
 
-    // Fetch full lesson from API (not in cache)
+    // Always fetch full content — cache only has contentPreview, not Tiptap JSON
     fetch(`/api/courses/_/sections/${sectionId}/lessons/${lessonId}`)
       .then((r) => r.json())
       .then((data) => {
         setTitle(data.title || '')
-        if (data.content?.content) editor.commands.setContent(data.content.content as JSONContent)
+        if (data.content?.content) {
+          editor.commands.setContent(data.content.content as JSONContent)
+        } else {
+          console.warn('[LessonEditorPanel] no content.content found', data.content)
+        }
       })
-      .catch(() => toast.error('Gagal memuat pelajaran'))
+      .catch((e) => {
+        console.error('[LessonEditorPanel] fetch failed', e)
+        toast.error('Gagal memuat pelajaran')
+      })
       .finally(() => setLoadingLesson(false))
-  }, [isEditMode, lessonId, sectionId, editor, lessonsMap])
+  }, [isEditMode, lessonId, sectionId, editor])
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!title.trim()) { toast.error('Judul pelajaran tidak boleh kosong'); return }
     if (!editor) return
     setSaving(true)
@@ -156,7 +266,10 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
     const resultId = await submitLessonFromPanel(sectionId, { title: title.trim(), content }, lessonId)
     setSaving(false)
     if (resultId) setActiveView({ type: 'lesson', sectionId, lessonId: resultId })
-  }
+  }, [title, editor, sectionId, lessonId, submitLessonFromPanel, setActiveView])
+
+  // Keep saveRef in sync so Tiptap SaveShortcut extension always calls latest version
+  useEffect(() => { saveRef.current = handleSave }, [handleSave])
 
   const handleCancel = () => {
     setActiveView(lessonId ? { type: 'lesson', sectionId, lessonId } : { type: 'section', sectionId })
@@ -182,13 +295,33 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
           <div className="flex-1 min-w-0">
             <EditorToolbar />
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <Button variant="outline" size="sm" onClick={handleCancel} disabled={saving} className="border-beige-300 text-beige-700">
-              Batal
+          <div className="flex items-center shrink-0">
+            {/* Split button: Create/Save | ∨ Cancel */}
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={saving || !title.trim()}
+              className="bg-merah-500 hover:bg-merah-600 text-white rounded-r-none border-r border-merah-400"
+            >
+              {saving ? 'Menyimpan...' : isEditMode ? 'Save' : 'Create'}
             </Button>
-            <Button size="sm" onClick={handleSave} disabled={saving || !title.trim()} className="bg-merah-500 hover:bg-merah-600 text-white">
-              {saving ? 'Menyimpan...' : isEditMode ? 'Simpan Perubahan' : 'Buat Pelajaran'}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="sm"
+                  disabled={saving}
+                  className="bg-merah-500 hover:bg-merah-600 text-white rounded-l-none px-2"
+                  aria-label="Opsi lainnya"
+                >
+                  <ChevronDown className="h-3.5 w-3.5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuItem onClick={handleCancel} className="text-beige-700">
+                  Cancel
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
@@ -207,7 +340,7 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
 
       <hr className="border-beige-200 mb-4" />
 
-    <div className="min-h-100 cursor-text max-w-full" onClick={() => editor?.commands.focus()}>
+    <div className="min-h-100 cursor-text max-w-full lesson-editor-body" onClick={() => editor?.commands.focus()}>
         <EditorContent
           editor={editor}
           role="presentation"
@@ -281,7 +414,7 @@ function CourseOverview() {
 // ── Main export ────────────────────────────────────────────────────────────
 
 export function ManageContent() {
-  const { course, sections, lessonsMap, activeView, openEditLesson } = useManageContext()
+  const { course, sections, activeView } = useManageContext()
   if (!course) return null
 
   if (activeView.type === 'overview') return <CourseOverview />
@@ -303,25 +436,7 @@ export function ManageContent() {
   }
 
   if (activeView.type === 'lesson') {
-    const lessons = lessonsMap[activeView.sectionId] || []
-    const lesson = lessons.find((l) => l.id === activeView.lessonId)
-    if (!lesson) return null
-    return (
-      <div className="max-w-3xl">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-beige-900">{lesson.title}</h2>
-          <Button size="sm" variant="outline" className="border-beige-300 text-beige-700 hover:bg-beige-50"
-            onClick={() => openEditLesson(lesson, activeView.sectionId)}>
-            <Edit className="h-3.5 w-3.5 mr-1.5" />Edit Pelajaran
-          </Button>
-        </div>
-        <div className="bg-white rounded-xl border border-beige-200 shadow-neu p-6">
-          <p className="text-beige-600 text-sm whitespace-pre-wrap">
-            {lesson.contentPreview || 'Belum ada konten.'}
-          </p>
-        </div>
-      </div>
-    )
+    return <LessonViewerPanel sectionId={activeView.sectionId} lessonId={activeView.lessonId} />
   }
 
   return null

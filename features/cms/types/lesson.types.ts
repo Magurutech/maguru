@@ -105,6 +105,7 @@ export interface LessonWithPreview {
   sectionId: string
   order: number
   title: string
+  contentPreview: string
   createdAt: Date
   updatedAt: Date
 }

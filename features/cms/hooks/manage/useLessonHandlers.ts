@@ -53,56 +53,6 @@ export function useLessonHandlers({
     setExpandedSections(next)
   }
 
-  const handleLessonSubmit = async (
-    data: { title: string; content: unknown; order: number },
-    editingLesson: { lesson: ManagedLesson; sectionId: string } | null,
-    addingLessonToSection: string | null,
-    onDone: () => void
-  ) => {
-    try {
-      if (editingLesson) {
-        const { lesson, sectionId } = editingLesson
-        const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lesson.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}))
-          throw new Error(err.error || 'Gagal memperbarui pelajaran')
-        }
-        const updated = await res.json()
-        setLessonsMap((prev) => ({
-          ...prev,
-          [sectionId]: (prev[sectionId] || []).map((l) => (l.id === lesson.id ? { ...l, ...updated } : l)),
-        }))
-        toast.success('Pelajaran berhasil diperbarui')
-      } else if (addingLessonToSection) {
-        const res = await fetch(`/api/courses/${courseSlug}/sections/${addingLessonToSection}/lessons`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-        })
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}))
-          throw new Error(err.error || 'Gagal membuat pelajaran')
-        }
-        const created = await res.json()
-        setLessonsMap((prev) => ({
-          ...prev,
-          [addingLessonToSection]: [...(prev[addingLessonToSection] || []), created],
-        }))
-        setSections((prev) =>
-          prev.map((s) => s.id === addingLessonToSection ? { ...s, lessonCount: s.lessonCount + 1 } : s)
-        )
-        toast.success('Pelajaran berhasil dibuat')
-      }
-      onDone()
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
-    }
-  }
-
   /**
    * Submit lesson from inline panel (Confluence-style editor).
    * Returns created/updated lesson id on success, null on failure.
@@ -159,15 +109,12 @@ export function useLessonHandlers({
     }
   }
 
-  const handleDeleteLesson = async (sectionId: string, lessonId: string) => {
-    if (!confirm('Hapus pelajaran ini?')) return
-    const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`, {
-      method: 'DELETE',
-    })
-    if (!res.ok) { toast.error('Gagal menghapus pelajaran'); return }
+  const deleteLessonOptimistic = async (sectionId: string, lessonId: string) => {
+    // Optimistic update — remove from UI immediately before API responds
+    const previousLessons = lessonsMap[sectionId] || []
     setLessonsMap((prev) => ({
       ...prev,
-      [sectionId]: (prev[sectionId] || []).filter((l) => l.id !== lessonId),
+      [sectionId]: previousLessons.filter((l) => l.id !== lessonId),
     }))
     setSections((prev) =>
       prev.map((s) => (s.id === sectionId ? { ...s, lessonCount: s.lessonCount - 1 } : s))
@@ -175,6 +122,21 @@ export function useLessonHandlers({
     if (activeView.type === 'lesson' && activeView.lessonId === lessonId) {
       setActiveView({ type: 'section', sectionId })
     }
+
+    const res = await fetch(`/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`, {
+      method: 'DELETE',
+    })
+
+    if (!res.ok) {
+      // Rollback on failure
+      setLessonsMap((prev) => ({ ...prev, [sectionId]: previousLessons }))
+      setSections((prev) =>
+        prev.map((s) => (s.id === sectionId ? { ...s, lessonCount: s.lessonCount + 1 } : s))
+      )
+      toast.error('Gagal menghapus pelajaran')
+      return
+    }
+
     toast.success('Pelajaran berhasil dihapus')
   }
 
@@ -182,8 +144,7 @@ export function useLessonHandlers({
     lessonsMap, setLessonsMap,
     expandedSections,
     toggleSection,
-    handleLessonSubmit,
     submitLessonFromPanel,
-    handleDeleteLesson,
+    deleteLessonOptimistic,
   }
 }

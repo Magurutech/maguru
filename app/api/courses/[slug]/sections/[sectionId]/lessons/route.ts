@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { lessonService } from '@/features/cms/services/lesson.service'
 import { sectionService } from '@/features/cms/services/section.service'
-import { checkCourseOwnership } from '@/features/cms/services/authorization.helper'
+import { authorizationService } from '@/features/cms/services/authorization.service'
 import { CreateLessonInput } from '@/features/cms/types/lesson.types'
 
 /**
@@ -42,7 +42,7 @@ export async function POST(
       )
     }
 
-    const hasOwnership = await checkCourseOwnership(userId, section.courseId)
+    const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(userId, section.courseId)
     if (!hasOwnership) {
       return NextResponse.json(
         { error: 'Forbidden: You do not have permission to modify this course', code: 'FORBIDDEN' },
@@ -60,7 +60,11 @@ export async function POST(
     // Pass courseId to avoid duplicate section lookup inside createLesson
     const lesson = await lessonService.createLesson(sectionId, input, undefined, section.courseId)
 
-    return NextResponse.json(lesson, { status: 201 })
+    // Extract contentPreview for immediate UI update (avoid re-fetch)
+    const lessonContent = lesson.content as unknown as import('@/features/cms/types/lesson.types').LessonContent | null
+    const contentPreview = lessonContent ? lessonService.extractContentPreview(lessonContent) : ''
+
+    return NextResponse.json({ ...lesson, contentPreview }, { status: 201 })
   } catch (error) {
     console.error('Error creating lesson:', error)
 
