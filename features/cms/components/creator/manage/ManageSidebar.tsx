@@ -4,6 +4,7 @@ import { useRef, useEffect, useState } from 'react'
 import {
   Plus, ChevronDown, ChevronRight, Folder, FolderOpen,
   FileText, MoreHorizontal, Edit, Trash2, Settings, GripVertical,
+  PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -248,6 +249,7 @@ export function ManageSidebar() {
   const [openLessonMenuId, setOpenLessonMenuId] = useState<string | null>(null)
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null)
   const [editingSectionTitle, setEditingSectionTitle] = useState('')
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
 
@@ -297,90 +299,119 @@ export function ManageSidebar() {
   }
 
   return (
-    <aside className="w-72 bg-white border-r border-beige-200 flex flex-col overflow-hidden shrink-0">
-      <div className="p-4 border-b border-beige-100">
-        <span className="text-sm font-semibold text-beige-700">Konten Kursus</span>
-      </div>
-      <nav className="flex-1 overflow-y-auto p-2">
-        <button
-          onClick={() => setActiveView({ type: 'overview' })}
-          data-testid="sidebar-overview-btn"
-          className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
-            activeView.type === 'overview' ? 'bg-merah-50 text-merah-700 font-medium' : 'text-beige-700 hover:bg-beige-50'
-          }`}
-        >
-          <Settings className="h-4 w-4 shrink-0" />
-          Overview Kursus
-        </button>
+    <aside className={`
+      relative bg-white border-r border-beige-200 flex flex-col shrink-0 h-full
+      transition-all duration-300 ease-in-out
+      ${sidebarOpen ? 'w-72' : 'w-12'}
+    `}>
+      {/* Toggle button */}
+      <button
+        onClick={() => setSidebarOpen((v) => !v)}
+        className="absolute -right-3 top-4 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-beige-200 bg-white shadow-md hover:bg-beige-50 hover:shadow-lg transition-all"
+        aria-label={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
+        title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
+      >
+        {sidebarOpen
+          ? <PanelLeftClose className="h-3.5 w-3.5 text-beige-500" />
+          : <PanelLeftOpen className="h-3.5 w-3.5 text-beige-500" />
+        }
+      </button>
 
-        {sections.length === 0 && !isAddingSection && (
-          <p className="text-xs text-beige-400 px-3 py-4 text-center">
-            Belum ada seksi. Klik + Tambah Seksi untuk mulai.
-          </p>
-        )}
+      {/* Collapsed state — just icon */}
+      {!sidebarOpen && (
+        <div className="flex flex-col items-center pt-4 gap-3">
+          <Settings className="h-4 w-4 text-merah-500" />
+        </div>
+      )}
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
-          <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
-            {sections.map((section) => (
-              <SortableSectionItem
-                key={section.id}
-                section={section}
-                isExpanded={expandedSections.has(section.id)}
-                lessons={lessonsMap[section.id] || []}
-                isActiveSection={activeView.type === 'section' && activeView.sectionId === section.id}
-                isPending={section.id.startsWith('temp-')}
-                isMenuOpen={openMenuId === section.id}
-                isEditing={editingSectionId === section.id}
-                editingSectionTitle={editingSectionTitle}
-                editInputRef={editInputRef}
-                openLessonMenuId={openLessonMenuId}
-                activeView={activeView}
-                setOpenMenuId={setOpenMenuId}
-                setOpenLessonMenuId={setOpenLessonMenuId}
-                setEditingSectionTitle={setEditingSectionTitle}
-                onToggle={() => editingSectionId !== section.id && toggleSection(section.id)}
-                onEditKeyDown={(e) => handleEditKeyDown(e, section.id, section.title)}
-                onEditBlur={() => confirmEditSection(section.id, section.title)}
-                onStartEdit={() => startEditSection(section)}
-                onAddLesson={() => openAddLesson(section.id)}
-                onDeleteSection={() => handleDeleteSection(section.id)}
-                onSelectLesson={(lessonId) => setActiveView({ type: 'lesson', sectionId: section.id, lessonId })}
-                onEditLesson={(lesson) => openEditLesson(lesson, section.id)}
-                onDeleteLesson={(lessonId) => handleDeleteLesson(section.id, lessonId)}
-                onLessonDragEnd={handleLessonDragEnd(section.id)}
-                sensors={sensors}
-              />
-            ))}
-          </SortableContext>
-        </DndContext>
-
-        {isAddingSection && (
-          <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-beige-50 mb-1">
-            <ChevronRight className="h-3.5 w-3.5 text-beige-300 shrink-0" />
-            <Folder className="h-3.5 w-3.5 text-beige-400 shrink-0" />
-            <input
-              ref={inlineInputRef}
-              type="text"
-              value={newSectionTitle}
-              onChange={(e) => setNewSectionTitle(e.target.value)}
-              onKeyDown={handleInlineKeyDown}
-              onBlur={handleInlineBlur}
-              placeholder="Nama seksi..."
-              className="flex-1 text-sm bg-transparent outline-none text-beige-800 placeholder:text-beige-300"
-              data-testid="inline-section-input"
-            />
+      {/* Expanded state */}
+      {sidebarOpen && (
+        <>
+          <div className="p-4 border-b border-beige-100">
+            <span className="text-sm font-semibold text-beige-700">Konten Kursus</span>
           </div>
-        )}
+          <nav className="flex-1 overflow-y-auto p-2">
+            <button
+              onClick={() => setActiveView({ type: 'overview' })}
+              data-testid="sidebar-overview-btn"
+              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
+                activeView.type === 'overview' ? 'bg-merah-50 text-merah-700 font-medium' : 'text-beige-700 hover:bg-beige-50'
+              }`}
+            >
+              <Settings className="h-4 w-4 shrink-0" />
+              Overview Kursus
+            </button>
 
-        <button
-          onClick={startAddingSection}
-          className="w-full flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-beige-700 hover:text-merah-600 hover:bg-merah-50 transition-colors mt-1"
-          data-testid="add-section-btn"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          Tambah Seksi
-        </button>
-      </nav>
+            {sections.length === 0 && !isAddingSection && (
+              <p className="text-xs text-beige-400 px-3 py-4 text-center">
+                Belum ada seksi. Klik + Tambah Seksi untuk mulai.
+              </p>
+            )}
+
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
+              <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+                {sections.map((section) => (
+                  <SortableSectionItem
+                    key={section.id}
+                    section={section}
+                    isExpanded={expandedSections.has(section.id)}
+                    lessons={lessonsMap[section.id] || []}
+                    isActiveSection={activeView.type === 'section' && activeView.sectionId === section.id}
+                    isPending={section.id.startsWith('temp-')}
+                    isMenuOpen={openMenuId === section.id}
+                    isEditing={editingSectionId === section.id}
+                    editingSectionTitle={editingSectionTitle}
+                    editInputRef={editInputRef}
+                    openLessonMenuId={openLessonMenuId}
+                    activeView={activeView}
+                    setOpenMenuId={setOpenMenuId}
+                    setOpenLessonMenuId={setOpenLessonMenuId}
+                    setEditingSectionTitle={setEditingSectionTitle}
+                    onToggle={() => editingSectionId !== section.id && toggleSection(section.id)}
+                    onEditKeyDown={(e) => handleEditKeyDown(e, section.id, section.title)}
+                    onEditBlur={() => confirmEditSection(section.id, section.title)}
+                    onStartEdit={() => startEditSection(section)}
+                    onAddLesson={() => openAddLesson(section.id)}
+                    onDeleteSection={() => handleDeleteSection(section.id)}
+                    onSelectLesson={(lessonId) => setActiveView({ type: 'lesson', sectionId: section.id, lessonId })}
+                    onEditLesson={(lesson) => openEditLesson(lesson, section.id)}
+                    onDeleteLesson={(lessonId) => handleDeleteLesson(section.id, lessonId)}
+                    onLessonDragEnd={handleLessonDragEnd(section.id)}
+                    sensors={sensors}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+
+            {isAddingSection && (
+              <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-beige-50 mb-1">
+                <ChevronRight className="h-3.5 w-3.5 text-beige-300 shrink-0" />
+                <Folder className="h-3.5 w-3.5 text-beige-400 shrink-0" />
+                <input
+                  ref={inlineInputRef}
+                  type="text"
+                  value={newSectionTitle}
+                  onChange={(e) => setNewSectionTitle(e.target.value)}
+                  onKeyDown={handleInlineKeyDown}
+                  onBlur={handleInlineBlur}
+                  placeholder="Nama seksi..."
+                  className="flex-1 text-sm bg-transparent outline-none text-beige-800 placeholder:text-beige-300"
+                  data-testid="inline-section-input"
+                />
+              </div>
+            )}
+
+            <button
+              onClick={startAddingSection}
+              className="w-full flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-beige-700 hover:text-merah-600 hover:bg-merah-50 transition-colors mt-1"
+              data-testid="add-section-btn"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Tambah Seksi
+            </button>
+          </nav>
+        </>
+      )}
     </aside>
   )
 }

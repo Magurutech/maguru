@@ -1,509 +1,283 @@
-# Testing Plan: Course Content Management V2
+# Plan: Refactor Student Learn Page
 
-**Feature:** Course Content Management  
-**Sprint:** Sprint 2 — Content First  
-**Tasks:** 13 (Postman), 14 (E2E Creator), 15 (E2E Student), 16 (Manual Docs)  
-**Created:** 2026-03-19
+## Update: UX Improvements (2026-04-10)
+
+### Fitur yang Sudah Ada
+✅ **Expand/Collapse Sidebar** — sudah diimplementasikan di `CourseNavigation.tsx`:
+- State `sidebarOpen` dengan toggle button
+- Transisi smooth dengan `transition-all duration-300`
+- Icon `PanelLeftClose` / `PanelLeftOpen` dari lucide-react
+- Width berubah dari `w-72` (expanded) ke `w-12` (collapsed)
+
+### Masalah yang Perlu Diperbaiki
+
+**Issue 1: Warna Selection Lesson Terlalu Gelap**
+Saat ini lesson yang aktif menggunakan:
+```tsx
+bg-merah-100 text-merah-700 font-semibold
+```
+
+Masalah:
+- `text-merah-700` terlalu gelap untuk background `bg-merah-100`
+- Tidak konsisten dengan design system Maguru (beige/warm palette)
+- Kontras kurang optimal untuk readability
+
+**Solusi:**
+Gunakan warna yang lebih soft dan konsisten:
+```tsx
+// Active state
+bg-merah-50 text-merah-600 font-medium border-l-2 border-merah-500
+
+// Hover state (non-active)
+hover:bg-beige-100 hover:text-beige-900
+```
+
+Ini memberikan:
+- Background lebih terang (`merah-50` vs `merah-100`)
+- Text lebih readable (`merah-600` vs `merah-700`)
+- Border accent untuk visual hierarchy
+- Font weight lebih subtle (`medium` vs `semibold`)
 
 ---
 
-## Overview
+# Plan: Refactor Student Learn Page
 
-Testing dilakukan sebelum performance optimization (Task 17) untuk memastikan semua API dan user workflow berfungsi dengan benar. Tiga lapisan testing:
+## Analisis
 
-1. **Postman Collections** — API contract testing per endpoint group
-2. **Playwright E2E** — User workflow testing (Creator + Student)
-3. **Manual Test Doc** — Checklist untuk QA manual
+### Pola Creator (yang sudah bekerja)
+
+Creator page menggunakan arsitektur berlapis:
+
+```
+CourseManagePage
+└── ManageProvider (Context)
+    ├── useCourseManage     → fetch course + sections (metadata only)
+    ├── useLessonHandlers   → lazy fetch lessons per section (on expand)
+    ├── useSectionHandlers  → CRUD sections
+    ├── useManageView       → ActiveView state (overview | section | lesson | lesson-editor)
+    └── useReorderHandlers  → drag-drop reorder
+```
+
+**Pola kunci:**
+- Sections di-fetch sekali saat mount (hanya metadata: id, title, order, lessonCount)
+- Lessons di-fetch **lazy** — hanya saat section di-expand (`toggleSection`)
+- Lessons disimpan di `lessonsMap: Record<sectionId, ManagedLesson[]>`
+- View state dikelola via `ActiveView` union type
+- Semua state + handlers di Context, page hanya render komponen
+
+### Bug di Student Learn Page (saat ini)
+
+**Bug 1 — Sections API tidak mengembalikan lessons**
+`GET /api/courses/[slug]/sections` hanya mengembalikan `lessonCount` (angka), bukan array lessons.
+Page langsung akses `section.lessons.map(...)` → selalu `undefined`.
+
+**Bug 2 — Progress API shape mismatch**
+`GET /api/progress/course/[slug]` mengembalikan `completedLessons` sebagai **number** (count).
+Page memperlakukannya sebagai **array of IDs** → `.includes(lesson.id)` dan `.length` selalu salah.
+Semua lesson tampil sebagai belum selesai meski sudah diselesaikan.
+
+**Bug 3 — Tidak ada endpoint untuk fetch per-lesson progress**
+Untuk tahu lesson mana yang sudah selesai, perlu endpoint yang mengembalikan list lesson IDs yang completed.
+Saat ini tidak ada — progress API hanya mengembalikan aggregate count.
+
+**Bug 4 — Infinite loop risk di useEffect**
+`lessonId` ada di dependency array `fetchCourseData`, tapi `router.replace` di dalam effect mengubah URL
+yang mengubah `lessonId` → bisa trigger re-fetch loop.
+
+**Bug 5 — Error state menimpa seluruh halaman**
+Jika fetch lesson gagal (bukan fetch course), `setError` mengganti seluruh halaman dengan error screen.
+Seharusnya error lesson hanya tampil di area konten, sidebar tetap bisa digunakan.
 
 ---
 
-## Task 13: Postman Collections
+## Rencana Refactor
 
-### File Structure
+### Pendekatan: Ikuti pola creator
+
+Buat `LearnProvider` + hooks yang mirip dengan creator, dengan penyesuaian untuk kebutuhan student.
+
+### Struktur Target
 
 ```
-docs/api/content-management/
-├── sections.postman_collection.json
-├── lessons.postman_collection.json
-└── progress.postman_collection.json
+LearnPage
+└── LearnProvider (Context)
+    ├── useCourseLearn      → fetch course + sections (metadata only)
+    ├── useLessonLearn      → lazy fetch lessons per section + progress per lesson
+    ├── useLearnView        → ActiveLesson state (lessonId | null)
+    └── useProgressHandlers → mark complete, update progress state
 ```
 
-### 13.1 sections.postman_collection.json
+### File yang Perlu Dibuat/Diubah
 
-Collection variables:
-- `baseUrl` = `http://localhost:3000`
-- `courseSlug` = slug kursus yang ada di DB
-- `sectionId` = ID section (diisi dari response POST)
-- `authToken` = Clerk session token creator
+```
+features/cms/
+├── context/
+│   └── student/
+│       └── LearnContext.tsx          ← baru
+├── hooks/
+│   └── learn/
+│       ├── index.ts                  ← baru
+│       ├── useCourseLearn.ts         ← baru (mirip useCourseManage)
+│       ├── useLessonLearn.ts         ← baru (mirip useLessonHandlers)
+│       └── useProgressHandlers.ts   ← baru
+└── components/
+    └── student/
+        └── (komponen existing tetap, tidak perlu diubah)
 
-Requests:
-
-| Method                                 | Endpoint                                             | Expected                              | Notes                                 |                                                    |
-| ----------------------------------------| ------------------------------------------------------| ---------------------------------------| ---------------------------------------| ----------------------------------------------------|
-| POST                                   | i/courses/{{courseSlug}}/sections`                   | 201                                   | body: `{ title, description, order }` |                                                    |
-| GET                                    | courses/{{courseSlug}}/sections`                     | 200                                   | response: array ordered by `order`    |                                                    |
-|                                        | api/courses/{{courseSlug}}/sections/{{sectionId}}`   | 200                                   | body: `{ title }`                     |                                                    |
-| DEL                                    | `/api/courses/{{courseSlug}}/sections/{{sectionId}}` | 200                                   | response: `{ deletedLessons: N }`     |                                                    |
-| POS                                    | pi/courses/{{courseSlug}}/sections`                  | 401                                   | tanpa Authorization header            |                                                    |
-| POST                                   | rses/{{courseSlug}}/sections`                        | 403                                   | auth sebagai user bukan owner         |                                                    |
-|                                        | pi/courses/{{courseSlug}}/sections/nonexistent-id`   | 404                                   | section tidak ada                     |                                                    |
-| `/api/courses/{{courseSlug}}/sections` | 409                                                  | order yang sudah dipakai section lain |                                       |                                                    |
-|                                        |                                                      |                                       |                                       | script untuk POST (set `sectionId` dari response): |
-```jav
-pm.test("Section created", () => {
-  pm.response.to.have.status(201)
-  const json = pm.response.json()
-  pm.collectionVariables.set("sectionId", json.id)
-})
+app/course/[slug]/learn/
+└── page.tsx                          ← refactor (thin orchestrator)
 ```
 
-### 13.2 lessons.postman_collection.json
+### API yang Perlu Ditambah/Diubah
 
-Collection variables:
-- `baseUrl`, `courseSlug`, `sectionId`, `lessonId`, `authToken`
+**Tambah endpoint baru:**
+```
+GET /api/progress/course/[slug]/lessons
+```
+Mengembalikan list lesson IDs yang sudah completed oleh user:
+```typescript
+{ completedLessonIds: string[] }
+```
 
-Valid Tiptap JSON body (dipakai di semua lesson requests):
-```json
-{
-  "title": "Intro to TypeScript",
-  "order": 1,
-  "content": {
-    "type": "doc",
-    "version": 1,
-    "lastEdit": "2026-03-19T00:00:00.000Z",
-    "content": [
-      {
-        "type": "paragraph",
-        "content": [{ "type": "text", "text": "Hello world" }]
-      }
-    ]
+Ini memungkinkan client tahu lesson mana yang sudah selesai tanpa fetch per-lesson.
+
+**Alternatif (tanpa endpoint baru):**
+Modifikasi `GET /api/courses/[slug]/sections/[sectionId]/lessons` untuk include progress
+jika user authenticated — tapi ini lebih kompleks dan mengubah existing API.
+
+→ **Pilih: tambah endpoint baru** (lebih clean, tidak breaking existing API)
+
+---
+
+## Implementation Steps
+
+### Step 1: Tambah API endpoint progress lessons
+
+**File:** `app/api/progress/course/[slug]/lessons/route.ts`
+
+```typescript
+GET /api/progress/course/[slug]/lessons
+Response: { completedLessonIds: string[] }
+```
+
+Query: ambil semua `lesson_progress` where `userId = currentUser` AND `completed = true`
+AND lesson belongs to course (via sections.courseId).
+
+### Step 2: Buat `useCourseLearn` hook
+
+**File:** `features/cms/hooks/learn/useCourseLearn.ts`
+
+Mirip `useCourseManage` tapi:
+- Fetch sections saja (tidak perlu course detail untuk student)
+- Fetch `completedLessonIds` dari endpoint baru secara paralel
+- Return: `sections`, `completedLessonIds`, `loading`, `error`
+
+```typescript
+export function useCourseLearn(courseSlug: string) {
+  const [sections, setSections] = useState<LearnSection[]>([])
+  const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(new Set())
+  const [progress, setProgress] = useState<CourseProgress>({ percentage: 0, completedLessons: 0, totalLessons: 0 })
+  // ...
+}
+```
+
+### Step 3: Buat `useLessonLearn` hook
+
+**File:** `features/cms/hooks/learn/useLessonLearn.ts`
+
+Mirip `useLessonHandlers` tapi:
+- Lazy fetch lessons per section on expand (sama persis)
+- Fetch full lesson content saat lesson diklik (bukan saat expand)
+- `lessonsMap: Record<sectionId, LearnLesson[]>` — lesson list per section
+- `currentLesson` — full lesson content yang sedang ditampilkan
+
+```typescript
+export function useLessonLearn({ courseSlug, completedLessonIds }) {
+  const [lessonsMap, setLessonsMap] = useState<Record<string, LearnLesson[]>>({})
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
+  const [currentLesson, setCurrentLesson] = useState<FullLesson | null>(null)
+  const [lessonLoading, setLessonLoading] = useState(false)
+  // toggleSection → lazy fetch lessons
+  // selectLesson → fetch full content
+}
+```
+
+### Step 4: Buat `useProgressHandlers` hook
+
+**File:** `features/cms/hooks/learn/useProgressHandlers.ts`
+
+```typescript
+export function useProgressHandlers({ courseSlug, setCompletedLessonIds, setProgress }) {
+  const markComplete = async (lessonId: string) => {
+    // POST /api/progress/lesson/[lessonId]/complete
+    // Update completedLessonIds (Set)
+    // Update progress state
   }
 }
 ```
 
-Requests:
+### Step 5: Buat `LearnContext`
 
-| Method                                                    | Endpoint                  | Expected                       | Notes            |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| -----------------------------------------------------------| ---------------------------| --------------------------------| ------------------| -----| -----| -----| ---------------------------------------------------------| -----| -------------------| ----------------------| -----| -------------------------| -----------------------| -----| ------------------------------------| -------------| -----| ------------| -------| -----| -------------|
-| POST                                                      |                           |                                |                  |     |     |     | /courses/{{courseSlug}}/sections/{{sectionId}}/lessons` | 201 | valid Tiptap JSON |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| pi/courses/{{courseSlug}}/sections/{{sectionId}}/lessons` | 200                       | list dengan content preview    |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| ./lessons/{{lessonId}}`                                   | 200                       | full content + section info    |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| PUT                                                       |                           |                                |                  |     |     |     |                                                         |     |                   | essons/{{lessonId}}` | 200 | version harus increment |                       |     |                                    |             |     |            |       |     |             |
-| DELE                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         | lessons/{{lessonId}}` | 200 | response: `{ deletedProgress: N }` |             |     |            |       |     |             |
-| ./lessons`                                                | 400                       | content.type bukan "doc"       |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| `.../lessons`                                             | 400                       | content.version missing atau 0 |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
-| POST                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    | ../lessons` | 401 | tanpa auth |       |     |             |
-| POST                                                      |                           |                                |                  |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            | sons` | 403 | bukan owner |
-| T                                                         | `.../lessons/nonexistent` | 404                            | lesson tidak ada |     |     |     |                                                         |     |                   |                      |     |                         |                       |     |                                    |             |     |            |       |     |             |
+**File:** `features/cms/context/student/LearnContext.tsx`
 
-Testk version increment:
-```javascript
-pm.test("Version incremented", () => {
-  const before = pm.collectionVariables.get("lessonVersion")
-  const after = pm.response.json().content.version
-  pm.expect(after).to.equal(Number(before) + 1)
-})
-```
+Compose semua hooks, expose via context. Mirip `ManageContext.tsx`.
 
-### 13.3 progress.postman_collection.json
+### Step 6: Refactor `learn/page.tsx`
 
-Collection variables:
-- `baseUrl`, `courseSlug`, `lessonId`, `authToken` (student token)
-
-Requests:
-
-| Method                                    | Endpoint | Expected                           | Notes |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            |                               |     |            |
-| -------------------------------------------| ----------| ------------------------------------| -------| -----| -----| -----| ---------------------------------| -----| --------------------------------------------------| -----------------------------| -----| --------------------------| ----------------------------------------| -----| ------------| -------------------------------| -----| ------------|
-| pi/progress/lesson/{{lessonId}}/complete` | 200      | `{ completed: true, completedAt }` |       |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            |                               |     |            |
-| GET                                       |          |                                    |       |     |     |     | progress/course/{{courseSlug}}` | 200 | `{ percentage, completedLessons, totalLessons }` |                             |     |                          |                                        |     |            |                               |     |            |
-| GET                                       |          |                                    |       |     |     |     |                                 |     |                                                  | ogress/lesson/{{lessonId}}` | 200 | `{ completed: boolean }` |                                        |     |            |                               |     |            |
-| POS                                       |          |                                    |       |     |     |     |                                 |     |                                                  |                             |     |                          | progress/lesson/{{lessonId}}/complete` | 401 | tanpa auth |                               |     |            |
-| GET                                       |          |                                    |       |     |     |     |                                 |     |                                                  |                             |     |                          |                                        |     |            | ogress/course/{{courseSlug}}` | 401 | tanpa auth |
-
----Task 14: E2E Tests — Creator Workflow
-
-### File
-
-`__tests__/playwright/content/creator/manage-course.spec.ts`
-
-### Setup Pattern
-
-Ikuti pola yang sama dengan `course-list.spec.ts` — gunakan `clerk.signIn()` dari `@clerk/testing/playwright` dan `waitForPageLoad()` dari utils.
+Jadikan thin orchestrator seperti `manage/page.tsx`:
 
 ```typescript
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
-import { waitForPageLoad } from '../../utils/test-helpers'
+export default function LearnPage() {
+  const params = useParams()
+  return (
+    <LearnProvider courseSlug={params.slug}>
+      <LearnPageInner />
+    </LearnProvider>
+  )
+}
 
-const MANAGE_URL = /\/creator\/courses\/.+\/manage/
-
-test.describe('Creator Manage Course — Authenticated', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-    await clerk.signIn({
-      page,
-      signInParams: {
-        strategy: 'password',
-        identifier: testUsers.creatorUser.identifier,
-        password: testUsers.creatorUser.password,
-      },
-    })
-  })
-  // ... tests
-})
-```
-
-### Test Scenarios
-
-**14.2 — Halaman manage tampil**
-```typescript
-test('manage page loads with section list', async ({ page }) => {
-  await page.goto('/creator/courses')
-  await waitForPageLoad(page)
-  await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
-
-  const manageBtn = page.getByTestId('manage-course-btn').first()
-  const hasManage = await manageBtn.isVisible().catch(() => false)
-  if (!hasManage) { console.log('ℹ️ No courses, skipping'); return }
-
-  await manageBtn.click()
-  await page.waitForURL(MANAGE_URL, { timeout: 10000 })
-  await expect(page.locator('h1, h2')).toBeVisible()
-})
-```
-
-**14.3 — Buat section baru**
-```typescript
-test('create new section appears in list', async ({ page }) => {
-  await page.goto('/creator/courses')
-  await waitForPageLoad(page)
-  await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
-
-  const manageBtn = page.getByTestId('manage-course-btn').first()
-  if (!await manageBtn.isVisible().catch(() => false)) { return }
-  await manageBtn.click()
-  await page.waitForURL(MANAGE_URL, { timeout: 10000 })
-
-  const addSectionBtn = page.getByRole('button', { name: /\+ seksi|tambah seksi/i })
-  await expect(addSectionBtn).toBeVisible({ timeout: 10000 })
-  await addSectionBtn.click()
-
-  await page.getByLabel(/judul seksi/i).fill('Seksi Test E2E')
-  await page.getByLabel(/urutan/i).fill('99')
-  await page.getByRole('button', { name: /simpan|buat/i }).click()
-
-  await expect(page.locator('body')).toContainText('Seksi Test E2E', { timeout: 8000 })
-})
-```
-
-**14.4 — Buat lesson dengan Tiptap content**
-```typescript
-test('create lesson saves with Tiptap content', async ({ page }) => {
-  // Navigate to manage page (same setup as above)
-  // ...
-
-  const addLessonBtn = page.getByRole('button', { name: /\+ pelajaran|tambah pelajaran/i }).first()
-  await expect(addLessonBtn).toBeVisible({ timeout: 10000 })
-  await addLessonBtn.click()
-
-  await page.getByLabel(/judul pelajaran/i).fill('Pelajaran Test E2E')
-  // Tiptap editor — type into contenteditable
-  const editor = page.locator('.ProseMirror').first()
-  await editor.click()
-  await editor.type('Konten pelajaran test')
-
-  await page.getByRole('button', { name: /simpan/i }).click()
-  await expect(page.locator('body')).toContainText('Pelajaran Test E2E', { timeout: 8000 })
-})
-```
-
-**14.5 — Edit lesson, version increment**
-```typescript
-test('edit lesson content increments version', async ({ page }) => {
-  // Navigate to manage page, click existing lesson edit button
-  const editBtn = page.getByTestId('edit-lesson-btn').first()
-  await expect(editBtn).toBeVisible({ timeout: 10000 })
-
-  const versionBefore = await page.getByTestId('lesson-version').textContent()
-  await editBtn.click()
-
-  const editor = page.locator('.ProseMirror').first()
-  await editor.click()
-  await editor.press('Control+a')
-  await editor.type('Konten yang diupdate')
-
-  await page.getByRole('button', { name: /simpan/i }).click()
-  await page.waitForTimeout(1000)
-
-  const versionAfter = await page.getByTestId('lesson-version').textContent()
-  expect(Number(versionAfter)).toBeGreaterThan(Number(versionBefore))
-})
-```
-
-**14.6 — Reorder section**
-```typescript
-test('reorder section changes order in UI', async ({ page }) => {
-  // Requires at least 2 sections
-  const sections = page.getByTestId('section-item')
-  const count = await sections.count()
-  if (count < 2) { console.log('ℹ️ Need 2+ sections, skipping'); return }
-
-  const firstTitle = await sections.first().getByTestId('section-title').textContent()
-  await sections.first().getByTestId('move-down-btn').click()
-  await page.waitForTimeout(500)
-
-  const newFirstTitle = await sections.first().getByTestId('section-title').textContent()
-  expect(newFirstTitle).not.toBe(firstTitle)
-})
-```
-
-**14.7 — Delete section cascade**
-```typescript
-test('delete section removes it and its lessons', async ({ page }) => {
-  const sections = page.getByTestId('section-item')
-  const countBefore = await sections.count()
-  if (countBefore === 0) { return }
-
-  await sections.last().getByTestId('delete-section-btn').click()
-  // Confirm dialog
-  await page.getByRole('button', { name: /hapus|konfirmasi/i }).click()
-  await page.waitForTimeout(1000)
-
-  const countAfter = await page.getByTestId('section-item').count()
-  expect(countAfter).toBe(countBefore - 1)
-})
-```
-
-**14.8 — Unauthenticated redirect**
-```typescript
-test.describe('Creator Manage — Access Control', () => {
-  test.use({ storageState: { cookies: [], origins: [] } })
-
-  test('unauthenticated redirects to sign-in', async ({ page }) => {
-    await page.goto('/creator/courses/test-slug/manage')
-    await waitForPageLoad(page)
-    await expect(page).toHaveURL(/sign-in/)
-  })
-})
+function LearnPageInner() {
+  const { loading, error } = useLearnContext()
+  if (loading) return <LoadingSpinner />
+  if (error) return <ErrorState />
+  return (
+    <SidebarProvider>
+      <LearnSidebar />
+      <LearnMain />
+    </SidebarProvider>
+  )
+}
 ```
 
 ---
 
-## Task 15: E2E Tests — Student Learn Workflow
+## Perbedaan Creator vs Student
 
-### File
-
-`__tests__/playwright/content/student/learn.spec.ts`
-
-### Setup Pattern
-
-Sama dengan catalog.spec.ts — gunakan `clerk.signIn()` dengan `testUsers.regularUser`.
-
-### Test Scenarios
-
-**15.2 — Halaman learn tampil dengan sidebar**
-```typescript
-test('learn page loads with sidebar sections', async ({ page }) => {
-  // Navigate to a course the student is enrolled in
-  await page.goto('/student/courses')
-  await waitForPageLoad(page)
-
-  const learnBtn = page.getByRole('link', { name: /lanjut belajar/i }).first()
-  const hasLearn = await learnBtn.isVisible().catch(() => false)
-  if (!hasLearn) { console.log('ℹ️ No enrolled courses, skipping'); return }
-
-  await learnBtn.click()
-  await page.waitForURL(/\/learn/, { timeout: 10000 })
-
-  // Sidebar visible
-  await expect(page.getByTestId('course-navigation')).toBeVisible({ timeout: 10000 })
-  // Progress bar visible
-  await expect(page.getByTestId('progress-bar')).toBeVisible()
-})
-```
-
-**15.3 — Klik lesson render Tiptap content**
-```typescript
-test('clicking lesson renders Tiptap content', async ({ page }) => {
-  // (after navigating to learn page)
-  const lessonLink = page.getByTestId('lesson-nav-item').first()
-  const hasLesson = await lessonLink.isVisible().catch(() => false)
-  if (!hasLesson) { return }
-
-  await lessonLink.click()
-  await page.waitForTimeout(1000)
-
-  // Tiptap viewer renders content
-  await expect(page.locator('.ProseMirror')).toBeVisible({ timeout: 8000 })
-})
-```
-
-**15.4 — Mark complete, checkmark muncul**
-```typescript
-test('mark complete shows checkmark in sidebar', async ({ page }) => {
-  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
-  const hasBtn = await markCompleteBtn.isVisible().catch(() => false)
-  if (!hasBtn) { return }
-
-  await markCompleteBtn.click()
-  // Button should change to completed state
-  await expect(page.getByTestId('lesson-completed-badge')).toBeVisible({ timeout: 8000 })
-  // Checkmark in sidebar
-  await expect(page.getByTestId('lesson-nav-item').first().getByTestId('completed-check')).toBeVisible()
-})
-```
-
-**15.5 — Progress bar update**
-```typescript
-test('progress bar updates after mark complete', async ({ page }) => {
-  const progressBar = page.getByTestId('progress-bar')
-  const percentageBefore = await progressBar.getAttribute('aria-valuenow')
-
-  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
-  if (!await markCompleteBtn.isVisible().catch(() => false)) { return }
-  await markCompleteBtn.click()
-
-  await page.waitForTimeout(1500)
-  const percentageAfter = await progressBar.getAttribute('aria-valuenow')
-  expect(Number(percentageAfter)).toBeGreaterThanOrEqual(Number(percentageBefore))
-})
-```
-
-**15.6 — Navigasi next lesson**
-```typescript
-test('next lesson button loads next lesson', async ({ page }) => {
-  const nextBtn = page.getByTestId('next-lesson-btn')
-  const isEnabled = await nextBtn.isEnabled().catch(() => false)
-  if (!isEnabled) { console.log('ℹ️ Already on last lesson, skipping'); return }
-
-  const currentUrl = page.url()
-  await nextBtn.click()
-  await page.waitForTimeout(1000)
-
-  expect(page.url()).not.toBe(currentUrl)
-})
-```
-
-**15.7 — Progress persists setelah refresh**
-```typescript
-test('progress persists after page refresh', async ({ page }) => {
-  // Mark a lesson complete first
-  const markCompleteBtn = page.getByRole('button', { name: /tandai selesai/i })
-  if (await markCompleteBtn.isVisible().catch(() => false)) {
-    await markCompleteBtn.click()
-    await page.waitForTimeout(1000)
-  }
-
-  await page.reload()
-  await waitForPageLoad(page)
-
-  // Completed badge should still be visible
-  await expect(page.getByTestId('lesson-completed-badge')).toBeVisible({ timeout: 8000 })
-})
-```
-
-**15.8 — Unauthenticated redirect**
-```typescript
-test.describe('Student Learn — Access Control', () => {
-  test.use({ storageState: { cookies: [], origins: [] } })
-
-  test('unauthenticated redirects to sign-in', async ({ page }) => {
-    await page.goto('/course/test-slug/learn')
-    await waitForPageLoad(page)
-    await expect(page).toHaveURL(/sign-in/)
-  })
-})
-```
+| Aspek | Creator | Student |
+|-------|---------|---------|
+| Data utama | Course + Sections (metadata) | Sections + Progress |
+| Lessons | Lazy fetch on expand | Lazy fetch on expand (sama) |
+| Lesson content | Full content on edit | Full content on click |
+| View state | overview / section / lesson / lesson-editor | lesson (lessonId) |
+| Write operations | CRUD sections & lessons | Mark complete only |
+| Progress | Tidak ada | completedLessonIds + percentage |
 
 ---
 
-## Task 16: Manual Test Documentation
+## Yang Tidak Perlu Diubah
 
-### File
-
-`docs/testing/manual-test-content-management.md`
-
-### Structure (ikuti format `manual-test-course-discovery.md`)
-
-```
-# Manual Test Checklist: Course Content Management
-
-## Persiapan
-- Aplikasi berjalan di http://localhost:3000
-- DB memiliki minimal 1 course PUBLISHED dengan sections dan lessons
-- Akun creator tersedia
-- Akun student tersedia dan sudah enrolled ke course tersebut
-
-## 1. Creator Workflow
-### 1.1 Buat Section
-### 1.2 Buat Lesson dengan Tiptap Content
-### 1.3 Edit Lesson (version increment)
-### 1.4 Reorder Section
-### 1.5 Delete Section (cascade)
-
-## 2. Student Workflow
-### 2.1 Navigasi ke Lesson
-### 2.2 Baca Konten Tiptap
-### 2.3 Mark Complete
-### 2.4 Progress Bar Update
-### 2.5 Navigasi Prev/Next
-### 2.6 Progress Persistence (refresh)
-
-## 3. Authorization
-### 3.1 Unauthenticated Access
-### 3.2 Creator Akses Course Milik Orang Lain
-### 3.3 Student Akses Creator Endpoint
-
-## 4. Error Scenarios
-### 4.1 Invalid Tiptap JSON
-### 4.2 Duplicate Section Order
-### 4.3 Section/Lesson Tidak Ada (404)
-### 4.4 Server Error Handling
-
-## Catatan Test
-| No | Temuan | Severity | Status |
-```
+- Semua komponen student (`CourseNavigation`, `LessonViewer`, `ProgressBar`, `LessonNavigation`) — sudah benar
+- API sections, lessons, progress (kecuali tambah 1 endpoint baru)
+- Creator page dan semua hooks-nya
 
 ---
 
-## Execution Order
+## Estimasi
 
-```
-Task 13 (Postman) — tidak ada dependency, bisa dikerjakan paralel
-  └── 13.1 sections → 13.2 lessons → 13.3 progress
-
-Task 14 (E2E Creator) — butuh app running + test user creator
-  └── 14.1 setup file → 14.2-14.8 tests
-
-Task 15 (E2E Student) — butuh app running + test user student enrolled
-  └── 15.1 setup file → 15.2-15.8 tests
-
-Task 16 (Manual Docs) — bisa dikerjakan kapan saja
-  └── 16.1 buat file → 16.2-16.5 isi checklist
-```
-
-### Dependencies
-
-- Task 14 & 15 butuh `__tests__/playwright/fixtures/test-users.ts` dan `__tests__/playwright/utils/test-helpers.ts` yang sudah ada
-- Task 14 & 15 butuh `playwright.config.ts` yang sudah dikonfigurasi (sudah ada)
-- Postman collections butuh server running di `http://localhost:3000`
-- E2E tests butuh `CLERK_SECRET_KEY` dan test user credentials di `.env.test`
-
-### Run Commands
-
-```bash
-# Run E2E tests (single run, no watch)
-yarn playwright test __tests__/playwright/content/
-
-# Run specific spec
-yarn playwright test __tests__/playwright/content/creator/manage-course.spec.ts
-
-# Run with UI
-yarn playwright test --ui
-```
-
----
-
-**Document Version:** 1.0  
-**Last Updated:** 2026-03-19
+| Step | Effort |
+|------|--------|
+| Step 1: API endpoint baru | ~30 menit |
+| Step 2-4: Hooks | ~1 jam |
+| Step 5: Context | ~30 menit |
+| Step 6: Refactor page | ~30 menit |
+| **Total** | **~2.5 jam** |

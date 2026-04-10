@@ -1,8 +1,22 @@
 'use client'
 
 import { useEditor, EditorContent, JSONContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { StarterKit } from '@tiptap/starter-kit'
+import { TextAlign } from '@tiptap/extension-text-align'
+import { Highlight } from '@tiptap/extension-highlight'
+import { Typography } from '@tiptap/extension-typography'
+import { Superscript } from '@tiptap/extension-superscript'
+import { Subscript } from '@tiptap/extension-subscript'
+import { Selection } from '@tiptap/extensions'
 import { useState } from 'react'
+
+// Import Tiptap node styles for proper rendering (same as creator)
+import '@/components/tiptap-node/heading-node/heading-node.scss'
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
+import '@/components/tiptap-node/list-node/list-node.scss'
+import '@/components/tiptap-node/code-block-node/code-block-node.scss'
+import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 /**
  * LessonViewer Component
@@ -30,23 +44,31 @@ interface LessonViewerProps {
     title: string
     content: LessonContent
   }
-  onMarkComplete?: () => Promise<void>
-  isCompleted: boolean
-  completing?: boolean
 }
 
-export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing = false }: LessonViewerProps) {
+export function LessonViewer({ lesson }: LessonViewerProps) {
   const [error, setError] = useState<string | null>(null)
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit.configure({
+        link: { openOnClick: false },
+      }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Highlight.configure({ multicolor: true }),
+      Typography,
+      Superscript,
+      Subscript,
+      Selection,
+    ],
     content: lesson.content.content,
     editable: false,
     immediatelyRender: false,
     shouldRerenderOnTransaction: false,
     editorProps: {
       attributes: {
-        class: 'tiptap prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none',
+        class: 'simple-editor',
+        'aria-label': 'Konten pelajaran',
       },
     },
     onCreate: ({ editor }) => {
@@ -80,29 +102,15 @@ export function LessonViewer({ lesson, onMarkComplete, isCompleted, completing =
   }
 
   return (
-    <div className="lesson-viewer">
-      <h1 data-testid="lesson-title">{lesson.title}</h1>
-      <EditorContent editor={editor} className="lesson-content" />
-      <div className="lesson-meta" data-testid="lesson-metadata">
-        <span>Version: {lesson.content.version}</span>
-        <span>Last updated: {new Date(lesson.content.lastEdit).toLocaleDateString()}</span>
-      </div>
-      {!isCompleted && onMarkComplete && (
-        <button 
-          onClick={onMarkComplete}
-          disabled={completing}
-          className="mark-complete-btn"
-          aria-label="Mark this lesson as complete"
-          data-testid="mark-complete-btn"
-        >
-          {completing ? 'Menyimpan...' : 'Tandai Selesai'}
-        </button>
-      )}
-      {isCompleted && (
-        <div className="completed-badge" role="status" aria-label="Lesson completed" data-testid="completion-badge">
-          ✓ Completed
-        </div>
-      )}
+    <div className="lesson-viewer w-full max-w-none text-beige-900 dark:text-beige-900 p-6 rounded-lg
+      [&_.simple-editor-content]:h-auto [&_.simple-editor-content]:flex-none [&_.simple-editor-content]:max-w-none
+      [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0">
+      <h1 data-testid="lesson-title" className="text-3xl font-bold text-beige-900 mb-6">{lesson.title}</h1>
+      <EditorContent 
+        editor={editor} 
+        className="simple-editor-content max-w-none! w-full [&_.tiptap]:px-0 [&_.tiptap]:max-w-none! [&_.tiptap]:w-full"
+        role="presentation"
+      />
     </div>
   )
 }

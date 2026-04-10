@@ -46,10 +46,12 @@ function ManagePageInner() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-beige-50 overflow-hidden">
+    <div className="flex flex-col h-full bg-beige-50">
       <ManageHeader />
       <div className="flex flex-1 overflow-hidden">
-        <ManageSidebar />
+        <div className="relative shrink-0 h-full">
+          <ManageSidebar />
+        </div>
         <main className="flex-1 overflow-y-auto p-8">
           <ManageContent />
         </main>

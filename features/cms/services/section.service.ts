@@ -10,6 +10,7 @@ import { checkCourseOwnership } from './course.service'
 import {
   Section,
   SectionWithLessonCount,
+  SectionWithLessons,
   CreateSectionInput,
   UpdateSectionInput,
   DeleteSectionResult,
@@ -142,7 +143,7 @@ export class SectionService {
   async getSectionsByCourseSlug(slug: string): Promise<{
     courseId: string
     courseStatus: string
-    sections: SectionWithLessonCount[]
+    sections: SectionWithLessons[]
   } | null> {
     const course = await prisma.courses.findUnique({
       where: { slug },
@@ -163,6 +164,14 @@ export class SectionService {
             _count: {
               select: { lessons: true },
             },
+            lessons: {
+              orderBy: { order: 'asc' },
+              select: {
+                id: true,
+                title: true,
+                order: true,
+              },
+            },
           },
         },
       },
@@ -182,6 +191,94 @@ export class SectionService {
         createdAt: s.createdAt,
         updatedAt: s.updatedAt,
         lessonCount: s._count.lessons,
+        lessons: s.lessons,
+      })),
+    }
+  }
+
+  /**
+   * Get sections with full lesson details (including contentPreview) by course slug.
+   * Used by student learn page to fetch all sections + lessons in one request.
+   * Returns null if course does not exist.
+   * 
+   * Optimized: single SQL JOIN with nested relations
+   * Requirements: 1.2, 8.3, Student Learn Page optimization
+   */
+  async getSectionsWithLessons(slug: string): Promise<{
+    courseId: string
+    courseStatus: string
+    sections: Array<{
+      id: string
+      courseId: string
+      title: string
+      description: string | null
+      order: number
+      createdAt: Date
+      updatedAt: Date
+      lessonCount: number
+      lessons: Array<{
+        id: string
+        title: string
+        order: number
+        contentPreview: string
+      }>
+    }>
+  } | null> {
+    const course = await prisma.courses.findUnique({
+      where: { slug },
+      relationLoadStrategy: 'join',
+      select: {
+        id: true,
+        status: true,
+        sections: {
+          orderBy: { order: 'asc' },
+          select: {
+            id: true,
+            courseId: true,
+            title: true,
+            description: true,
+            order: true,
+            createdAt: true,
+            updatedAt: true,
+            lessons: {
+              orderBy: { order: 'asc' },
+              select: {
+                id: true,
+                title: true,
+                order: true,
+                content: true, // Need content to extract preview
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (!course) return null
+
+    // Import lessonService to extract content preview
+    const { lessonService } = await import('./lesson.service')
+
+    return {
+      courseId: course.id,
+      courseStatus: course.status,
+      sections: course.sections.map((s) => ({
+        id: s.id,
+        courseId: s.courseId,
+        title: s.title,
+        description: s.description,
+        order: s.order,
+        createdAt: s.createdAt,
+        updatedAt: s.updatedAt,
+        lessonCount: s.lessons.length,
+        lessons: s.lessons.map((l) => ({
+          id: l.id,
+          title: l.title,
+          order: l.order,
+          contentPreview: lessonService.extractContentPreview(
+            l.content as unknown as import('../types/lesson.types').LessonContent
+          ),
+        })),
       })),
     }
   }

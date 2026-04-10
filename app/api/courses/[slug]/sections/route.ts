@@ -127,17 +127,23 @@ export async function POST(
 /**
  * GET /api/courses/[slug]/sections
  * List all sections in a course, ordered by order field
+ * Query params:
+ *   - include=lessons: Include all lessons for each section (for student learn page)
  * Requirements: 1.2, 8.3
  */
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
     const { slug } = await params
+    const { searchParams } = new URL(request.url)
+    const includeLessons = searchParams.get('include') === 'lessons'
 
-    // Single JOIN query via service — course + sections + lessonCount in one round-trip
-    const result = await sectionService.getSectionsByCourseSlug(slug)
+    // Fetch sections with or without lessons based on query param
+    const result = includeLessons
+      ? await sectionService.getSectionsWithLessons(slug)
+      : await sectionService.getSectionsByCourseSlug(slug)
 
     if (!result) {
       return NextResponse.json(

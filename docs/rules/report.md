@@ -1,132 +1,103 @@
-# Bug Report: Lesson API — 400 Bad Request on Create Lesson
+# Code Cleanup Report — CMS Feature
 
-**Date:** 2026-03-22  
-**Endpoint:** `POST /api/courses/[slug]/sections/[sectionId]/lessons`  
-**Status:** Bug Confirmed
+**Tanggal:** 2026-03-30
+**Scope:** `features/cms/` + API routes terkait
+**Referensi:** `docs/rules/brainstorm.md`
 
 ---
 
-## Error
+## 1. Debug Logs — Harus Dihapus
 
-```json
-{
-  "error": "Invalid lesson content: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\"content\"],\n    \"message\": \"Invalid input: expected object, received array\"\n  }\n]",
-  "code": "VALIDATION_ERROR"
+Debug logs yang ditambahkan saat debugging session, tidak boleh ada di production code.
+
+| File                                                                      | Log                                                            | Action                                                    |       |                     |
+| ---------------------------------------------------------------------------| ----------------------------------------------------------------| -----------------------------------------------------------| -------| ---------------------|
+| `feat--                                                                   | -ms/services/lesson.service.ts`                                | 4x `console.debug` di `getLessonsBySectionWithValidation` | Hapus |                     |
+| `fea------cms/hooks/manage/useLessonHandlers.ts`                          | 3x `console.debug` di `fetchLessons` + `submitLessonFromPanel` | Hapus                                                     |       |                     |
+| `-        cms/components/creator/manage/ManageSidebar.tsx`                | `console.debug` di lesson click handler                        | Hapus                                                     |       |                     |
+| `feat    /cms/components/creator/manage/ManageContent.tsx`                | 2x `console.debug` di `LessonViewerPanel`                      | Hapus                                                     |       |                     |
+| `app         ses/[slug]/sections/[sectionId]/lessons/route.ts`            | `console.debug` di POST handler                                | Hapus                                                     |       |                     |
+| `       /courses/[slug]/sections/[sectionId]/lessons/[lessonId]/route.ts` | `console.debug` di PUT handler                                 | Hapus                                                     |       |                     |
+|                                                                           |                                                                |                                                           |       | Yang boleh tetap:** |
+- `e.error` di `course.service.ts` — legitimate error logging
+- `console.error` di `LessonViewer.tsx` — error boundary
+- `console.error` di `LessonForm.tsx` — error boundary
+- `console.error` di `ManageContent.tsx` (LessonViewerPanel catch) — error boundary
+
+---
+
+## 2. Dead Code — Harus Dihapus
+
+| File | Issue |
+| ------| -------||-------|
+| `features/cms/components/creator/LessonEditor.tsx` | File lama dari spec, tidak dipakai di production. `ManageContent.tsx` sudah replace fungsinya |
+| `features/cms/components/creator/LessonPreview.tsx` | Tidak dipakai, sudah inline di `ManageContent.tsx` |
+| `features/cms/components/creator/LessonForm.tsx` | Tidak dipakai di manage flow baru (Confluence-style panel) |
+| `features/cms/components/creator/LessonList.tsx` | Tidak dipakai di manage flow baru |
+| `features/cms/components/creator/SectionForm.tsx` | Tidak dipakai di manage flow baru |
+| `features/cms/components/creator/SectionList.tsx` | Tidak dipakai di manage flow baru |
+| `features/cms/services/lesson.service.ts` | Method `extractPreview()` adalah wrapper duplikat dari `extractContentPreview()` — hapus salah satu |
+| `features/cms/services/authorization.service.ts` | Cek apakah masih dipakai atau sudah digantikan `authorization.helper.ts` |
+
+---
+
+## 3. Architecture Issues
+
+### 3.1 Context folder naming tidak konsisten
+- `features/cms/Context/` — huruf kapital, tidak sesuai konvensi `kebab-case` dari `CLAUDE.md`
+- Seharusnya `features/cms/context/`
+
+### 3.2 Validation folder di luar konvensi
+- `features/cms/validation/` — seharusnya masuk ke `features/cms/lib/` sesuai arsitektur
+- Atau tetap di `validation/` jika tim sepakat sebagai konvensi baru
+
+### 3.3 ManageContext terlalu besar
+- `ManageContext.tsx` mengelola 10+ state dan handler dalam satu file
+- Sesuai `brainstorm.md` poin 2 (Prop drilling → Context) dan poin 4 (Separation of concern)
+- Sudah baik menggunakan hooks (`useCourseManage`, `useLessonHandlers`, dll) — ini sudah DRY
+- Tidak perlu refactor lebih jauh untuk MVP
+
+### 3.4 `extractPreview` duplikat
+```ts
+// lesson.service.ts — dua method dengan fungsi sama
+extractPreview(content: LessonContent): string {
+  return this.extractContentPreview(content)  // wrapper tidak perlu
 }
+extractContentPreview(content: LessonContent): string { ... }
 ```
+Hapus `extractPreview`, pakai `extractContentPreview` langsung di API routes.
 
 ---
 
-## Root Cause
+## 4. Code Quality — Minor
 
-Ada **ketidaksesuaian struktur** antara body JSON yang dikirim Postman dan schema validasi Zod di `features/cms/validation/tiptap.ts`.
+| File  | Issue | Severity |     |     |           |                                                                               |        |                                        |                                         |     |                         |                                       |     |
+| -------| -------| ----------| -----| -----| -----------| -------------------------------------------------------------------------------| --------| ----------------------------------------| -----------------------------------------| -----| -------------------------| ---------------------------------------| -----|
+| `us   |       |          |     |     | dlers.ts` | `handleLessonSubmit` tidak dipakai (sudah digantikan `submitLessonFromPanel`) | Medium |                                        |                                         |     |                         |                                       |     |
+| `f    |       |          |     |     |           |                                                                               |        | tures/cms/components/creator/index.ts` | Mungkin export komponen yang sudah dead | Low |                         |                                       |     |
+| `feat |       |          |     |     |           |                                                                               |        |                                        |                                         |     | /cms/services/index.ts` | Cek apakah semua export masih relevan | Low |
 
-### Body yang dikirim (Postman)
+---
+Sudah Baik (Tidak Perlu Diubah)
 
-```json
-{
-  "title": "Intro to TypeScript",
-  "order": 1,
-  "content": {
-    "type": "doc",
-    "version": 1,
-    "lastEdit": "2026-03-19T00:00:00.000Z",
-    "content": [...]
-  }
-}
-```
-
-Struktur ini menempatkan `type`, `version`, `lastEdit`, dan `content` (array) **semuanya di level yang sama** dalam satu objek.
-
-### Schema yang diharapkan (`LessonContentSchema`)
-
-```typescript
-const LessonContentSchema = z.object({
-  content: TiptapDocumentSchema,  // <-- expects nested object { type: "doc", content: [...] }
-  version: z.number().int().positive(),
-  lastEdit: z.string().datetime(),
-})
-```
-
-Schema ini mengharapkan struktur **dua lapis**:
-
-```json
-{
-  "version": 1,
-  "lastEdit": "2026-03-19T00:00:00.000Z",
-  "content": {
-    "type": "doc",
-    "content": [...]
-  }
-}
-```
-
-### Perbedaan
-
-| Field             | Body Postman      | Schema Zod                                            |                                   |
-| -------------------| -------------------| -------------------------------------------------------| -----------------------------------|
-| `co--------- `    | `"doc"` (di root) | Harus ada di dalam `content.content`                  |                                   |
-| `cont             |                   | `1` (di root)                                         | Harus ada di root `LessonContent` |
-| -----ent.content` | Array of nodes    | Harus berupa object `{ type: "doc", content: [...] }` |                                   |
-| -------           |                   |                                                       |                                   |
-```ma `content` sebagai field yang harus berupa **object** (`TiptapDocumentSchema`), tapi yang dikirim adalah **array** karena `content` di body Postman langsung berisi array nodes Tiptap.
+- Struktur hooks `features/cms/hooks/manage/` — modular, separation of concern baik
+- `ManageContext.tsx` — sudah delegate ke hooks, tidak over-engineer
+- Service layer (`lesson.service.ts`, `section.service.ts`) — clean, single responsibility
+- Type definitions di `features/cms/types/` — terstruktur per domain
+- Zod validation di `features/cms/validation/tiptap.ts` — solid
 
 ---
 
-## Solusi
+## 6. Priority Action Items
 
-Ada dua opsi:
+**P1 — Lakukan sekarang:**
+1. Hapus semua `console.debug` (6 file)
+2. Hapus method `extractPreview()` duplikat di `lesson.service.ts`
 
-### Opsi A — Fix body Postman (recommended, tidak ubah kode)
+**P2 — Lakukan setelah P1:**
+3. Hapus dead components: `LessonEditor.tsx`, `LessonPreview.tsx`, `LessonForm.tsx`, `LessonList.tsx`, `SectionForm.tsx`, `SectionList.tsx`
+4. Cek dan hapus `handleLessonSubmit` di `useLessonHandlers.ts` jika tidak dipakai
 
-Ubah body request menjadi struktur dua lapis sesuai schema:
-
-```json
-{
-  "title": "Intro to TypeScript",
-  "order": 1,
-  "content": {
-    "version": 1,
-    "lastEdit": "2026-03-19T00:00:00.000Z",
-    "content": {
-      "type": "doc",
-      "content": [
-        {
-          "type": "paragraph",
-          "content": [{ "type": "text", "text": "Hello world" }]
-        }
-      ]
-    }
-  }
-}
-```
-
-### Opsi B — Refactor schema Zod (ubah kode)
-
-Flatten `LessonContentSchema` agar menerima format body Postman saat ini:
-
-```typescript
-const LessonContentSchema = z.object({
-  type: z.literal('doc'),
-  version: z.number().int().positive(),
-  lastEdit: z.string().datetime(),
-  content: z.array(TiptapNodeSchema),
-})
-```
-
----
-
-## Rekomendasi
-
-Gunakan **Opsi A** — fix body Postman. Schema dua lapis lebih sesuai dengan cara Tiptap menyimpan dokumen secara internal (Tiptap memisahkan metadata editor dari dokumen ProseMirror). Ini juga konsisten dengan cara Tiptap mengekspos `editor.getJSON()` yang mengembalikan `{ type: "doc", content: [...] }` sebagai dokumen terpisah dari metadata seperti `version` dan `lastEdit`.
-
-Update file `docs/api/content-management/lessons.postman.json` dan `lesson-api.md` dengan format body yang benar.
-
----
-
-## Files Terdampak
-
-- `docs/api/content-management/lessons.postman.json` — body request perlu diupdate
-- `docs/api/content-management/lesson-api.md` — contoh body perlu diupdate
-- `features/cms/validation/tiptap.ts` — schema sudah benar, tidak perlu diubah
-- `features/cms/services/lesson.service.ts` — tidak perlu diubah
+**P3 — Nice to have:**
+5. Rename `Context/` → `context/` untuk konsistensi naming
+6. Cek `authorization.service.ts` vs `authorization.helper.ts` — mungkin duplikat

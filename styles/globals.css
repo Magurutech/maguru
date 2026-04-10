@@ -557,25 +557,34 @@
 }
 
 :root {
-  --sidebar: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 95.9%);
-  --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* Maguru design system — beige/warm palette */
+  --sidebar: #F5EDE0;
+  /* beige-50 */
+  --sidebar-foreground: #7B5B2C;
+  /* beige-900 */
+  --sidebar-primary: #FF4D4D;
+  /* merah-500 */
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F2EADC;
+  /* beige-100 */
+  --sidebar-accent-foreground: #7B5B2C;
+  /* beige-900 */
+  --sidebar-border: #E8D9C6;
+  /* beige-200 */
+  --sidebar-ring: #FF4D4D;
+  /* merah-500 */
 }
 
 .dark {
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+  /* Keep dark mode using same warm palette — no dark inversion for Maguru */
+  --sidebar: #F5EDE0;
+  --sidebar-foreground: #7B5B2C;
+  --sidebar-primary: #FF4D4D;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F2EADC;
+  --sidebar-accent-foreground: #7B5B2C;
+  --sidebar-border: #E8D9C6;
+  --sidebar-ring: #FF4D4D;
 }
 
 @theme inline {

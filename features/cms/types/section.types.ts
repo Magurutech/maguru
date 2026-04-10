@@ -17,6 +17,16 @@ export interface SectionWithLessonCount extends Section {
   lessonCount: number
 }
 
+export interface SectionLesson {
+  id: string
+  title: string
+  order: number
+}
+
+export interface SectionWithLessons extends SectionWithLessonCount {
+  lessons: SectionLesson[]
+}
+
 export interface CreateSectionInput {
   title: string
   description?: string

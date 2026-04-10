@@ -157,7 +157,7 @@ function LessonViewerPanel({ sectionId, lessonId }: { sectionId: string; lessonI
         <EditorContent
           editor={editor}
           role="presentation"
-          className="simple-editor-content max-w-full [&_.tiptap]:px-0"
+          className="simple-editor-content max-w-full [&_.simple-editor-content]:h-auto [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0"
         />
       </div>
     </div>
@@ -344,7 +344,7 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
         <EditorContent
           editor={editor}
           role="presentation"
-          className="simple-editor-content max-w-full [&_.tiptap]:min-h-200 [&_.tiptap]:px-0"
+          className="simple-editor-content max-w-full [&_.tiptap]:min-h-[200px] [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-8"
         />
       </div>
     </div>

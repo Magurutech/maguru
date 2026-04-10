@@ -18,8 +18,8 @@ Sebelum memulai test, pastikan kondisi berikut terpenuhi:
   - Lesson content berisi minimal 1 heading (untuk verifikasi Tiptap rendering)
   - Catat slug course: `___________`
 - [x] Akun creator tersedia dan memiliki course di atas
-- [ ] Akun student tersedia dan sudah enrolled di course di atas
-- [ ] Browser DevTools siap untuk cek network/console errors
+- [x] Akun student tersedia dan sudah enrolled di course di atas
+- [x] Browser DevTools siap untuk cek network/console errors
 
 ---
 
@@ -200,102 +200,100 @@ Sebelum memulai test, pastikan kondisi berikut terpenuhi:
 
 ### 2.1 Akses Halaman dengan Auth Student Enrolled
 
-- [ ] Login sebagai student yang sudah enrolled
-- [ ] Buka `http://localhost:3000/course/[slug]/learn`
-- [ ] Halaman tampil tanpa error
-- [ ] Tidak ada redirect ke `/sign-in`
+- [x] Login sebagai student yang sudah enrolled
+- [x] Buka `http://localhost:3000/course/[slug]/learn`
+- [x] Halaman tampil tanpa error
+- [x] Tidak ada redirect ke `/sign-in`
 
 ### 2.2 Sidebar: Daftar Seksi dan Lesson Tampil
 
-- [ ] Sidebar kiri tampil
-- [ ] Semua seksi course tampil di sidebar
-- [ ] Klik seksi → expand/collapse daftar lesson di dalam seksi
-- [ ] Semua lesson tampil di bawah seksi masing-masing
+- [x] Sidebar kiri tampil
+- [x] Semua seksi course tampil di sidebar
+- [x] Klik seksi → expand/collapse daftar lesson di dalam seksi
+- [x] Semua lesson tampil di bawah seksi masing-masing
 
 ### 2.3 Klik Lesson → Konten Tiptap Ter-render
 
-- [ ] Klik salah satu lesson di sidebar
-- [ ] Area konten utama menampilkan konten lesson
-- [ ] Heading (h1/h2/h3) ter-render dengan ukuran font yang berbeda
-- [ ] Paragraph ter-render sebagai teks biasa
-- [ ] (Jika ada) Bold/italic ter-render dengan formatting yang benar
-- [ ] (Jika ada) List ter-render sebagai bullet/numbered list
-- [ ] (Jika ada) Code block ter-render dengan background berbeda
-- [ ] Tidak ada raw JSON yang terlihat di halaman
+- [x] Klik salah satu lesson di sidebar
+- [x] Area konten utama menampilkan konten lesson
+- [x] Heading (h1/h2/h3) ter-render dengan ukuran font yang berbeda
+- [x] Paragraph ter-render sebagai teks biasa
+- [x] (Jika ada) Bold/italic ter-render dengan formatting yang benar
+- [x] (Jika ada) List ter-render sebagai bullet/numbered list
+- [x] (Jika ada) Code block ter-render dengan background berbeda
+- [x] Tidak ada raw JSON yang terlihat di halaman
 
 ### 2.4 Progress Bar Tampil dengan Persentase
 
-- [ ] Progress bar tampil di bagian atas halaman
-- [ ] Persentase tampil (misal: "30%")
-- [ ] Jumlah lesson selesai / total lesson tampil (misal: "3 / 10 pelajaran selesai")
-- [ ] Nilai persentase sesuai dengan jumlah lesson yang sudah diselesaikan
+- [x] Progress bar tampil di bagian atas halaman
+- [x] Persentase tampil (misal: "30%")
+- [x] Jumlah lesson selesai / total lesson tampil (misal: "3 / 10 pelajaran selesai")
+- [x] Nilai persentase sesuai dengan jumlah lesson yang sudah diselesaikan
 
 ### 2.5 Tandai Selesai → Checkmark Muncul di Sidebar
 
-- [ ] Buka lesson yang belum diselesaikan
-- [ ] Tombol "Tandai Selesai" tampil di bawah konten
-- [ ] Klik tombol "Tandai Selesai"
-- [ ] Loading state tampil di tombol saat proses
-- [ ] Toast sukses muncul
-- [ ] Checkmark (✓) muncul di sidebar di sebelah lesson tersebut
-- [ ] Tombol "Tandai Selesai" berubah menjadi badge "Selesai" atau hilang
+- [x] Buka lesson yang belum diselesaikan
+- [x] Klik tombol navigasi `>` (Next) untuk pindah ke lesson berikutnya
+- [x] Lesson sebelumnya otomatis ditandai selesai
+- [x] ![alt text](image.png)Checkmark (✓) muncul di sidebar di sebelah lesson yang baru saja ditinggalkan
+- [x] Tidak ada error di console
 
 ### 2.6 Progress Bar Update Setelah Mark Complete
 
 - [ ] Catat persentase progress sebelum mark complete
-- [ ] Klik "Tandai Selesai" pada lesson yang belum selesai
-- [ ] Progress bar update otomatis (tanpa refresh)
-- [ ] Persentase naik sesuai perhitungan (misal: dari 30% ke 40% jika ada 10 lessons)
-- [ ] Jumlah "X / Y pelajaran selesai" juga bertambah
+- [x] Klik tombol navigasi `>` (Next) untuk pindah ke lesson berikutnya
+- [x] Progress bar update otomatis (tanpa refresh)
+- [x] Persentase naik sesuai perhitungan (misal: dari 30% ke 40% jika ada 10 lessons)
+- [x] Jumlah "X / Y pelajaran selesai" juga bertambah
 
 ### 2.7 Tombol Berikutnya → Lesson Berikutnya Ter-load
 
-- [ ] Buka lesson yang bukan lesson terakhir
-- [ ] Tombol "Pelajaran Berikutnya" tampil
-- [ ] Klik tombol
-- [ ] Konten lesson berikutnya ter-load di area utama
-- [ ] Judul lesson di area utama berubah sesuai lesson berikutnya
-- [ ] Lesson berikutnya ter-highlight di sidebar
+- [x] Buka lesson yang bukan lesson terakhir
+- [x] Tombol "Pelajaran Berikutnya" tampil
+- [x] Klik tombol
+- [x] Konten lesson berikutnya ter-load di area utama
+- [x] Judul lesson di area utama berubah sesuai lesson berikutnya
+- [x] Lesson berikutnya ter-highlight di sidebar
 
 ### 2.8 Tombol Sebelumnya → Lesson Sebelumnya Ter-load
 
-- [ ] Buka lesson yang bukan lesson pertama
-- [ ] Tombol "Pelajaran Sebelumnya" tampil
-- [ ] Klik tombol
-- [ ] Konten lesson sebelumnya ter-load di area utama
-- [ ] Judul lesson di area utama berubah sesuai lesson sebelumnya
+- [x] Buka lesson yang bukan lesson pertama
+- [x] Tombol "<" untuk Pelajaran Sebelumnya tampil
+- [x] Klik tombol
+- [x] Konten lesson sebelumnya ter-load di area utama
+- [x] Judul lesson di area utama berubah sesuai lesson sebelumnya
 
 ### 2.9 Prev Disabled di Lesson Pertama, Next Disabled di Terakhir
 
-- [ ] Navigasi ke lesson pertama di course
-- [ ] Tombol "Pelajaran Sebelumnya" disabled atau tidak tampil
-- [ ] Navigasi ke lesson terakhir di course
-- [ ] Tombol "Pelajaran Berikutnya" disabled atau tidak tampil
+- [x] Navigasi ke lesson pertama di course
+- [x] Tombol "Pelajaran Sebelumnya" disabled atau tidak tampil
+- [x] Navigasi ke lesson terakhir di course
+- [x] Tombol "Pelajaran Berikutnya" disabled atau tidak tampil
 
 ### 2.10 Refresh Halaman → Progress Tetap Tersimpan
 
-- [ ] Tandai beberapa lesson sebagai selesai
-- [ ] Catat lesson mana saja yang sudah selesai dan persentase progress
-- [ ] Refresh halaman (F5 atau Ctrl+R)
-- [ ] Checkmark tetap muncul di sidebar untuk lesson yang sudah selesai
-- [ ] Progress bar menampilkan persentase yang sama seperti sebelum refresh
-- [ ] Tidak ada progress yang hilang
+- [x] Tandai beberapa lesson sebagai selesai
+- [x] Catat lesson mana saja yang sudah selesai dan persentase progress
+- [x] Refresh halaman (F5 atau Ctrl+R)
+- [x] Checkmark tetap muncul di sidebar untuk lesson yang sudah selesai
+- [x] Progress bar menampilkan persentase yang sama seperti sebelum refresh
+- [x] Tidak ada progress yang hilang
 
 ### 2.11 Error State: Lesson Tidak Ditemukan → Pesan Error Tampil
 
-- [ ] Buka URL dengan lesson ID yang tidak valid:
+- [x] Buka URL dengan lesson ID yang tidak valid:
   `http://localhost:3000/course/[slug]/learn?lessonId=invalid-id-xyz`
-- [ ] Pesan error tampil di area konten utama (bukan blank page)
-- [ ] Pesan error informatif (misal: "Pelajaran tidak ditemukan")
-- [ ] Tombol retry atau kembali tersedia
-- [ ] Tidak ada crash atau white screen
+- [x] Pesan error tampil di area konten utama (bukan blank page)
+- [x] Pesan error informatif (misal: "Pelajaran tidak ditemukan")
+- [x] Tombol retry atau kembali tersedia
+- [x] Tidak ada crash atau white screen
 
 ### 2.12 Akses Tanpa Auth → Redirect `/sign-in`
 
-- [ ] Logout dari aplikasi
-- [ ] Buka `http://localhost:3000/course/[slug]/learn`
-- [ ] Redirect ke `/sign-in`
-- [ ] Tidak ada konten lesson yang terekspos
+- [x] Logout dari aplikasi
+- [x] Buka `http://localhost:3000/course/[slug]/learn`
+- [x] Redirect ke `/sign-in`
+- [x] Tidak ada konten lesson yang terekspos
 
 ---
 

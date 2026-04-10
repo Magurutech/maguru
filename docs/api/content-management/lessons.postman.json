@@ -257,6 +257,104 @@
       ]
     },
     {
+      "name": "2b. GET /api/courses/[slug]/sections?include=lessons",
+      "item": [
+        {
+          "name": "Get All Sections with Lessons - No Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has sections array with lessons\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('sections');",
+                  "    pm.expect(json.sections).to.be.an('array');",
+                  "    if (json.sections.length > 0) {",
+                  "        pm.expect(json.sections[0]).to.have.property('id');",
+                  "        pm.expect(json.sections[0]).to.have.property('title');",
+                  "        pm.expect(json.sections[0]).to.have.property('lessons');",
+                  "        pm.expect(json.sections[0].lessons).to.be.an('array');",
+                  "        if (json.sections[0].lessons.length > 0) {",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('id');",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('title');",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('contentPreview');",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections?include=lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "lessons",
+                  "description": "Include all lessons for each section"
+                }
+              ]
+            },
+            "description": "Public endpoint — fetch all sections with lessons in single request. Optimized for student learn page."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sections Only - No Lessons (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has sections array without full lessons\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('sections');",
+                  "    pm.expect(json.sections).to.be.an('array');",
+                  "    if (json.sections.length > 0) {",
+                  "        pm.expect(json.sections[0]).to.have.property('id');",
+                  "        pm.expect(json.sections[0]).to.have.property('title');",
+                  "        pm.expect(json.sections[0]).to.have.property('lessonCount');",
+                  "        // Should have basic lesson info but not contentPreview",
+                  "        if (json.sections[0].lessons && json.sections[0].lessons.length > 0) {",
+                  "            pm.expect(json.sections[0].lessons[0]).to.not.have.property('contentPreview');",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Public endpoint — fetch sections with lesson count only (no full lesson details). Used by creator manage page."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "3. GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]",
       "item": [
         {
