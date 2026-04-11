@@ -27,7 +27,7 @@ export function ManageDialogs() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={cancelDeleteSection}>Batal</Button>
+            <Button variant="outline" onClick={cancelDeleteSection} data-testid="cancel-delete-section-btn">Batal</Button>
             <Button variant="destructive" onClick={confirmDeleteSection} data-testid="confirm-delete-section-btn">
               Ya, Hapus
             </Button>
@@ -49,7 +49,7 @@ export function ManageDialogs() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={cancelDeleteLesson}>Batal</Button>
+            <Button variant="outline" onClick={cancelDeleteLesson} data-testid="cancel-delete-lesson-btn">Batal</Button>
             <Button variant="destructive" onClick={confirmDeleteLesson} data-testid="confirm-delete-lesson-btn">
               Ya, Hapus
             </Button>

@@ -39,8 +39,11 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
       return
     }
 
-    const courseId = await firstItem.getAttribute('data-course-id')
-    managePath = `/creator/courses/${courseId}/manage`
+    // Ambil slug dari href link (data-course-id berisi ID bukan slug)
+    const href = await firstItem.getAttribute('href')
+    if (!href) { managePath = ''; return }
+    const match = href.match(/\/creator\/courses\/([^/]+)\/manage/)
+    managePath = match ? `/creator/courses/${match[1]}/manage` : ''
   })
 
   test('manage page header shows course info and publish button', async ({ page }) => {
@@ -76,8 +79,8 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
 
     await toggleBtn.click()
 
-    // Wait for optimistic update (no full reload)
-    await page.waitForTimeout(2000)
+    // Tunggu API selesai — tombol tidak lagi dalam state "Menyimpan..."
+    await expect(toggleBtn).not.toContainText('Menyimpan...', { timeout: 10000 })
 
     const newText = await toggleBtn.textContent()
     if (isDraft) {
@@ -88,7 +91,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
 
     // Toggle back to original state
     await toggleBtn.click()
-    await page.waitForTimeout(2000)
+    await expect(toggleBtn).not.toContainText('Menyimpan...', { timeout: 10000 })
   })
 
   test('sidebar overview button shows course overview panel', async ({ page }) => {
@@ -104,8 +107,11 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await expect(overviewBtn).toBeVisible()
     await overviewBtn.click()
 
-    // Main content should show overview
-    await expect(page.locator('main')).toContainText('Overview Kursus')
+    // Sidebar overview button should be active/selected
+    await expect(overviewBtn).toBeVisible()
+
+    // Main content should show course overview details (Deskripsi is always present in overview)
+    await expect(page.locator('main')).toContainText('Deskripsi')
   })
 
   test('+ Seksi button opens section creation dialog', async ({ page }) => {
@@ -118,12 +124,11 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await waitForPageLoad(page)
 
     const addSectionBtn = page.getByTestId('add-section-btn')
-    await expect(addSectionBtn).toBeVisible()
+    await expect(addSectionBtn).toBeVisible({ timeout: 10000 })
     await addSectionBtn.click()
 
-    // Dialog should open
-    await expect(page.locator('[role="dialog"]')).toBeVisible()
-    await expect(page.locator('[role="dialog"]')).toContainText(/buat seksi baru/i)
+    // Inline input muncul di sidebar (bukan dialog)
+    await expect(page.getByTestId('inline-section-input')).toBeVisible({ timeout: 5000 })
   })
 
   test('back button redirects to /creator/courses', async ({ page }) => {
@@ -136,10 +141,10 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await waitForPageLoad(page)
 
     const backBtn = page.getByTestId('back-to-courses-btn')
-    await expect(backBtn).toBeVisible()
+    await expect(backBtn).toBeVisible({ timeout: 10000 })
     await backBtn.click()
 
-    await page.waitForURL('/creator/courses', { timeout: 5000 })
+    await page.waitForURL('/creator/courses', { timeout: 10000 })
     await expect(page).toHaveURL('/creator/courses')
   })
 

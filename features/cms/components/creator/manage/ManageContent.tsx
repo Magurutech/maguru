@@ -301,6 +301,7 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
               size="sm"
               onClick={handleSave}
               disabled={saving || !title.trim()}
+              data-testid="lesson-save-btn"
               className="bg-merah-500 hover:bg-merah-600 text-white rounded-r-none border-r border-merah-400"
             >
               {saving ? 'Menyimpan...' : isEditMode ? 'Save' : 'Create'}

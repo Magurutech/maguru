@@ -30,6 +30,8 @@ const isProtectedRoute = createRouteMatcher([
   '/creator(.*)',
   '/settings(.*)',
   '/profile(.*)',
+  '/course/(.*)/learn(.*)',  // Learn pages require authentication
+  '/student(.*)',            // Student area requires authentication
 ])
 
 // Define admin-only routes for role-based protection

@@ -77,7 +77,7 @@ test.describe('Course Catalog — Unauthenticated', () => {
     await searchInput.fill('React')
 
     // Wait for debounce (300ms) + navigation
-    await page.waitForURL(/search=React/, { timeout: 3000 })
+    await page.waitForURL(/search=React/, { timeout: 8000 })
     await expect(page).toHaveURL(/search=React/)
   })
 

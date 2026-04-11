@@ -1,23 +1,55 @@
-## Error Type
-Console ReferenceError
+sidebar overview button shows course overview panel
+course/creator/manage-course.spec.ts:97
 
-## Error Message
-useEffect is not defined
+Error: expect(locator).toContainText(expected) failed
+
+Locator: locator('main')
+Expected substring: "Overview Kursus"
+Received string:    "Test Kursus 1775911112386PemrogramanPemulaDraft0 seksi · 0 pelajaranDeskripsiDeskripsi kursus test yang valid untuk E2E"
+Timeout: 5000ms
+
+Call log:
+  - Expect "toContainText" with timeout 5000ms
+  - waiting for locator('main')
+    9 × locator resolved to <main class="flex-1 overflow-y-auto p-8">…</main>
+      - unexpected value "Test Kursus 1775911112386PemrogramanPemulaDraft0 seksi · 0 pelajaranDeskripsiDeskripsi kursus test yang valid untuk E2E"
 
 
-    at useLessonLearn (features/cms/hooks/learn/useLessonLearn.ts:47:3)
-    at LearnProvider (features/cms/context/student/LearnContext.tsx:71:21)
-    at S.scheduleRefresh (chrome-extension://fmkadmapgofadopljbjfkapdkoienihi/build/installHook.js:1:86461)
-    at UserRoleProvider (features/auth/context/UserRoleContext.tsx:353:5)
-    at RootLayout (app\layout.tsx:45:11)
+  109 |
+  110 |     // Main content should show overview
+> 111 |     await expect(page.locator('main')).toContainText('Overview Kursus')
+      |                                        ^
+  112 |   })
+  113 |
+  114 |   test('+ Seksi button opens section creation dialog', async ({ page }) => {
+    at D:\.maguru\maguru\__tests__\playwright\course\creator\manage-course.spec.ts:111:40
 
-## Code Frame
-  45 |
-  46 |   // Pre-populate lessonsMap from sections data (fetched with ?include=lessons)
-> 47 |   useEffect(() => {
-     |   ^
-  48 |     const initialLessonsMap: Record<string, LearnLesson[]> = {}
-  49 |     const initialExpandedSections = new Set<string>()
-  50 |
 
-Next.js version: 16.1.6 (Turbopack)
+
+sidebar overview button shows course overview panel
+course/creator/manage-course.spec.ts:97
+
+
+
+Error: expect(locator).toContainText(expected) failed
+
+Locator: locator('main')
+Expected substring: "Overview Kursus"
+Received string:    "Test Kursus 1775911112386PemrogramanPemulaDraft0 seksi · 0 pelajaranDeskripsiDeskripsi kursus test yang valid untuk E2E"
+Timeout: 5000ms
+
+Call log:
+  - Expect "toContainText" with timeout 5000ms
+  - waiting for locator('main')
+    9 × locator resolved to <main class="flex-1 overflow-y-auto p-8">…</main>
+      - unexpected value "Test Kursus 1775911112386PemrogramanPemulaDraft0 seksi · 0 pelajaranDeskripsiDeskripsi kursus test yang valid untuk E2E"
+
+
+  109 |
+  110 |     // Main content should show overview
+> 111 |     await expect(page.locator('main')).toContainText('Overview Kursus')
+      |                                        ^
+  112 |   })
+  113 |
+  114 |   test('+ Seksi button opens section creation dialog', async ({ page }) => {
+    at D:\.maguru\maguru\__tests__\playwright\course\creator\manage-course.spec.ts:111:40

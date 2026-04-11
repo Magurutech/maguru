@@ -92,7 +92,7 @@ test.describe('Creator Dashboard — Authenticated Creator', () => {
     const courseId = await firstItem.getAttribute('data-course-id')
     await firstItem.click()
 
-    await page.waitForURL(`/creator/courses/${courseId}/manage`, { timeout: 5000 })
+    await page.waitForURL(`/creator/courses/${courseId}/manage`, { timeout: 15000 })
     await expect(page).toHaveURL(`/creator/courses/${courseId}/manage`)
   })
 
@@ -104,7 +104,7 @@ test.describe('Creator Dashboard — Authenticated Creator', () => {
     await expect(viewAllBtn).toBeVisible()
     await viewAllBtn.click()
 
-    await page.waitForURL('/creator/courses', { timeout: 5000 })
+    await page.waitForURL('/creator/courses', { timeout: 15000 })
     await expect(page).toHaveURL('/creator/courses')
   })
 

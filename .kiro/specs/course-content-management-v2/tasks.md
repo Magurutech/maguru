@@ -572,34 +572,39 @@ This implementation plan breaks down the Course Content Management feature into 
     - GET tanpa auth → 401 Unauthorized
     - _Requirements: 6.2, 6.5, 7.1, 7.2_
 
-- [ ] 14. E2E Tests — Creator Workflow
-  - [ ] 14.1 Buat `__tests__/playwright/content/creator/manage-course.spec.ts`
-  - [ ] 14.2 Test: akses `/creator/courses/[slug]/manage` dengan auth creator → halaman tampil dengan section list
-  - [ ] 14.3 Test: klik "+ Seksi" → dialog terbuka, isi form, submit → section baru muncul di list
-  - [ ] 14.4 Test: klik "+ Pelajaran" pada section → dialog terbuka, isi title + Tiptap content, submit → lesson tersimpan
-  - [ ] 14.5 Test: klik edit lesson → form terbuka dengan existing content, ubah content, save → version increment terlihat
-  - [ ] 14.6 Test: klik tombol reorder section (up/down) → urutan section berubah di UI
-  - [ ] 14.7 Test: klik delete section → konfirmasi dialog, confirm → section dan lessons-nya hilang dari list
-  - [ ] 14.8 Test: akses `/creator/courses/[slug]/manage` tanpa auth → redirect ke `/sign-in`
-  - _Requirements: 1.1, 1.3, 1.4, 1.5, 2.1, 2.4, 2.5, 8.1, 8.4_
+- [x] 14. E2E Tests — Creator Workflow
+  - [x] 14.1 Buat `__tests__/playwright/content/creator/manage-course.spec.ts`
+  - [x] 14.2 Test: akses `/creator/courses/[slug]/manage` dengan auth creator → halaman tampil dengan section list
+  - [x] 14.3 Test: klik "+ Seksi" → dialog terbuka, isi form, submit → section baru muncul di list
+  - [x] 14.4 Test: klik "+ Pelajaran" pada section → dialog terbuka, isi title + Tiptap content, submit → lesson tersimpan
+  - [x] 14.5 Test: klik edit lesson → form terbuka dengan existing content, ubah content, save → version increment terlihat
+  - [x] 14.6 Test: klik tombol reorder section (up/down) → urutan section berubah di UI
+  - [x] 14.7 Test: klik delete section → konfirmasi dialog, confirm → section dan lessons-nya hilang dari list
+  - [x] 14.8 Test: akses `/creator/courses/[slug]/manage` tanpa auth → redirect ke `/sign-in`
+  - [x] 14.9 Fix assertion `__tests__/playwright/course/creator/manage-course.spec.ts`
+    - ✓ Fix test "sidebar overview button shows course overview panel"
+    - ✓ Assertion diubah dari `toContainText('Overview Kursus')` ke `toContainText('Deskripsi')`
+    - ✓ Root cause: "Overview Kursus" ada di sidebar (`aside`), bukan di `main` — konten `main` menampilkan detail kursus
+    - ✓ Fix sesuai dengan UI aktual yang terlihat di screenshot
+  - _Requirements: 1.1, 1.3, 1.4, 1.5, 2.1, 2.4, 2.5, 4.5, 8.1, 8.4_
 
-- [ ] 15. E2E Tests — Student Learn Workflow
-  - [ ] 15.1 Buat `__tests__/playwright/content/student/learn.spec.ts`
-  - [ ] 15.2 Test: akses `/course/[slug]/learn` dengan auth student yang enrolled → halaman tampil dengan sidebar sections dan lesson list
-  - [ ] 15.3 Test: klik lesson di sidebar → konten Tiptap ter-render di area utama
-  - [ ] 15.4 Test: klik "Tandai Selesai" → lesson marked complete, checkmark muncul di sidebar
-  - [ ] 15.5 Test: progress bar update setelah mark complete (persentase naik)
-  - [ ] 15.6 Test: klik tombol navigasi "Pelajaran Berikutnya" → lesson berikutnya ter-load
-  - [ ] 15.7 Test: refresh halaman → progress tetap tersimpan (checkmark masih ada)
-  - [ ] 15.8 Test: akses `/course/[slug]/learn` tanpa auth → redirect ke `/sign-in`
+- [x] 15. E2E Tests — Student Learn Workflow
+  - [x] 15.1 Buat `__tests__/playwright/content/student/learn.spec.ts`
+  - [x] 15.2 Test: akses `/course/[slug]/learn` dengan auth student yang enrolled → halaman tampil dengan sidebar sections dan lesson list
+  - [x] 15.3 Test: klik lesson di sidebar → konten Tiptap ter-render di area utama
+  - [x] 15.4 Test: klik "Tandai Selesai" → lesson marked complete, checkmark muncul di sidebar
+  - [x] 15.5 Test: progress bar update setelah mark complete (persentase naik)
+  - [x] 15.6 Test: klik tombol navigasi "Pelajaran Berikutnya" → lesson berikutnya ter-load
+  - [x] 15.7 Test: refresh halaman → progress tetap tersimpan (checkmark masih ada)
+  - [x] 15.8 Test: akses `/course/[slug]/learn` tanpa auth → redirect ke `/sign-in`
   - _Requirements: 5.1, 5.2, 5.3, 5.7, 6.1, 6.2, 6.4, 7.1, 7.5_
 
-- [ ] 16. Manual Test Documentation
-  - [ ] 16.1 Buat `docs/testing/manual-test-content-management.md`
-  - [ ] 16.2 Checklist Creator workflow: buat section, buat lesson dengan Tiptap content, edit lesson, reorder section, delete section (cascade)
-  - [ ] 16.3 Checklist Student workflow: navigasi ke lesson, baca konten, mark complete, cek progress bar, navigasi prev/next, refresh persistence
-  - [ ] 16.4 Checklist Authorization: unauthenticated access, creator akses course milik orang lain, student akses creator endpoint
-  - [ ] 16.5 Checklist Error scenarios: invalid Tiptap JSON, duplicate section order, lesson/section tidak ada (404), server error handling
+- [x] 16. Manual Test Documentation
+  - [x] 16.1 Buat `docs/testing/manual-test-content-management.md`
+  - [x] 16.2 Checklist Creator workflow: buat section, buat lesson dengan Tiptap content, edit lesson, reorder section, delete section (cascade)
+  - [x] 16.3 Checklist Student workflow: navigasi ke lesson, baca konten, mark complete, cek progress bar, navigasi prev/next, refresh persistence
+  - [x] 16.4 Checklist Authorization: unauthenticated access, creator akses course milik orang lain, student akses creator endpoint
+  - [x] 16.5 Checklist Error scenarios: invalid Tiptap JSON, duplicate section order, lesson/section tidak ada (404), server error handling
 
 - [ ] 17. Performance Optimization
   - [ ] 17.1 Implement database query optimization

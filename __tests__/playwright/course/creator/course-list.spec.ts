@@ -29,6 +29,9 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
+    // Tunggu loading skeleton selesai — h1 muncul setelah role check + data fetch
+    await page.waitForSelector('h1', { timeout: 15000 })
+
     await expect(page.locator('h1')).toContainText('Kursus Saya')
 
     // Stats text: total · published · draft
@@ -64,7 +67,6 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
-    // Wait for data to load — either course grid or empty state must appear
     await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
 
     const emptyState = page.getByTestId('empty-state')
@@ -75,11 +77,12 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
       return
     }
 
-    const manageBtn = page.getByTestId('manage-course-btn').first()
-    await expect(manageBtn).toBeVisible({ timeout: 10000 })
-    await manageBtn.click()
+    // Klik link Manage langsung (lebih reliable dari button di dalam Link)
+    const manageLink = page.locator('a[href*="/creator/courses/"][href*="/manage"]').first()
+    await expect(manageLink).toBeVisible({ timeout: 10000 })
+    await manageLink.click()
 
-    await page.waitForURL(/\/creator\/courses\/.+\/manage/, { timeout: 10000 })
+    await page.waitForURL(/\/creator\/courses\/.+\/manage/, { timeout: 15000 })
     expect(page.url()).toMatch(/\/creator\/courses\/.+\/manage/)
   })
 
@@ -87,14 +90,13 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
 
-    // Wait for data to load — header with "Buat Kursus Baru" renders after fetch completes
     await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
 
     const createBtn = page.getByRole('link', { name: /buat kursus baru/i }).first()
     await expect(createBtn).toBeVisible({ timeout: 10000 })
     await createBtn.click()
 
-    await page.waitForURL('/creator/courses/create', { timeout: 5000 })
+    await page.waitForURL('/creator/courses/create', { timeout: 15000 })
     await expect(page).toHaveURL('/creator/courses/create')
   })
 

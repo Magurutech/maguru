@@ -94,7 +94,7 @@ function LearnPageInner() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full flex-col">
+      <div className="flex h-screen w-full flex-col" data-testid="learn-page">
         {/* Compact header — back + dashboard + avatar */}
         <LearnHeader courseSlug={slug} />
 
@@ -124,16 +124,16 @@ function LearnPageInner() {
           </div>
 
           {/* Lesson area */}
-          <div className="flex-1 overflow-y-auto p-6 bg-beige-50">
+          <div className="flex-1 overflow-y-auto p-6 bg-beige-50" data-testid="lesson-area">
             {lessonLoading ? (
-              <div className="space-y-4 animate-pulse max-w-4xl mx-auto">
+              <div className="space-y-4 animate-pulse max-w-4xl mx-auto" data-testid="lesson-loading">
                 <div className="h-8 bg-beige-200 rounded w-2/3" />
                 <div className="h-4 bg-beige-200 rounded w-full" />
                 <div className="h-4 bg-beige-200 rounded w-5/6" />
                 <div className="h-32 bg-beige-200 rounded w-full mt-4" />
               </div>
             ) : lessonError ? (
-              <div className="text-center space-y-3 py-12 max-w-4xl mx-auto">
+              <div className="text-center space-y-3 py-12 max-w-4xl mx-auto" data-testid="lesson-error">
                 <p className="text-merah-600">{lessonError}</p>
               </div>
             ) : currentLesson ? (
