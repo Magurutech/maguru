@@ -1,6 +1,7 @@
 import { BookOpen, Layers, Tag, BarChart3 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import type { CourseDetail, OverviewSection } from './types'
+import { getDifficultyClass } from '@/features/cms/utils/difficulty-colors'
 
 /**
  * CourseOverviewHero
@@ -16,18 +17,9 @@ interface CourseOverviewHeroProps {
   children?: React.ReactNode // CTA button slot
 }
 
-const difficultyColor: Record<string, string> = {
-  Pemula: 'bg-hijau-100 text-hijau-700 border-hijau-200',
-  Menengah: 'bg-kuning-100 text-kuning-700 border-kuning-200',
-  Mahir: 'bg-merah-100 text-merah-700 border-merah-200',
-}
-
 export function CourseOverviewHero({ course, sections, children }: CourseOverviewHeroProps) {
   const totalLessons = sections.reduce((sum, s) => sum + s.lessons.length, 0)
-  const difficultyClass =
-    course.difficulty && difficultyColor[course.difficulty]
-      ? difficultyColor[course.difficulty]
-      : 'bg-beige-100 text-beige-700 border-beige-200'
+  const difficultyClass = getDifficultyClass(course.difficulty)
 
   return (
     <div

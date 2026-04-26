@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -7,10 +8,10 @@ import { Button } from '@/components/ui/button'
  * LessonNavigation Component
  *
  * Previous/Next navigation buttons for lessons.
- * Previous anchored left, Next anchored right (justify-between).
+ * Wrapped with React.memo — pure component, re-renders only when props change.
  *
  * Requirements: 5.7, 5.8, 5.9
- * Task: 9.3
+ * Task: 9.3, 17.3
  */
 
 interface LessonNavigationProps {
@@ -21,7 +22,7 @@ interface LessonNavigationProps {
   isCompleted?: boolean
 }
 
-export function LessonNavigation({
+export const LessonNavigation = memo(function LessonNavigation({
   previousLesson,
   nextLesson,
   onNavigate,
@@ -73,4 +74,4 @@ export function LessonNavigation({
       )}
     </nav>
   )
-}
+})

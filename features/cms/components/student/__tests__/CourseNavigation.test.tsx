@@ -4,65 +4,51 @@ import { CourseNavigation } from '../CourseNavigation'
 
 /**
  * Test Suite: CourseNavigation Component
- * 
+ *
  * Tests the sidebar navigation with sections and lessons.
- * 
+ *
  * Requirements: 5.1, 5.2, 6.4
  * Task: 9.1, 9.4
  */
 
-// Mock lucide-react icons
+// Mock all lucide-react icons used by the component
 jest.mock('lucide-react', () => ({
-  Check: () => <span data-testid="check-icon">✓</span>,
+  Check: ({ className, 'aria-label': ariaLabel, 'data-testid': testId }: { className?: string; 'aria-label'?: string; 'data-testid'?: string }) => (
+    <span data-testid={testId ?? 'check-icon'} aria-label={ariaLabel} className={className}>✓</span>
+  ),
   ChevronDown: ({ className }: { className?: string }) => (
     <span data-testid="chevron-down-icon" className={className}>▼</span>
   ),
-}))
-
-// Mock shadcn/ui components
-jest.mock('@/components/ui/sidebar', () => ({
-  Sidebar: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar">{children}</div>,
-  SidebarContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarGroupContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarGroupLabel: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) => (
-    asChild ? <>{children}</> : <div>{children}</div>
+  ChevronRight: ({ className }: { className?: string }) => (
+    <span data-testid="chevron-right-icon" className={className}>▶</span>
   ),
-  SidebarMenu: ({ children }: { children: React.ReactNode }) => <ul>{children}</ul>,
-  SidebarMenuItem: ({ children }: { children: React.ReactNode }) => <li>{children}</li>,
-  SidebarMenuButton: ({ 
-    children, 
-    onClick, 
-    isActive, 
-    className,
-    ...props 
-  }: { 
-    children: React.ReactNode
-    onClick?: () => void
-    isActive?: boolean
-    className?: string
-    'aria-current'?: string
-  }) => (
-    <button 
-      onClick={onClick} 
-      data-active={isActive}
-      className={className}
-      {...props}
-    >
-      {children}
-    </button>
+  BookOpen: ({ className }: { className?: string }) => (
+    <span data-testid="book-open-icon" className={className} />
+  ),
+  Folder: ({ className }: { className?: string }) => (
+    <span data-testid="folder-icon" className={className} />
+  ),
+  FolderOpen: ({ className }: { className?: string }) => (
+    <span data-testid="folder-open-icon" className={className} />
+  ),
+  PanelLeftClose: ({ className }: { className?: string }) => (
+    <span data-testid="panel-left-close-icon" className={className} />
+  ),
+  PanelLeftOpen: ({ className }: { className?: string }) => (
+    <span data-testid="panel-left-open-icon" className={className} />
   ),
 }))
 
+// Mock collapsible — render children directly so lessons are always visible
 jest.mock('@/components/ui/collapsible', () => ({
-  Collapsible: ({ children, defaultOpen, className }: { children: React.ReactNode; defaultOpen?: boolean; className?: string }) => (
-    <div data-testid="collapsible" data-default-open={defaultOpen} className={className}>
-      {children}
-    </div>
+  Collapsible: ({ children, className }: { children: React.ReactNode; open?: boolean; onOpenChange?: () => void; className?: string }) => (
+    <div data-testid="collapsible" className={className}>{children}</div>
   ),
-  CollapsibleContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CollapsibleTrigger: ({ children, className }: { children: React.ReactNode; className?: string }) => (
-    <button className={className}>{children}</button>
+  CollapsibleContent: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="collapsible-content">{children}</div>
+  ),
+  CollapsibleTrigger: ({ children, asChild, className }: { children: React.ReactNode; asChild?: boolean; className?: string }) => (
+    asChild ? <>{children}</> : <button className={className}>{children}</button>
   ),
 }))
 
@@ -93,16 +79,15 @@ describe('CourseNavigation', () => {
   })
 
   describe('Rendering', () => {
-    it('should render sidebar container', () => {
-      render(
+    it('should render navigation container', () => {
+      const { container } = render(
         <CourseNavigation
           sections={mockSections}
           currentLessonId="lesson-1"
           onLessonClick={mockOnLessonClick}
         />
       )
-
-      expect(screen.getByTestId('sidebar')).toBeInTheDocument()
+      expect(container.firstChild).toBeInTheDocument()
     })
 
     it('should render all section titles', () => {
@@ -142,8 +127,7 @@ describe('CourseNavigation', () => {
         />
       )
 
-      expect(screen.getByTestId('sidebar')).toBeInTheDocument()
-      expect(screen.queryByRole('button')).not.toBeInTheDocument()
+      expect(screen.getByText(/Belum ada materi/i)).toBeInTheDocument()
     })
   })
 
@@ -160,21 +144,6 @@ describe('CourseNavigation', () => {
       const collapsibles = screen.getAllByTestId('collapsible')
       expect(collapsibles).toHaveLength(2)
     })
-
-    it('should default sections to open', () => {
-      render(
-        <CourseNavigation
-          sections={mockSections}
-          currentLessonId="lesson-1"
-          onLessonClick={mockOnLessonClick}
-        />
-      )
-
-      const collapsibles = screen.getAllByTestId('collapsible')
-      collapsibles.forEach(collapsible => {
-        expect(collapsible).toHaveAttribute('data-default-open', 'true')
-      })
-    })
   })
 
   describe('Lesson Completion Indicators', () => {
@@ -187,9 +156,9 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const completedIcon = screen.getByTestId('check-icon')
+      // lesson-1 is completed — check-icon with testid lesson-completed-lesson-1
+      const completedIcon = screen.getByTestId('lesson-completed-lesson-1')
       expect(completedIcon).toBeInTheDocument()
-      expect(completedIcon).toHaveTextContent('✓')
     })
 
     it('should not show checkmark for incomplete lessons', () => {
@@ -201,9 +170,10 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const completedIcons = screen.queryAllByTestId('check-icon')
       // Only lesson-1 is completed
-      expect(completedIcons).toHaveLength(1)
+      expect(screen.getByTestId('lesson-completed-lesson-1')).toBeInTheDocument()
+      expect(screen.queryByTestId('lesson-completed-lesson-2')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('lesson-completed-lesson-3')).not.toBeInTheDocument()
     })
 
     it('should show checkmarks for all completed lessons', () => {
@@ -226,13 +196,13 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const completedIcons = screen.getAllByTestId('check-icon')
-      expect(completedIcons).toHaveLength(2)
+      expect(screen.getByTestId('lesson-completed-lesson-1')).toBeInTheDocument()
+      expect(screen.getByTestId('lesson-completed-lesson-2')).toBeInTheDocument()
     })
   })
 
   describe('Active Lesson Highlighting', () => {
-    it('should mark current lesson as active', () => {
+    it('should mark current lesson as active via aria-current', () => {
       render(
         <CourseNavigation
           sections={mockSections}
@@ -241,12 +211,8 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const lessonButtons = screen.getAllByRole('button').filter(
-        button => button.textContent?.includes('HTML Structure')
-      )
-      
-      const activeButton = lessonButtons.find(button => button.getAttribute('data-active') === 'true')
-      expect(activeButton).toBeInTheDocument()
+      const activeLesson = screen.getByTestId('nav-lesson-lesson-2')
+      expect(activeLesson).toHaveAttribute('aria-current', 'page')
     })
 
     it('should set aria-current for active lesson', () => {
@@ -258,12 +224,8 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const lessonButtons = screen.getAllByRole('button').filter(
-        button => button.textContent?.includes('Semantic HTML')
-      )
-      
-      const activeButton = lessonButtons.find(button => button.getAttribute('aria-current') === 'page')
-      expect(activeButton).toBeInTheDocument()
+      const activeLesson = screen.getByTestId('nav-lesson-lesson-3')
+      expect(activeLesson).toHaveAttribute('aria-current', 'page')
     })
 
     it('should only mark one lesson as active', () => {
@@ -275,10 +237,16 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const activeButtons = screen.getAllByRole('button').filter(
-        button => button.getAttribute('data-active') === 'true'
+      const allLessonButtons = [
+        screen.getByTestId('nav-lesson-lesson-1'),
+        screen.getByTestId('nav-lesson-lesson-2'),
+        screen.getByTestId('nav-lesson-lesson-3'),
+        screen.getByTestId('nav-lesson-lesson-4'),
+      ]
+
+      const activeButtons = allLessonButtons.filter(
+        (btn) => btn.getAttribute('aria-current') === 'page'
       )
-      
       expect(activeButtons).toHaveLength(1)
     })
   })
@@ -286,7 +254,7 @@ describe('CourseNavigation', () => {
   describe('Lesson Click Handling', () => {
     it('should call onLessonClick when lesson is clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <CourseNavigation
           sections={mockSections}
@@ -295,11 +263,7 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const lessonButtons = screen.getAllByRole('button').filter(
-        button => button.textContent?.includes('HTML Structure')
-      )
-      
-      await user.click(lessonButtons[0])
+      await user.click(screen.getByTestId('nav-lesson-lesson-2'))
 
       expect(mockOnLessonClick).toHaveBeenCalledWith('lesson-2')
       expect(mockOnLessonClick).toHaveBeenCalledTimes(1)
@@ -307,7 +271,7 @@ describe('CourseNavigation', () => {
 
     it('should call onLessonClick with correct lesson id for different lessons', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <CourseNavigation
           sections={mockSections}
@@ -316,18 +280,14 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const semanticButton = screen.getAllByRole('button').filter(
-        button => button.textContent?.includes('Semantic HTML')
-      )[0]
-      
-      await user.click(semanticButton)
+      await user.click(screen.getByTestId('nav-lesson-lesson-3'))
 
       expect(mockOnLessonClick).toHaveBeenCalledWith('lesson-3')
     })
 
     it('should allow clicking on already active lesson', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <CourseNavigation
           sections={mockSections}
@@ -336,11 +296,7 @@ describe('CourseNavigation', () => {
         />
       )
 
-      const activeButton = screen.getAllByRole('button').filter(
-        button => button.textContent?.includes('What is HTML?')
-      )[0]
-      
-      await user.click(activeButton)
+      await user.click(screen.getByTestId('nav-lesson-lesson-1'))
 
       expect(mockOnLessonClick).toHaveBeenCalledWith('lesson-1')
     })
@@ -356,11 +312,8 @@ describe('CourseNavigation', () => {
         />
       )
 
-      // Section 1 lessons
       expect(screen.getByText('What is HTML?')).toBeInTheDocument()
       expect(screen.getByText('HTML Structure')).toBeInTheDocument()
-
-      // Section 2 lessons
       expect(screen.getByText('Semantic HTML')).toBeInTheDocument()
       expect(screen.getByText('Forms')).toBeInTheDocument()
     })
@@ -419,7 +372,7 @@ describe('CourseNavigation', () => {
       )
 
       expect(screen.getByText('Empty Section')).toBeInTheDocument()
-      expect(screen.queryByRole('button', { name: /lesson/i })).not.toBeInTheDocument()
+      expect(screen.queryByTestId(/^nav-lesson-/)).not.toBeInTheDocument()
     })
 
     it('should handle very long lesson titles', () => {
@@ -428,10 +381,10 @@ describe('CourseNavigation', () => {
           id: 'section-1',
           title: 'Section',
           lessons: [
-            { 
-              id: 'lesson-1', 
-              title: 'This is a very long lesson title that might wrap to multiple lines in the sidebar navigation component', 
-              completed: false 
+            {
+              id: 'lesson-1',
+              title: 'This is a very long lesson title that might wrap to multiple lines in the sidebar navigation component',
+              completed: false,
             },
           ],
         },

@@ -4,28 +4,34 @@ import { LessonNavigation } from '../LessonNavigation'
 
 /**
  * Test Suite: LessonNavigation Component
- * 
+ *
  * Tests the previous/next navigation buttons for lessons.
- * 
+ *
  * Requirements: 5.7, 5.8, 5.9
  * Task: 9.3, 9.4
  */
 
 // Mock lucide-react icons
 jest.mock('lucide-react', () => ({
-  ChevronLeft: () => <span data-testid="chevron-left-icon">←</span>,
-  ChevronRight: () => <span data-testid="chevron-right-icon">→</span>,
+  ChevronLeft: ({ className }: { className?: string }) => (
+    <span data-testid="chevron-left-icon" className={className} aria-hidden="true">←</span>
+  ),
+  ChevronRight: ({ className }: { className?: string }) => (
+    <span data-testid="chevron-right-icon" className={className} aria-hidden="true">→</span>
+  ),
 }))
 
 // Mock shadcn/ui Button component
 jest.mock('@/components/ui/button', () => ({
-  //eslint-disable-next-line 
-  Button: ({ children, onClick, disabled, variant, className, ...props }: any) => (
-    <button 
-      onClick={onClick} 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Button: ({ children, onClick, disabled, variant, className, 'aria-label': ariaLabel, 'data-testid': testId, ...props }: any) => (
+    <button
+      onClick={onClick}
       disabled={disabled}
       data-variant={variant}
       className={className}
+      aria-label={ariaLabel}
+      data-testid={testId}
       {...props}
     >
       {children}
@@ -50,13 +56,13 @@ describe('LessonNavigation', () => {
         />
       )
 
-      expect(screen.getByLabelText(/Previous lesson: Introduction/i)).toBeInTheDocument()
-      expect(screen.getByLabelText(/Next lesson: Advanced Topics/i)).toBeInTheDocument()
+      expect(screen.getByTestId('prev-lesson-btn')).toBeInTheDocument()
+      expect(screen.getByTestId('next-lesson-btn')).toBeInTheDocument()
     })
 
     it('should call onNavigate with previous lesson id when previous button clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Introduction' }}
@@ -65,8 +71,7 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const previousButton = screen.getByLabelText(/Previous lesson: Introduction/i)
-      await user.click(previousButton)
+      await user.click(screen.getByTestId('prev-lesson-btn'))
 
       expect(mockOnNavigate).toHaveBeenCalledWith('lesson-1')
       expect(mockOnNavigate).toHaveBeenCalledTimes(1)
@@ -74,7 +79,7 @@ describe('LessonNavigation', () => {
 
     it('should call onNavigate with next lesson id when next button clicked', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Introduction' }}
@@ -83,8 +88,7 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const nextButton = screen.getByLabelText(/Next lesson: Advanced Topics/i)
-      await user.click(nextButton)
+      await user.click(screen.getByTestId('next-lesson-btn'))
 
       expect(mockOnNavigate).toHaveBeenCalledWith('lesson-3')
       expect(mockOnNavigate).toHaveBeenCalledTimes(1)
@@ -105,7 +109,7 @@ describe('LessonNavigation', () => {
   })
 
   describe('First Lesson (No Previous)', () => {
-    it('should disable previous button when no previous lesson', () => {
+    it('should not render previous button when no previous lesson', () => {
       render(
         <LessonNavigation
           nextLesson={{ id: 'lesson-2', title: 'Next Lesson' }}
@@ -113,13 +117,23 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const previousButton = screen.getByLabelText(/No previous lesson/i)
-      expect(previousButton).toBeDisabled()
+      expect(screen.queryByTestId('prev-lesson-btn')).not.toBeInTheDocument()
     })
 
-    it('should not call onNavigate when disabled previous button clicked', async () => {
+    it('should render next button when next lesson exists', () => {
+      render(
+        <LessonNavigation
+          nextLesson={{ id: 'lesson-2', title: 'Next Lesson' }}
+          onNavigate={mockOnNavigate}
+        />
+      )
+
+      expect(screen.getByTestId('next-lesson-btn')).toBeInTheDocument()
+    })
+
+    it('should call onNavigate with next lesson id', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <LessonNavigation
           nextLesson={{ id: 'lesson-2', title: 'Next Lesson' }}
@@ -127,27 +141,13 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const previousButton = screen.getByLabelText(/No previous lesson/i)
-      await user.click(previousButton)
-
-      expect(mockOnNavigate).not.toHaveBeenCalled()
-    })
-
-    it('should enable next button when next lesson exists', () => {
-      render(
-        <LessonNavigation
-          nextLesson={{ id: 'lesson-2', title: 'Next Lesson' }}
-          onNavigate={mockOnNavigate}
-        />
-      )
-
-      const nextButton = screen.getByLabelText(/Next lesson: Next Lesson/i)
-      expect(nextButton).not.toBeDisabled()
+      await user.click(screen.getByTestId('next-lesson-btn'))
+      expect(mockOnNavigate).toHaveBeenCalledWith('lesson-2')
     })
   })
 
   describe('Last Lesson (No Next)', () => {
-    it('should disable next button when no next lesson', () => {
+    it('should not render next button when no next lesson', () => {
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Previous Lesson' }}
@@ -155,13 +155,23 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const nextButton = screen.getByLabelText(/No next lesson/i)
-      expect(nextButton).toBeDisabled()
+      expect(screen.queryByTestId('next-lesson-btn')).not.toBeInTheDocument()
     })
 
-    it('should not call onNavigate when disabled next button clicked', async () => {
+    it('should render previous button when previous lesson exists', () => {
+      render(
+        <LessonNavigation
+          previousLesson={{ id: 'lesson-1', title: 'Previous Lesson' }}
+          onNavigate={mockOnNavigate}
+        />
+      )
+
+      expect(screen.getByTestId('prev-lesson-btn')).toBeInTheDocument()
+    })
+
+    it('should call onNavigate with previous lesson id', async () => {
       const user = userEvent.setup()
-      
+
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Previous Lesson' }}
@@ -169,43 +179,26 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const nextButton = screen.getByLabelText(/No next lesson/i)
-      await user.click(nextButton)
-
-      expect(mockOnNavigate).not.toHaveBeenCalled()
-    })
-
-    it('should enable previous button when previous lesson exists', () => {
-      render(
-        <LessonNavigation
-          previousLesson={{ id: 'lesson-1', title: 'Previous Lesson' }}
-          onNavigate={mockOnNavigate}
-        />
-      )
-
-      const previousButton = screen.getByLabelText(/Previous lesson: Previous Lesson/i)
-      expect(previousButton).not.toBeDisabled()
+      await user.click(screen.getByTestId('prev-lesson-btn'))
+      expect(mockOnNavigate).toHaveBeenCalledWith('lesson-1')
     })
   })
 
   describe('Single Lesson (No Navigation)', () => {
-    it('should disable both buttons when no previous or next lesson', () => {
+    it('should not render any navigation buttons when no previous or next lesson', () => {
       render(
         <LessonNavigation
           onNavigate={mockOnNavigate}
         />
       )
 
-      const previousButton = screen.getByLabelText(/No previous lesson/i)
-      const nextButton = screen.getByLabelText(/No next lesson/i)
-
-      expect(previousButton).toBeDisabled()
-      expect(nextButton).toBeDisabled()
+      expect(screen.queryByTestId('prev-lesson-btn')).not.toBeInTheDocument()
+      expect(screen.queryByTestId('next-lesson-btn')).not.toBeInTheDocument()
     })
   })
 
   describe('Accessibility', () => {
-    it('should have navigation landmark', () => {
+    it('should have navigation landmark with Indonesian label', () => {
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Previous' }}
@@ -214,11 +207,11 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const nav = screen.getByRole('navigation', { name: 'Lesson navigation' })
+      const nav = screen.getByRole('navigation', { name: /navigasi pelajaran/i })
       expect(nav).toBeInTheDocument()
     })
 
-    it('should have descriptive aria-labels for enabled buttons', () => {
+    it('should have descriptive aria-labels for previous button', () => {
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Introduction to HTML' }}
@@ -227,19 +220,21 @@ describe('LessonNavigation', () => {
         />
       )
 
-      expect(screen.getByLabelText('Previous lesson: Introduction to HTML')).toBeInTheDocument()
-      expect(screen.getByLabelText('Next lesson: CSS Basics')).toBeInTheDocument()
+      const prevBtn = screen.getByTestId('prev-lesson-btn')
+      expect(prevBtn).toHaveAttribute('aria-label', expect.stringContaining('Introduction to HTML'))
     })
 
-    it('should have descriptive aria-labels for disabled buttons', () => {
+    it('should have descriptive aria-labels for next button', () => {
       render(
         <LessonNavigation
+          previousLesson={{ id: 'lesson-1', title: 'Introduction to HTML' }}
+          nextLesson={{ id: 'lesson-3', title: 'CSS Basics' }}
           onNavigate={mockOnNavigate}
         />
       )
 
-      expect(screen.getByLabelText('No previous lesson')).toBeInTheDocument()
-      expect(screen.getByLabelText('No next lesson')).toBeInTheDocument()
+      const nextBtn = screen.getByTestId('next-lesson-btn')
+      expect(nextBtn).toHaveAttribute('aria-label', expect.stringContaining('CSS Basics'))
     })
 
     it('should hide icons from screen readers', () => {
@@ -257,7 +252,7 @@ describe('LessonNavigation', () => {
   })
 
   describe('Button Labels', () => {
-    it('should display "Previous" and "Next" labels', () => {
+    it('should display lesson titles in navigation buttons', () => {
       render(
         <LessonNavigation
           previousLesson={{ id: 'lesson-1', title: 'Intro' }}
@@ -266,11 +261,8 @@ describe('LessonNavigation', () => {
         />
       )
 
-      const previousLabels = screen.getAllByText('Previous')
-      const nextLabels = screen.getAllByText('Next')
-
-      expect(previousLabels.length).toBeGreaterThan(0)
-      expect(nextLabels.length).toBeGreaterThan(0)
+      expect(screen.getByText('Intro')).toBeInTheDocument()
+      expect(screen.getByText('Advanced')).toBeInTheDocument()
     })
   })
 })

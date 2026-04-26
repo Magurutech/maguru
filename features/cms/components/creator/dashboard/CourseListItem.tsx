@@ -1,16 +1,14 @@
-import React from 'react'
+import { memo } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import type { CreatorCourse } from '@/features/cms/types'
 
 interface CourseListItemProps {
   course: CreatorCourse
-  isToggling?: boolean
-  onTogglePublish?: (courseId: string) => void
-  onManage?: (slug: string) => void
 }
 
-export function CourseListItem({ course }: CourseListItemProps) {
+// Wrapped with React.memo — re-renders only when course data changes
+export const CourseListItem = memo(function CourseListItem({ course }: CourseListItemProps) {
   const isPublished = course.status === 'PUBLISHED'
 
   return (
@@ -58,4 +56,4 @@ export function CourseListItem({ course }: CourseListItemProps) {
       </p>
     </Link>
   )
-}
+})

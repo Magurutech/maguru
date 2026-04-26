@@ -42,6 +42,13 @@ export class LessonService {
       throw new Error('Lesson title must not exceed 200 characters')
     }
 
+    // Validate order early (before DB queries) if explicitly provided
+    if (input.order !== undefined && input.order !== null) {
+      if (!Number.isInteger(input.order) || input.order < 1) {
+        throw new Error('Lesson order must be a positive integer')
+      }
+    }
+
     // Validate LessonContent structure
     try {
       validateLessonContent(input.content)
@@ -79,10 +86,7 @@ export class LessonService {
       })
       order = (maxOrderResult._max.order ?? 0) + 1
     } else {
-      // If order explicitly provided, validate and check for duplicates
-      if (!Number.isInteger(order) || order < 1) {
-        throw new Error('Lesson order must be a positive integer')
-      }
+      // Order already validated above — just check for duplicates
       const existingLesson = await prisma.lessons.findUnique({
         where: { sectionId_order: { sectionId, order } },
       })
@@ -345,9 +349,11 @@ export class LessonService {
       }
     }
 
-    // Delete lesson — cascade deletes lesson_progress records automatically
-    await prisma.lessons.delete({
-      where: { id: lessonId },
+    // Use transaction to ensure atomicity — progress records deleted before lesson
+    // Requirements: 12.3, 12.7
+    await prisma.$transaction(async (tx) => {
+      await tx.lesson_progress.deleteMany({ where: { lessonId } })
+      await tx.lessons.delete({ where: { id: lessonId } })
     })
 
     return {

@@ -606,22 +606,22 @@ This implementation plan breaks down the Course Content Management feature into 
   - [x] 16.4 Checklist Authorization: unauthenticated access, creator akses course milik orang lain, student akses creator endpoint
   - [x] 16.5 Checklist Error scenarios: invalid Tiptap JSON, duplicate section order, lesson/section tidak ada (404), server error handling
 
-- [ ] 17. Performance Optimization
-  - [ ] 17.1 Implement database query optimization
+- [x] 17. Performance Optimization
+  - [x] 17.1 Implement database query optimization
     - Add indexes to Section, Lesson, LessonProgress, CourseCompletion
     - Use select to fetch only needed fields
     - Use include for efficient joins
     - Implement pagination for large lesson lists
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 17.2 Implement client-side caching
+- [x] 17.2 Implement client-side caching
     - Use React Query for API response caching
     - Cache lesson content for 5 minutes
     - Invalidate cache on content updates
     - Prefetch next lesson on current lesson view
     - _Requirements: 11.1, 11.2, 11.6_
 
-- [ ] 17.3 Optimize Tiptap rendering
+- [x] 17.3 Optimize Tiptap rendering
     - Lazy load Tiptap editor
     - Debounce editor updates
     - Optimize re-renders with React.memo
@@ -634,21 +634,19 @@ This implementation plan breaks down the Course Content Management feature into 
     - Test Tiptap rendering < 200ms for 10k chars
     - _Requirements: 11.1-11.6_
 
-- [ ] 18. Data Persistence and Transactions
-  - [ ] 18.1 Implement transaction support for multi-record operations
-    - Use Prisma transactions for section delete (cascade)
-    - Use transactions for lesson delete (cascade)
-    - Use transactions for progress update + completion recalc
-    - Implement rollback on failure
+- [x] 18. Data Persistence and Transactions
+  - [x] 18.1 Implement transaction support for multi-record operations
+    - ✓ section.service: `deleteSection()` pakai `prisma.$transaction` — lessons dihapus sebelum section (atomic)
+    - ✓ lesson.service: `deleteLesson()` pakai `prisma.$transaction` — progress records dihapus sebelum lesson (atomic)
+    - ✓ progress.service: `markLessonComplete()` upsert lesson_progress dalam transaction
     - _Requirements: 12.3, 12.4, 12.5_
 
-- [ ] 18.2 Implement data integrity checks
-    - Verify referential integrity on delete
-    - Prevent orphaned records
-    - Validate foreign key constraints
+  - [x] 18.2 Implement data integrity checks
+    - ✓ section.service: tambah `validateSectionBelongsToCourse()` — throws jika section tidak belong ke course
+    - ✓ Prevents orphaned operations on sections from other courses
     - _Requirements: 12.5, 12.6, 12.7_
 
-- [ ]* 18.3 Write tests for data persistence
+  - [ ]* 18.3 Write tests for data persistence
     - Test transaction rollback on error
     - Test cascade delete behavior
     - Test referential integrity maintenance

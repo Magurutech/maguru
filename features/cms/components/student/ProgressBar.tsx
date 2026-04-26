@@ -1,13 +1,16 @@
 'use client'
 
+import { memo } from 'react'
+
 /**
  * ProgressBar Component
  *
  * Visual progress indicator for course completion.
  * Uses Maguru design tokens (beige/kuning/hijau palette).
+ * Wrapped with React.memo — pure component, re-renders only when props change.
  *
  * Requirements: 7.1, 7.5
- * Task: 9.2
+ * Task: 9.2, 17.3
  */
 
 interface ProgressBarProps {
@@ -16,7 +19,7 @@ interface ProgressBarProps {
   totalLessons: number
 }
 
-export function ProgressBar({
+export const ProgressBar = memo(function ProgressBar({
   percentage,
   completedLessons,
   totalLessons,
@@ -73,4 +76,4 @@ export function ProgressBar({
       </span>
     </div>
   )
-}
+})

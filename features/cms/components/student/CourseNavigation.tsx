@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import {
   Check,
   ChevronDown,
@@ -17,11 +17,10 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
  * CourseNavigation Component
  *
  * Sidebar navigation showing sections and lessons with progress indicators.
- * Supports collapse/expand sidebar toggle.
- * Styled with Maguru design system tokens (beige/warm palette).
+ * Wrapped with React.memo — re-renders only when sections/currentLessonId change.
  *
  * Requirements: 5.1, 5.2, 6.4
- * Task: 9.1
+ * Task: 9.1, 17.3
  */
 
 interface CourseNavigationProps {
@@ -38,7 +37,7 @@ interface CourseNavigationProps {
   onLessonClick: (lessonId: string) => void
 }
 
-export function CourseNavigation({
+export const CourseNavigation = memo(function CourseNavigation({
   sections,
   currentLessonId,
   onLessonClick,
@@ -181,4 +180,4 @@ export function CourseNavigation({
       )}
     </div>
   )
-}
+})

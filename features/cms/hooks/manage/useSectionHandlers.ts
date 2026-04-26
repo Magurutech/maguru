@@ -2,13 +2,16 @@
 
 import { toast } from 'sonner'
 import type { ManagedSection } from './useCourseManage'
+import { toastError } from '@/features/cms/utils/error-toast'
+import type { ManagedLesson } from './useLessonHandlers'
+import type { ActiveView } from './useManageView'
 
 interface UseSectionHandlersProps {
   courseSlug: string
   setSections: React.Dispatch<React.SetStateAction<ManagedSection[]>>
-  setLessonsMap: React.Dispatch<React.SetStateAction<Record<string, import('./useLessonHandlers').ManagedLesson[]>>>
-  activeView: import('./useManageView').ActiveView
-  setActiveView: React.Dispatch<React.SetStateAction<import('./useManageView').ActiveView>>
+  setLessonsMap: React.Dispatch<React.SetStateAction<Record<string, ManagedLesson[]>>>
+  activeView: ActiveView
+  setActiveView: React.Dispatch<React.SetStateAction<ActiveView>>
 }
 
 export function useSectionHandlers({
@@ -53,11 +56,11 @@ export function useSectionHandlers({
       }
       onDone()
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
+      toastError(err, 'Terjadi kesalahan')
     }
   }
 
-  const handleDeleteSection = async (sectionId: string, onConfirm: () => void) => {
+  const handleDeleteSection = (_sectionId: string, onConfirm: () => void) => {
     onConfirm()
   }
 

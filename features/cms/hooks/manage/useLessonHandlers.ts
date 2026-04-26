@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react'
 import { toast } from 'sonner'
 import type { ManagedSection } from './useCourseManage'
 import type { ActiveView } from './useManageView'
+import { toastError } from '@/features/cms/utils/error-toast'
 
 export interface ManagedLesson {
   id: string
@@ -104,7 +105,7 @@ export function useLessonHandlers({
         return created.id
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : 'Terjadi kesalahan')
+      toastError(err, 'Terjadi kesalahan')
       return null
     }
   }

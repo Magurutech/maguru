@@ -54,8 +54,8 @@ interface ManageContextValue {
   openEditLesson: (lesson: ManagedLesson, sectionId: string) => void
   submitLessonFromPanel: (sectionId: string, data: { title: string; content: unknown }, lessonId?: string) => Promise<string | null>
   // Reorder
-  reorderSections: (newSections: ManagedSection[]) => Promise<void>
-  reorderLessons: (sectionId: string, newLessons: ManagedLesson[]) => Promise<void>
+  reorderSections: (newSections: ManagedSection[], previousSections: ManagedSection[]) => Promise<void>
+  reorderLessons: (sectionId: string, newLessons: ManagedLesson[], previousLessons: ManagedLesson[]) => Promise<void>
 }
 
 const ManageContext = createContext<ManageContextValue | null>(null)

@@ -68,7 +68,7 @@ export function LearnProvider({ courseSlug, initialLessonId, children }: LearnPr
     selectLesson,
     getAllLessons,
     expandAndSelect,
-  } = useLessonLearn({ courseSlug, completedLessonIds, sections })
+  } = useLessonLearn({ courseSlug, sections })
 
   const { completing, markComplete } = useProgressHandlers({
     setCompletedLessonIds,

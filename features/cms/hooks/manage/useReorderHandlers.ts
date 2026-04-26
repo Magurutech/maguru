@@ -1,5 +1,6 @@
 'use client'
 
+import { useCallback } from 'react'
 import { toast } from 'sonner'
 import type { ManagedSection } from './useCourseManage'
 import type { ManagedLesson } from './useLessonHandlers'
@@ -16,10 +17,10 @@ export function useReorderHandlers({
   setLessonsMap,
 }: UseReorderHandlersProps) {
   /**
-   * Reorder sections — optimistic update + persist to API
+   * Reorder sections — optimistic update + rollback on failure.
+   * Caller passes both the new order and the previous order for rollback.
    */
-  const reorderSections = async (newSections: ManagedSection[]) => {
-    const previousSections = newSections // caller already has previous via closure
+  const reorderSections = useCallback(async (newSections: ManagedSection[], previousSections: ManagedSection[]) => {
     setSections(newSections)
 
     const items = newSections.map((s, idx) => ({ id: s.id, order: idx + 1 }))
@@ -32,17 +33,16 @@ export function useReorderHandlers({
       })
       if (!res.ok) throw new Error('Gagal menyimpan urutan seksi')
     } catch {
-      // Rollback
       setSections(previousSections)
       toast.error('Gagal menyimpan urutan seksi')
     }
-  }
+  }, [courseSlug, setSections])
 
   /**
-   * Reorder lessons within a section — optimistic update + persist to API
+   * Reorder lessons within a section — optimistic update + rollback on failure.
+   * Caller passes both the new order and the previous order for rollback.
    */
-  const reorderLessons = async (sectionId: string, newLessons: ManagedLesson[]) => {
-    const previousLessons = newLessons // caller already has previous via closure
+  const reorderLessons = useCallback(async (sectionId: string, newLessons: ManagedLesson[], previousLessons: ManagedLesson[]) => {
     setLessonsMap((prev) => ({ ...prev, [sectionId]: newLessons }))
 
     const items = newLessons.map((l, idx) => ({ id: l.id, order: idx + 1 }))
@@ -55,11 +55,10 @@ export function useReorderHandlers({
       })
       if (!res.ok) throw new Error('Gagal menyimpan urutan pelajaran')
     } catch {
-      // Rollback
       setLessonsMap((prev) => ({ ...prev, [sectionId]: previousLessons }))
       toast.error('Gagal menyimpan urutan pelajaran')
     }
-  }
+  }, [courseSlug, setLessonsMap])
 
   return { reorderSections, reorderLessons }
 }

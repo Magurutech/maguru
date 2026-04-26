@@ -25,14 +25,12 @@ export class ProgressService {
     lessonId: string,
     userId: string
   ): Promise<MarkLessonCompleteResult> {
-    // Verify lesson exists and get courseId
+    // Fetch only what's needed — courseId for completion update
     const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
-      include: {
+      select: {
         sections: {
-          select: {
-            courseId: true,
-          },
+          select: { courseId: true },
         },
       },
     })
@@ -41,27 +39,32 @@ export class ProgressService {
       throw new Error('Lesson not found')
     }
 
-    const lessonProgress = await prisma.lesson_progress.upsert({
-      where: {
-        lessonId_userId: {
+    // Upsert lesson progress in a transaction to ensure atomicity
+    // Requirements: 12.3, 12.4
+    const lessonProgress = await prisma.$transaction(async (tx) => {
+      return tx.lesson_progress.upsert({
+        where: {
+          lessonId_userId: {
+            lessonId: lessonId,
+            userId: userId,
+          },
+        },
+        update: {
+          completed: true,
+          completedAt: new Date(),
+        },
+        create: {
+          id: crypto.randomUUID(),
           lessonId: lessonId,
           userId: userId,
+          completed: true,
+          completedAt: new Date(),
         },
-      },
-      update: {
-        completed: true,
-        completedAt: new Date(),
-      },
-      create: {
-        id: crypto.randomUUID(),
-        lessonId: lessonId,
-        userId: userId,
-        completed: true,
-        completedAt: new Date(),
-      },
+      })
     })
 
     const courseId = lesson.sections.courseId
+    // Update course completion percentage (outside transaction — non-critical)
     await this.updateCourseCompletion(userId, courseId)
 
     // Return formatted response (Requirement 12.2)
@@ -139,25 +142,19 @@ export class ProgressService {
       throw new Error('Course not found')
     }
 
-    const totalLessons = await prisma.lessons.count({
-      where: {
-        sections: {
-          courseId: course.id,
+    // Parallelise both count queries — reduces sequential DB round-trips
+    const [totalLessons, completedLessons] = await Promise.all([
+      prisma.lessons.count({
+        where: { sections: { courseId: course.id } },
+      }),
+      prisma.lesson_progress.count({
+        where: {
+          userId,
+          completed: true,
+          lessons: { sections: { courseId: course.id } },
         },
-      },
-    })
-
-    const completedLessons = await prisma.lesson_progress.count({
-      where: {
-        userId: userId,
-        completed: true,
-        lessons: {
-          sections: {
-            courseId: course.id,
-          },
-        },
-      },
-    })
+      }),
+    ])
 
     const { percentage, completed } = calculateCourseCompletion({
       totalLessons,
@@ -213,25 +210,19 @@ export class ProgressService {
     userId: string,
     courseId: string
   ): Promise<void> {
-    const totalLessons = await prisma.lessons.count({
-      where: {
-        sections: {
-          courseId: courseId,
+    // Parallelise both count queries — reduces sequential DB round-trips
+    const [totalLessons, completedLessons] = await Promise.all([
+      prisma.lessons.count({
+        where: { sections: { courseId } },
+      }),
+      prisma.lesson_progress.count({
+        where: {
+          userId,
+          completed: true,
+          lessons: { sections: { courseId } },
         },
-      },
-    })
-
-    const completedLessons = await prisma.lesson_progress.count({
-      where: {
-        userId: userId,
-        completed: true,
-        lessons: {
-          sections: {
-            courseId: courseId,
-          },
-        },
-      },
-    })
+      }),
+    ])
 
     const { percentage, completed } = calculateCourseCompletion({
       totalLessons,

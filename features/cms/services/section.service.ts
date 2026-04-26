@@ -36,6 +36,13 @@ export class SectionService {
       throw new Error('Section title must not exceed 200 characters')
     }
 
+    // Validate order early (before DB queries) if explicitly provided
+    if (input.order !== undefined && input.order !== null) {
+      if (!Number.isInteger(input.order) || input.order < 1) {
+        throw new Error('Section order must be a positive integer')
+      }
+    }
+
     // Check course ownership using Course Service
     if (userId) {
       const hasOwnership = await checkCourseOwnership(courseId, userId)
@@ -62,10 +69,7 @@ export class SectionService {
       })
       order = (maxOrderResult._max.order ?? 0) + 1
     } else {
-      // If order explicitly provided, validate and check for duplicates
-      if (!Number.isInteger(order) || order < 1) {
-        throw new Error('Section order must be a positive integer')
-      }
+      // Order already validated above — just check for duplicates
       const existingSection = await prisma.sections.findUnique({
         where: { courseId_order: { courseId, order } },
       })
@@ -414,9 +418,11 @@ export class SectionService {
 
     const lessonCount = existingSection._count.lessons
 
-    // Delete section (cascade will delete lessons)
-    await prisma.sections.delete({
-      where: { id: sectionId },
+    // Use transaction to ensure atomicity — lessons deleted before section
+    // Requirements: 12.3, 12.4
+    await prisma.$transaction(async (tx) => {
+      await tx.lessons.deleteMany({ where: { sectionId } })
+      await tx.sections.delete({ where: { id: sectionId } })
     })
 
     return {
@@ -427,7 +433,7 @@ export class SectionService {
 
   /**
    * Check if a section belongs to a specific course
-   * Helper method for authorization
+   * Helper method for authorization and referential integrity (Requirements: 12.5)
    */
   async verifySectionBelongsToCourse(
     sectionId: string,
@@ -439,6 +445,16 @@ export class SectionService {
     })
 
     return section?.courseId === courseId
+  }
+
+  /**
+   * Validate that a section belongs to the given course — throws if not.
+   * Prevents orphaned operations on sections from other courses.
+   * Requirements: 12.5
+   */
+  async validateSectionBelongsToCourse(sectionId: string, courseId: string): Promise<void> {
+    const belongs = await this.verifySectionBelongsToCourse(sectionId, courseId)
+    if (!belongs) throw new Error('Section not found or does not belong to this course')
   }
 }
 

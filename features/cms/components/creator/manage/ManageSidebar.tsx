@@ -285,7 +285,8 @@ export function ManageSidebar() {
     const oldIndex = sections.findIndex((s) => s.id === active.id)
     const newIndex = sections.findIndex((s) => s.id === over.id)
     if (oldIndex === -1 || newIndex === -1) return
-    reorderSections(arrayMove(sections, oldIndex, newIndex))
+    const previousSections = [...sections]
+    reorderSections(arrayMove(sections, oldIndex, newIndex), previousSections)
   }
 
   const handleLessonDragEnd = (sectionId: string) => (event: DragEndEvent) => {
@@ -295,7 +296,8 @@ export function ManageSidebar() {
     const oldIndex = lessons.findIndex((l) => l.id === active.id)
     const newIndex = lessons.findIndex((l) => l.id === over.id)
     if (oldIndex === -1 || newIndex === -1) return
-    reorderLessons(sectionId, arrayMove(lessons, oldIndex, newIndex))
+    const previousLessons = [...lessons]
+    reorderLessons(sectionId, arrayMove(lessons, oldIndex, newIndex), previousLessons)
   }
 
   return (

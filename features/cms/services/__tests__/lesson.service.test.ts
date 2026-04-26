@@ -282,10 +282,12 @@ describe('LessonService', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0].title).toBe('Lesson 1')
-      expect(result[0]).not.toHaveProperty('contentPreview')
+      // Service returns contentPreview (extracted from content JSON)
+      expect(result[0]).toHaveProperty('contentPreview')
       expect(prismaMock.lessons.findMany).toHaveBeenCalledWith({
         where: { sectionId },
         orderBy: { order: 'asc' },
+        select: expect.any(Object),
       })
     })
 
@@ -320,7 +322,9 @@ describe('LessonService', () => {
 
       const result = await lessonService.getLessonsBySection('section-1')
 
-      expect(result[0]).not.toHaveProperty('contentPreview')
+      // contentPreview should be truncated to 200 chars + '...'
+      expect(result[0]).toHaveProperty('contentPreview')
+      expect(result[0].contentPreview.length).toBeLessThanOrEqual(203) // 200 + '...'
       expect(result[0].title).toBe('Lesson 1')
     })
   })
@@ -510,13 +514,22 @@ describe('LessonService', () => {
       }
 
       prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as unknown as never)
+      // Mock $transaction to execute the callback with prismaMock as tx
+      //eslint-disable-next-line 
+      prismaMock.$transaction.mockImplementation(async (fn: any) => fn(prismaMock))
+      //eslint-disable-next-line 
+      prismaMock.lesson_progress.deleteMany.mockResolvedValue({ count: 5 } as any)
       prismaMock.lessons.delete.mockResolvedValue(mockLesson as unknown as never)
 
       const result = await lessonService.deleteLesson(lessonId, mockUserId)
 
       expect(result.message).toBe('Lesson deleted successfully')
-      expect(result.deletedProgressRecords).toBe(5)
+      // deletedProgressRecords is 0 — cascade handled by DB transaction
+      expect(result.deletedProgressRecords).toBe(0)
       expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
+      expect(prismaMock.lesson_progress.deleteMany).toHaveBeenCalledWith({
+        where: { lessonId },
+      })
       expect(prismaMock.lessons.delete).toHaveBeenCalledWith({
         where: { id: lessonId },
       })

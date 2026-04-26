@@ -1,9 +1,11 @@
+import { memo } from 'react'
 import Link from 'next/link'
 import { BookOpen, BarChart3, Layers } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import type { CourseCardCourse } from '@/features/cms/types'
+import { getDifficultyClass } from '@/features/cms/utils/difficulty-colors'
 
 /**
  * CourseCard Component
@@ -30,18 +32,13 @@ interface CourseCardProps {
   catalogMode?: boolean
 }
 
-const difficultyColor: Record<string, string> = {
-  Pemula: 'bg-hijau-100 text-hijau-700 border-hijau-200',
-  Menengah: 'bg-kuning-100 text-kuning-700 border-kuning-200',
-  Mahir: 'bg-merah-100 text-merah-700 border-merah-200',
-}
-
 function truncate(text: string | null, max: number): string {
   if (!text) return ''
   return text.length > max ? text.slice(0, max) + '...' : text
 }
 
-export function CourseCard({
+// Wrap with React.memo — pure component, re-renders only when props change
+export const CourseCard = memo(function CourseCard({
   course,
   enrolled = false,
   onEnroll,
@@ -51,10 +48,7 @@ export function CourseCard({
   enrolledAt,
   catalogMode = false,
 }: CourseCardProps) {
-  const difficultyClass =
-    course.difficulty && difficultyColor[course.difficulty]
-      ? difficultyColor[course.difficulty]
-      : 'bg-beige-100 text-beige-700 border-beige-200'
+  const difficultyClass = getDifficultyClass(course.difficulty)
 
   const cardContent = (
     <>
@@ -218,4 +212,4 @@ export function CourseCard({
       {cardContent}
     </div>
   )
-}
+})

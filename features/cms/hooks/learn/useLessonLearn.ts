@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { toast } from 'sonner'
 
 export interface LearnLesson {
@@ -36,12 +36,16 @@ interface UseLessonLearnProps {
   }>
 }
 
-export function useLessonLearn({ courseSlug, completedLessonIds, sections }: UseLessonLearnProps) {
+export function useLessonLearn({ courseSlug, sections }: Omit<UseLessonLearnProps, 'completedLessonIds'>) {
   const [lessonsMap, setLessonsMap] = useState<Record<string, LearnLesson[]>>({})
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set())
   const [currentLesson, setCurrentLesson] = useState<FullLesson | null>(null)
   const [lessonLoading, setLessonLoading] = useState(false)
   const [lessonError, setLessonError] = useState<string | null>(null)
+
+  // In-memory cache for full lesson content — avoids re-fetching on revisit
+  // Cache is scoped to the hook instance (per learn page mount)
+  const lessonCache = useRef<Map<string, FullLesson>>(new Map())
 
   // Pre-populate lessonsMap from sections data (fetched with ?include=lessons)
   useEffect(() => {
@@ -93,6 +97,14 @@ export function useLessonLearn({ courseSlug, completedLessonIds, sections }: Use
   const selectLesson = useCallback(
     async (lessonId: string, sectionId: string) => {
       setLessonError(null)
+
+      // Serve from cache if available — avoids redundant network requests
+      const cached = lessonCache.current.get(lessonId)
+      if (cached) {
+        setCurrentLesson(cached)
+        return
+      }
+
       setLessonLoading(true)
       try {
         const res = await fetch(
@@ -100,13 +112,16 @@ export function useLessonLearn({ courseSlug, completedLessonIds, sections }: Use
         )
         if (!res.ok) throw new Error('Pelajaran tidak ditemukan')
         const data = await res.json()
-        setCurrentLesson({
+        const lesson: FullLesson = {
           id: data.id,
           title: data.title,
           order: data.order,
           content: data.content,
           sectionId,
-        })
+        }
+        // Store in cache for subsequent visits
+        lessonCache.current.set(lessonId, lesson)
+        setCurrentLesson(lesson)
       } catch (err) {
         setLessonError(err instanceof Error ? err.message : 'Gagal memuat pelajaran')
       } finally {

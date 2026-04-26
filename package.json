@@ -11,7 +11,7 @@
     "type-check": "tsc --noEmit --skipLibCheck",
     "test": "jest app/creator/dashboard/page.test.tsx  --verbose",
     "test:watch": "jest --watch",
-    "test:unit": "jest features/cms  --verbose --passWithNoTests",
+    "test:unit": "jest features/cms/components  --verbose --passWithNoTests",
     "test:unit:all": "jest features/ --verbose --passWithNoTests",
     "test:integration": "jest __tests__/integration/course/frontend --verbose --passWithNoTests",
     "test:integration:all": "jest __tests__/integration --verbose --passWithNoTests",

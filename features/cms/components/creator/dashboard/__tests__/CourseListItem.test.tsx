@@ -45,11 +45,11 @@ describe('CourseListItem', () => {
       expect(link).toHaveAttribute('href', '/creator/courses/course-123/manage')
     })
 
-    it('harus menggunakan course.id (bukan slug) untuk URL', () => {
+    it('harus menggunakan course.slug untuk URL (bukan id)', () => {
       const course = { ...baseCourse, id: 'uuid-abc-123', slug: 'react-fundamentals' }
       render(<CourseListItem course={course} />)
       const link = screen.getByTestId('creator-course-item')
-      expect(link).toHaveAttribute('href', '/creator/courses/uuid-abc-123/manage')
+      expect(link).toHaveAttribute('href', '/creator/courses/react-fundamentals/manage')
     })
   })
 

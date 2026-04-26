@@ -74,6 +74,9 @@ describe('ProgressService', () => {
       }
 
       prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as never)
+      // Mock $transaction to execute the callback with prismaMock as tx
+      //eslint-disable-next-line 
+      prismaMock.$transaction.mockImplementation(async (fn: any) => fn(prismaMock))
       prismaMock.lesson_progress.upsert.mockResolvedValue(mockLessonProgress as never)
       prismaMock.lessons.count.mockResolvedValue(10)
       prismaMock.lesson_progress.count.mockResolvedValue(5)
@@ -92,7 +95,7 @@ describe('ProgressService', () => {
 
       expect(prismaMock.lessons.findUnique).toHaveBeenCalledWith({
         where: { id: mockLessonId },
-        include: {
+        select: {
           sections: {
             select: {
               courseId: true,
@@ -152,6 +155,9 @@ describe('ProgressService', () => {
       }
 
       prismaMock.lessons.findUnique.mockResolvedValue(mockLesson as never)
+      // Mock $transaction to execute the callback with prismaMock as tx
+      //eslint-disable-next-line 
+      prismaMock.$transaction.mockImplementation(async (fn: any) => fn(prismaMock))
       prismaMock.lesson_progress.upsert.mockResolvedValue(mockLessonProgress as never)
       prismaMock.lessons.count.mockResolvedValue(5)
       prismaMock.lesson_progress.count.mockResolvedValue(1)

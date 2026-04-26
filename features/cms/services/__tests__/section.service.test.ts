@@ -311,6 +311,11 @@ describe('SectionService', () => {
       }
 //eslint-disable-next-line 
       prismaMock.sections.findUnique.mockResolvedValue(existingSection as any)
+      // Mock $transaction to execute the callback with prismaMock as tx
+      //eslint-disable-next-line 
+      prismaMock.$transaction.mockImplementation(async (fn: any) => fn(prismaMock))
+      //eslint-disable-next-line 
+      prismaMock.lessons.deleteMany.mockResolvedValue({ count: 5 } as any)
       //eslint-disable-next-line 
       prismaMock.sections.delete.mockResolvedValue(existingSection as any)
 
@@ -319,6 +324,9 @@ describe('SectionService', () => {
       expect(result.message).toBe('Section deleted successfully')
       expect(result.deletedLessons).toBe(5)
       expect(checkCourseOwnership).toHaveBeenCalledWith(mockCourseId, mockUserId)
+      expect(prismaMock.lessons.deleteMany).toHaveBeenCalledWith({
+        where: { sectionId: mockSectionId },
+      })
       expect(prismaMock.sections.delete).toHaveBeenCalledWith({
         where: { id: mockSectionId },
       })

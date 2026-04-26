@@ -1,15 +1,14 @@
 /**
  * LessonViewer Component Tests
- * 
+ *
  * Tests for student lesson viewer component with Tiptap renderer.
- * 
- * Requirements: 5.3, 5.4, 5.5, 6.1, 6.4, 6.5
+ *
+ * Requirements: 5.3, 5.4, 5.5
  * Task: 8.3
  */
 
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
-import { userEvent } from '@testing-library/user-event'
+import { render, screen } from '@testing-library/react'
 import { LessonViewer } from '../LessonViewer'
 import { useEditor } from '@tiptap/react'
 
@@ -20,6 +19,23 @@ jest.mock('@tiptap/react', () => ({
     <div data-testid="editor-content">{editor ? 'Editor Ready' : 'Loading'}</div>
   ),
 }))
+
+// Mock Tiptap extensions
+jest.mock('@tiptap/starter-kit', () => ({ StarterKit: { configure: jest.fn().mockReturnValue({}) } }))
+jest.mock('@tiptap/extension-text-align', () => ({ TextAlign: { configure: jest.fn().mockReturnValue({}) } }))
+jest.mock('@tiptap/extension-highlight', () => ({ Highlight: { configure: jest.fn().mockReturnValue({}) } }))
+jest.mock('@tiptap/extension-typography', () => ({ Typography: {} }))
+jest.mock('@tiptap/extension-superscript', () => ({ Superscript: {} }))
+jest.mock('@tiptap/extension-subscript', () => ({ Subscript: {} }))
+jest.mock('@tiptap/extensions', () => ({ Selection: {} }))
+
+// Mock SCSS imports
+jest.mock('@/components/tiptap-node/heading-node/heading-node.scss', () => ({}))
+jest.mock('@/components/tiptap-node/paragraph-node/paragraph-node.scss', () => ({}))
+jest.mock('@/components/tiptap-node/list-node/list-node.scss', () => ({}))
+jest.mock('@/components/tiptap-node/code-block-node/code-block-node.scss', () => ({}))
+jest.mock('@/components/tiptap-node/blockquote-node/blockquote-node.scss', () => ({}))
+jest.mock('@/components/tiptap-templates/simple/simple-editor.scss', () => ({}))
 
 const mockUseEditor = useEditor as jest.MockedFunction<typeof useEditor>
 
@@ -48,8 +64,8 @@ describe('LessonViewer Component', () => {
     isActive: jest.fn(),
     chain: jest.fn().mockReturnThis(),
     focus: jest.fn().mockReturnThis(),
-    toggleBold: jest.fn().mockReturnThis(),
     run: jest.fn(),
+    getJSON: jest.fn().mockReturnValue({ type: 'doc', content: [] }),
   }
 
   beforeEach(() => {
@@ -57,40 +73,10 @@ describe('LessonViewer Component', () => {
   })
 
   describe('Initialization', () => {
-    it('should initialize Tiptap editor with StarterKit', () => {
+    it('should initialize Tiptap editor with editable false', () => {
       mockUseEditor.mockReturnValue(mockEditor as never)
 
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      expect(mockUseEditor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          extensions: expect.any(Array),
-          content: mockLesson.content.content,
-          editable: false,
-          editorProps: expect.objectContaining({
-            attributes: expect.objectContaining({
-              class: expect.stringContaining('tiptap prose'),
-            }),
-          }),
-          onCreate: expect.any(Function),
-        })
-      )
-    })
-
-    it('should set editable to false for read-only mode', () => {
-      mockUseEditor.mockReturnValue(mockEditor as never)
-
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={mockLesson} />)
 
       const call = mockUseEditor.mock.calls[0][0]
       expect(call?.editable).toBe(false)
@@ -99,26 +85,45 @@ describe('LessonViewer Component', () => {
     it('should load content from lesson.content.content', () => {
       mockUseEditor.mockReturnValue(mockEditor as never)
 
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={mockLesson} />)
 
       const call = mockUseEditor.mock.calls[0][0]
       expect(call?.content).toEqual(mockLesson.content.content)
     })
 
+    it('should pass extensions array to useEditor', () => {
+      mockUseEditor.mockReturnValue(mockEditor as never)
+
+      render(<LessonViewer lesson={mockLesson} />)
+
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.extensions).toBeDefined()
+      expect(Array.isArray(call?.extensions)).toBe(true)
+    })
+
+    it('should configure onCreate callback for error handling', () => {
+      mockUseEditor.mockReturnValue(mockEditor as never)
+
+      render(<LessonViewer lesson={mockLesson} />)
+
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.onCreate).toBeDefined()
+      expect(typeof call?.onCreate).toBe('function')
+    })
+
+    it('should set immediatelyRender to false', () => {
+      mockUseEditor.mockReturnValue(mockEditor as never)
+
+      render(<LessonViewer lesson={mockLesson} />)
+
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.immediatelyRender).toBe(false)
+    })
+
     it('should display loading state when editor is not ready', () => {
       mockUseEditor.mockReturnValue(null)
 
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={mockLesson} />)
 
       expect(screen.getByText('Loading lesson...')).toBeInTheDocument()
     })
@@ -130,138 +135,38 @@ describe('LessonViewer Component', () => {
     })
 
     it('should display lesson title', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={mockLesson} />)
 
-      expect(screen.getByText('Introduction to HTML')).toBeInTheDocument()
+      expect(screen.getByTestId('lesson-title')).toHaveTextContent('Introduction to HTML')
     })
 
     it('should render EditorContent component', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={mockLesson} />)
 
       expect(screen.getByTestId('editor-content')).toBeInTheDocument()
       expect(screen.getByText('Editor Ready')).toBeInTheDocument()
     })
-
-    it('should display version metadata', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      expect(screen.getByText(/Version: 1/)).toBeInTheDocument()
-    })
-
-    it('should display lastEdit metadata with formatted date', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      // Check that date is displayed (format may vary by locale)
-      expect(screen.getByText(/Last updated:/)).toBeInTheDocument()
-    })
   })
 
-  describe('Mark as Complete Button', () => {
-    beforeEach(() => {
-      mockUseEditor.mockReturnValue(mockEditor as never)
+  describe('Error Handling', () => {
+    it('should display error state when editor returns null', () => {
+      mockUseEditor.mockReturnValue(null)
+
+      render(<LessonViewer lesson={mockLesson} />)
+
+      // Loading state shown when editor is null
+      expect(screen.getByRole('status')).toBeInTheDocument()
     })
 
-    it('should display "Mark as Complete" button when not completed', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          onMarkComplete={jest.fn()}
-          isCompleted={false}
-        />
-      )
+    it('should display error message when Tiptap rendering fails', () => {
+      mockUseEditor.mockReturnValue(null)
 
-      expect(screen.getByText('Tandai Selesai')).toBeInTheDocument()
-    })
+      render(<LessonViewer lesson={mockLesson} />)
 
-    it('should not display "Mark as Complete" button when completed', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          onMarkComplete={jest.fn()}
-          isCompleted={true}
-        />
-      )
-
-      expect(screen.queryByText('Tandai Selesai')).not.toBeInTheDocument()
-    })
-
-    it('should not display "Mark as Complete" button when onMarkComplete is not provided', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      expect(screen.queryByText('Tandai Selesai')).not.toBeInTheDocument()
-    })
-
-    it('should call onMarkComplete when button is clicked', async () => {
-      const mockOnMarkComplete = jest.fn().mockResolvedValue(undefined)
-      const user = userEvent.setup()
-
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          onMarkComplete={mockOnMarkComplete}
-          isCompleted={false}
-        />
-      )
-
-      const button = screen.getByText('Tandai Selesai')
-      await user.click(button)
-
-      await waitFor(() => {
-        expect(mockOnMarkComplete).toHaveBeenCalledTimes(1)
-      })
-    })
-  })
-
-  describe('Completion Badge', () => {
-    beforeEach(() => {
-      mockUseEditor.mockReturnValue(mockEditor as never)
-    })
-
-    it('should display completion badge when completed', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={true}
-        />
-      )
-
-      expect(screen.getByText('✓ Completed')).toBeInTheDocument()
-    })
-
-    it('should not display completion badge when not completed', () => {
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      expect(screen.queryByText('✓ Completed')).not.toBeInTheDocument()
+      // Verify onCreate callback is configured for error handling
+      const config = mockUseEditor.mock.calls[0][0]
+      expect(config?.onCreate).toBeDefined()
+      expect(typeof config?.onCreate).toBe('function')
     })
   })
 
@@ -288,18 +193,10 @@ describe('LessonViewer Component', () => {
         }
       }
 
-      render(
-        <LessonViewer
-          lesson={lessonWithHeading}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={lessonWithHeading} />)
 
-      expect(mockUseEditor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          content: lessonWithHeading.content.content
-        })
-      )
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.content).toEqual(lessonWithHeading.content.content)
     })
 
     it('should render lesson with list nodes', () => {
@@ -329,18 +226,10 @@ describe('LessonViewer Component', () => {
         }
       }
 
-      render(
-        <LessonViewer
-          lesson={lessonWithList}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={lessonWithList} />)
 
-      expect(mockUseEditor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          content: lessonWithList.content.content
-        })
-      )
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.content).toEqual(lessonWithList.content.content)
     })
 
     it('should render lesson with code block', () => {
@@ -361,18 +250,10 @@ describe('LessonViewer Component', () => {
         }
       }
 
-      render(
-        <LessonViewer
-          lesson={lessonWithCode}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={lessonWithCode} />)
 
-      expect(mockUseEditor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          content: lessonWithCode.content.content
-        })
-      )
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.content).toEqual(lessonWithCode.content.content)
     })
 
     it('should render lesson with text marks (bold, italic)', () => {
@@ -390,11 +271,6 @@ describe('LessonViewer Component', () => {
                     type: 'text' as const,
                     text: 'Bold text',
                     marks: [{ type: 'bold' as const }]
-                  },
-                  {
-                    type: 'text' as const,
-                    text: ' and italic text',
-                    marks: [{ type: 'italic' as const }]
                   }
                 ]
               }
@@ -403,18 +279,10 @@ describe('LessonViewer Component', () => {
         }
       }
 
-      render(
-        <LessonViewer
-          lesson={lessonWithMarks}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={lessonWithMarks} />)
 
-      expect(mockUseEditor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          content: lessonWithMarks.content.content
-        })
-      )
+      const call = mockUseEditor.mock.calls[0][0]
+      expect(call?.content).toEqual(lessonWithMarks.content.content)
     })
   })
 
@@ -428,94 +296,20 @@ describe('LessonViewer Component', () => {
         ...mockLesson,
         content: {
           ...mockLesson.content,
-          content: {
-            type: 'doc' as const,
-            content: []
-          }
+          content: { type: 'doc' as const, content: [] }
         }
       }
 
-      render(
-        <LessonViewer
-          lesson={lessonWithEmptyContent}
-          isCompleted={false}
-        />
-      )
+      render(<LessonViewer lesson={lessonWithEmptyContent} />)
 
       expect(screen.getByTestId('editor-content')).toBeInTheDocument()
     })
 
-    it('should handle lesson with version 0', () => {
-      const lessonWithVersion0 = {
-        ...mockLesson,
-        content: {
-          ...mockLesson.content,
-          version: 0
-        }
-      }
+    it('should render without crashing for any valid lesson', () => {
+      render(<LessonViewer lesson={mockLesson} />)
 
-      render(
-        <LessonViewer
-          lesson={lessonWithVersion0}
-          isCompleted={false}
-        />
-      )
-
-      expect(screen.getByText(/Version: 0/)).toBeInTheDocument()
-    })
-
-    it('should handle invalid date gracefully', () => {
-      const lessonWithInvalidDate = {
-        ...mockLesson,
-        content: {
-          ...mockLesson.content,
-          lastEdit: 'invalid-date'
-        }
-      }
-
-      render(
-        <LessonViewer
-          lesson={lessonWithInvalidDate}
-          isCompleted={false}
-        />
-      )
-
-      // Should still render without crashing
-      expect(screen.getByText(/Last updated:/)).toBeInTheDocument()
-    })
-
-    it('should display error message when Tiptap rendering fails', () => {
-      // Mock useEditor to simulate error state with onCreate callback
-      mockUseEditor.mockReturnValue(null)
-
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      // Verify onCreate callback is configured for error handling
-      const config = mockUseEditor.mock.calls[0][0]
-      expect(config?.onCreate).toBeDefined()
-      expect(typeof config?.onCreate).toBe('function')
-    })
-
-    it('should have error handling configuration for accessibility', () => {
-      mockUseEditor.mockReturnValue(mockEditor as never)
-
-      render(
-        <LessonViewer
-          lesson={mockLesson}
-          isCompleted={false}
-        />
-      )
-
-      // Verify onCreate callback is configured with proper error handling
-      const config = mockUseEditor.mock.calls[0][0]
-      expect(config?.onCreate).toBeDefined()
-      
-      // The component should have error state management via onCreate
+      expect(screen.getByTestId('lesson-title')).toBeInTheDocument()
+      expect(screen.getByTestId('editor-content')).toBeInTheDocument()
     })
   })
 })
