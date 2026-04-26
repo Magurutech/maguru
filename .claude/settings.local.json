@@ -84,7 +84,8 @@
       "mcp__serena__list_dir",
       "mcp__tavily__tavily-search",
       "Bash(Get-ChildItem:*)",
-      "Bash(Where-Object { $_ame -like \"*copy*\" -or $_ame -like \"*limition*\" })"
+      "Bash(Where-Object { $_ame -like \"*copy*\" -or $_ame -like \"*limition*\" })",
+      "mcp__atlassian__searchJiraIssuesUsingJql"
     ]
   },
   "outputStyle": "Learning"

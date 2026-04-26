@@ -1,40 +1,31 @@
 // Polyfill untuk Node.js environment - HARUS DI AWAL sebelum import lain
 // Menggunakan node-fetch v2 untuk polyfill yang lebih robust
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { TextEncoder, TextDecoder } = require('util')
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
 
 // Polyfill Web Streams API (diperlukan untuk MSW v2)
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('web-streams-polyfill/polyfill')
 
-// Polyfill fetch API menggunakan node-fetch
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const fetch = require('node-fetch')
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { Headers, Request, Response } = require('node-fetch')
-
-// Assign ke global jika belum ada
-if (!global.fetch) {
-  global.fetch = fetch
+// Polyfill fetch API - only if not already available
+// Skip node-fetch import to avoid ESM issues in Jest
+if (typeof global.fetch === 'undefined') {
+  global.fetch = jest.fn()
 }
-if (!global.Headers) {
-  global.Headers = Headers
+if (typeof global.Headers === 'undefined') {
+  global.Headers = jest.fn()
 }
-if (!global.Request) {
-  global.Request = Request
+if (typeof global.Request === 'undefined') {
+  global.Request = jest.fn()
 }
-if (!global.Response) {
-  global.Response = Response
+if (typeof global.Response === 'undefined') {
+  global.Response = jest.fn()
 }
 
 // Import jest-dom untuk menambahkan custom matchers seperti toBeInTheDocument()
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('@testing-library/jest-dom')
 
 // Import React untuk mock components
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const React = require('react')
 
 // Setup environment variables untuk testing
@@ -200,6 +191,19 @@ jest.mock('@clerk/nextjs', () => ({
   SignUp: () => <div data-testid="sign-up">Sign Up</div>,
 }))
 
+// Mock Clerk Server (untuk course.service.ts)
+jest.mock('@clerk/nextjs/server', () => ({
+  auth: jest.fn(() => Promise.resolve({ userId: 'user_test123' })),
+  clerkClient: jest.fn(() => Promise.resolve({
+    users: {
+      getUser: jest.fn((userId) => Promise.resolve({
+        id: userId,
+        publicMetadata: { role: 'USER' },
+      })),
+    },
+  })),
+}))
+
 // Mock Lucide React icons
 jest.mock('lucide-react', () => ({
   User: () => <div data-testid="user-icon">User Icon</div>,
@@ -231,6 +235,7 @@ jest.mock('lucide-react', () => ({
   Settings: () => <div data-testid="settings-icon">Settings Icon</div>,
   Menu: () => <div data-testid="menu-icon">Menu Icon</div>,
   X: () => <div data-testid="x-icon">X Icon</div>,
+  Search: () => <div data-testid="search-icon">Search Icon</div>,
   TrendingUp: () => <div data-testid="trending-up-icon">TrendingUp Icon</div>,
   Award: () => <div data-testid="award-icon">Award Icon</div>,
   Quote: () => <div data-testid="quote-icon">Quote Icon</div>,
@@ -246,6 +251,50 @@ jest.mock('@/components/ui/button', () => ({
 
 jest.mock('@/components/ui/badge', () => ({
   Badge: jest.fn(({ children, ...props }) => React.createElement('span', props, children)),
+}))
+
+jest.mock('@/components/ui/input', () => ({
+  Input: jest.fn((props) => React.createElement('input', props)),
+}))
+
+jest.mock('@/components/ui/select', () => ({
+  Select: jest.fn(({ children, onValueChange, value }) => {
+    // Pass onValueChange down via context-like prop drilling through data attribute
+    return React.createElement(
+      'div',
+      { 'data-value': value, 'data-testid': 'select-root' },
+      React.Children.map(children, (child) =>
+        child ? React.cloneElement(child, { _onValueChange: onValueChange }) : child
+      )
+    )
+  }),
+  SelectTrigger: jest.fn(({ children, 'aria-label': ariaLabel, _onValueChange, ...props }) =>
+    React.createElement('button', { 'aria-label': ariaLabel, role: 'combobox', ...props }, children)
+  ),
+  SelectValue: jest.fn(({ placeholder }) =>
+    React.createElement('span', null, placeholder)
+  ),
+  SelectContent: jest.fn(({ children, _onValueChange }) =>
+    React.createElement(
+      'div',
+      { role: 'listbox' },
+      React.Children.map(children, (child) =>
+        child ? React.cloneElement(child, { _onValueChange }) : child
+      )
+    )
+  ),
+  SelectItem: jest.fn(({ children, value, _onValueChange, ...props }) =>
+    React.createElement(
+      'div',
+      {
+        role: 'option',
+        'data-value': value,
+        onClick: () => _onValueChange && _onValueChange(value),
+        ...props,
+      },
+      children
+    )
+  ),
 }))
 
 // Suppress console errors during tests

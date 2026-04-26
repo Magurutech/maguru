@@ -1,0 +1,515 @@
+{
+  "info": {
+    "name": "Content Management - Lessons API",
+    "description": "API testing collection for Course Content Management - Lesson endpoints\n\nFeature: Course Content Management\nRequirements: Task 13.2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus yang ada di DB (PUBLISHED) — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
+    { "key": "sectionId", "value": "", "type": "string", "description": "ID section yang valid" },
+    { "key": "lessonId", "value": "", "type": "string", "description": "ID lesson — auto-filled dari response POST" },
+    { "key": "lessonVersion", "value": "1", "type": "string", "description": "Version lesson sebelum edit — auto-filled" },
+    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — creator (course owner)" },
+    { "key": "otherUserToken", "value": "", "type": "string", "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403" }
+  ],
+  "item": [
+    {
+      "name": "1. POST /api/courses/[slug]/sections/[sectionId]/lessons",
+      "item": [
+        {
+          "name": "Create Lesson - Success (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has lesson data with content\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json).to.have.property('title');",
+                  "    pm.expect(json).to.have.property('content');",
+                  "    pm.expect(json.content.content).to.have.property('type', 'doc');",
+                  "    pm.expect(json.content).to.have.property('version');",
+                  "    pm.collectionVariables.set('lessonId', json.id);",
+                  "    pm.collectionVariables.set('lessonVersion', json.content.version);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Intro to TypeScript\",\n  \"order\": 1,\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T00:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": [\n        {\n          \"type\": \"paragraph\",\n          \"content\": [{ \"type\": \"text\", \"text\": \"Hello world\" }]\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "Buat lesson baru dengan valid Tiptap JSON (format dua lapis). Simpan lessonId dan lessonVersion dari response."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - Invalid Content Type (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson Invalid Content\",\n  \"order\": 2,\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T00:00:00.000Z\",\n    \"content\": {\n      \"type\": \"invalid-type\",\n      \"content\": []\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "content.content.type bukan 'doc' — expects 400."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - Missing Version (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson Tanpa Version\",\n  \"order\": 2,\n  \"content\": {\n    \"lastEdit\": \"2026-03-19T00:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": []\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "content.version missing — expects 400."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson Tanpa Auth\",\n  \"order\": 2,\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T00:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": []\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "Tanpa auth — expects 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Lesson - Not Owner (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lesson dari Non-Owner\",\n  \"order\": 2,\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T00:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": []\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "Auth sebagai user bukan owner — expects 403."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. GET /api/courses/[slug]/sections/[sectionId]/lessons",
+      "item": [
+        {
+          "name": "Get Lessons - No Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has lessons array\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('lessons');",
+                  "    pm.expect(json.lessons).to.be.an('array');",
+                  "    if (json.lessons.length > 0) {",
+                  "        pm.expect(json.lessons[0]).to.have.property('id');",
+                  "        pm.expect(json.lessons[0]).to.have.property('title');",
+                  "        pm.expect(json.lessons[0]).to.have.property('order');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons"]
+            },
+            "description": "Public endpoint — tidak perlu auth. Student bisa akses tanpa login."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2b. GET /api/courses/[slug]/sections?include=lessons",
+      "item": [
+        {
+          "name": "Get All Sections with Lessons - No Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has sections array with lessons\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('sections');",
+                  "    pm.expect(json.sections).to.be.an('array');",
+                  "    if (json.sections.length > 0) {",
+                  "        pm.expect(json.sections[0]).to.have.property('id');",
+                  "        pm.expect(json.sections[0]).to.have.property('title');",
+                  "        pm.expect(json.sections[0]).to.have.property('lessons');",
+                  "        pm.expect(json.sections[0].lessons).to.be.an('array');",
+                  "        if (json.sections[0].lessons.length > 0) {",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('id');",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('title');",
+                  "            pm.expect(json.sections[0].lessons[0]).to.have.property('contentPreview');",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections?include=lessons",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "lessons",
+                  "description": "Include all lessons for each section"
+                }
+              ]
+            },
+            "description": "Public endpoint — fetch all sections with lessons in single request. Optimized for student learn page."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Sections Only - No Lessons (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has sections array without full lessons\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('sections');",
+                  "    pm.expect(json.sections).to.be.an('array');",
+                  "    if (json.sections.length > 0) {",
+                  "        pm.expect(json.sections[0]).to.have.property('id');",
+                  "        pm.expect(json.sections[0]).to.have.property('title');",
+                  "        pm.expect(json.sections[0]).to.have.property('lessonCount');",
+                  "        // Should have basic lesson info but not contentPreview",
+                  "        if (json.sections[0].lessons && json.sections[0].lessons.length > 0) {",
+                  "            pm.expect(json.sections[0].lessons[0]).to.not.have.property('contentPreview');",
+                  "        }",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections"]
+            },
+            "description": "Public endpoint — fetch sections with lesson count only (no full lesson details). Used by creator manage page."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]",
+      "item": [
+        {
+          "name": "Get Lesson Detail - No Auth (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has full content and section info\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('id');",
+                  "    pm.expect(json).to.have.property('title');",
+                  "    pm.expect(json).to.have.property('content');",
+                  "    pm.expect(json).to.have.property('section');",
+                  "    pm.expect(json.content.content).to.have.property('type', 'doc');",
+                  "    pm.expect(json.content).to.have.property('version');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+            },
+            "description": "Public endpoint — tidak perlu auth. Ambil detail lesson dengan full content + section info."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Lesson Detail - Not Found (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/nonexistent-lesson-id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "nonexistent-lesson-id"]
+            },
+            "description": "Lesson tidak ada — expects 404."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. PUT /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]",
+      "item": [
+        {
+          "name": "Update Lesson - Success, Version Increment (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Version incremented\", function () {",
+                  "    var before = Number(pm.collectionVariables.get('lessonVersion'));",
+                  "    var after = pm.response.json().content.version;",
+                  "    pm.expect(after).to.equal(before + 1);",
+                  "    pm.collectionVariables.set('lessonVersion', after);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Intro to TypeScript - Updated\",\n  \"content\": {\n    \"version\": 2,\n    \"lastEdit\": \"2026-03-19T01:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": [\n        {\n          \"type\": \"paragraph\",\n          \"content\": [{ \"type\": \"text\", \"text\": \"Konten yang diupdate\" }]\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+            },
+            "description": "Update lesson content — version di response harus increment dari sebelumnya. Jalankan setelah Create Lesson Success."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. DELETE /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]",
+      "item": [
+        {
+          "name": "Delete Lesson - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has deletedProgressRecords count\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('deletedProgressRecords');",
+                  "    pm.expect(json.deletedProgressRecords).to.be.a('number');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+            },
+            "description": "Hapus lesson beserta semua progress records. Response: { deletedProgress: N }."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

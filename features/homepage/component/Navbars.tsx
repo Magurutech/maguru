@@ -3,16 +3,18 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Menu, X, BookOpen, Search, Bell } from 'lucide-react'
+import { Menu, X, BookOpen, Search, Bell, Sun, Moon } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 import { SignOutButton, UserButton } from '@clerk/nextjs'
 import { useUserRole, useRoleNavigation } from '@/features/auth'
+import { useTheme } from 'next-themes'
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const { isSignedIn } = useUser()
   const { role } = useUserRole()
   const { getDashboardUrl } = useRoleNavigation()
+  const { theme, setTheme } = useTheme()
 
   const navItems = [
     { label: 'Beranda', href: '/' },
@@ -65,6 +67,16 @@ export function Navbar() {
                 >
                   <Search className="w-4 h-4" />
                 </Button>
+                {/* Theme Toggle */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="text-beige-700 hover:bg-beige-100 hover:text-beige-900"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
                 <Link href="/sign-in">
                   <Button
                     variant="outline"
@@ -96,6 +108,16 @@ export function Navbar() {
                 >
                   <Bell className="w-4 h-4" />
                 </Button>
+                {/* Theme Toggle */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="text-beige-700 hover:bg-beige-100 hover:text-beige-900"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </Button>
 
                 {/* Role-based Dashboard Link */}
                 <Link href={getDashboardUrl()}>
@@ -119,7 +141,6 @@ export function Navbar() {
                 </SignOutButton>
 
                 <UserButton
-                  afterSignOutUrl="/"
                   data-testid="desktop-user-button"
                   appearance={{
                     elements: {
@@ -162,6 +183,25 @@ export function Navbar() {
               <div className="flex flex-col space-y-2 pt-4 border-t border-beige-300/50">
                 {!isSignedIn ? (
                   <>
+                    {/* Mobile Theme Toggle */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                      className="w-full justify-start text-beige-700 hover:bg-beige-100"
+                    >
+                      {theme === 'dark' ? (
+                        <>
+                          <Sun className="w-4 h-4 mr-2" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="w-4 h-4 mr-2" />
+                          Dark Mode
+                        </>
+                      )}
+                    </Button>
                     <Link href="/sign-in">
                       <Button
                         variant="outline"
@@ -184,6 +224,25 @@ export function Navbar() {
                   </>
                 ) : (
                   <>
+                    {/* Mobile Theme Toggle */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                      className="w-full justify-start text-beige-700 hover:bg-beige-100"
+                    >
+                      {theme === 'dark' ? (
+                        <>
+                          <Sun className="w-4 h-4 mr-2" />
+                          Light Mode
+                        </>
+                      ) : (
+                        <>
+                          <Moon className="w-4 h-4 mr-2" />
+                          Dark Mode
+                        </>
+                      )}
+                    </Button>
                     {/* Mobile Role-based Dashboard Link */}
                     <Link href={getDashboardUrl()}>
                       <Button
@@ -217,7 +276,6 @@ export function Navbar() {
 
                     <div className="pt-2 flex justify-center">
                       <UserButton
-                        afterSignOutUrl="/"
                         data-testid="mobile-user-button"
                         appearance={{
                           elements: {

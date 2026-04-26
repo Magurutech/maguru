@@ -9,7 +9,7 @@
 
 import React from 'react'
 import { UserRoleProvider } from '@/features/auth'
-import { PenTool, BookOpen, Video, FileText, BarChart3, Users, Settings } from 'lucide-react'
+import { PenTool, BookOpen, Video, FileText, Users } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
@@ -20,16 +20,16 @@ interface CreatorLayoutProps {
 export default function CreatorLayout({ children }: CreatorLayoutProps) {
   return (
     <UserRoleProvider>
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50">
+      <div className="min-h-screen bg-linear-gradient-to-br from-purple-50 via-violet-50 to-indigo-50">
         {/* Sidebar Navigation */}
         <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-40">
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="flex items-center space-x-3 p-6 border-b border-gray-200">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-linear-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold bg-linear-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                 Maguru
               </span>
               <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">
@@ -90,49 +90,9 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                   </Button>
                 </Link>
 
-                <Link href="/creator/analytics">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"
-                  >
-                    <BarChart3 className="mr-3 h-4 w-4" />
-                    Analytics
-                  </Button>
-                </Link>
 
-                <Link href="/creator/settings">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-purple-50 hover:text-purple-700"
-                  >
-                    <Settings className="mr-3 h-4 w-4" />
-                    Settings
-                  </Button>
-                </Link>
               </div>
 
-              {/* Creator Stats */}
-              <div className="mt-8 p-4 bg-purple-50 rounded-lg">
-                <h3 className="text-sm font-semibold text-purple-900 mb-3">Creator Stats</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Active Courses</span>
-                    <span className="font-semibold text-purple-900">6</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Total Students</span>
-                    <span className="font-semibold text-purple-900">1,247</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-purple-700">Avg Rating</span>
-                    <span className="font-semibold text-purple-900">4.8⭐</span>
-                  </div>
-                  <div className="w-full bg-purple-200 rounded-full h-2 mt-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                  <p className="text-xs text-purple-600 text-center mt-1">85% Course Completion</p>
-                </div>
-              </div>
 
               {/* Quick Actions */}
               <div className="mt-6">
@@ -142,16 +102,12 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                     <BookOpen className="w-3 h-3 mr-2" />
                     New Course
                   </Button>
-                  <Button variant="outline" size="sm" className="w-full">
-                    <Video className="w-3 h-3 mr-2" />
-                    Upload Video
-                  </Button>
                 </div>
               </div>
             </nav>
 
             {/* Footer */}
-            <div className="p-6 border-t border-gray-200">
+            <div className="p-2 border-t border-gray-200">
               <p className="text-xs text-gray-500 text-center">Creator Studio v1.5</p>
               <p className="text-xs text-gray-400 text-center mt-1">© 2024 Maguru</p>
             </div>

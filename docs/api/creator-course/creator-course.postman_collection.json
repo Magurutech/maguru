@@ -1,0 +1,204 @@
+{
+  "info": {
+    "name": "Creator Course API",
+    "description": "API testing collection for Course Discovery & Enrollment - Creator endpoints\n\nFeature: Course Discovery & Enrollment\nRequirements: 4.x, 5.x, 6.x, 8.x",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "courseId", "value": "", "type": "string", "description": "ID course milik creator (auto-filled setelah create/get)" },
+    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — creator (course owner)" },
+    { "key": "otherUserToken", "value": "", "type": "string", "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403" }
+  ],
+  "item": [
+    {
+      "name": "1. GET /api/creator/courses",
+      "item": [
+        {
+          "name": "Get Creator Courses - Unauthenticated (401)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+            "pm.test(\"Response has error\", function () { pm.expect(pm.response.json()).to.have.property('error'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "No auth — expects 401.\n\nRequirements: 8.7"
+          }, "response": []
+        },
+        {
+          "name": "Get Creator Courses - Success (200)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+            "pm.test(\"Has courses and stats\", function () {",
+            "    var d = pm.response.json();",
+            "    pm.expect(d).to.have.property('courses');",
+            "    pm.expect(d).to.have.property('stats');",
+            "    pm.expect(d.courses).to.be.an('array');",
+            "});",
+            "pm.test(\"Stats fields correct\", function () {",
+            "    var s = pm.response.json().stats;",
+            "    pm.expect(s).to.have.property('totalCourses');",
+            "    pm.expect(s).to.have.property('publishedCourses');",
+            "    pm.expect(s).to.have.property('draftCourses');",
+            "    pm.expect(s.totalCourses).to.eql(s.publishedCourses + s.draftCourses);",
+            "});",
+            "pm.test(\"Each course has required fields\", function () {",
+            "    var courses = pm.response.json().courses;",
+            "    if (courses.length > 0) {",
+            "        var c = courses[0];",
+            "        pm.expect(c).to.have.property('id');",
+            "        pm.expect(c).to.have.property('title');",
+            "        pm.expect(c).to.have.property('status');",
+            "        pm.expect(c).to.have.property('difficulty');",
+            "        pm.expect(c).to.have.property('enrollmentCount');",
+            "        pm.expect(c).to.have.property('sectionCount');",
+            "        pm.collectionVariables.set('courseId', c.id);",
+            "    }",
+            "});"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "Get all creator courses with stats.\n\nRequirements: 4.1, 4.3, 8.1, 8.2"
+          }, "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. POST /api/creator/courses",
+      "item": [
+        {
+          "name": "Create Course - Unauthenticated (401)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+            "pm.test(\"Has error\", function () { pm.expect(pm.response.json()).to.have.property('error'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Test\",\n  \"description\": \"Desc\",\n  \"category\": \"programming\",\n  \"difficulty\": \"Pemula\",\n  \"status\": \"DRAFT\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "No auth — expects 401.\n\nRequirements: 8.7"
+          }, "response": []
+        },
+        {
+          "name": "Create Course - Missing Required Fields (400)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
+            "pm.test(\"Has error\", function () { pm.expect(pm.response.json()).to.have.property('error'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Kursus Tanpa Deskripsi\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "Missing required fields — expects 400.\n\nRequirements: 5.6, 8.4"
+          }, "response": []
+        },
+        {
+          "name": "Create Course - Invalid Difficulty (400)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 400\", function () { pm.response.to.have.status(400); });",
+            "pm.test(\"Error mentions difficulty\", function () {",
+            "    var err = pm.response.json().error.toLowerCase();",
+            "    pm.expect(err.includes('difficulty') || err.includes('pemula') || err.includes('must be one of')).to.be.true;",
+            "});"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Invalid Difficulty\",\n  \"description\": \"Desc\",\n  \"category\": \"programming\",\n  \"difficulty\": \"Expert\",\n  \"status\": \"DRAFT\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "Invalid difficulty value — expects 400.\n\nRequirements: 5.7, 8.4"
+          }, "response": []
+        },
+        {
+          "name": "Create Course - Success (201)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });",
+            "pm.test(\"Has course data\", function () {",
+            "    var c = pm.response.json().course;",
+            "    pm.expect(c).to.have.property('id');",
+            "    pm.expect(c).to.have.property('title');",
+            "    pm.expect(c).to.have.property('status');",
+            "    pm.expect(c).to.have.property('creatorId');",
+            "    pm.collectionVariables.set('courseId', c.id);",
+            "});",
+            "pm.test(\"Status is DRAFT\", function () { pm.expect(pm.response.json().course.status).to.eql('DRAFT'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Test Course Double Postman dari Postman\",\n  \"description\": \"Deskripsi kursus test yang dibuat via Postman collection\",\n  \"category\": \"programming\",\n  \"difficulty\": \"Pemula\",\n  \"status\": \"DRAFT\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/creator/courses", "host": ["{{baseUrl}}"], "path": ["api","creator","courses"] },
+            "description": "Create course with valid data — expects 201.\n\nRequirements: 5.3, 5.4, 8.3"
+          }, "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. PUT /api/creator/courses/[slug]/publish",
+      "item": [
+        {
+          "name": "Publish Course - Unauthenticated (401)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 401\", function () { pm.response.to.have.status(401); });",
+            "pm.test(\"Has error\", function () { pm.expect(pm.response.json()).to.have.property('error'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT", "header": [],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses/{{courseId}}/publish", "host": ["{{baseUrl}}"], "path": ["api","creator","courses","{{courseId}}","publish"] },
+            "description": "No auth — expects 401.\n\nRequirements: 8.7"
+          }, "response": []
+        },
+        {
+          "name": "Publish Course - Not Owner (403)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 403\", function () { pm.response.to.have.status(403); });",
+            "pm.test(\"Has error\", function () { pm.expect(pm.response.json()).to.have.property('error'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Cookie", "value": "__session={{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses/{{courseId}}/publish", "host": ["{{baseUrl}}"], "path": ["api","creator","courses","{{courseId}}","publish"] },
+            "description": "Non-owner attempts toggle — expects 403.\n\nRequirements: 6.5, 8.6"
+          }, "response": []
+        },
+        {
+          "name": "Publish Course - DRAFT to PUBLISHED (200)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+            "pm.test(\"Has course with status\", function () {",
+            "    var c = pm.response.json().course;",
+            "    pm.expect(c).to.have.property('id');",
+            "    pm.expect(c).to.have.property('title');",
+            "    pm.expect(c).to.have.property('status');",
+            "});",
+            "pm.test(\"Status is PUBLISHED\", function () { pm.expect(pm.response.json().course.status).to.eql('PUBLISHED'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses/{{courseId}}/publish", "host": ["{{baseUrl}}"], "path": ["api","creator","courses","{{courseId}}","publish"] },
+            "description": "Toggle DRAFT → PUBLISHED.\nRun after Create Course - Success.\n\nRequirements: 6.1, 8.5"
+          }, "response": []
+        },
+        {
+          "name": "Unpublish Course - PUBLISHED to DRAFT (200)",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "pm.test(\"Status code is 200\", function () { pm.response.to.have.status(200); });",
+            "pm.test(\"Status is DRAFT\", function () { pm.expect(pm.response.json().course.status).to.eql('DRAFT'); });"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "url": { "raw": "{{baseUrl}}/api/creator/courses/{{courseId}}/publish", "host": ["{{baseUrl}}"], "path": ["api","creator","courses","{{courseId}}","publish"] },
+            "description": "Toggle PUBLISHED → DRAFT (same courseId, run after publish).\n\nRequirements: 6.2, 8.5"
+          }, "response": []
+        }
+      ]
+    }
+  ]
+}

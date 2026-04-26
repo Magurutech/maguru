@@ -7,7 +7,7 @@
  * Mengikuti Ancient Fantasy Asia design system.
  */
 
-import { StatsCard } from '@/features/creator/components/dashboard'
+import { StatsCard } from '@/features/cms/components/creator/dashboard'
 import { getStaggerDelay } from '../utils'
 import type { StatCard } from '../types'
 

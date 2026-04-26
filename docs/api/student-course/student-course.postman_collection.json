@@ -1,0 +1,588 @@
+{
+  "info": {
+    "name": "Student Course API",
+    "description": "API testing collection for Course Discovery & Enrollment - Student endpoints\n\nFeature: Course Discovery & Enrollment\nRequirements: 1.x, 2.x, 3.x, 7.x",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "",
+      "type": "string",
+      "description": "Set this to a valid PUBLISHED course slug from your database (e.g. belajar-typescript-dari-nol) — human-readable, bukan UUID"
+    },
+    {
+      "key": "draftCourseId",
+      "value": "",
+      "type": "string",
+      "description": "Set this to a valid DRAFT course slug from your database (e.g. belajar-typescript-dari-nol) — human-readable, bukan UUID"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string",
+      "description": "Clerk session token for authenticated requests"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. GET /api/courses (Public Catalog)",
+      "item": [
+        {
+          "name": "Get Catalog - Success (no auth)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has courses array and pagination\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('courses');",
+                  "    pm.expect(jsonData).to.have.property('pagination');",
+                  "    pm.expect(jsonData.courses).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Pagination has required fields\", function () {",
+                  "    var pagination = pm.response.json().pagination;",
+                  "    pm.expect(pagination).to.have.property('page');",
+                  "    pm.expect(pagination).to.have.property('limit');",
+                  "    pm.expect(pagination).to.have.property('total');",
+                  "    pm.expect(pagination).to.have.property('totalPages');",
+                  "});",
+                  "",
+                  "pm.test(\"Each course has required fields\", function () {",
+                  "    var courses = pm.response.json().courses;",
+                  "    if (courses.length > 0) {",
+                  "        var course = courses[0];",
+                  "        pm.expect(course).to.have.property('id');",
+                  "        pm.expect(course).to.have.property('title');",
+                  "        pm.expect(course).to.have.property('category');",
+                  "        pm.expect(course).to.have.property('difficulty');",
+                  "        pm.expect(course).to.have.property('status');",
+                  "        pm.expect(course).to.have.property('sectionCount');",
+                  "        pm.expect(course).to.have.property('lessonCount');",
+                  "        pm.expect(course).to.have.property('enrolled');",
+                  "        // Save first courseId for later tests",
+                  "        pm.collectionVariables.set('courseId', course.id);",
+                  "    }",
+                  "});",
+                  "",
+                  "pm.test(\"All courses are PUBLISHED\", function () {",
+                  "    var courses = pm.response.json().courses;",
+                  "    courses.forEach(function (course) {",
+                  "        pm.expect(course.status).to.eql('PUBLISHED');",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test(\"Description is truncated to max 150 chars\", function () {",
+                  "    var courses = pm.response.json().courses;",
+                  "    courses.forEach(function (course) {",
+                  "        if (course.description !== null) {",
+                  "            pm.expect(course.description.length).to.be.at.most(150);",
+                  "        }",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"]
+            },
+            "description": "Get public course catalog without authentication.\nAll returned courses must be PUBLISHED.\n\nRequirements: 1.1, 7.1"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Catalog - Filter by Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All returned courses match the category filter\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    var courses = jsonData.courses;",
+                  "    courses.forEach(function (course) {",
+                  "        pm.expect(course.category.toLowerCase()).to.include('programming');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?category=programming",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                { "key": "category", "value": "programming" }
+              ]
+            },
+            "description": "Filter catalog by category.\n\nRequirements: 1.2, 7.2"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Catalog - Filter by Difficulty",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"All returned courses match the difficulty filter\", function () {",
+                  "    var courses = pm.response.json().courses;",
+                  "    courses.forEach(function (course) {",
+                  "        pm.expect(course.difficulty).to.eql('Pemula');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?difficulty=Pemula",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                { "key": "difficulty", "value": "Pemula" }
+              ]
+            },
+            "description": "Filter catalog by difficulty level.\n\nRequirements: 1.3, 7.2"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Catalog - Search by Keyword",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has courses array\", function () {",
+                  "    pm.expect(pm.response.json()).to.have.property('courses');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?search=web",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                { "key": "search", "value": "web" }
+              ]
+            },
+            "description": "Search courses by keyword in title or description (case-insensitive).\n\nRequirements: 1.4, 7.2"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Catalog - Pagination",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Pagination returns correct page and limit\", function () {",
+                  "    var pagination = pm.response.json().pagination;",
+                  "    pm.expect(pagination.page).to.eql(1);",
+                  "    pm.expect(pagination.limit).to.eql(6);",
+                  "});",
+                  "",
+                  "pm.test(\"Courses count does not exceed limit\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.courses.length).to.be.at.most(6);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses?page=1&limit=6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "6" }
+              ]
+            },
+            "description": "Test pagination with custom page and limit.\n\nRequirements: 1.8, 7.2"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for public course catalog endpoint"
+    },
+    {
+      "name": "2. GET /api/courses/[slug] (Course Detail)",
+      "item": [
+        {
+          "name": "Get Course Detail - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has required course fields\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('title');",
+                  "    pm.expect(jsonData).to.have.property('description');",
+                  "    pm.expect(jsonData).to.have.property('category');",
+                  "    pm.expect(jsonData).to.have.property('status');",
+                  "    pm.expect(jsonData).to.have.property('createdAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseId}}"]
+            },
+            "description": "Get course detail by ID.\nRequires courseId variable to be set.\n\nRequirements: 7.3, 7.4"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Course Detail - Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error message\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/non-existent-course-id-00000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "non-existent-course-id-00000000"]
+            },
+            "description": "Test 404 for non-existent course ID.\n\nRequirements: 10.3"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for course detail endpoint"
+    },
+    {
+      "name": "3. POST /api/courses/[slug]/enroll",
+      "item": [
+        {
+          "name": "Enroll - Success (201)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has enrollment data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('enrollment');",
+                  "    pm.expect(jsonData.enrollment).to.have.property('id');",
+                  "    pm.expect(jsonData.enrollment).to.have.property('userId');",
+                  "    pm.expect(jsonData.enrollment).to.have.property('courseId');",
+                  "    pm.expect(jsonData.enrollment).to.have.property('enrolledAt');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseId}}/enroll",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseId}}", "enroll"]
+            },
+            "description": "Enroll authenticated student into a PUBLISHED course.\nRequires authToken and courseId variables.\n\nRequirements: 2.1, 2.8"
+          },
+          "response": []
+        },
+        {
+          "name": "Enroll - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates login required\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.include('login');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseId}}/enroll",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseId}}", "enroll"]
+            },
+            "description": "Attempt to enroll without authentication.\nExpects 401 with login message.\n\nRequirements: 2.4, 10.2"
+          },
+          "response": []
+        },
+        {
+          "name": "Enroll - DRAFT Course (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 403\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates course not published\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{draftCourseId}}/enroll",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{draftCourseId}}", "enroll"]
+            },
+            "description": "Attempt to enroll in a DRAFT course.\nRequires draftCourseId variable set to a DRAFT course.\nExpects 403.\n\nRequirements: 2.6"
+          },
+          "response": []
+        },
+        {
+          "name": "Enroll - Already Enrolled (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 409\", function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates already enrolled\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.eql('Anda sudah terdaftar di kursus ini');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseId}}/enroll",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseId}}", "enroll"]
+            },
+            "description": "Attempt to enroll in a course the user is already enrolled in.\nRun AFTER the success enroll request above.\nExpects 409 with exact error message.\n\nRequirements: 2.3, 10.1"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for course enrollment endpoint"
+    },
+    {
+      "name": "4. GET /api/courses/my-courses",
+      "item": [
+        {
+          "name": "My Courses - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has enrollments array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('enrollments');",
+                  "    pm.expect(jsonData.enrollments).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each enrollment has required fields\", function () {",
+                  "    var enrollments = pm.response.json().enrollments;",
+                  "    if (enrollments.length > 0) {",
+                  "        var enrollment = enrollments[0];",
+                  "        pm.expect(enrollment).to.have.property('id');",
+                  "        pm.expect(enrollment).to.have.property('course');",
+                  "        pm.expect(enrollment).to.have.property('enrolledAt');",
+                  "        pm.expect(enrollment).to.have.property('progress');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/my-courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "my-courses"]
+            },
+            "description": "Get all enrolled courses for authenticated student.\nRequires authToken variable.\n\nRequirements: 3.1, 3.2, 7.7"
+          },
+          "response": []
+        },
+        {
+          "name": "My Courses - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message indicates login required\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.include('login');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/my-courses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "my-courses"]
+            },
+            "description": "Attempt to access my-courses without authentication.\nExpects 401.\n\nRequirements: 3.5, 7.8"
+          },
+          "response": []
+        }
+      ],
+      "description": "Tests for student enrolled courses endpoint"
+    }
+  ]
+}

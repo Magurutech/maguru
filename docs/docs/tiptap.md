@@ -1,0 +1,88 @@
+# Tiptap Concepts
+
+## [](#structure)Structure
+
+ProseMirror works with a strict [Schema](/docs/editor/core-concepts/schema), which defines the allowed structure of a document. A document is a tree of headings, paragraphs and other elements, called nodes. Marks can be attached to a node, e. g. to emphasize part of it. [Commands](/docs/editor/api/commands) change that document programmatically.
+
+## [](#state)State
+
+The document is stored in a state. Changes are applied as transactions to the state. The state has details about the current content, cursor position and selection. You can hook into [events](/docs/editor/api/events), for example to alter transactions before they get applied.
+
+## [](#content)Content
+
+The document is stored internally as a [ProseMirror node](https://prosemirror.net/docs/ref/#model.Node), and can be retrieved as a Tiptap JSON object calling `editor.getJSON()`.
+
+Tiptap JSON is the recommended format for storing the document and working with it. Below is an example Tiptap JSON document:
+
+```
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": "center"
+      },
+      "content": [
+        { "type": "text", "text": "Hello, " },
+        {
+          "type": "text",
+          "text": "world",
+          "marks": [{ "type": "bold" }, { "type": "italic" }]
+        },
+        { "type": "text", "text": "!" }
+      ]
+    }
+  ]
+}
+```
+
+A Tiptap JSON document is a tree of nodes. Some nodes can have children, but only text nodes (those with `type: 'text'`) can contain text. Text nodes and other inline nodes can have marks applied to them. Some nodes and marks can have attributes.
+
+## [](#extensions)Extensions
+
+Extensions add [nodes](/docs/editor/extensions/nodes), [marks](/docs/editor/extensions/marks) and/or [functionalities](/docs/editor/extensions/functionality) to the editor. A lot of those extensions bound their commands to common [keyboard shortcuts](/docs/editor/core-concepts/keyboard-shortcuts).
+
+## [](#vocabulary)Vocabulary
+
+ProseMirror has its own vocabulary and you’ll stumble upon all those words now and then. Here is a short overview of the most common words we use in the documentation.
+
+Word
+
+Description
+
+Schema
+
+Configures the structure your content can have.
+
+Document
+
+The actual content in your editor.
+
+State
+
+Everything to describe the current content and selection of your editor.
+
+Transaction
+
+A change to the state (updated selection, content, …)
+
+Extension
+
+Registers new functionality.
+
+Node
+
+A type of content, for example a heading or a paragraph.
+
+Mark
+
+Can be applied to nodes, for example for inline formatting.
+
+Command
+
+Execute an action inside the editor, that somehow changes the state.
+
+Decoration
+
+Styling on top of the document, for example to highlight mistakes.

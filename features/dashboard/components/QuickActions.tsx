@@ -8,7 +8,7 @@
  */
 
 import Link from 'next/link'
-import { ActionButton } from '@/features/creator/components/dashboard/ActionButton'
+import { ActionButton } from '@/features/cms/components/creator/dashboard'
 import type { QuickAction } from '../types'
 
 interface QuickActionsProps {

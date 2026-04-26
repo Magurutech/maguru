@@ -13,9 +13,9 @@
 # claude
 .claude
 .clerk
-.kiro
 .serena
 .next
+rules/error.md
 
 # testing
 /coverage
@@ -72,3 +72,6 @@ __pycache__
 # Claude Code generated files and cache
 .claude/reports/
 .claude/hooks/cache
+
+# Newman environment (contains auth tokens — do not commit)
+docs/api/newman-env.json

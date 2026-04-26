@@ -7,11 +7,10 @@
 
 import React from 'react'
 import { useUser } from '@clerk/nextjs'
-import type { UserResource } from '@clerk/types'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
 
 export interface AdminAuthState {
-  user: UserResource | null | undefined
+  user: ReturnType<typeof useUser>['user']
   role: string | null
   isAdmin: boolean
   isLoaded: boolean

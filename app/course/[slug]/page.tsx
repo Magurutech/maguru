@@ -1,137 +1,90 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useParams } from 'next/navigation'
-import { Suspense } from 'react'
-import { CourseHeader } from '@/features/course/components/CourseHeader'
-import { CourseTabs } from '@/features/course/components/CourseTabs'
-import { Course, CourseProgress } from '@/features/course/types/course.types'
-import { getCourse } from '@/features/course/api'
-import {
-  Loader2,
-  AlertCircle,
-  ArrowLeft
-} from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { notFound } from 'next/navigation'
+import { currentUser } from '@clerk/nextjs/server'
 import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
+import { CourseOverviewHero } from '@/features/cms/components/student/overview/CourseOverviewHero'
+import { CourseCurriculum } from '@/features/cms/components/student/overview/CourseCurriculum'
+import { CourseEnrollButton } from '@/features/cms/components/student/overview/CourseEnrollButton'
+import type { CourseDetail, OverviewSection } from '@/features/cms/components/student/overview/types'
+import prisma from '@/prisma/lib/client'
 
-function CourseDetailContent() {
-  const params = useParams()
-  const slug = params.slug as string
+/**
+ * Course Detail / Overview Page — /course/[slug]
+ *
+ * Server component. Accessible by anyone for PUBLISHED courses.
+ * Shows course info, curriculum preview, and enroll/continue CTA.
+ *
+ * Requirements: 1.5, 1.6, 1.7, 2.1, 2.2, 7.3, 7.4, 7.5
+ */
 
-  const [course, setCourse] = useState<Course | null>(null)
-  const [progress, setProgress] = useState<CourseProgress | undefined>()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  // Load course data
-  useEffect(() => {
-    async function loadCourse() {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const response = await getCourse(slug)
-        if (!response) {
-          throw new Error('Course not found')
-        }
-
-        setCourse(response.course)
-        setProgress(response.progress)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load course')
-        console.error('Error loading course:', err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    if (slug) {
-      loadCourse()
-    }
-  }, [slug])
-
-  
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center">
-              <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-secondary-600" />
-              <p className="text-lg text-beige-700">Loading course...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (error || !course) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center max-w-md">
-              <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-              <h1 className="text-2xl font-bold text-beige-900 mb-2">Course Not Found</h1>
-              <p className="text-beige-700 mb-6">
-                {error || 'The course you are looking for does not exist or could not be loaded.'}
-              </p>
-              <Link href="/course">
-                <Button className="btn-primary hover-glow">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Courses
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
-      {/* Decorative Elements */}
-      <div className="fixed top-10 right-10 text-6xl opacity-10 whimsical-bounce">📚</div>
-      <div className="fixed bottom-10 left-10 text-4xl opacity-20 whimsical-bounce animation-delay-1000">
-        🎓
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        {/* Course Header */}
-        <CourseHeader
-          course={course}
-          progress={progress}
-          showStartButton={true}
-          startButtonHref={`/course/${slug}/learn`}
-        />
-
-        {/* Tab Interface */}
-        <CourseTabs course={course} progress={progress} />
-      </div>
-    </div>
-  )
+interface PageProps {
+  params: Promise<{ slug: string }>
 }
 
-export default function CourseDetailPage() {
+async function fetchCourseDetail(slug: string): Promise<CourseDetail | null> {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/api/courses/${slug}`, { cache: 'no-store' })
+  if (!res.ok) return null
+  return res.json()
+}
+
+async function fetchCourseSections(slug: string): Promise<OverviewSection[]> {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/api/courses/${slug}/sections`, { cache: 'no-store' })
+  if (!res.ok) return []
+  const data = await res.json()
+  return data.sections ?? []
+}
+
+async function checkEnrollment(userId: string, courseId: string): Promise<boolean> {
+  const enrollment = await prisma.enrollments.findFirst({
+    where: { userId, courseId },
+    select: { id: true },
+  })
+  return !!enrollment
+}
+
+export default async function CourseDetailPage({ params }: PageProps) {
+  const { slug } = await params
+
+  const [course, sections] = await Promise.all([
+    fetchCourseDetail(slug),
+    fetchCourseSections(slug),
+  ])
+
+  if (!course) notFound()
+
+  // Check enrollment status (optional auth)
+  const user = await currentUser()
+  const enrolled = user ? await checkEnrollment(user.id, course.id) : false
+
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gradient-to-br from-beige-50 via-white to-beige-50">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-center min-h-[60vh]">
-              <div className="text-center">
-                <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-secondary-600" />
-                <p className="text-lg text-beige-700">Loading course...</p>
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-linear-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* Back to catalog */}
+        <Link
+          href="/course"
+          className="inline-flex items-center gap-1.5 text-sm text-beige-500 hover:text-beige-800 transition-colors mb-6"
+          data-testid="back-to-catalog"
+        >
+          <ChevronLeft className="w-4 h-4" />
+          Kembali ke Katalog
+        </Link>
+
+        <div className="flex flex-col gap-6">
+          {/* Hero: title, description, stats, CTA */}
+          <CourseOverviewHero course={course} sections={sections}>
+            <CourseEnrollButton
+              courseSlug={course.slug}
+              courseTitle={course.title}
+              initialEnrolled={enrolled}
+            />
+          </CourseOverviewHero>
+
+          {/* Curriculum */}
+          <CourseCurriculum sections={sections} />
         </div>
-      }
-    >
-      <CourseDetailContent />
-    </Suspense>
+      </div>
+    </div>
   )
 }

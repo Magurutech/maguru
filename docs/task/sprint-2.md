@@ -1,399 +1,127 @@
-# Sprint 2 - Quiz & Assessment System
+# Sprint 2a: Content First - Course Structure & Delivery
 
-Dokumentasi sprint untuk implementasi sistem kuis dan penilaian.
+**Status:** Draft | **Prioritas:** P1 | **Estimasi:** 2-3 minggu
 
 ---
 
 ## 📋 Ringkasan
 
-Sprint ini berfokus pada **menutup core learning loop**: Belajar → Praktek → Kuis → Feedback → Review.
+Sprint ini berfokus pada **menyelesaikan struktur content** agar siswa dapat belajar dengan terstruktur. Saat ini content masih file-based (markdown di repo git), kita akan migrasi ke database agar persisten dan bisa diakses dinamis.
 
-**Fitur Utama:**
-1. Quiz System - Kuis creation, taking, scoring
-2. Diagnostic Test - Baseline assessment untuk user baru
-3. Hint System - Progressive hints untuk stuck students
-4. Review Flow - Otomatis review untuk failed quizzes
-
----
-
-## 🏗️ Arsitektur Sistem
-
-```
-┌─────────────────────────────────────────────┐
-│      Quiz & Assessment Architecture      │
-├─────────────────────────────────────────────┤
-│                                         │
-│  ┌────────────┐  ┌──────────┐      │
-│  │ Frontend   │  │  API Layer │      │
-│  │ (Quiz UI)  │  │  (Supabase│      │
-│  └────────────┘  │  + LangServe)│      │
-│        │              │               │      │
-│        ▼              ▼               ▼      │
-│  ┌────────────────────────────────┐       │
-│  │     Data Layer (Hybrid)      │       │
-│  │  ┌──────────────┐          │       │
-│  │  │ Supabase     │          │       │
-│  │  │ - Quizzes     │          │       │
-│  │  │ - Answers     │          │       │
-│  │  │ - Scores      │          │       │
-│  │  └──────────────┘          │       │
-│  │  ┌──────────────┐          │       │
-│  │  │ LangServe     │          │       │
-│  │  │ - Feedback     │          │       │
-│  │  └──────────────┘          │       │
-│  └────────────────────────────────┘       │
-└─────────────────────────────────────────────┘
-```
+**Tujuan Utama:**
+1. Database schema untuk Course → Sections → Lessons → Content
+2. API routes untuk content management
+3. Frontend integration untuk Creator dan Student
+4. Progress tracking yang persisten di database
 
 ---
 
-## 🎯 Gambaran Besar Fitur
+## 🎯 User Stories
 
-### 1. Quiz System
-**Deskripsi:** Sistem kuis lengkap untuk mengukur pemahaman siswa setelah belajar materi.
+### Epic 1: Course Structure Management
 
-**Komponen Utama:**
-- Quiz Builder - Interface untuk membuat pertanyaan (multiple choice, code completion)
-- Quiz Taking UI - Tampilan kuis untuk siswa
-- Scoring Engine - Hitung skor dan tentukan pass/fail
-- Results Display - Tampilkan skor dengan breakdown per topik
-- Feedback Integration - Gunakan LangServe untuk feedback detail
+**US1.1 - Section Navigation**
+> Sebagai Creator, saya ingin membuat section (bab) di course agar materi bisa dikelompok secara logis.
 
----
+**US1.2 - Lesson Management**
+> Sebagai Creator, saya ingin membuat lesson (materi) di setiap section agar saya bisa mengorganisir konten pelajaran dengan baik.
 
-### 2. Diagnostic Test
-**Deskripsi:** Tes diagnostik singkat untuk user baru agar sistem mengerti kekuatan dan kelemahan.
-
-**Komponen Utama:**
-- Diagnostic Questions - Bank pertanyaan (15-20 soal)
-- Profiling Algorithm - Analisis jawaban untuk mapping kekuatan/kelemahan
-- Profile Setup - Form data user untuk personalisasi
-- Recommendation Engine - Generate rekomendasi course berdasarkan profil
+**US1.3 - Content Upload**
+> Sebagai Creator, saya ingin mengupload konten (markdown, video, gambar) untuk setiap lesson.
 
 ---
 
-### 3. Hint System
-**Deskripsi:** Progressive hints (Level 1-2-3) untuk siswa yang stuck pada exercise.
+### Epic 2: Content Delivery
 
-**Komponen Utama:**
-- Hint Button UI - Tombol hint di learning interface
-- Hint Level Tracking - Cek dan update level hint saat ini
-- Cooldown System - Limit request hint untuk mencegah over-reliance
-- LangServe Integration - Call `streamHint()` untuk generate hints
+**US2.1 - File-Based Content Viewer**
+> Sebagai Student, saya ingin melihat konten lesson yang sedang saya pelajari dalam format yang rapi dan mudah dibaca.
 
----
-
-### 4. Review Flow
-**Deskripsi:** Otomatis review trigger untuk siswa yang gagal kuis (<70%).
-
-**Komponen Utama:**
-- Failed Quiz Detection - Identify quizzes dengan score < 70%
-- Weak Topics Mapping - Tag topik yang gagal di kuasai
-- Review Mode - Special mode dengan konten alternatif
-- Verification Quiz - Mini quiz setelah review untuk verifikasi
+**US2.2 - Content Type Support**
+> Sebagai Creator, saya ingin tipe konten bisa beragam (markdown, video, quiz) untuk variasi metode pembelajaran.
 
 ---
 
-## 🎨 UI/UX Guidelines
+### Epic 3: Progress Tracking
 
-### Quiz Taking Layout
-```
-- Question-by-question display (bukan semua sekaligus)
-- Progress indicator: "Question 3 / 10"
-- Timer opsional per question / total
-- Answer input yang jelas dan mudah
-- Feedback langsung setelah submit
-```
+**US3.1 - Lesson Progress**
+> Sebagai Student, saya ingin melihat kemajuan belajar saya (lesson mana yang sudah selesai) agar saya tahu posisi saya.
 
-### Quiz Builder Layout
-```
-- List view untuk semua pertanyaan
-- Form editor untuk setiap pertanyaan
-- Preview panel untuk melihat hasil
-- Drag-drop untuk reordering
-- Validation realtime sebelum save
-```
-
-### Diagnostic Test Layout
-```
-- Timer countdown untuk timed test
-- Progress bar untuk soal terjawab
-- Auto-save answer lokal (prevent refresh loss)
-- Results dengan topic breakdown (strengths/weaknesses)
-```
+**US3.2 - Course Completion**
+> Sebagai Student, saya ingin melihat status penyelesaian course saya (berapa persen yang sudah selesai) agar saya termotivasi.
 
 ---
 
-## 🚀 API Endpoints
+## 📝 Tasks
 
-### Quiz Management
-```
-POST   /api/quizzes                 - Create quiz baru
-GET    /api/quizzes                 - List all quizzes
-GET    /api/quizzes/[id]             - Get quiz detail
-PUT    /api/quizzes/[id]             - Update quiz
-DELETE /api/quizzes/[id]             - Delete quiz
+### Phase 1: Database Schema (Hari 1-2)
 
-POST   /api/quizzes/[id]/questions      - Add question ke quiz
-GET    /api/quizzes/[id]/questions      - List questions dalam quiz
-PUT    /api/quizzes/[id]/questions/[qId] - Update question
-DELETE /api/quizzes/[id]/questions/[qId] - Delete question
+| # | Task | Deskripsi | Estimasi |
+|---|-------|-----------|------------|
+| 1.1 | Buat Section model di Prisma schema | 2 jam |
+| 1.2 | Buat Lesson model di Prisma schema | 2 jam |
+| 1.3 | Buat Progress model di Prisma schema | 1 jam |
+| 1.4 | Buat CourseCompletion model di Prisma schema | 1 jam |
+| 1.5 | Update Course model dengan Section relation | 1 jam |
 
-POST   /api/quizzes/submit           - Submit jawaban kuis
-GET    /api/quizzes/[id]/results       - Get results kuis
-```
+### Phase 2: API Routes (Hari 2-3)
 
-### Diagnostic Test
-```
-POST   /api/diagnostic/start          - Mulai diagnostic test
-GET    /api/diagnostic/questions        - Get pertanyaan diagnostic
-POST   /api/diagnostic/submit       - Submit jawaban diagnostic
-GET    /api/diagnostic/results        - Get hasil diagnostic
-GET    /api/diagnostic/profile         - Get user profile
-POST   /api/diagnostic/profile         - Update user profile
-GET    /api/diagnostic/recommendations - Get rekomendasi course
-```
+| # | Task | Deskripsi | Estimasi |
+|---|-------|-----------|------------|
+| 2.1 | Buat API route untuk create section | 3 jam |
+| 2.2 | Buat API route untuk list sections per course | 2 jam |
+| 2.3 | Buat API route untuk create lesson | 3 jam |
+| 2.4 | Buat API route untuk list lessons per section | 2 jam |
+| 2.5 | Buat API route untuk get lesson content | 2 jam |
+| 2.6 | Buat API route untuk save progress | 2 jam |
+| 2.7 | Buat API route untuk get course progress | 3 jam |
+| 2.8 | Buat API route untuk mark course completion | 2 jam |
 
-### Hint System
-```
-POST   /api/hints/request             - Request hint untuk item
-GET    /api/hints/status/[itemId]      - Cek status hint (level, cooldown)
-PUT    /api/hints/status/[itemId]      - Update status hint
-```
+### Phase 3: Frontend Integration (Hari 4-5)
 
-### Review Flow
-```
-GET    /api/review/failed-quizzes      - Get failed quizzes untuk review
-POST   /api/review/[quizId]/start       - Mulai review mode
-POST   /api/review/[quizId]/complete    - Selesaikan review
-GET    /api/review/[quizId]/materials   - Get materi review
-POST   /api/review/[quizId]/verify     - Submit verification quiz
-```
+| # | Task | Deskripsi | Estimasi |
+|---|-------|-----------|------------|
+| 3.1 | Update Creator Dashboard untuk section management | 4 jam |
+| 3.2 | Update Learn Page untuk section navigation | 4 jam |
+| 3.3 | Update Learn Page untuk lesson list per section | 4 jam |
+| 3.4 | Update Learn Page untuk content viewer | 4 jam |
+| 3.5 | Implement progress tracking di Learn Page | 4 jam |
+| 3.6 | Implement course completion tracking | 2 jam |
 
 ---
 
-## 📊 Struktur Data (Supabase)
+## 🎯 Acceptance Criteria
 
-### Quiz Tables
-```sql
--- Quizzes
-CREATE TABLE quizzes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  course_item_id UUID REFERENCES course_items(id),
-  title TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Quiz Questions
-CREATE TABLE quiz_questions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  quiz_id UUID REFERENCES quizzes(id),
-  question_type TEXT NOT NULL, -- 'multiple_choice', 'code_completion'
-  question_data JSONB NOT NULL,
-  correct_answer JSONB NOT NULL,
-  explanation TEXT,
-  points INTEGER DEFAULT 1,
-  order_index INTEGER
-);
-
--- Quiz Answers
-CREATE TABLE quiz_answers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  question_id UUID REFERENCES quiz_questions(id),
-  answer JSONB NOT NULL,
-  is_correct BOOLEAN DEFAULT FALSE,
-  submitted_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Quiz Scores
-CREATE TABLE quiz_scores (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  quiz_id UUID REFERENCES quizzes(id),
-  total_score INTEGER,
-  max_score INTEGER,
-  passed BOOLEAN DEFAULT FALSE,
-  topic_breakdown JSONB,
-  completed_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
-
-### Diagnostic Tables
-```sql
--- Diagnostic Questions
-CREATE TABLE diagnostic_questions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  question_data JSONB NOT NULL,
-  topics TEXT[],
-  difficulty TEXT,
-  order_index INTEGER
-);
-
--- Diagnostic Answers
-CREATE TABLE diagnostic_answers (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  question_id UUID REFERENCES diagnostic_questions(id),
-  answer JSONB NOT NULL,
-  is_correct BOOLEAN
-);
-
--- User Profile
-CREATE TABLE user_profiles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID UNIQUE REFERENCES auth.users(id),
-  grade_level TEXT,
-  subjects TEXT[],
-  study_hours TEXT,
-  diagnostic_score JSONB,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Learning Paths
-CREATE TABLE learning_paths (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES user_profiles(id),
-  recommended_courses JSONB NOT NULL,
-  weak_topics TEXT[],
-  generated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
-
-### Hint System Tables
-```sql
--- Hint Requests
-CREATE TABLE hint_requests (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  course_item_id UUID REFERENCES course_items(id),
-  hint_level INTEGER DEFAULT 1,
-  requested_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  UNIQUE(user_id, course_item_id, hint_level)
-);
-```
-
-### Review Tables
-```sql
--- Review Sessions
-CREATE TABLE review_sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  user_id UUID REFERENCES auth.users(id),
-  quiz_id UUID REFERENCES quizzes(id),
-  started_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  completed_at TIMESTAMP WITH TIME ZONE
-);
-
--- Review Materials
-CREATE TABLE review_materials (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  review_session_id UUID REFERENCES review_sessions(id),
-  section_id UUID REFERENCES course_sections(id),
-  alternative_content JSONB,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-```
+| Story | Criteria |
+|-------|----------|
+| US1.1 | Creator bisa membuat section baru | POST /api/courses/[slug]/sections mengembalikan section |
+| US1.2 | Creator bisa membuat lesson baru | POST /api/courses/[slug]/sections/[sectionId]/lessons mengembalikan lesson |
+| US2.1 | Student bisa melihat konten lesson | GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]/content mengembalikan content file |
+| US3.1 | Student bisa melihat progress lesson | GET /api/courses/[slug]/progress mengembalikan progress data |
 
 ---
 
-## 🔄 Flow Utama
+## 📊 Timeline
 
-### Quiz Taking Flow
-```
-Siswa             →  Quiz UI              →  Backend
-│                                    │
-│  1. Start quiz      →  Fetch question 1   │
-│  2. Answer Q1        →  Submit answer      │
-│  3. Answer Q2        →  Submit answer      │
-│  4. ...             →  Submit all       │
-│  5. Finish          →  Calculate score  │
-│  6. View results     →  Display score     │
-```
-
-### Diagnostic Flow
-```
-User Baru      →  Profile Setup      →  Diagnostic
-│                                     │
-│  1. Create account →  Setup learning   │
-│  2. Take test     →  Submit answers  │
-│  3. View results  →  See strengths     │
-│  4. Get courses    →  Recommended path │
-```
-
-### Hint Flow
-```
-Siswa Stuck     →  Hint UI           →  Backend
-│                                     │
-│  1. Click hint    →  Check level       │
-│  2. Get hint     →  Display hint      │
-│  3. Continue     →  Update level     │
-```
+| Minggu | Fokus |
+|-------|--------|
+| 1 | Database Schema |
+| 2 | API Routes |
+| 3 | Frontend Integration |
 
 ---
 
-## 🎯 Checklist Implementasi
+## 🔗 Dependencies
 
-### Phase 1: Setup (Day 1-2)
-- [ ] Buat Supabase schema (quizzes, quiz_questions, quiz_answers, quiz_scores)
-- [ ] Buat schema diagnostic (questions, answers, profiles, learning_paths)
-- [ ] Buat schema hints (hint_requests)
-- [ ] Buat schema review (review_sessions, review_materials)
-- [ ] Create API routes skeleton
-
-### Phase 2: Quiz System (Day 3-7)
-- [ ] Quiz builder UI (multiple choice)
-- [ ] Quiz builder UI (code completion)
-- [ ] Quiz taking interface
-- [ ] Scoring algorithm
-- [ ] Results display component
-- [ ] LangServe feedback integration
-- [ ] Answer submission API
-- [ ] Results retrieval API
-
-### Phase 3: Diagnostic Test (Day 4-6)
-- [ ] Diagnostic question bank (15-20 soal)
-- [ ] Profiling algorithm
-- [ ] Profile setup form
-- [ ] Recommendation engine
-- [ ] Diagnostic taking interface
-- [ ] Results display dengan topic breakdown
-
-### Phase 4: Hint System (Day 6-7)
-- [ ] Hint button di learning interface
-- [ ] Hint level tracking logic
-- [ ] Cooldown system
-- [ ] LangServe `streamHint()` integration
-
-### Phase 5: Review Flow (Day 8-9)
-- [ ] Failed quiz detection logic
-- [ ] Weak topics mapping
-- [ ] Review mode UI
-- [ ] Alternative content delivery
-- [ ] Verification quiz
-
-### Phase 6: Integration (Day 10-12)
-- [ ] Hubungkan quiz ke course flow
-- [ ] Hubungkan diagnostic ke onboarding
-- [ ] Hubungkan hint ke learning mode
-- [ ] E2E testing semua fitur
-- [ ] Performance testing
+| Dependensi | Status |
+|-----------|--------|
+| Prisma migration | Perlu dijalankan setelah schema update |
+| LangServe | Tidak dibutuhkan untuk sprint ini |
 
 ---
 
-## 📚 Referensi
+## 📝 Catatan
 
-### Internal
-- Analysis Report: `docs/rules/report.md`
-- CMS Feature: `docs/feat/cms.md`
-- LangServe API: `features/langserve/api.ts`
-
-### External
-- Supabase Docs: https://supabase.com/docs
-- Best Practices untuk Quizzes: https://www.ncert.org/
-
----
-
-**Dokumentasi dibuat**: 2026-03-06
-**Sprint**: 2
-**Durasi**: 2 minggu
-**Status**: Ready untuk Implementasi
+- Content saat ini masih file-based (markdown di repo)
+- Setelah database siap, perlu migrasi konten ke database
+- Untuk MVP, fokus pada markdown content saja (video nanti)
+- Progress tracking perlu tetap ada meski user ganti browser
