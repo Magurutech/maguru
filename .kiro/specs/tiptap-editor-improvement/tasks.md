@@ -26,31 +26,31 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 #### Feature 1: Version Tracking Fix
 
 **Research Needed:**
-- [ ] Baca dokumentasi lesson API endpoint (PUT `/api/lessons/:id`)
-- [ ] Review `lesson.service.ts` untuk memahami server-side version increment logic
-- [ ] Cek struktur `LessonContent` interface di codebase
+- [x] Baca dokumentasi lesson API endpoint (PUT `/api/lessons/:id`)
+- [x] Review `lesson.service.ts` untuk memahami server-side version increment logic
+- [x] Cek struktur `LessonContent` interface di codebase
 
 **Implementation:**
-- [ ] 1.1 Implementasi version tracking fix
+- [x] 1.1 Implementasi version tracking fix
   - Hapus hardcoded `version: 1` dari `handleSave` di `ManageContent.tsx`
   - Untuk CREATE: kirim `version: 1` (sudah benar)
   - Untuk UPDATE: server di `lesson.service.ts` sudah handle increment — tidak perlu perubahan server
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
 **Testing:**
-- [ ] 1.2 Unit Test: Test version increment logic
+- [x] 1.2 Unit Test: Test version increment logic
   - Mock lesson API response dengan version N
   - Verify client mengirim version yang benar
   - Test CREATE mengirim version: 1
   - Test UPDATE server response mengembalikan version N+1
 
-- [ ] 1.3 API Test (Postman): Test lesson update endpoint
+- [x] 1.3 API Test (Postman): Test lesson update endpoint
   - Test POST `/api/lessons` → verify version = 1
   - Test PUT `/api/lessons/:id` → verify version increment dari N ke N+1
   - Test response structure contains correct version number
-  - Export collection ke `docs/api/lesson-version.postman.json`
+  - Added to existing collection: `docs/api/content-management/lessons.postman.json`
 
-- [ ] 1.4 E2E Test (Playwright): Test version tracking flow
+- [x] 1.4 E2E Test (Playwright): Test version tracking flow
   - Test: Create new lesson → verify version = 1 di UI
   - Test: Edit existing lesson → save → verify version increment di response
   - Test: Multiple saves → verify version increments correctly

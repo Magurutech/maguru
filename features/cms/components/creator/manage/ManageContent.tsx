@@ -262,6 +262,9 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
     if (!title.trim()) { toast.error('Judul pelajaran tidak boleh kosong'); return }
     if (!editor) return
     setSaving(true)
+    // Version always sent as 1 from client - server handles increment on UPDATE
+    // For CREATE: version = 1 (correct)
+    // For UPDATE: server reads current version from DB and increments it
     const content = { content: editor.getJSON() as JSONContent, version: 1, lastEdit: new Date().toISOString() }
     const resultId = await submitLessonFromPanel(sectionId, { title: title.trim(), content }, lessonId)
     setSaving(false)

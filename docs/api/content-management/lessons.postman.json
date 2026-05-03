@@ -37,6 +37,24 @@
                   "    pm.expect(json.content).to.have.property('version');",
                   "    pm.collectionVariables.set('lessonId', json.id);",
                   "    pm.collectionVariables.set('lessonVersion', json.content.version);",
+                  "});",
+                  "",
+                  "// Feature 1: Version Tracking - CREATE should return version = 1",
+                  "pm.test(\"[Version Tracking] CREATE returns version = 1\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.equal(1);",
+                  "    console.log('✅ CREATE lesson version:', json.content.version);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Version is a number\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.be.a('number');",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] lastEdit is ISO 8601 string\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.lastEdit).to.be.a('string');",
+                  "    pm.expect(json.content.lastEdit).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -446,6 +464,30 @@
                   "    var after = pm.response.json().content.version;",
                   "    pm.expect(after).to.equal(before + 1);",
                   "    pm.collectionVariables.set('lessonVersion', after);",
+                  "});",
+                  "",
+                  "// Feature 1: Version Tracking - UPDATE should increment version",
+                  "pm.test(\"[Version Tracking] UPDATE increments version from N to N+1\", function () {",
+                  "    var json = pm.response.json();",
+                  "    var previousVersion = Number(pm.collectionVariables.get('lessonVersion')) - 1;",
+                  "    pm.expect(json.content.version).to.equal(previousVersion + 1);",
+                  "    console.log('✅ UPDATE lesson version:', previousVersion, '→', json.content.version);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Property 1: Version Increment Monotonicity\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.be.a('number');",
+                  "    pm.expect(json.content.version).to.be.greaterThan(1);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] lastEdit updated after UPDATE\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.lastEdit).to.be.a('string');",
+                  "    pm.expect(json.content.lastEdit).to.match(/^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}/);",
+                  "    // lastEdit should be recent (within last minute)",
+                  "    var lastEditTime = new Date(json.content.lastEdit).getTime();",
+                  "    var now = Date.now();",
+                  "    pm.expect(now - lastEditTime).to.be.lessThan(60000); // 60 seconds",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -468,6 +510,105 @@
               "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
             },
             "description": "Update lesson content — version di response harus increment dari sebelumnya. Jalankan setelah Create Lesson Success."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lesson - Second Update (Version 2→3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Second UPDATE increments to version 3\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.equal(3);",
+                  "    pm.collectionVariables.set('lessonVersion', json.content.version);",
+                  "    console.log('✅ Second UPDATE lesson version:', json.content.version);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Property 1: Monotonic Increment (2→3)\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.be.greaterThan(2);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Intro to TypeScript - Second Update\",\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T02:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": [\n        {\n          \"type\": \"paragraph\",\n          \"content\": [{ \"type\": \"text\", \"text\": \"Konten update kedua\" }]\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+            },
+            "description": "Second consecutive update — verify version increments monotonically (2→3). Client still sends version: 1, server handles increment."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Lesson - Third Update (Version 3→4)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Third UPDATE increments to version 4\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.equal(4);",
+                  "    pm.collectionVariables.set('lessonVersion', json.content.version);",
+                  "    console.log('✅ Third UPDATE lesson version:', json.content.version);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Property 1: Monotonic Increment (3→4)\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.content.version).to.be.greaterThan(3);",
+                  "});",
+                  "",
+                  "pm.test(\"[Version Tracking] Multiple updates maintain monotonicity\", function () {",
+                  "    var json = pm.response.json();",
+                  "    // After CREATE (v1) + 3 UPDATEs, should be v4",
+                  "    pm.expect(json.content.version).to.equal(4);",
+                  "    console.log('✅ Version tracking validated: CREATE(1) → UPDATE(2) → UPDATE(3) → UPDATE(4)');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Intro to TypeScript - Third Update\",\n  \"content\": {\n    \"version\": 1,\n    \"lastEdit\": \"2026-03-19T03:00:00.000Z\",\n    \"content\": {\n      \"type\": \"doc\",\n      \"content\": [\n        {\n          \"type\": \"paragraph\",\n          \"content\": [{ \"type\": \"text\", \"text\": \"Konten update ketiga - final validation\" }]\n        }\n      ]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+            },
+            "description": "Third consecutive update — final validation of monotonic increment (3→4). Validates Property 1 across multiple updates."
           },
           "response": []
         }
