@@ -33,8 +33,16 @@ import '@/components/tiptap-templates/simple/simple-editor.scss'
 // ── Inline description editor ──────────────────────────────────────────────
 
 function DescriptionEditor({
-  courseSlug, initialText, onSave, onCancel,
-}: { courseSlug: string; initialText: string; onSave: (t: string) => void; onCancel: () => void }) {
+  courseSlug,
+  initialText,
+  onSave,
+  onCancel,
+}: {
+  courseSlug: string
+  initialText: string
+  onSave: (t: string) => void
+  onCancel: () => void
+}) {
   const [saving, setSaving] = useState(false)
   const editor = useEditor({
     extensions: [StarterKit],
@@ -69,11 +77,24 @@ function DescriptionEditor({
         <EditorContent editor={editor} />
       </div>
       <div className="flex gap-2 mt-2">
-        <Button size="sm" onClick={handleSave} disabled={saving} className="bg-merah-500 hover:bg-merah-600 text-white">
-          <Check className="h-3.5 w-3.5 mr-1" />{saving ? 'Menyimpan...' : 'Simpan'}
+        <Button
+          size="sm"
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-merah-500 hover:bg-merah-600 text-white"
+        >
+          <Check className="h-3.5 w-3.5 mr-1" />
+          {saving ? 'Menyimpan...' : 'Simpan'}
         </Button>
-        <Button size="sm" variant="ghost" onClick={onCancel} disabled={saving} className="text-beige-600">
-          <X className="h-3.5 w-3.5 mr-1" />Batal
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={onCancel}
+          disabled={saving}
+          className="text-beige-600"
+        >
+          <X className="h-3.5 w-3.5 mr-1" />
+          Batal
         </Button>
       </div>
     </div>
@@ -89,6 +110,7 @@ function LessonViewerPanel({ sectionId, lessonId }: { sectionId: string; lessonI
     // Initialize from cache synchronously to avoid setState-in-effect
     return lessonsMap[sectionId]?.find((l) => l.id === lessonId)?.title ?? ''
   })
+  const [lessonData, setLessonData] = useState<{ version?: number; order?: number } | null>(null)
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -120,6 +142,10 @@ function LessonViewerPanel({ sectionId, lessonId }: { sectionId: string; lessonI
       .then((r) => r.json())
       .then((data) => {
         setTitle(data.title || '')
+        setLessonData({
+          version: data.content?.version || 1,
+          order: data.order || 1,
+        })
         if (data.content?.content) {
           editor.commands.setContent(data.content.content as JSONContent)
         }
@@ -145,12 +171,33 @@ function LessonViewerPanel({ sectionId, lessonId }: { sectionId: string; lessonI
     <div className="w-full max-w-none">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-beige-900 leading-tight">{title}</h1>
-        {lesson && (
-          <Button size="sm" variant="outline" className="border-beige-300 text-beige-700 hover:bg-beige-50 shrink-0"
-            onClick={() => openEditLesson(lesson, sectionId)}>
-            <Edit className="h-3.5 w-3.5 mr-1.5" />Edit Pelajaran
-          </Button>
-        )}
+        <div className="flex items-center gap-3 shrink-0">
+          {/* Version & Order Info */}
+          {lessonData && (
+            <div className="flex items-center gap-3 text-xs text-beige-600 border border-beige-200 rounded-lg px-3 py-1.5 bg-beige-50">
+              <div className="flex items-center gap-1.5">
+                <span className="font-medium">Order:</span>
+                <span className="font-mono font-semibold text-beige-900">{lessonData.order}</span>
+              </div>
+              <div className="h-3 w-px bg-beige-300" />
+              <div className="flex items-center gap-1.5">
+                <span className="font-medium">Version:</span>
+                <span className="font-mono font-semibold text-beige-900">{lessonData.version}</span>
+              </div>
+            </div>
+          )}
+          {lesson && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-beige-300 text-beige-700 hover:bg-beige-50"
+              onClick={() => openEditLesson(lesson, sectionId)}
+            >
+              <Edit className="h-3.5 w-3.5 mr-1.5" />
+              Edit Pelajaran
+            </Button>
+          )}
+        </div>
       </div>
       <hr className="border-beige-200 mb-6" />
       <div className="lesson-editor-body">
@@ -207,7 +254,7 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
           },
         }
       },
-    })
+    }),
   )
 
   const editor = useEditor({
@@ -259,23 +306,38 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
   }, [isEditMode, lessonId, sectionId, editor])
 
   const handleSave = useCallback(async () => {
-    if (!title.trim()) { toast.error('Judul pelajaran tidak boleh kosong'); return }
+    if (!title.trim()) {
+      toast.error('Judul pelajaran tidak boleh kosong')
+      return
+    }
     if (!editor) return
     setSaving(true)
     // Version always sent as 1 from client - server handles increment on UPDATE
     // For CREATE: version = 1 (correct)
     // For UPDATE: server reads current version from DB and increments it
-    const content = { content: editor.getJSON() as JSONContent, version: 1, lastEdit: new Date().toISOString() }
-    const resultId = await submitLessonFromPanel(sectionId, { title: title.trim(), content }, lessonId)
+    const content = {
+      content: editor.getJSON() as JSONContent,
+      version: 1,
+      lastEdit: new Date().toISOString(),
+    }
+    const resultId = await submitLessonFromPanel(
+      sectionId,
+      { title: title.trim(), content },
+      lessonId,
+    )
     setSaving(false)
     if (resultId) setActiveView({ type: 'lesson', sectionId, lessonId: resultId })
   }, [title, editor, sectionId, lessonId, submitLessonFromPanel, setActiveView])
 
   // Keep saveRef in sync so Tiptap SaveShortcut extension always calls latest version
-  useEffect(() => { saveRef.current = handleSave }, [handleSave])
+  useEffect(() => {
+    saveRef.current = handleSave
+  }, [handleSave])
 
   const handleCancel = () => {
-    setActiveView(lessonId ? { type: 'lesson', sectionId, lessonId } : { type: 'section', sectionId })
+    setActiveView(
+      lessonId ? { type: 'lesson', sectionId, lessonId } : { type: 'section', sectionId },
+    )
   }
 
   if (loadingLesson) {
@@ -288,70 +350,77 @@ function LessonEditorPanel({ sectionId, lessonId }: { sectionId: string; lessonI
 
   return (
     <EditorContext.Provider value={{ editor }}>
-    <div className="w-full max-w-none">
-      {/* Header bar: Kembali | Toolbar | Batal + Simpan */}
-      <div className="sticky top-0 z-10 bg-beige-50 border-b border-beige-200 mb-6 pb-2 pt-1">
-        <div className="flex items-center gap-3">
-          <button onClick={handleCancel} className="flex items-center gap-1.5 text-sm text-beige-500 hover:text-beige-800 transition-colors shrink-0">
-            <ArrowLeft className="h-4 w-4" />Kembali
-          </button>
-          <div className="flex-1 min-w-0">
-            <EditorToolbar />
-          </div>
-          <div className="flex items-center shrink-0">
-            {/* Split button: Create/Save | ∨ Cancel */}
-            <Button
-              size="sm"
-              onClick={handleSave}
-              disabled={saving || !title.trim()}
-              data-testid="lesson-save-btn"
-              className="bg-merah-500 hover:bg-merah-600 text-white rounded-r-none border-r border-merah-400"
+      <div className="w-full max-w-none">
+        {/* Header bar: Kembali | Toolbar | Batal + Simpan */}
+        <div className="sticky top-0 z-10 bg-beige-50 border-b border-beige-200 mb-6 pb-2 pt-1">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-1.5 text-sm text-beige-500 hover:text-beige-800 transition-colors shrink-0"
             >
-              {saving ? 'Menyimpan...' : isEditMode ? 'Save' : 'Create'}
-            </Button>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  size="sm"
-                  disabled={saving}
-                  className="bg-merah-500 hover:bg-merah-600 text-white rounded-l-none px-2"
-                  aria-label="Opsi lainnya"
-                >
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-32">
-                <DropdownMenuItem onClick={handleCancel} className="text-beige-700">
-                  Cancel
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              <ArrowLeft className="h-4 w-4" />
+              Kembali
+            </button>
+            <div className="flex-1 min-w-0">
+              <EditorToolbar />
+            </div>
+            <div className="flex items-center shrink-0">
+              {/* Split button: Create/Save | ∨ Cancel */}
+              <Button
+                size="sm"
+                onClick={handleSave}
+                disabled={saving || !title.trim()}
+                data-testid="lesson-save-btn"
+                className="bg-merah-500 hover:bg-merah-600 text-white rounded-r-none border-r border-merah-400"
+              >
+                {saving ? 'Menyimpan...' : isEditMode ? 'Save' : 'Create'}
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    size="sm"
+                    disabled={saving}
+                    className="bg-merah-500 hover:bg-merah-600 text-white rounded-l-none px-2"
+                    aria-label="Opsi lainnya"
+                  >
+                    <ChevronDown className="h-3.5 w-3.5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-32">
+                  <DropdownMenuItem onClick={handleCancel} className="text-beige-700">
+                    Cancel
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
-      </div>
 
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && editor?.commands.focus()}
-        placeholder="Judul pelajaran..."
-        className="w-full text-3xl font-bold text-beige-900 bg-transparent border-none outline-none placeholder:text-beige-300 mb-2"
-        maxLength={200}
-        autoFocus={!isEditMode}
-        data-testid="lesson-title-input"
-      />
-
-      <hr className="border-beige-200 mb-4" />
-
-    <div className="min-h-100 cursor-text max-w-full lesson-editor-body" onClick={() => editor?.commands.focus()}>
-        <EditorContent
-          editor={editor}
-          role="presentation"
-          className="simple-editor-content max-w-full [&_.tiptap]:min-h-[200px] [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-8"
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && editor?.commands.focus()}
+          placeholder="Judul pelajaran..."
+          className="w-full text-3xl font-bold text-beige-900 bg-transparent border-none outline-none placeholder:text-beige-300 mb-2"
+          maxLength={200}
+          autoFocus={!isEditMode}
+          data-testid="lesson-title-input"
         />
+
+        <hr className="border-beige-200 mb-4" />
+
+        <div
+          className="min-h-100 cursor-text max-w-full lesson-editor-body"
+          onClick={() => editor?.commands.focus()}
+        >
+          <EditorContent
+            editor={editor}
+            role="presentation"
+            className="simple-editor-content max-w-full [&_.tiptap]:min-h-[200px] [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-8"
+          />
+        </div>
       </div>
-    </div>
     </EditorContext.Provider>
   )
 }
@@ -364,35 +433,59 @@ function CourseOverview() {
   if (!course) return null
 
   const isPublished = course.status === 'PUBLISHED'
-  const totalLessons = sections.reduce((sum, s) => sum + (lessonsMap[s.id]?.length ?? s.lessonCount), 0)
-  const difficultyLabel: Record<string, string> = { BEGINNER: 'Pemula', INTERMEDIATE: 'Menengah', ADVANCED: 'Mahir' }
+  const totalLessons = sections.reduce(
+    (sum, s) => sum + (lessonsMap[s.id]?.length ?? s.lessonCount),
+    0,
+  )
+  const difficultyLabel: Record<string, string> = {
+    BEGINNER: 'Pemula',
+    INTERMEDIATE: 'Menengah',
+    ADVANCED: 'Mahir',
+  }
 
   return (
     <div className="max-w-full" data-testid="course-overview-panel">
       <h1 className="text-3xl font-bold text-beige-900 leading-tight mb-3">{course.title}</h1>
       <div className="flex flex-wrap items-center gap-2 mb-6">
         {course.category && (
-          <Badge variant="outline" className="bg-beige-100 text-beige-700 border-beige-300 text-xs font-normal">{course.category}</Badge>
+          <Badge
+            variant="outline"
+            className="bg-beige-100 text-beige-700 border-beige-300 text-xs font-normal"
+          >
+            {course.category}
+          </Badge>
         )}
         {course.difficulty && (
-          <Badge variant="outline" className="bg-beige-100 text-beige-700 border-beige-300 text-xs font-normal">
+          <Badge
+            variant="outline"
+            className="bg-beige-100 text-beige-700 border-beige-300 text-xs font-normal"
+          >
             {difficultyLabel[course.difficulty] ?? course.difficulty}
           </Badge>
         )}
-        <Badge variant="outline" className={isPublished
-          ? 'bg-hijau-50 text-hijau-700 border-hijau-200 text-xs font-normal'
-          : 'bg-kuning-50 text-kuning-700 border-kuning-200 text-xs font-normal'}>
+        <Badge
+          variant="outline"
+          className={
+            isPublished
+              ? 'bg-hijau-50 text-hijau-700 border-hijau-200 text-xs font-normal'
+              : 'bg-kuning-50 text-kuning-700 border-kuning-200 text-xs font-normal'
+          }
+        >
           {isPublished ? 'Published' : 'Draft'}
         </Badge>
-        <span className="text-xs text-beige-400 ml-1">{sections.length} seksi &middot; {totalLessons} pelajaran</span>
+        <span className="text-xs text-beige-400 ml-1">
+          {sections.length} seksi &middot; {totalLessons} pelajaran
+        </span>
       </div>
       <hr className="border-beige-200 mb-6" />
       <div className="group">
         <div className="flex items-center gap-2 mb-2">
           <span className="text-sm font-medium text-beige-600">Deskripsi</span>
           {!editingDesc && (
-            <button onClick={() => setEditingDesc(true)}
-              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-beige-100 text-beige-400 hover:text-beige-700">
+            <button
+              onClick={() => setEditingDesc(true)}
+              className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-beige-100 text-beige-400 hover:text-beige-700"
+            >
               <Edit className="h-3.5 w-3.5" />
             </button>
           )}
@@ -401,13 +494,20 @@ function CourseOverview() {
           <DescriptionEditor
             courseSlug={course.slug}
             initialText={course.description ?? ''}
-            onSave={(text) => { setCourse((prev) => prev ? { ...prev, description: text } : prev); setEditingDesc(false) }}
+            onSave={(text) => {
+              setCourse((prev) => (prev ? { ...prev, description: text } : prev))
+              setEditingDesc(false)
+            }}
             onCancel={() => setEditingDesc(false)}
           />
         ) : (
-          <p className="text-beige-700 text-base leading-relaxed cursor-text hover:bg-beige-100/50 rounded-lg px-2 py-1 -mx-2 transition-colors"
-            onClick={() => setEditingDesc(true)}>
-            {course.description || <span className="text-beige-400 italic">Tambahkan deskripsi kursus...</span>}
+          <p
+            className="text-beige-700 text-base leading-relaxed cursor-text hover:bg-beige-100/50 rounded-lg px-2 py-1 -mx-2 transition-colors"
+            onClick={() => setEditingDesc(true)}
+          >
+            {course.description || (
+              <span className="text-beige-400 italic">Tambahkan deskripsi kursus...</span>
+            )}
           </p>
         )}
       </div>
