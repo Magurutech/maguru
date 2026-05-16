@@ -7,30 +7,20 @@
  * Task 17.4 - 17.6
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { authenticatedTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
 
 // ─── Task 17.5: Form validation ───────────────────────────────────────────────
 
-test.describe('Course Creation Form — Validation', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-    await clerk.signIn({
-      page,
-      signInParams: {
-        strategy: 'password',
-        identifier: testUsers.creatorUser.identifier,
-        password: testUsers.creatorUser.password,
-      },
-    })
+authenticatedTest.describe('Course Creation Form — Validation', () => {
+  authenticatedTest.beforeEach(async ({ page }) => {
     await page.goto('/creator/courses/create')
     await waitForPageLoad(page)
   })
 
   // Task 17.5
-  test('submitting empty form shows validation errors', async ({ page }) => {
+  authenticatedTest('submitting empty form shows validation errors', async ({ page }) => {
     // Clear any pre-filled values
     await page.getByTestId('input-title').clear()
     await page.getByTestId('input-description').clear()
@@ -50,7 +40,7 @@ test.describe('Course Creation Form — Validation', () => {
     await expect(page.getByTestId('error-category')).toContainText('Kategori wajib diisi')
   })
 
-  test('title exceeding 100 chars shows validation error', async ({ page }) => {
+  authenticatedTest('title exceeding 100 chars shows validation error', async ({ page }) => {
     const longTitle = 'A'.repeat(101)
     const titleInput = page.getByTestId('input-title')
 
@@ -60,7 +50,7 @@ test.describe('Course Creation Form — Validation', () => {
     expect(actualValue.length).toBeLessThanOrEqual(100)
   })
 
-  test('title character counter updates correctly', async ({ page }) => {
+  authenticatedTest('title character counter updates correctly', async ({ page }) => {
     const titleInput = page.getByTestId('input-title')
     await titleInput.fill('Test Kursus')
 
@@ -68,7 +58,7 @@ test.describe('Course Creation Form — Validation', () => {
     await expect(page.locator('body')).toContainText('11/100 karakter')
   })
 
-  test('error clears when user starts typing', async ({ page }) => {
+  authenticatedTest('error clears when user starts typing', async ({ page }) => {
     // Trigger validation error
     await page.getByTestId('submit-course-btn').click()
     await expect(page.getByTestId('error-title')).toBeVisible()
@@ -80,7 +70,7 @@ test.describe('Course Creation Form — Validation', () => {
     await expect(page.getByTestId('error-title')).not.toBeVisible()
   })
 
-  test('submit button shows loading state during submission', async ({ page }) => {
+  authenticatedTest('submit button shows loading state during submission', async ({ page }) => {
     // Fill valid form data
     await page.getByTestId('input-title').fill('Test Kursus E2E')
     await page.getByTestId('input-description').fill('Deskripsi test kursus untuk E2E testing')
@@ -110,7 +100,7 @@ test.describe('Course Creation Form — Validation', () => {
     ])
   })
 
-  test('successful submission redirects to manage page', async ({ page }) => {
+  authenticatedTest('successful submission redirects to manage page', async ({ page }) => {
     const timestamp = Date.now()
 
     await page.getByTestId('input-title').fill(`Test Kursus ${timestamp}`)
@@ -126,6 +116,11 @@ test.describe('Course Creation Form — Validation', () => {
 })
 
 // ─── Task 17.6: Access control ───────────────────────────────────────────────
+// Note: Access control tests remain using base test since they test unauthenticated/unauthorized scenarios
+
+import { test } from '@playwright/test'
+import { clerk } from '@clerk/testing/playwright'
+import { testUsers } from '../../fixtures/test-users'
 
 test.describe('Course Creation — Access Control', () => {
   test.use({ storageState: { cookies: [], origins: [] } })

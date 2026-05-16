@@ -6,73 +6,33 @@
  *
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
  * Property 1: Version Increment Monotonicity
+ * 
+ * REFACTORED: Now uses Playwright fixtures for auto setup/teardown
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { lessonTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
-
-// ── Helpers ────────────────────────────────────────────────────────────────
-
-async function loginAsCreator(page: Parameters<typeof waitForPageLoad>[0]) {
-  await page.goto('/')
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: 'password',
-      identifier: testUsers.creatorUser.identifier,
-      password: testUsers.creatorUser.password,
-    },
-  })
-}
-
-async function getFirstCourseSlug(page: Parameters<typeof waitForPageLoad>[0]): Promise<string | null> {
-  await page.goto('/creator')
-  await waitForPageLoad(page)
-
-  const count = await page.getByTestId('creator-course-item').count()
-  if (count === 0) return null
-
-  const firstItem = page.getByTestId('creator-course-item').first()
-  const href = await firstItem.getAttribute('href')
-  if (!href) return null
-
-  const match = href.match(/\/creator\/courses\/([^/]+)\/manage/)
-  return match ? match[1] : null
-}
 
 // ── Test Suite ─────────────────────────────────────────────────────────────
 
-test.describe('Feature 1: Version Tracking Fix', () => {
-  let courseSlug: string | null = null
-
-  test.beforeEach(async ({ page }) => {
-    await loginAsCreator(page)
-    courseSlug = await getFirstCourseSlug(page)
-  })
-
-  test('1.1 — CREATE lesson should have version = 1', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
+lessonTest.describe('Feature 1: Version Tracking Fix', () => {
+  lessonTest('1.1 — CREATE lesson should have version = 1', async ({ 
+    page, 
+    testCourse,
+    testSection 
+  }) => {
+    // ✅ No manual login needed
+    // ✅ testCourse and testSection already created via API
+    
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
     await waitForPageLoad(page)
 
     // Wait for sidebar to load
     await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
 
-    // Create a new section first
-    const sectionTitle = `Section Version Test ${Date.now()}`
-    await page.getByTestId('add-section-btn').click()
-    await page.fill('input[placeholder="Judul seksi"]', sectionTitle)
-    await page.getByTestId('section-save-btn').click()
-    await page.waitForTimeout(1000)
-
-    // Click on the new section to expand it
-    const sectionItem = page.locator(`[data-testid="section-item"]:has-text("${sectionTitle}")`)
+    // Click on the test section to expand it
+    const sectionItem = page.locator(`[data-testid="section-item"]:has-text("${testSection.title}")`)
     await sectionItem.click()
     await page.waitForTimeout(500)
 
@@ -109,29 +69,24 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     console.log('✅ CREATE lesson version:', responseData.content.version)
   })
 
-  test('1.2 — UPDATE lesson should increment version (1 → 2)', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
+  lessonTest('1.2 — UPDATE lesson should increment version (1 → 2)', async ({ 
+    page,
+    testCourse,
+    testLesson 
+  }) => {
+    // ✅ testLesson already created with version = 1
+    
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
     await waitForPageLoad(page)
 
     // Wait for sidebar
     await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
 
-    // Find first lesson in sidebar
-    const firstLesson = page.locator('[data-testid="lesson-item"]').first()
-    const lessonCount = await page.locator('[data-testid="lesson-item"]').count()
-
-    if (lessonCount === 0) {
-      console.log('ℹ️ No lessons available, skipping')
-      return
-    }
-
+    // Find the test lesson in sidebar
+    const lessonItem = page.locator(`[data-testid="lesson-item"]:has-text("${testLesson.title}")`)
+    
     // Click lesson to open viewer
-    await firstLesson.click()
+    await lessonItem.click()
     await page.waitForTimeout(1000)
 
     // Click edit button
@@ -142,7 +97,7 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     const editorContent = page.locator('.tiptap.ProseMirror')
     await editorContent.click()
     await editorContent.press('End')
-    await editorContent.type(' - Updated content')
+    await editorContent.pressSequentially(' - Updated content')
 
     // Intercept the API request
     const responsePromise = page.waitForResponse(
@@ -159,32 +114,26 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     const response = await responsePromise
     const responseData = await response.json()
 
-    // Verify: UPDATE should increment version
-    expect(responseData.content.version).toBeGreaterThan(1)
-    console.log('✅ UPDATE lesson version:', responseData.content.version)
+    // Verify: UPDATE should increment version (1 → 2)
+    expect(responseData.content.version).toBe(2)
+    console.log('✅ UPDATE lesson version: 1 →', responseData.content.version)
   })
 
-  test('1.3 — Multiple saves should increment version monotonically', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
+  lessonTest('1.3 — Multiple saves should increment version monotonically', async ({ 
+    page,
+    testCourse,
+    testLesson 
+  }) => {
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
     await waitForPageLoad(page)
 
     await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
 
-    const firstLesson = page.locator('[data-testid="lesson-item"]').first()
-    const lessonCount = await page.locator('[data-testid="lesson-item"]').count()
-
-    if (lessonCount === 0) {
-      console.log('ℹ️ No lessons available, skipping')
-      return
-    }
+    // Find the test lesson
+    const lessonItem = page.locator(`[data-testid="lesson-item"]:has-text("${testLesson.title}")`)
 
     // Open lesson editor
-    await firstLesson.click()
+    await lessonItem.click()
     await page.waitForTimeout(1000)
     await page.getByTestId('lesson-edit-btn').click()
     await page.waitForTimeout(1000)
@@ -197,7 +146,7 @@ test.describe('Feature 1: Version Tracking Fix', () => {
       const editorContent = page.locator('.tiptap.ProseMirror')
       await editorContent.click()
       await editorContent.press('End')
-      await editorContent.type(` - Edit ${i + 1}`)
+      await editorContent.pressSequentially(` - Edit ${i + 1}`)
 
       // Intercept response
       const responsePromise = page.waitForResponse(
@@ -231,27 +180,20 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     console.log('✅ Version progression:', versions)
   })
 
-  test('1.4 — Version should persist after page reload', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
+  lessonTest('1.4 — Version should persist after page reload', async ({ 
+    page,
+    testCourse,
+    testLesson 
+  }) => {
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
     await waitForPageLoad(page)
 
     await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
 
-    const firstLesson = page.locator('[data-testid="lesson-item"]').first()
-    const lessonCount = await page.locator('[data-testid="lesson-item"]').count()
-
-    if (lessonCount === 0) {
-      console.log('ℹ️ No lessons available, skipping')
-      return
-    }
+    const lessonItem = page.locator(`[data-testid="lesson-item"]:has-text("${testLesson.title}")`)
 
     // Open lesson and get current version
-    await firstLesson.click()
+    await lessonItem.click()
     await page.waitForTimeout(1000)
 
     // Intercept GET request to get current version
@@ -275,7 +217,7 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     const editorContent = page.locator('.tiptap.ProseMirror')
     await editorContent.click()
     await editorContent.press('End')
-    await editorContent.type(' - Reload test')
+    await editorContent.pressSequentially(' - Reload test')
 
     const putResponsePromise = page.waitForResponse(
       (response) =>
@@ -298,7 +240,7 @@ test.describe('Feature 1: Version Tracking Fix', () => {
     await page.waitForTimeout(1000)
 
     // Open same lesson again
-    await firstLesson.click()
+    await lessonItem.click()
     await page.waitForTimeout(1000)
 
     // Get version after reload

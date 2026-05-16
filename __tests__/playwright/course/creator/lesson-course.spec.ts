@@ -9,66 +9,21 @@
  * Tasks: 14.1 - 14.8
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { sectionTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
-
-// ── Helpers ────────────────────────────────────────────────────────────────
-
-/**
- * Login sebagai creator dan ambil slug course pertama yang tersedia.
- * Returns null jika tidak ada course.
- */
-async function loginAndGetCourseSlug(page: Parameters<typeof waitForPageLoad>[0]): Promise<string | null> {
-  await page.goto('/')
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: 'password',
-      identifier: testUsers.creatorUser.identifier,
-      password: testUsers.creatorUser.password,
-    },
-  })
-
-  await page.goto('/creator')
-  await waitForPageLoad(page)
-
-  const firstItem = page.getByTestId('creator-course-item').first()
-  const count = await page.getByTestId('creator-course-item').count()
-  if (count === 0) return null
-
-  // data-course-id berisi slug (sesuai CourseListItem: data-course-id={course.id})
-  // Tapi link href-nya pakai slug: /creator/courses/${course.slug}/manage
-  // Ambil dari href link langsung
-  const href = await firstItem.getAttribute('href')
-  if (!href) return null
-
-  // href format: /creator/courses/[slug]/manage
-  const match = href.match(/\/creator\/courses\/([^/]+)\/manage/)
-  return match ? match[1] : null
-}
 
 // ── Test Suite: Authenticated Creator ─────────────────────────────────────
 
-test.describe('Task 14: Creator Content Management Workflow', () => {
-  let courseSlug: string | null = null
-
-  test.beforeEach(async ({ page }) => {
-    courseSlug = await loginAndGetCourseSlug(page)
+sectionTest.describe('Task 14: Creator Content Management Workflow', () => {
+  sectionTest.beforeEach(async ({ page, testCourse }) => {
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
+    await waitForPageLoad(page)
   })
 
   // ── 14.2: Akses halaman manage ──────────────────────────────────────────
 
-  test('14.2 — akses halaman manage dengan auth creator', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
+  sectionTest('14.2 — akses halaman manage dengan auth creator', async ({ page }) => {
     // Halaman tampil — tidak redirect ke sign-in
     expect(page.url()).not.toContain('/sign-in')
 
@@ -84,74 +39,23 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.3: Buat seksi baru ───────────────────────────────────────────────
 
-  test('14.3 — buat seksi baru muncul di sidebar', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
-    // Tunggu sidebar selesai render
-    await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
-
-    const sectionTitle = `Seksi E2E Test ${Date.now()}`
-
-    // Klik tombol Tambah Seksi
-    const addBtn = page.getByTestId('add-section-btn')
-    await expect(addBtn).toBeVisible()
-    await addBtn.click()
-
-    // Input inline muncul
-    const inlineInput = page.getByTestId('inline-section-input')
-    await expect(inlineInput).toBeVisible()
-    await expect(inlineInput).toBeFocused()
-
-    // Ketik judul dan tekan Enter
-    await inlineInput.fill(sectionTitle)
-    await inlineInput.press('Enter')
-
-    // Tunggu API response
-    await page.waitForTimeout(2000)
-
-    // Seksi baru muncul di sidebar
-    await expect(page.locator('aside').getByText(sectionTitle)).toBeVisible({ timeout: 10000 })
+  sectionTest('14.3 — buat seksi baru muncul di sidebar', async ({ page, testSection }) => {
+    // Section already created by fixture, verify it's visible
+    await expect(page.locator('aside').getByText(testSection.title)).toBeVisible({ timeout: 10000 })
   })
 
   // ── 14.4: Buat lesson baru dengan Tiptap content ────────────────────────
 
-  test('14.4 — buat lesson baru dengan Tiptap content', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
-    // Pastikan ada seksi — ambil seksi pertama
-    const sectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
-    const sectionCount = await sectionMenuBtns.count()
-
-    if (sectionCount === 0) {
-      console.log('ℹ️ No sections available, skipping lesson creation test')
-      return
-    }
-
+  sectionTest('14.4 — buat lesson baru dengan Tiptap content', async ({ page, testSection }) => {
     const lessonTitle = `Pelajaran E2E Test ${Date.now()}`
 
-    // Hover pada seksi pertama untuk munculkan menu
-    const firstSectionMenu = sectionMenuBtns.first()
-    await firstSectionMenu.scrollIntoViewIfNeeded()
-    await firstSectionMenu.click()
+    // Find section menu button
+    const sectionMenuBtn = page.getByTestId(`section-menu-btn-${testSection.id}`)
+    await sectionMenuBtn.scrollIntoViewIfNeeded()
+    await sectionMenuBtn.click()
 
     // Klik "Tambah Pelajaran" di dropdown
-    // Ambil section ID dari testid
-    const sectionId = await firstSectionMenu.getAttribute('data-testid')
-      .then((id) => id?.replace('section-menu-btn-', '') ?? '')
-
-    const addLessonBtn = page.getByTestId(`section-add-lesson-btn-${sectionId}`)
+    const addLessonBtn = page.getByTestId(`section-add-lesson-btn-${testSection.id}`)
     await expect(addLessonBtn).toBeVisible()
     await addLessonBtn.click()
 
@@ -182,25 +86,14 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.5: Edit lesson ───────────────────────────────────────────────────
 
-  test('14.5 — edit lesson, konten berubah setelah save', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
+  sectionTest('14.5 — edit lesson, konten berubah setelah save', async ({ page, testSection }) => {
     // Cari lesson pertama yang tersedia
     const lessonMenuBtns = page.locator('[data-testid^="lesson-menu-btn-"]')
 
-    // Expand semua section dulu untuk memunculkan lessons
-    const sectionToggles = page.locator('[data-testid^="section-toggle-"]')
-    const toggleCount = await sectionToggles.count()
-    for (let i = 0; i < toggleCount; i++) {
-      await sectionToggles.nth(i).click()
-      await page.waitForTimeout(300)
-    }
+    // Expand section to show lessons
+    const sectionToggle = page.getByTestId(`section-toggle-${testSection.id}`)
+    await sectionToggle.click()
+    await page.waitForTimeout(300)
 
     const lessonCount = await lessonMenuBtns.count()
     if (lessonCount === 0) {
@@ -242,14 +135,14 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.6: Reorder section via drag and drop ─────────────────────────────
 
-  test('14.6 — reorder section via drag and drop', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
+  sectionTest('14.6 — reorder section via drag and drop', async ({ page, testSection }) => {
+    // Create a second section for reordering test
+    const secondSectionTitle = `Seksi Reorder Test ${Date.now()}`
+    await page.getByTestId('add-section-btn').click()
+    const inlineInput = page.getByTestId('inline-section-input')
+    await inlineInput.fill(secondSectionTitle)
+    await inlineInput.press('Enter')
+    await page.waitForTimeout(2000)
 
     const sectionItems = page.locator('[data-testid^="section-item-"]')
     const count = await sectionItems.count()
@@ -294,16 +187,8 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.7: Delete section → cascade delete lessons ───────────────────────
 
-  test('14.7 — delete section cascade delete lessons', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
-    // Buat seksi baru dulu untuk dihapus (agar tidak merusak data lain)
+  sectionTest('14.7 — delete section cascade delete lessons', async ({ page, testSection }) => {
+    // Create a temp section to delete (to avoid breaking other tests)
     const tempSectionTitle = `Seksi Hapus Test ${Date.now()}`
     await page.getByTestId('add-section-btn').click()
     const inlineInput = page.getByTestId('inline-section-input')
@@ -314,11 +199,11 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
     // Pastikan seksi baru muncul
     await expect(page.locator('aside').getByText(tempSectionTitle)).toBeVisible({ timeout: 10000 })
 
-    // Cari section item yang baru dibuat
+    // Find the newly created section
     const allSectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
     const sectionCount = await allSectionMenuBtns.count()
 
-    // Klik menu pada seksi terakhir (yang baru dibuat)
+    // Click menu on the last section (newly created)
     const lastSectionMenu = allSectionMenuBtns.nth(sectionCount - 1)
     await lastSectionMenu.click()
 
@@ -347,6 +232,8 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 })
 
 // ── Test Suite: Access Control ─────────────────────────────────────────────
+
+import { test } from '@playwright/test'
 
 test.describe('Task 14.8: Creator Manage Page — Access Control', () => {
   test.use({ storageState: { cookies: [], origins: [] } })
