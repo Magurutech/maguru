@@ -20,7 +20,7 @@ import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
 import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
-import { useManageContext } from '../../../context/creator/ManageContext'
+import { useManageContext } from '../../../Context/creator/ManageContext'
 
 // Simple Editor node styles — same as simple-editor.tsx
 import '@/components/tiptap-node/heading-node/heading-node.scss'

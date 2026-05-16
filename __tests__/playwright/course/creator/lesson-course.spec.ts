@@ -105,7 +105,8 @@ sectionTest.describe('Task 14: Creator Content Management Workflow', () => {
     const firstLessonMenu = lessonMenuBtns.first()
     await firstLessonMenu.click()
 
-    const lessonId = await firstLessonMenu.getAttribute('data-testid')
+    const lessonId = await firstLessonMenu
+      .getAttribute('data-testid')
       .then((id) => id?.replace('lesson-menu-btn-', '') ?? '')
 
     // Klik Edit
@@ -135,100 +136,115 @@ sectionTest.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.6: Reorder section via drag and drop ─────────────────────────────
 
-  sectionTest('14.6 — reorder section via drag and drop', async ({ page, testSection }) => {
-    // Create a second section for reordering test
-    const secondSectionTitle = `Seksi Reorder Test ${Date.now()}`
-    await page.getByTestId('add-section-btn').click()
-    const inlineInput = page.getByTestId('inline-section-input')
-    await inlineInput.fill(secondSectionTitle)
-    await inlineInput.press('Enter')
-    await page.waitForTimeout(2000)
+  sectionTest(
+    '14.6 — reorder section via drag and drop',
+    async ({ page, testSection: _testSection }) => {
+      // Create a second section for reordering test
+      const secondSectionTitle = `Seksi Reorder Test ${Date.now()}`
+      await page.getByTestId('add-section-btn').click()
+      const inlineInput = page.getByTestId('inline-section-input')
+      await inlineInput.fill(secondSectionTitle)
+      await inlineInput.press('Enter')
+      await page.waitForTimeout(2000)
 
-    const sectionItems = page.locator('[data-testid^="section-item-"]')
-    const count = await sectionItems.count()
+      const sectionItems = page.locator('[data-testid^="section-item-"]')
+      const count = await sectionItems.count()
 
-    if (count < 2) {
-      console.log('ℹ️ Need at least 2 sections for reorder test, skipping')
-      return
-    }
+      if (count < 2) {
+        console.log('ℹ️ Need at least 2 sections for reorder test, skipping')
+        return
+      }
 
-    // Ambil judul section sebelum drag
-    const firstSectionToggle = page.locator('[data-testid^="section-toggle-"]').first()
-    const secondSectionToggle = page.locator('[data-testid^="section-toggle-"]').nth(1)
+      // Ambil judul section sebelum drag
+      const firstSectionToggle = page.locator('[data-testid^="section-toggle-"]').first()
+      const secondSectionToggle = page.locator('[data-testid^="section-toggle-"]').nth(1)
 
-    const firstTitleBefore = await firstSectionToggle.locator('span').first().textContent()
-    const secondTitleBefore = await secondSectionToggle.locator('span').first().textContent()
+      const firstTitleBefore = await firstSectionToggle.locator('span').first().textContent()
+      const secondTitleBefore = await secondSectionToggle.locator('span').first().textContent()
 
-    // Drag section kedua ke atas section pertama menggunakan grip handle
-    const secondGrip = sectionItems.nth(1).locator('[aria-label="Drag to reorder section"]')
-    const firstItem = sectionItems.first()
+      // Drag section kedua ke atas section pertama menggunakan grip handle
+      const secondGrip = sectionItems.nth(1).locator('[aria-label="Drag to reorder section"]')
+      const firstItem = sectionItems.first()
 
-    const firstBox = await firstItem.boundingBox()
-    if (!firstBox) return
+      const firstBox = await firstItem.boundingBox()
+      if (!firstBox) return
 
-    // Simulate drag dengan mouse events (DnD Kit pakai PointerSensor)
-    await secondGrip.hover()
-    await page.mouse.down()
-    await page.mouse.move(firstBox.x + firstBox.width / 2, firstBox.y + 5, { steps: 10 })
-    await page.waitForTimeout(500)
-    await page.mouse.up()
+      // Simulate drag dengan mouse events (DnD Kit pakai PointerSensor)
+      await secondGrip.hover()
+      await page.mouse.down()
+      await page.mouse.move(firstBox.x + firstBox.width / 2, firstBox.y + 5, { steps: 10 })
+      await page.waitForTimeout(500)
+      await page.mouse.up()
 
-    // Tunggu reorder API
-    await page.waitForTimeout(2000)
+      // Tunggu reorder API
+      await page.waitForTimeout(2000)
 
-    // Verifikasi urutan berubah — section yang tadinya kedua sekarang pertama
-    const firstTitleAfter = await page.locator('[data-testid^="section-toggle-"]').first()
-      .locator('span').first().textContent()
+      // Verifikasi urutan berubah — section yang tadinya kedua sekarang pertama
+      const firstTitleAfter = await page
+        .locator('[data-testid^="section-toggle-"]')
+        .first()
+        .locator('span')
+        .first()
+        .textContent()
 
-    // Urutan harus berbeda dari sebelumnya
-    expect(firstTitleAfter).not.toBe(firstTitleBefore)
-    expect(firstTitleAfter).toBe(secondTitleBefore)
-  })
+      // Urutan harus berbeda dari sebelumnya
+      expect(firstTitleAfter).not.toBe(firstTitleBefore)
+      expect(firstTitleAfter).toBe(secondTitleBefore)
+    },
+  )
 
   // ── 14.7: Delete section → cascade delete lessons ───────────────────────
 
-  sectionTest('14.7 — delete section cascade delete lessons', async ({ page, testSection }) => {
-    // Create a temp section to delete (to avoid breaking other tests)
-    const tempSectionTitle = `Seksi Hapus Test ${Date.now()}`
-    await page.getByTestId('add-section-btn').click()
-    const inlineInput = page.getByTestId('inline-section-input')
-    await inlineInput.fill(tempSectionTitle)
-    await inlineInput.press('Enter')
-    await page.waitForTimeout(2000)
+  sectionTest(
+    '14.7 — delete section cascade delete lessons',
+    async ({ page, testSection: _testSection }) => {
+      // Create a temp section to delete (to avoid breaking other tests)
+      const tempSectionTitle = `Seksi Hapus Test ${Date.now()}`
+      await page.getByTestId('add-section-btn').click()
+      const inlineInput = page.getByTestId('inline-section-input')
+      await inlineInput.fill(tempSectionTitle)
+      await inlineInput.press('Enter')
+      await page.waitForTimeout(2000)
 
-    // Pastikan seksi baru muncul
-    await expect(page.locator('aside').getByText(tempSectionTitle)).toBeVisible({ timeout: 10000 })
+      // Pastikan seksi baru muncul
+      await expect(page.locator('aside').getByText(tempSectionTitle)).toBeVisible({
+        timeout: 10000,
+      })
 
-    // Find the newly created section
-    const allSectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
-    const sectionCount = await allSectionMenuBtns.count()
+      // Find the newly created section
+      const allSectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
+      const sectionCount = await allSectionMenuBtns.count()
 
-    // Click menu on the last section (newly created)
-    const lastSectionMenu = allSectionMenuBtns.nth(sectionCount - 1)
-    await lastSectionMenu.click()
+      // Click menu on the last section (newly created)
+      const lastSectionMenu = allSectionMenuBtns.nth(sectionCount - 1)
+      await lastSectionMenu.click()
 
-    const sectionId = await lastSectionMenu.getAttribute('data-testid')
-      .then((id) => id?.replace('section-menu-btn-', '') ?? '')
+      const sectionId = await lastSectionMenu
+        .getAttribute('data-testid')
+        .then((id) => id?.replace('section-menu-btn-', '') ?? '')
 
-    // Klik Hapus Seksi
-    const deleteBtn = page.getByTestId(`section-delete-btn-${sectionId}`)
-    await expect(deleteBtn).toBeVisible()
-    await deleteBtn.click()
+      // Klik Hapus Seksi
+      const deleteBtn = page.getByTestId(`section-delete-btn-${sectionId}`)
+      await expect(deleteBtn).toBeVisible()
+      await deleteBtn.click()
 
-    // Dialog konfirmasi muncul
-    const dialog = page.getByTestId('delete-section-dialog')
-    await expect(dialog).toBeVisible({ timeout: 5000 })
-    await expect(dialog).toContainText('Hapus Seksi')
+      // Dialog konfirmasi muncul
+      const dialog = page.getByTestId('delete-section-dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await expect(dialog).toContainText('Hapus Seksi')
 
-    // Klik Ya, Hapus
-    await page.getByTestId('confirm-delete-section-btn').click()
+      // Klik Ya, Hapus
+      await page.getByTestId('confirm-delete-section-btn').click()
 
-    // Tunggu API response
-    await page.waitForTimeout(2000)
+      // Tunggu API response
+      await page.waitForTimeout(2000)
 
-    // Seksi hilang dari sidebar
-    await expect(page.locator('aside').getByText(tempSectionTitle)).not.toBeVisible({ timeout: 10000 })
-  })
+      // Seksi hilang dari sidebar
+      await expect(page.locator('aside').getByText(tempSectionTitle)).not.toBeVisible({
+        timeout: 10000,
+      })
+    },
+  )
 })
 
 // ── Test Suite: Access Control ─────────────────────────────────────────────
@@ -252,7 +268,8 @@ test.describe('Task 14.8: Creator Manage Page — Access Control', () => {
     if (!isRedirected) {
       // Fallback: cek konten halaman
       const bodyText = await page.locator('body').textContent()
-      const isBlocked = bodyText?.toLowerCase().includes('sign') ||
+      const isBlocked =
+        bodyText?.toLowerCase().includes('sign') ||
         bodyText?.toLowerCase().includes('login') ||
         bodyText?.toLowerCase().includes('akses')
       expect(isBlocked).toBeTruthy()

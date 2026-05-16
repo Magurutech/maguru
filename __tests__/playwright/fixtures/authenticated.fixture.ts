@@ -1,6 +1,6 @@
 /**
  * Authenticated Fixture
- * 
+ *
  * Provides auto-authenticated page for tests.
  * No need to manually login in each test.
  */
@@ -13,7 +13,7 @@ export type AuthenticatedFixtures = Record<string, never>
 
 /**
  * Authenticated test fixture
- * 
+ *
  * Usage:
  * ```typescript
  * authenticatedTest('my test', async ({ page }) => {
@@ -37,10 +37,10 @@ export const authenticatedTest = base.extend<AuthenticatedFixtures>({
 
     // Wait for auth to complete - ensure cookies are set
     await page.waitForTimeout(1000)
-    
+
     // Verify auth cookie exists
     const cookies = await page.context().cookies()
-    const hasAuthCookie = cookies.some(c => c.name === '__session' || c.name.includes('clerk'))
+    const hasAuthCookie = cookies.some((c) => c.name === '__session' || c.name.includes('clerk'))
     if (!hasAuthCookie) {
       console.warn('⚠️ No auth cookies found after login')
     }
@@ -48,6 +48,7 @@ export const authenticatedTest = base.extend<AuthenticatedFixtures>({
     console.log('🔐 Auto-authenticated as creator')
 
     // USE: Provide authenticated page to test
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page)
 
     // TEARDOWN: Nothing needed (Playwright handles page cleanup)

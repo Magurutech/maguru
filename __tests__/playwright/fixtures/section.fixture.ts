@@ -1,6 +1,6 @@
 /**
  * Section Fixture
- * 
+ *
  * Provides auto-created section for tests.
  * Depends on course fixture.
  */
@@ -14,7 +14,7 @@ export type SectionFixtures = {
 
 /**
  * Section test fixture
- * 
+ *
  * Usage:
  * ```typescript
  * sectionTest('my test', async ({ page, testCourse, testSection }) => {
@@ -34,6 +34,7 @@ export const sectionTest = courseTest.extend<SectionFixtures>({
     })
 
     // USE: Provide section to test
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(section)
 
     // TEARDOWN: Section will be auto-deleted when course is deleted

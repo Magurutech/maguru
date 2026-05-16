@@ -1,6 +1,6 @@
 /**
  * API Helpers for E2E Testing
- * 
+ *
  * Direct API calls untuk fast test data setup/teardown.
  * Bypass UI untuk speed up test execution.
  */
@@ -30,7 +30,7 @@ export interface LessonData {
     lastEdit: string
     content: {
       type: 'doc'
-      content: any[]
+      content: Array<Record<string, unknown>>
     }
   }
 }
@@ -56,7 +56,7 @@ export interface Lesson {
   content: {
     version: number
     lastEdit: string
-    content: any
+    content: Record<string, unknown>
   }
 }
 
@@ -67,7 +67,7 @@ export interface Lesson {
  */
 async function getAuthToken(page: Page): Promise<string> {
   const cookies = await page.context().cookies()
-  const sessionCookie = cookies.find(c => c.name === '__session')
+  const sessionCookie = cookies.find((c) => c.name === '__session')
   if (!sessionCookie) {
     throw new Error('No __session cookie found. User must be authenticated.')
   }
@@ -80,16 +80,16 @@ async function getAuthToken(page: Page): Promise<string> {
 async function apiRequest(
   page: Page,
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<Response> {
   const authToken = await getAuthToken(page)
   const baseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000'
-  
+
   const response = await page.request.fetch(`${baseUrl}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'Cookie': `__session=${authToken}`,
+      Cookie: `__session=${authToken}`,
       ...options.headers,
     },
   })
@@ -102,10 +102,7 @@ async function apiRequest(
 /**
  * Create course via API
  */
-export async function createCourseViaAPI(
-  page: Page,
-  data: CourseData
-): Promise<Course> {
+export async function createCourseViaAPI(page: Page, data: CourseData): Promise<Course> {
   const response = await apiRequest(page, '/api/creator/courses', {
     method: 'POST',
     body: JSON.stringify({
@@ -130,10 +127,7 @@ export async function createCourseViaAPI(
 /**
  * Delete course via API
  */
-export async function deleteCourseViaAPI(
-  page: Page,
-  courseSlug: string
-): Promise<void> {
+export async function deleteCourseViaAPI(page: Page, courseSlug: string): Promise<void> {
   const response = await apiRequest(page, `/api/courses/${courseSlug}`, {
     method: 'DELETE',
   })
@@ -149,10 +143,7 @@ export async function deleteCourseViaAPI(
 /**
  * Get course by slug via API
  */
-export async function getCourseViaAPI(
-  page: Page,
-  courseSlug: string
-): Promise<Course | null> {
+export async function getCourseViaAPI(page: Page, courseSlug: string): Promise<Course | null> {
   const response = await apiRequest(page, `/api/courses/${courseSlug}`, {
     method: 'GET',
   })
@@ -172,7 +163,7 @@ export async function getCourseViaAPI(
 export async function createSectionViaAPI(
   page: Page,
   courseSlug: string,
-  data: SectionData
+  data: SectionData,
 ): Promise<Section> {
   const response = await apiRequest(page, `/api/courses/${courseSlug}/sections`, {
     method: 'POST',
@@ -198,15 +189,11 @@ export async function createSectionViaAPI(
 export async function deleteSectionViaAPI(
   page: Page,
   courseSlug: string,
-  sectionId: string
+  sectionId: string,
 ): Promise<void> {
-  const response = await apiRequest(
-    page,
-    `/api/courses/${courseSlug}/sections/${sectionId}`,
-    {
-      method: 'DELETE',
-    }
-  )
+  const response = await apiRequest(page, `/api/courses/${courseSlug}/sections/${sectionId}`, {
+    method: 'DELETE',
+  })
 
   if (!response.ok()) {
     console.warn(`⚠️ Failed to delete section ${sectionId}: ${response.status()}`)
@@ -224,7 +211,7 @@ export async function createLessonViaAPI(
   page: Page,
   courseSlug: string,
   sectionId: string,
-  data: LessonData
+  data: LessonData,
 ): Promise<Lesson> {
   const defaultContent = {
     version: 1,
@@ -250,7 +237,7 @@ export async function createLessonViaAPI(
         order: data.order || 1,
         content: data.content || defaultContent,
       }),
-    }
+    },
   )
 
   if (!response.ok()) {
@@ -270,14 +257,14 @@ export async function deleteLessonViaAPI(
   page: Page,
   courseSlug: string,
   sectionId: string,
-  lessonId: string
+  lessonId: string,
 ): Promise<void> {
   const response = await apiRequest(
     page,
     `/api/courses/${courseSlug}/sections/${sectionId}/lessons/${lessonId}`,
     {
       method: 'DELETE',
-    }
+    },
   )
 
   if (!response.ok()) {
@@ -295,7 +282,7 @@ export async function updateLessonViaAPI(
   courseSlug: string,
   sectionId: string,
   lessonId: string,
-  data: Partial<LessonData>
+  data: Partial<LessonData>,
 ): Promise<Lesson> {
   const response = await apiRequest(
     page,
@@ -303,7 +290,7 @@ export async function updateLessonViaAPI(
     {
       method: 'PUT',
       body: JSON.stringify(data),
-    }
+    },
   )
 
   if (!response.ok()) {
@@ -327,7 +314,7 @@ export async function createFullCourseStructure(
     courseTitle?: string
     sectionTitle?: string
     lessonTitle?: string
-  } = {}
+  } = {},
 ): Promise<{
   course: Course
   section: Section
@@ -361,10 +348,7 @@ export async function createFullCourseStructure(
 /**
  * Cleanup full course structure
  */
-export async function cleanupFullCourseStructure(
-  page: Page,
-  courseSlug: string
-): Promise<void> {
+export async function cleanupFullCourseStructure(page: Page, courseSlug: string): Promise<void> {
   // Deleting course will cascade delete sections and lessons
   await deleteCourseViaAPI(page, courseSlug)
 }

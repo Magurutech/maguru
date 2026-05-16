@@ -19,7 +19,6 @@ courseTest.describe('Creator Dashboard — Authenticated Creator', () => {
 
   // Task 17.2
   courseTest('dashboard shows stats with real data', async ({ page }) => {
-
     // Page title
     await expect(page.locator('h1')).toContainText('Creator Studio')
 
@@ -35,32 +34,35 @@ courseTest.describe('Creator Dashboard — Authenticated Creator', () => {
   })
 
   // Task 17.3
-  courseTest('dashboard shows course list with enrollment count', async ({ page, testCourse }) => {
+  courseTest(
+    'dashboard shows course list with enrollment count',
+    async ({ page, testCourse: _testCourse }) => {
+      // Wait for loading state to disappear
+      await page
+        .waitForSelector('[data-testid="course-list-loading"]', { state: 'hidden', timeout: 15000 })
+        .catch(() => {})
 
-    // Wait for loading state to disappear
-    await page.waitForSelector('[data-testid="course-list-loading"]', { state: 'hidden', timeout: 15000 }).catch(() => {})
+      const courseItems = page.getByTestId('creator-course-item')
+      const count = await courseItems.count()
 
-    const courseItems = page.getByTestId('creator-course-item')
-    const count = await courseItems.count()
+      // Since we have a course from fixture, count should be > 0
+      expect(count).toBeGreaterThan(0)
 
-    // Since we have a course from fixture, count should be > 0
-    expect(count).toBeGreaterThan(0)
+      // First course item should show title and status
+      const firstItem = courseItems.first()
+      await expect(firstItem).toBeVisible()
 
-    // First course item should show title and status
-    const firstItem = courseItems.first()
-    await expect(firstItem).toBeVisible()
+      // Should contain status badge text
+      const itemText = await firstItem.textContent()
+      expect(itemText).toMatch(/PUBLISHED|DRAFT/)
 
-    // Should contain status badge text
-    const itemText = await firstItem.textContent()
-    expect(itemText).toMatch(/PUBLISHED|DRAFT/)
-
-    // Should show enrollment count (siswa)
-    expect(itemText).toContain('siswa')
-  })
+      // Should show enrollment count (siswa)
+      expect(itemText).toContain('siswa')
+    },
+  )
 
   // Publish toggle is tested in manage-course.spec.ts (only available on /creator/courses/[id]/manage)
   courseTest('clicking course item redirects to manage page', async ({ page, testCourse }) => {
-
     const courseItems = page.getByTestId('creator-course-item')
     const count = await courseItems.count()
 
@@ -74,7 +76,6 @@ courseTest.describe('Creator Dashboard — Authenticated Creator', () => {
   })
 
   courseTest('"Lihat Semua" button redirects to /creator/courses', async ({ page }) => {
-
     const viewAllBtn = page.getByTestId('view-all-courses-btn')
     await expect(viewAllBtn).toBeVisible()
     await viewAllBtn.click()
@@ -84,7 +85,6 @@ courseTest.describe('Creator Dashboard — Authenticated Creator', () => {
   })
 
   courseTest('"Buat Kursus Baru" button links to create page', async ({ page }) => {
-
     const createBtn = page.getByRole('link', { name: /buat kursus baru/i }).first()
     await expect(createBtn).toBeVisible()
 

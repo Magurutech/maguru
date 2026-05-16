@@ -18,7 +18,6 @@ courseTest.describe('Creator Course List Page — Authenticated Creator', () => 
   })
 
   courseTest('page loads with correct heading and stats', async ({ page }) => {
-
     // Tunggu loading skeleton selesai — h1 muncul setelah role check + data fetch
     await page.waitForSelector('h1', { timeout: 15000 })
 
@@ -30,18 +29,23 @@ courseTest.describe('Creator Course List Page — Authenticated Creator', () => 
     await expect(page.locator('body')).toContainText(/draft/)
   })
 
-  courseTest('course grid shows cards when courses exist', async ({ page, testCourse }) => {
-    // Wait for data to load
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+  courseTest(
+    'course grid shows cards when courses exist',
+    async ({ page, testCourse: _testCourse }) => {
+      // Wait for data to load
+      await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', {
+        timeout: 15000,
+      })
 
-    // Since we have a course from fixture, grid should be visible
-    const courseGrid = page.getByTestId('course-grid')
-    await expect(courseGrid).toBeVisible()
+      // Since we have a course from fixture, grid should be visible
+      const courseGrid = page.getByTestId('course-grid')
+      await expect(courseGrid).toBeVisible()
 
-    const cards = courseGrid.getByTestId('course-card')
-    const count = await cards.count()
-    expect(count).toBeGreaterThan(0)
-  })
+      const cards = courseGrid.getByTestId('course-card')
+      const count = await cards.count()
+      expect(count).toBeGreaterThan(0)
+    },
+  )
 
   courseTest('"Manage" button on card redirects to manage page', async ({ page, testCourse }) => {
     await page.waitForSelector('[data-testid="course-grid"]', { timeout: 15000 })
@@ -56,7 +60,6 @@ courseTest.describe('Creator Course List Page — Authenticated Creator', () => 
   })
 
   courseTest('"Buat Kursus Baru" button redirects to create page', async ({ page }) => {
-
     await page.waitForSelector('[data-testid="course-grid"]', { timeout: 15000 })
 
     const createBtn = page.getByRole('link', { name: /buat kursus baru/i }).first()

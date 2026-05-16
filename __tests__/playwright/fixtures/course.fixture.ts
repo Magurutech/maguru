@@ -1,6 +1,6 @@
 /**
  * Course Fixture
- * 
+ *
  * Provides auto-created course for tests.
  * Course is created via API (fast) and auto-deleted after test.
  */
@@ -14,7 +14,7 @@ export type CourseFixtures = {
 
 /**
  * Course test fixture
- * 
+ *
  * Usage:
  * ```typescript
  * courseTest('my test', async ({ page, testCourse }) => {
@@ -37,6 +37,7 @@ export const courseTest = authenticatedTest.extend<CourseFixtures>({
     })
 
     // USE: Provide course to test
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(course)
 
     // TEARDOWN: Delete course via API
