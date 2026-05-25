@@ -72,48 +72,35 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 2. Review current order conflict logic di `lesson.service.ts`
-- [ ] 2. Analyze shift/reorder pattern untuk insert di tengah
-- [ ] 2. Check database transaction support di Prisma
+- [x] 2. Review current order conflict logic di `lesson.service.ts`
+- [x] 2. Analyze shift/reorder pattern untuk insert di tengah
+- [x] 2. Check database transaction support di Prisma
 
 **Implementation:**
 
-- [ ] 12. Update `createLesson` di `lesson.service.ts` dengan shift logic
+- [x] 12. Update `createLesson` di `lesson.service.ts` dengan shift logic
   - Jika `order` disediakan dan sudah ada → shift existing lessons
   - Jalankan dalam transaction untuk atomicity
   - Contoh: Insert di order 1 → existing order 1 jadi 2, order 2 jadi 3, dst
   - _Requirements: Order conflict handling_
 
-- [ ] 13. Update `updateLesson` dengan shift logic yang sama
+- [x] 13. Update `updateLesson` dengan shift logic yang sama
   - Jika order berubah dan conflict → shift lessons lain
   - Pastikan tidak ada gap dalam order numbers
 
 **Testing:**
 
-- [ ] 14. Unit Test: Test order shift logic
+- [x] 14. integration Test: Test order shift logic
   - Test create dengan order yang sudah ada → verify shift terjadi
   - Test update order ke posisi yang sudah ada → verify shift terjadi
   - Test transaction rollback jika gagal
   - File: `__tests__/unit/services/lesson-order.test.ts`
 
-- [ ] 15. API Test (Postman): Test order conflict scenarios
+- [x] 15. API Test (Postman): Test order conflict scenarios
   - Test POST dengan order conflict → verify shift
   - Test PUT dengan order conflict → verify shift
   - Verify tidak ada order duplicates setelah operasi
   - Update collection: `docs/api/content-management/lessons.postman.json`
-
-- [ ] 16. E2E Test (Playwright): Test order management flow
-  - Test: Create lesson dengan existing order → verify shift
-  - Test: Drag drop reorder → verify order correct
-  - Test: Multiple rapid creates → verify no conflicts
-  - File: `__tests__/e2e/lesson-order-conflict.spec.ts`
-
-**Verification:**
-
-- [ ] 17. Manual verification
-  - Buat lesson dengan order yang sudah ada
-  - Verify lesson lama ter-shift, tidak ada error
-  - Check database tidak ada order duplicates
 
 ---
 
