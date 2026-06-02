@@ -11,6 +11,7 @@ import { Typography } from '@tiptap/extension-typography'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
+import Image from '@tiptap/extension-image'
 import { toast } from 'sonner'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
 
@@ -51,6 +52,7 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
       Superscript,
       Subscript,
       Selection,
+      Image,
     ],
     content: { type: 'doc', content: [] },
     editable: false,

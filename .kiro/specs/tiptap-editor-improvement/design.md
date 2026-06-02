@@ -76,11 +76,12 @@ lib/
 **Root cause:** Client hardcodes `version: 1` in every save. Server already handles increment correctly in `lesson.service.ts`.
 
 **Server behavior (already correct):**
+
 ```typescript
 // lesson.service.ts — already implemented
 updatedContent = {
   ...input.content,
-  version: currentContent.version + 1,  // server increments
+  version: currentContent.version + 1, // server increments
   lastEdit: new Date().toISOString(),
 }
 ```
@@ -91,7 +92,7 @@ updatedContent = {
 // LessonEditorPanel.tsx — handleSave
 const content = {
   content: editor.getJSON() as JSONContent,
-  version: 1,           // always 1 from client — server handles increment on update
+  version: 1, // always 1 from client — server handles increment on update
   lastEdit: new Date().toISOString(),
 }
 ```
@@ -112,21 +113,26 @@ export function useUnsavedChanges(
   editor: Editor | null,
   title: string,
   initialTitle: string,
-  initialContent: JSONContent | null
+  initialContent: JSONContent | null,
 ): UseUnsavedChangesReturn
 ```
 
 **Dirty state logic:**
+
 - Compare `JSON.stringify(editor.getJSON())` vs `JSON.stringify(initialContent)` on every `editor.on('update')`
 - Compare `title` vs `initialTitle` on every title change
 - If either differs → `isDirty = true`
 - On save success or cancel → `resetDirty()` sets `isDirty = false`
 
 **Browser warning:**
+
 ```typescript
 useEffect(() => {
   const handler = (e: BeforeUnloadEvent) => {
-    if (isDirty) { e.preventDefault(); e.returnValue = '' }
+    if (isDirty) {
+      e.preventDefault()
+      e.returnValue = ''
+    }
   }
   window.addEventListener('beforeunload', handler)
   return () => window.removeEventListener('beforeunload', handler)
@@ -141,7 +147,7 @@ useEffect(() => {
 
 ```typescript
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
-const MAX_SIZE = 5 * 1024 * 1024  // 5MB
+const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 
 export async function uploadLessonImage(file: File): Promise<string> {
   if (!ALLOWED_TYPES.includes(file.type)) {
@@ -160,15 +166,14 @@ export async function uploadLessonImage(file: File): Promise<string> {
 
   if (error) throw new Error(`Upload gagal: ${error.message}`)
 
-  const { data } = supabaseStorage.storage
-    .from('lesson-images')
-    .getPublicUrl(fileName)
+  const { data } = supabaseStorage.storage.from('lesson-images').getPublicUrl(fileName)
 
   return data.publicUrl
 }
 ```
 
 **ImageUploadButton** added to `EditorToolbar.tsx`:
+
 ```typescript
 function ImageUploadButton() {
   const { editor } = useCurrentEditor()
@@ -205,7 +210,7 @@ function ImageUploadButton() {
 
 **Paste support** via `editorProps.handlePaste` in editor config to intercept pasted image files.
 
-**Supabase bucket:** `lesson-images` — public bucket, needs to be created in Supabase dashboard.
+**Supabase bucket:** `course-materials` — public bucket, needs to be created in Supabase dashboard.
 
 #### 1.4 Auto-save to localStorage
 
@@ -213,7 +218,7 @@ function ImageUploadButton() {
 
 ```typescript
 const DRAFT_KEY = (id: string) => `lesson-draft-${id}`
-const DELAY = 10_000  // 10 seconds
+const DELAY = 10_000 // 10 seconds
 
 interface LessonDraft {
   title: string
@@ -230,6 +235,7 @@ export function useAutoSave(options: {
 ```
 
 **Auto-save flow:**
+
 ```
 content/title changes
   → isDirty = true
@@ -239,6 +245,7 @@ content/title changes
 ```
 
 **Draft restore flow on editor open:**
+
 ```
 Open LessonEditorPanel (edit mode)
   → Check localStorage[DRAFT_KEY(lessonId)]
@@ -285,6 +292,7 @@ export const LessonViewerPanel = React.memo(function LessonViewerPanel(props) { 
 #### 2.3 Keyboard Shortcut Hints
 
 **New utility:** `lib/utils/keyboard.ts`
+
 ```typescript
 export function getModKey(): 'Cmd' | 'Ctrl' {
   if (typeof window === 'undefined') return 'Ctrl'
@@ -293,6 +301,7 @@ export function getModKey(): 'Cmd' | 'Ctrl' {
 ```
 
 **Tooltip wrapper** around toolbar buttons using shadcn/ui `Tooltip`:
+
 ```typescript
 // Wrap each toolbar group with tooltips
 <TooltipProvider delayDuration={300}>
@@ -306,6 +315,7 @@ export function getModKey(): 'Cmd' | 'Ctrl' {
 #### 2.4 Link Behavior
 
 Add to `LessonEditorPanel` editor config:
+
 ```typescript
 editorProps: {
   handleDOMEvents: {
@@ -323,6 +333,7 @@ editorProps: {
 ```
 
 CSS tooltip on link hover (in `simple-editor.scss` or global styles):
+
 ```css
 .simple-editor .tiptap a[href] {
   cursor: text;
@@ -366,8 +377,8 @@ export function createEditorExtensions(saveRef: React.RefObject<() => void>) {
   return [
     ...commonExtensions,
     Image.configure({ inline: false, allowBase64: false }),
-    HeadingShortcuts,  // module-level constant
-    createSaveShortcut(saveRef),  // factory function
+    HeadingShortcuts, // module-level constant
+    createSaveShortcut(saveRef), // factory function
   ]
 }
 
@@ -438,9 +449,12 @@ export function generatePreview(content: JSONContent | null | undefined, maxLeng
 #### 3.5 Editor Lifecycle Cleanup
 
 Add to `LessonEditorPanel`, `LessonViewerPanel`, `DescriptionEditor`:
+
 ```typescript
 useEffect(() => {
-  return () => { editor?.destroy() }
+  return () => {
+    editor?.destroy()
+  }
 }, [editor])
 ```
 
@@ -454,55 +468,55 @@ useEffect(() => {
 interface LessonDraft {
   title: string
   content: JSONContent
-  savedAt: string  // ISO 8601
+  savedAt: string // ISO 8601
 }
 // Key: `lesson-draft-${lessonId}`
 ```
 
 ### Image Upload
 
-Images stored in Supabase bucket `lesson-images` as public files.
-URL format: `https://{project}.supabase.co/storage/v1/object/public/lesson-images/{filename}`
+Images stored in Supabase bucket `course-materials` as public files.
+URL format: `https://{project}.supabase.co/storage/v1/object/public/course-materials/{filename}`
 
 ---
 
 ## Correctness Properties
 
-*A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do.*
+_A property is a characteristic or behavior that should hold true across all valid executions of a system — essentially, a formal statement about what the system should do._
 
 ### Property 1: Version Increment Monotonicity
 
-*For any* existing lesson with version N, saving an update should result in the lesson having version N+1 in the database response.
+_For any_ existing lesson with version N, saving an update should result in the lesson having version N+1 in the database response.
 
 **Validates: Requirements 1.3**
 
 ### Property 2: Dirty State Round-trip
 
-*For any* sequence of editor changes followed by undoing all changes back to the initial content, the dirty state should be false (matching the initial state).
+_For any_ sequence of editor changes followed by undoing all changes back to the initial content, the dirty state should be false (matching the initial state).
 
 **Validates: Requirements 2.7, 2.8**
 
 ### Property 3: Image Validation — Size
 
-*For any* file with `size > 5 * 1024 * 1024` bytes, `uploadLessonImage` should throw an error. *For any* file with valid size and valid MIME type, it should not throw a validation error.
+_For any_ file with `size > 5 * 1024 * 1024` bytes, `uploadLessonImage` should throw an error. _For any_ file with valid size and valid MIME type, it should not throw a validation error.
 
 **Validates: Requirements 3.5, 3.6**
 
 ### Property 4: Image Validation — Type
 
-*For any* file with MIME type not in `['image/jpeg', 'image/png', 'image/gif', 'image/webp']`, `uploadLessonImage` should throw an error containing "Format gambar".
+_For any_ file with MIME type not in `['image/jpeg', 'image/png', 'image/gif', 'image/webp']`, `uploadLessonImage` should throw an error containing "Format gambar".
 
 **Validates: Requirements 3.4, 3.7**
 
 ### Property 5: Preview Text Extraction
 
-*For any* valid Tiptap JSON document containing text nodes, `generatePreview` should return a non-empty string that contains the text from those nodes.
+_For any_ valid Tiptap JSON document containing text nodes, `generatePreview` should return a non-empty string that contains the text from those nodes.
 
 **Validates: Requirements 14.3, 14.5**
 
 ### Property 6: Preview Truncation
 
-*For any* Tiptap JSON where extracted text length exceeds `maxLength`, `generatePreview(content, maxLength)` should return a string ending with `'...'` and with total length `maxLength + 3`.
+_For any_ Tiptap JSON where extracted text length exceeds `maxLength`, `generatePreview(content, maxLength)` should return a string ending with `'...'` and with total length `maxLength + 3`.
 
 **Validates: Requirements 14.6**
 
@@ -510,13 +524,13 @@ URL format: `https://{project}.supabase.co/storage/v1/object/public/lesson-image
 
 ## Error Handling
 
-| Scenario | Message (Indonesian) | Behavior |
-|----------|---------------------|----------|
-| Image > 5MB | "Ukuran gambar maksimal 5MB." | Reject, toast error |
-| Invalid image format | "Format gambar tidak didukung. Gunakan JPG, PNG, GIF, atau WebP." | Reject, toast error |
-| Upload network error | "Gagal mengupload gambar. Coba lagi." | Toast error, no insert |
-| Lesson save API error | API message or "Gagal menyimpan pelajaran" | Toast error, keep dirty |
-| Draft corrupted | Silent fail | Delete draft, load server |
+| Scenario              | Message (Indonesian)                                              | Behavior                  |
+| --------------------- | ----------------------------------------------------------------- | ------------------------- |
+| Image > 5MB           | "Ukuran gambar maksimal 5MB."                                     | Reject, toast error       |
+| Invalid image format  | "Format gambar tidak didukung. Gunakan JPG, PNG, GIF, atau WebP." | Reject, toast error       |
+| Upload network error  | "Gagal mengupload gambar. Coba lagi."                             | Toast error, no insert    |
+| Lesson save API error | API message or "Gagal menyimpan pelajaran"                        | Toast error, keep dirty   |
+| Draft corrupted       | Silent fail                                                       | Delete draft, load server |
 
 ---
 

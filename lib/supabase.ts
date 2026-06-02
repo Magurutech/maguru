@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js'
  *
  * @description
  * Client ini digunakan untuk operasi storage (upload, download, delete) dengan anon key.
- * Menggunakan pendekatan sederhana tanpa JWT integration yang kompleks.
+ * Safe untuk digunakan di client-side dan server-side.
  *
  * Referensi:
  * - https://supabase.com/docs/guides/storage/quickstart
@@ -13,7 +13,7 @@ import { createClient } from '@supabase/supabase-js'
  * - https://supabase.com/docs/guides/storage/serving/downloads
  */
 
-// Client untuk storage operations dengan anon key
+// Client untuk storage operations dengan anon key (safe untuk client-side)
 export const supabaseStorage = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

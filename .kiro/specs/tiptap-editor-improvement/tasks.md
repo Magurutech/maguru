@@ -13,7 +13,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing Strategy:** Implement → Unit Test → API Test → E2E Test → Verify
 
-**Prerequisite:** Buat bucket `lesson-images` di Supabase dashboard (public bucket) sebelum memulai Phase 1.
+**Prerequisite:** Buat bucket `course-materials` di Supabase dashboard (public bucket) sebelum memulai Phase 1.
 
 ---
 
@@ -61,7 +61,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 8. Manual verification
+- [~] 8. Manual verification
   - Buat lesson baru, cek version = 1 di network tab
   - Edit lesson, save, cek version increment di response
   - Refresh page, verify version persisted correctly
@@ -158,7 +158,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Test resetDirty dipanggil setelah cancel
   - File: `features/cms/components/creator/manage/ManageContent.test.tsx`
 
-- [ ] 25. E2E Test (Playwright): Test unsaved changes warning
+- [~] 25. E2E Test (Playwright): Test unsaved changes warning
   - Test: Edit content → refresh browser → verify browser warning muncul
   - Test: Edit content → navigate away → verify custom dialog muncul
   - Test: Edit content → save → navigate away → verify no warning
@@ -181,42 +181,42 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 3. Baca dokumentasi Supabase Storage API (upload, getPublicUrl)
-- [ ] 3. Review dokumentasi `@tiptap/extension-image`
-- [ ] 3. Cek best practices file upload validation (MIME type, file size)
+- [x] 3. Baca dokumentasi Supabase Storage API (upload, getPublicUrl)
+- [x] 3. Review dokumentasi `@tiptap/extension-image`
+- [x] 3. Cek best practices file upload validation (MIME type, file size)
 - [ ] 3. Review existing `supabaseStorage` client di `lib/supabase.ts`
 
 **Implementation:**
 
-- [ ] 3.1 Buat `lib/tiptap/image-upload.ts`
+- [x] 3.1 Buat `lib/tiptap/image-upload.ts`
   - Implementasi `uploadLessonImage(file: File): Promise<string>`
   - Validasi MIME type: jpeg, png, gif, webp
   - Validasi file size: max 5MB
-  - Upload ke Supabase bucket `lesson-images` menggunakan `supabaseStorage` dari `lib/supabase.ts`
+  - Upload ke Supabase bucket `course-materials` menggunakan `supabaseStorage` dari `lib/supabase.ts`
   - Return public URL
   - _Requirements: 3.1, 3.4, 3.5, 3.6, 3.7, 3.8, 3.10, 3.12, 3.13_
 
-- [ ] 3.2 Aktifkan `@tiptap/extension-image` di editor extensions
+- [x] 3.2 Aktifkan `@tiptap/extension-image` di editor extensions
   - Install `@tiptap/extension-image` jika belum ada: `yarn add @tiptap/extension-image`
   - Tambahkan `Image.configure({ inline: false, allowBase64: false })` ke extensions di `LessonEditorPanel`
   - Tambahkan Image extension ke viewer extensions juga (untuk render gambar di viewer)
   - _Requirements: 3.1_
 
-- [ ] 3.3 Tambahkan `ImageUploadButton` ke `EditorToolbar.tsx`
+- [x] 3.3 Tambahkan `ImageUploadButton` ke `EditorToolbar.tsx`
   - Buat komponen `ImageUploadButton` dengan hidden file input
   - Tampilkan loading spinner saat upload berlangsung
   - Panggil `editor.chain().focus().setImage({ src: url }).run()` setelah upload sukses
   - Tampilkan toast error jika upload gagal
   - _Requirements: 3.2, 3.3, 3.9, 3.11_
 
-- [ ] 3.4 Tambahkan paste image support
+- [x] 3.4 Tambahkan paste image support
   - Tambahkan `editorProps.handlePaste` untuk intercept paste event dengan image file
   - Panggil `uploadLessonImage` dan insert image node
   - _Requirements: 3.14_
 
 **Testing:**
 
-- [ ] 3.5 Unit Test: Test uploadLessonImage validation
+- [x] 3.5 Unit Test: Test uploadLessonImage validation
   - Test validasi file size > 5MB ditolak
   - Test validasi MIME type tidak valid ditolak
   - Test validasi MIME type valid diterima
@@ -227,21 +227,21 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - **Validates: Requirements 3.4, 3.5, 3.6, 3.7**
   - File: `__tests__/unit/lib/image-upload.test.ts`
 
-- [ ] 3.6 Unit Test: Test ImageUploadButton component
+- [x] 3.6 Unit Test: Test ImageUploadButton component
   - Test file input opens saat button clicked
   - Test loading state saat upload
   - Test error toast muncul saat upload gagal
   - Test image inserted ke editor setelah upload sukses
   - File: `__tests__/unit/components/ImageUploadButton.test.tsx`
 
-- [ ] 3.7 API Test (Postman): Test Supabase Storage upload
+- [x] 3.7 API Test (Postman): Test Supabase Storage upload
   - Test upload valid image → verify public URL returned
   - Test upload file > 5MB → verify error
   - Test upload invalid MIME type → verify error
   - Test get public URL dari uploaded image
   - Export collection ke `docs/api/supabase-storage.postman.json`
 
-- [ ] 3.8 E2E Test (Playwright): Test image upload flow
+- [~] 3.8 E2E Test (Playwright): Test image upload flow
   - Test: Click image button → select valid image → verify image muncul di editor
   - Test: Upload image > 5MB → verify error toast
   - Test: Upload invalid format → verify error toast
@@ -251,7 +251,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 3.9 Manual verification
+- [x] 3.9 Manual verification
   - Upload gambar valid, cek muncul di editor
   - Upload gambar > 5MB, cek error message
   - Upload format tidak valid, cek error message
@@ -264,13 +264,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 4. Review React debounce patterns (lodash.debounce atau custom hook)
-- [ ] 4. Baca dokumentasi localStorage API
+- [~] 4. Review React debounce patterns (lodash.debounce atau custom hook)
+- [~] 4. Baca dokumentasi localStorage API
 - [ ] 4. Review shadcn/ui Alert/Dialog components untuk restore prompt
 
 **Implementation:**
 
-- [ ] 4.1 Buat hook `features/cms/hooks/manage/useLocalStorageDraft.ts`
+- [~] 4.1 Buat hook `features/cms/hooks/manage/useLocalStorageDraft.ts`
   - Implementasi debounced auto-save dengan delay 3 detik (sesuai requirement)
   - Save `{ title, content, savedAt }` ke `localStorage['lesson-draft-{lessonId}']`
   - Export `lastAutoSave`, `clearDraft()`, `hasDraft()`
@@ -278,7 +278,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Auto-save setiap perubahan (debounced 3 detik)
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.12_
 
-- [ ] 4.2 Implementasi draft restore di `LessonEditorPanel`
+- [~] 4.2 Implementasi draft restore di `LessonEditorPanel`
   - Saat editor dibuka (edit mode), cek localStorage untuk draft
   - Jika draft ada dan `draft.savedAt > lesson.lastEdit`, tampilkan restore prompt
   - Tombol "Pulihkan": load draft content ke editor
@@ -286,14 +286,14 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Restore prompt menggunakan shadcn/ui Alert atau Dialog
   - _Requirements: 4.6, 4.7, 4.8, 4.9_
 
-- [ ] 4.3 Tampilkan auto-draft indicator
+- [~] 4.3 Tampilkan auto-draft indicator
   - Tampilkan icon indicator 💾 atau ✓ di dekat tombol Save
   - Tampilkan "Draft tersimpan pada HH:MM:SS" (tetap terlihat)
   - Hapus draft dari localStorage saat manual save sukses
   - Clear draft saat user klik "Discard Draft" (optional button)
   - _Requirements: 4.10, 4.11_
 
-- [ ] 4.4 Handle browser refresh/close behavior
+- [~] 4.4 Handle browser refresh/close behavior
   - Saat user refresh (F5) dengan draft tersimpan → langsung load draft (tidak ke overview)
   - Browser warning tetap muncul (native `beforeunload`) jika ada unsaved changes
   - Draft persist setelah browser close → reopen
@@ -301,7 +301,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 4.5 Unit Test: Test useLocalStorageDraft hook
+- [~] 4.5 Unit Test: Test useLocalStorageDraft hook
   - Test draft tersimpan ke localStorage setelah delay 3 detik
   - Test draft tidak tersimpan jika isDirty = false
   - Test clearDraft menghapus dari localStorage
@@ -310,14 +310,14 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Test hasDraft() returns true jika draft exists
   - File: `__tests__/unit/hooks/useLocalStorageDraft.test.ts`
 
-- [ ] 4.6 Unit Test: Test draft restore logic
+- [~] 4.6 Unit Test: Test draft restore logic
   - Test restore prompt muncul saat draft lebih baru dari server
   - Test restore prompt tidak muncul saat draft lebih lama
   - Test "Pulihkan" load draft content
   - Test "Abaikan" hapus draft dan load server content
   - File: `__tests__/unit/components/DraftRestore.test.tsx`
 
-- [ ] 4.7 E2E Test (Playwright): Test localStorage auto-draft flow
+- [~] 4.7 E2E Test (Playwright): Test localStorage auto-draft flow
   - Test: Edit content → wait 3s → verify "Draft tersimpan" indicator muncul
   - Test: Edit content → wait 3s → close browser → reopen → verify restore prompt
   - Test: Restore draft → verify content loaded correctly
@@ -328,7 +328,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 4.8 Manual verification (Test 4 di test.md)
+- [~] 4.8 Manual verification (Test 4 di test.md)
   - Edit lesson, tunggu 3 detik, cek "Draft tersimpan" indicator
   - Close browser, reopen, cek restore prompt
   - Pulihkan draft, verify content correct
@@ -340,23 +340,23 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 #### Checkpoint Phase 1
 
-- [ ] 5.1 Run all Phase 1 tests
+- [~] 5.1 Run all Phase 1 tests
   - `yarn jest --testPathPattern="version-tracking|unsaved-changes|image-upload|auto-save"`
   - Pastikan semua unit tests passing
   - Pastikan semua E2E tests passing
 
-- [ ] 5.2 Manual verification checklist
+- [~] 5.2 Manual verification checklist
   - ✅ Version tracking: Create lesson → version = 1, Edit → version increment
   - ✅ Unsaved changes: Edit → navigate → warning muncul
   - ✅ Image upload: Upload gambar → muncul di editor
   - ✅ localStorage Auto-draft: Edit → wait 3s → draft tersimpan, refresh → draft restored
 
-- [ ] 5.3 Code quality check
+- [~] 5.3 Code quality check
   - `yarn tsc --noEmit` → no TypeScript errors
   - `yarn lint` → no lint errors
   - Review code coverage untuk Phase 1 features
 
-- [ ] 5.4 User acceptance
+- [~] 5.4 User acceptance
   - Tanya user jika ada pertanyaan atau feedback
   - Demo Phase 1 features ke user
   - Confirm sebelum lanjut ke Phase 2
@@ -371,8 +371,8 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 5. Review React.memo documentation dan best practices
-- [ ] 5. Baca tentang React re-render optimization
+- [~] 5. Review React.memo documentation dan best practices
+- [~] 5. Baca tentang React re-render optimization
 - [ ] 5. Review React DevTools Profiler untuk measure performance
 
 **Implementation:**
@@ -385,20 +385,20 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 5.2 Unit Test: Test memoization behavior
+- [~] 5.2 Unit Test: Test memoization behavior
   - Test SortableSectionItem tidak re-render saat props unchanged
   - Test SortableLessonItem tidak re-render saat props unchanged
   - Test EditorToolbar tidak re-render saat editor state unchanged
   - Use React Testing Library dengan custom render counter
   - File: `__tests__/unit/components/memoization.test.tsx`
 
-- [ ] 5.3 Performance Test: Measure re-render reduction
+- [~] 5.3 Performance Test: Measure re-render reduction
   - Benchmark DnD operations sebelum dan sesudah memoization
   - Measure render count dengan React DevTools Profiler
   - Document performance improvement di test file
   - File: `__tests__/performance/component-memoization.test.ts`
 
-- [ ] 5.4 E2E Test (Playwright): Test DnD performance
+- [~] 5.4 E2E Test (Playwright): Test DnD performance
   - Test: Drag section → verify smooth animation
   - Test: Drag lesson → verify no lag
   - Test: Multiple rapid drags → verify performance stable
@@ -406,7 +406,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 5.5 Manual verification
+- [~] 5.5 Manual verification
   - Open React DevTools Profiler
   - Perform DnD operations, measure re-renders
   - Compare before/after memoization
@@ -418,19 +418,19 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 6.Review shadcn/ui Tooltip component documentation
-- [ ] 6. Baca tentang cross-platform keyboard detection (Mac vs Windows)
+- [~] 6.Review shadcn/ui Tooltip component documentation
+- [~] 6. Baca tentang cross-platform keyboard detection (Mac vs Windows)
 - [ ] 6. Review Tiptap keyboard shortcuts documentation
 
 **Implementation:**
 
-- [ ] 6.1 Buat `lib/utils/keyboard.ts` dengan fungsi `getModKey()`
+- [~] 6.1 Buat `lib/utils/keyboard.ts` dengan fungsi `getModKey()`
   - Return `'Cmd'` untuk Mac, `'Ctrl'` untuk Windows/Linux
   - Gunakan `navigator.platform` untuk deteksi OS
   - Handle SSR case (window undefined)
   - _Requirements: 7.2_
 
-- [ ] 6.2 Tambahkan tooltips ke `EditorToolbar.tsx`
+- [~] 6.2 Tambahkan tooltips ke `EditorToolbar.tsx`
   - Wrap setiap toolbar button group dengan `TooltipProvider` dari shadcn/ui
   - Tambahkan tooltip untuk Bold, Italic, Code, Link, H1/H2/H3, Save
   - Gunakan `getModKey()` untuk menampilkan modifier key yang tepat
@@ -439,21 +439,21 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 6.3 Unit Test: Test getModKey utility
+- [~] 6.3 Unit Test: Test getModKey utility
   - Test return 'Cmd' untuk Mac platform
   - Test return 'Ctrl' untuk Windows platform
   - Test return 'Ctrl' saat window undefined (SSR)
   - Mock navigator.platform untuk testing
   - File: `__tests__/unit/lib/keyboard.test.ts`
 
-- [ ] 6.4 Unit Test: Test toolbar tooltips
+- [~] 6.4 Unit Test: Test toolbar tooltips
   - Test tooltip muncul saat hover button
   - Test tooltip content correct (action + shortcut)
   - Test tooltip delay 300ms
   - Test tooltip untuk semua buttons (Bold, Italic, etc)
   - File: `__tests__/unit/components/EditorToolbar.test.tsx`
 
-- [ ] 6.5 E2E Test (Playwright): Test keyboard shortcuts
+- [~] 6.5 E2E Test (Playwright): Test keyboard shortcuts
   - Test: Hover Bold button → verify tooltip "Bold (Ctrl+B)"
   - Test: Press Ctrl+B → verify text bold
   - Test: Hover H1 button → verify tooltip "Heading 1 (Ctrl+Shift+1)"
@@ -463,7 +463,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 6.6 Manual verification
+- [~] 6.6 Manual verification
   - Hover semua toolbar buttons, cek tooltips muncul
   - Test semua keyboard shortcuts berfungsi
   - Test di Mac dan Windows (jika available)
@@ -474,13 +474,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 7. Review Tiptap editorProps.handleDOMEvents documentation
-- [ ] 7. Baca tentang link handling best practices di rich text editors
+- [~] 7. Review Tiptap editorProps.handleDOMEvents documentation
+- [~] 7. Baca tentang link handling best practices di rich text editors
 - [ ] 7. Review CSS tooltip implementation patterns
 
 **Implementation:**
 
-- [ ] 7.1 Implementasi Ctrl+Click link behavior
+- [~] 7.1 Implementasi Ctrl+Click link behavior
   - Tambahkan `editorProps.handleDOMEvents.click` ke editor config di `LessonEditorPanel`
   - Detect `event.ctrlKey || event.metaKey` saat klik pada elemen `<a>`
   - Buka link di tab baru dengan `window.open(..., '_blank', 'noopener,noreferrer')`
@@ -489,14 +489,14 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 7.2 Unit Test: Test link click handler
+- [~] 7.2 Unit Test: Test link click handler
   - Test regular click → cursor placed for editing
   - Test Ctrl+Click → window.open called
   - Test Cmd+Click (Mac) → window.open called
   - Mock window.open untuk testing
   - File: `__tests__/unit/components/LinkBehavior.test.tsx`
 
-- [ ] 7.3 E2E Test (Playwright): Test link interaction
+- [~] 7.3 E2E Test (Playwright): Test link interaction
   - Test: Regular click link → cursor placed, link not opened
   - Test: Ctrl+Click link → new tab opened
   - Test: Hover link → tooltip "Ctrl+Click untuk membuka" muncul
@@ -505,7 +505,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 7.4 Manual verification
+- [~] 7.4 Manual verification
   - Insert link di editor
   - Regular click → verify cursor placed
   - Ctrl+Click → verify link opened di new tab
@@ -515,22 +515,22 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 #### Checkpoint Phase 2
 
-- [ ] 8.1 Run all Phase 2 tests
+- [~] 8.1 Run all Phase 2 tests
   - `yarn jest --testPathPattern="memoization|keyboard|link-behavior"`
   - Pastikan semua unit tests passing
   - Pastikan semua E2E tests passing
 
-- [ ] 8.2 Manual verification checklist
+- [~] 8.2 Manual verification checklist
   - ✅ Memoization: DnD lebih smooth, less re-renders
   - ✅ Keyboard shortcuts: Tooltips muncul, shortcuts work
   - ✅ Link behavior: Ctrl+Click opens link
 
-- [ ] 8.3 Performance metrics
+- [~] 8.3 Performance metrics
   - Document re-render reduction percentage
   - Measure DnD operation time improvement
   - Compare before/after metrics
 
-- [ ] 8.4 User acceptance
+- [~] 8.4 User acceptance
   - Tanya user jika ada pertanyaan atau feedback
   - Demo Phase 2 features ke user
   - Confirm sebelum lanjut ke Phase 3
@@ -549,13 +549,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 8. Review semua Tiptap extensions yang digunakan di codebase
-- [ ] 8. Audit usage dari Selection extension (grep codebase)
+- [~] 8. Review semua Tiptap extensions yang digunakan di codebase
+- [~] 8. Audit usage dari Selection extension (grep codebase)
 - [ ] 8. Review Typography extension features dan benefits
 
 **Implementation:**
 
-- [ ] 8.1 Buat `lib/tiptap/extensions.ts`
+- [~] 8.1 Buat `lib/tiptap/extensions.ts`
   - Export `commonExtensions` (StarterKit, TextAlign, Highlight, Typography, Superscript, Subscript)
   - Export `createEditorExtensions(saveRef)` factory function (+ Image, HeadingShortcuts, SaveShortcut)
   - Export `viewerExtensions` (commonExtensions + Image untuk render)
@@ -563,7 +563,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Hapus `Selection` extension (tidak digunakan)
   - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 10.1, 10.2_
 
-- [ ] 8.2 Update semua editor components untuk import dari `lib/tiptap/extensions.ts`
+- [~] 8.2 Update semua editor components untuk import dari `lib/tiptap/extensions.ts`
   - Update `LessonEditorPanel` di `ManageContent.tsx`
   - Update `LessonViewerPanel` di `ManageContent.tsx`
   - Update `DescriptionEditor` di `ManageContent.tsx`
@@ -572,21 +572,21 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 8.3 Unit Test: Test extension configurations
+- [~] 8.3 Unit Test: Test extension configurations
   - Test commonExtensions contains correct extensions
   - Test createEditorExtensions returns correct array
   - Test viewerExtensions includes Image for rendering
   - Test descriptionExtensions minimal (StarterKit only)
   - File: `__tests__/unit/lib/extensions.test.ts`
 
-- [ ] 8.4 Unit Test: Test editor instances use centralized extensions
+- [~] 8.4 Unit Test: Test editor instances use centralized extensions
   - Test LessonEditorPanel uses createEditorExtensions
   - Test LessonViewerPanel uses viewerExtensions
   - Test DescriptionEditor uses descriptionExtensions
   - Verify no inline extension definitions remain
   - File: `__tests__/unit/components/editor-extensions.test.tsx`
 
-- [ ] 8.5 E2E Test (Playwright): Test all extensions work
+- [~] 8.5 E2E Test (Playwright): Test all extensions work
   - Test: Bold, Italic, Code formatting work
   - Test: Headings (H1, H2, H3) work
   - Test: Text alignment work
@@ -597,7 +597,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 8.6 Manual verification
+- [~] 8.6 Manual verification
   - Test semua formatting options di editor
   - Verify viewer render semua content correctly
   - Check bundle size reduction (if any)
@@ -609,45 +609,45 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 9. Audit semua occurrences dari difficulty color logic (grep "BEGINNER|INTERMEDIATE|ADVANCED")
-- [ ] 9. Audit semua error handling patterns (grep "instanceof Error")
+- [~] 9. Audit semua occurrences dari difficulty color logic (grep "BEGINNER|INTERMEDIATE|ADVANCED")
+- [~] 9. Audit semua error handling patterns (grep "instanceof Error")
 - [ ] 9. Review Tailwind CSS class naming conventions
 
 **Implementation:**
 
-- [ ] 9.1 Buat `lib/utils/course-helpers.ts`
+- [~] 9.1 Buat `lib/utils/course-helpers.ts`
   - Export `getDifficultyColor(difficulty: string): string`
   - Export `getErrorMessage(error: unknown, fallback: string): string`
   - _Requirements: 11.1, 11.2, 11.4, 11.5_
 
-- [ ] 9.2 Refactor difficulty color usage
+- [~] 9.2 Refactor difficulty color usage
   - Update `CourseCard` untuk gunakan `getDifficultyColor`
   - Update `CourseOverviewHero` untuk gunakan `getDifficultyColor`
   - Update `CourseListItem` untuk gunakan `getDifficultyColor`
   - _Requirements: 11.3_
 
-- [ ] 9.3 Refactor error toast pattern
+- [~] 9.3 Refactor error toast pattern
   - Cari semua `err instanceof Error ? err.message : 'Gagal...'` pattern (15+ occurrences)
   - Replace dengan `getErrorMessage(err, 'Gagal...')`
   - _Requirements: 11.6_
 
 **Testing:**
 
-- [ ] 9.4 Unit Test: Test course-helpers utilities
+- [~] 9.4 Unit Test: Test course-helpers utilities
   - Test getDifficultyColor untuk semua difficulty values (BEGINNER, INTERMEDIATE, ADVANCED)
   - Test getDifficultyColor untuk unknown value (fallback)
   - Test getErrorMessage dengan Error instance
   - Test getErrorMessage dengan non-Error value (string, object, null)
   - File: `__tests__/unit/lib/course-helpers.test.ts`
 
-- [ ] 9.5 Unit Test: Test refactored components
+- [~] 9.5 Unit Test: Test refactored components
   - Test CourseCard uses getDifficultyColor correctly
   - Test CourseOverviewHero uses getDifficultyColor correctly
   - Test CourseListItem uses getDifficultyColor correctly
   - Test error handlers use getErrorMessage correctly
   - File: `__tests__/unit/components/course-components.test.tsx`
 
-- [ ] 9.6 E2E Test (Playwright): Test difficulty colors display
+- [~] 9.6 E2E Test (Playwright): Test difficulty colors display
   - Test: Course dengan BEGINNER → verify green color
   - Test: Course dengan INTERMEDIATE → verify yellow color
   - Test: Course dengan ADVANCED → verify red color
@@ -666,25 +666,25 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 10. Review ManageContent.tsx current structure (~400 lines)
-- [ ] 10. Identify all sub-components dan their dependencies
+- [~] 10. Review ManageContent.tsx current structure (~400 lines)
+- [~] 10. Identify all sub-components dan their dependencies
 - [ ] 10. Plan component extraction order (dependencies first)
 
 **Implementation:**
 
-- [ ] 10.1 Extract `DescriptionEditor` ke `features/cms/components/creator/manage/DescriptionEditor.tsx`
+- [~] 10.1 Extract `DescriptionEditor` ke `features/cms/components/creator/manage/DescriptionEditor.tsx`
   - Pindahkan kode DescriptionEditor function dari ManageContent.tsx
   - Pastikan semua imports terbawa
   - Tambahkan `useEffect` cleanup untuk `editor?.destroy()`
   - _Requirements: 13.4, 15.3, 15.4, 15.5_
 
-- [ ] 10.2 Extract `LessonViewerPanel` ke `features/cms/components/creator/manage/LessonViewerPanel.tsx`
+- [~] 10.2 Extract `LessonViewerPanel` ke `features/cms/components/creator/manage/LessonViewerPanel.tsx`
   - Pindahkan kode LessonViewerPanel function
   - Tambahkan `React.memo` wrapper
   - Tambahkan `useEffect` cleanup untuk `editor?.destroy()`
   - _Requirements: 13.3, 6.4, 15.2_
 
-- [ ] 10.3 Extract `LessonEditorPanel` ke `features/cms/components/creator/manage/LessonEditorPanel.tsx`
+- [~] 10.3 Extract `LessonEditorPanel` ke `features/cms/components/creator/manage/LessonEditorPanel.tsx`
   - Pindahkan kode LessonEditorPanel function
   - Integrasikan `useUnsavedChanges` dan `useAutoSave` hooks
   - Gunakan `createEditorExtensions` dari `lib/tiptap/extensions.ts`
@@ -692,11 +692,11 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Tambahkan `useEffect` cleanup untuk `editor?.destroy()`
   - _Requirements: 13.2, 6.3, 15.1_
 
-- [ ] 10.4 Extract `CourseOverview` ke `features/cms/components/creator/manage/CourseOverview.tsx`
+- [~] 10.4 Extract `CourseOverview` ke `features/cms/components/creator/manage/CourseOverview.tsx`
   - Pindahkan kode CourseOverview function
   - _Requirements: 13.1_
 
-- [ ] 10.5 Refactor `ManageContent.tsx` menjadi orchestrator
+- [~] 10.5 Refactor `ManageContent.tsx` menjadi orchestrator
   - Import semua komponen yang sudah di-extract
   - Render berdasarkan `activeView.type`
   - Target: kurang dari 100 baris
@@ -704,7 +704,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 10.6 Unit Test: Test extracted components
+- [~] 10.6 Unit Test: Test extracted components
   - Test DescriptionEditor renders correctly
   - Test LessonViewerPanel renders correctly
   - Test LessonEditorPanel renders correctly
@@ -712,13 +712,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Test editor cleanup called on unmount
   - File: `__tests__/unit/components/manage/*.test.tsx`
 
-- [ ] 10.7 Unit Test: Test ManageContent orchestrator
+- [~] 10.7 Unit Test: Test ManageContent orchestrator
   - Test correct component rendered based on activeView
   - Test props passed correctly to child components
   - Test ManageContent < 100 lines
   - File: `__tests__/unit/components/ManageContent.test.tsx`
 
-- [ ] 10.8 E2E Test (Playwright): Test all views work after split
+- [~] 10.8 E2E Test (Playwright): Test all views work after split
   - Test: Navigate to Course Overview → verify renders
   - Test: Navigate to Lesson Editor → verify renders
   - Test: Navigate to Lesson Viewer → verify renders
@@ -727,7 +727,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 10.9 Manual verification
+- [~] 10.9 Manual verification
   - Navigate semua views di ManageContent
   - Verify functionality identical sebelum/sesudah split
   - Check ManageContent.tsx line count < 100
@@ -739,13 +739,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 11. Review Tiptap JSONContent structure
-- [ ] 11. Understand node types (paragraph, heading, listItem, etc)
+- [~] 11. Review Tiptap JSONContent structure
+- [~] 11. Understand node types (paragraph, heading, listItem, etc)
 - [ ] 11. Review current preview implementation di lesson.service.ts
 
 **Implementation:**
 
-- [ ] 11.1 Buat `lib/tiptap/preview.ts`
+- [~] 11.1 Buat `lib/tiptap/preview.ts`
   - Export `generatePreview(content: JSONContent | null | undefined, maxLength?: number): string`
   - Traverse Tiptap JSON recursively untuk extract text
   - Tambahkan separator setelah block nodes (paragraph, heading)
@@ -754,14 +754,14 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Handle empty/null content
   - _Requirements: 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 14.7_
 
-- [ ] 11.2 Gunakan `generatePreview` di lesson list API
+- [~] 11.2 Gunakan `generatePreview` di lesson list API
   - Update `extractContentPreview` di `lesson.service.ts` atau API route
   - Replace implementasi saat ini dengan `generatePreview`
   - _Requirements: 14.8_
 
 **Testing:**
 
-- [ ] 11.3 Unit Test: Test generatePreview function
+- [~] 11.3 Unit Test: Test generatePreview function
   - Test dengan paragraph nodes → verify text extracted
   - Test dengan heading nodes → verify text extracted dengan separator
   - Test dengan list nodes → verify `• ` prefix
@@ -773,13 +773,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - **Validates: Requirements 14.3, 14.5, 14.6, 14.7**
   - File: `__tests__/unit/lib/preview.test.ts`
 
-- [ ] 11.4 API Test (Postman): Test lesson list with preview
+- [~] 11.4 API Test (Postman): Test lesson list with preview
   - Test GET `/api/lessons` → verify preview field present
   - Test preview content matches generatePreview output
   - Test preview truncated correctly
   - Export collection ke `docs/api/lesson-preview.postman.json`
 
-- [ ] 11.5 E2E Test (Playwright): Test preview in lesson list
+- [~] 11.5 E2E Test (Playwright): Test preview in lesson list
   - Test: Create lesson dengan content → verify preview muncul di list
   - Test: Long content → verify preview truncated dengan `...`
   - Test: Content dengan list → verify `• ` prefix
@@ -787,7 +787,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 11.6 Manual verification
+- [~] 11.6 Manual verification
   - Create lesson dengan berbagai content types
   - Check lesson list, verify preview accurate
   - Verify truncation works correctly
@@ -798,13 +798,13 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Research Needed:**
 
-- [ ] 12. Audit semua props yang diterima SortableSectionItem (count them)
-- [ ] 12. Identify section-related vs lesson-related props
+- [~] 12. Audit semua props yang diterima SortableSectionItem (count them)
+- [~] 12. Identify section-related vs lesson-related props
 - [ ] 12. Review all call sites dari SortableSectionItem
 
 **Implementation:**
 
-- [ ] 12.1 Refactor SortableSectionItem props
+- [~] 12.1 Refactor SortableSectionItem props
   - Audit semua 20+ props yang diterima `SortableSectionItem`
   - Group section action props menjadi `sectionActions` object
   - Group lesson action props menjadi `lessonActions` object
@@ -815,14 +815,14 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Testing:**
 
-- [ ] 12.2 Unit Test: Test SortableSectionItem with new props
+- [~] 12.2 Unit Test: Test SortableSectionItem with new props
   - Test sectionActions object passed correctly
   - Test lessonActions object passed correctly
   - Test all actions still work (add, edit, delete, reorder)
   - Test prop count ≤10
   - File: `__tests__/unit/components/SortableSectionItem.test.tsx`
 
-- [ ] 12.3 E2E Test (Playwright): Test section/lesson actions
+- [~] 12.3 E2E Test (Playwright): Test section/lesson actions
   - Test: Add section → verify works
   - Test: Edit section → verify works
   - Test: Delete section → verify works
@@ -832,7 +832,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 **Verification:**
 
-- [ ] 12.4 Manual verification
+- [~] 12.4 Manual verification
   - Test semua section actions (add, edit, delete, reorder)
   - Test semua lesson actions
   - Verify functionality identical
@@ -842,34 +842,34 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 
 #### Final Checkpoint Phase 3
 
-- [ ] 13.1 Run all Phase 3 tests
+- [~] 13.1 Run all Phase 3 tests
   - `yarn jest --testPathPattern="extensions|dry-utilities|manage-content|preview|prop-drilling"`
   - Pastikan semua unit tests passing
   - Pastikan semua E2E tests passing
 
-- [ ] 13.2 Run full test suite
+- [~] 13.2 Run full test suite
   - `yarn jest` → all tests passing
   - `yarn test:e2e` → all E2E tests passing
   - Check code coverage → target >80%
 
-- [ ] 13.3 Code quality final check
+- [~] 13.3 Code quality final check
   - `yarn tsc --noEmit` → no TypeScript errors
   - `yarn lint` → no lint errors
   - `yarn build` → build successful
   - Check bundle size → verify no significant increase
 
-- [ ] 13.4 Manual verification checklist (All Phases)
+- [~] 13.4 Manual verification checklist (All Phases)
   - ✅ Phase 1: Version tracking, Unsaved changes, Image upload, Auto-save
   - ✅ Phase 2: Memoization, Keyboard shortcuts, Link behavior
   - ✅ Phase 3: Extensions, DRY utilities, Component split, Preview, Props
 
-- [ ] 13.5 Documentation
+- [~] 13.5 Documentation
   - Update README dengan new features
   - Document API changes (jika ada)
   - Update Postman collections
   - Document breaking changes (jika ada)
 
-- [ ] 13.6 User acceptance final
+- [~] 13.6 User acceptance final
   - Demo semua features ke user
   - Collect feedback
   - Address any concerns
@@ -883,7 +883,7 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
 - Setiap feature harus complete (Implement → Unit Test → API Test → E2E Test) sebelum lanjut
 - Research documentation SEBELUM implementasi untuk memastikan best practices
 - Phase 1 harus selesai sebelum Phase 2, Phase 2 sebelum Phase 3
-- Bucket `lesson-images` di Supabase harus dibuat manual sebelum Feature 3
+- Bucket `course-materials` di Supabase harus dibuat manual sebelum Feature 3
 
 ## Testing Summary
 

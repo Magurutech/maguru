@@ -17,6 +17,7 @@ import { Typography } from '@tiptap/extension-typography'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
+import Image from '@tiptap/extension-image'
 import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
@@ -113,6 +114,38 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
         'aria-label': 'Tulis konten pelajaran di sini.',
         class: 'simple-editor',
       },
+      handlePaste: (view, event) => {
+        // Handle image paste from clipboard
+        const items = event.clipboardData?.items
+        if (!items || !lessonId) return false
+
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i]
+          if (item.type.indexOf('image') === 0) {
+            event.preventDefault()
+            const file = item.getAsFile()
+            if (file) {
+              // Import uploadLessonImage dynamically to avoid circular dependency
+              import('@/lib/tiptap/image-upload')
+                .then(({ uploadLessonImage }) => uploadLessonImage(file, lessonId))
+                .then((url) => {
+                  view.dispatch(
+                    view.state.tr.replaceSelectionWith(
+                      view.state.schema.nodes.image.create({ src: url }),
+                    ),
+                  )
+                  toast.success('Gambar berhasil diupload')
+                })
+                .catch((err) => {
+                  const message = err instanceof Error ? err.message : 'Gagal mengupload gambar'
+                  toast.error(message)
+                })
+            }
+            return true
+          }
+        }
+        return false
+      },
     },
     extensions: [
       StarterKit.configure({
@@ -124,6 +157,7 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
       Superscript,
       Subscript,
       Selection,
+      Image.configure({ inline: false, allowBase64: false }),
       HeadingShortcuts,
       saveShortcutExtension,
     ],
@@ -243,7 +277,7 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
               Kembali
             </button>
             <div className="flex-1 min-w-0">
-              <EditorToolbar />
+              <EditorToolbar lessonId={lessonId} />
             </div>
             <div className="flex items-center shrink-0">
               <Button

@@ -100,7 +100,7 @@ Fokus utama adalah memperbaiki **critical gaps** yang berdampak langsung pada us
 
 3.7. IF the selected file format is not supported, THE System SHALL display an error message in Indonesian
 
-3.8. WHEN a valid image is selected, THE System SHALL upload it to Supabase Storage bucket `lesson-images`
+3.8. WHEN a valid image is selected, THE System SHALL upload it to Supabase Storage bucket `course-materials`
 
 3.9. WHEN upload is in progress, THE System SHALL show a loading indicator on the Image button
 
@@ -379,23 +379,27 @@ Fokus utama adalah memperbaiki **critical gaps** yang berdampak langsung pada us
 ## Non-Functional Requirements
 
 ### Performance
+
 - Toolbar re-renders SHALL be reduced with `useEditorState` optimization
 - DnD operations SHALL be smoother with `React.memo` on sortable components
 - Auto-save SHALL NOT block user interaction (runs asynchronously)
 
 ### Usability
+
 - All error messages SHALL be in Indonesian language
 - Keyboard shortcuts SHALL be discoverable through tooltips
 - Auto-save indicator SHALL be subtle and non-intrusive
 - Unsaved changes warning SHALL prevent accidental data loss
 
 ### Maintainability
+
 - Extension configuration SHALL be centralized in `lib/tiptap/extensions.ts`
 - Duplicate code patterns SHALL be eliminated through utility functions
 - Components SHALL have single responsibility (ManageContent split)
 - Prop count on SortableSectionItem SHALL be reduced to ≤10
 
 ### Security
+
 - Image uploads SHALL be validated for file type (JPG, PNG, GIF, WebP only)
 - Image uploads SHALL be validated for file size (max 5MB)
 - Image URLs SHALL be stored as Supabase public URLs (not base64)
@@ -408,29 +412,29 @@ Fokus utama adalah memperbaiki **critical gaps** yang berdampak langsung pada us
 - `lib/supabase.ts` - Existing Supabase client (already configured)
 - `NEXT_PUBLIC_SUPABASE_URL` - Already configured in .env
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Already configured in .env
-- Supabase Storage bucket `lesson-images` - Needs to be created
+- Supabase Storage bucket `course-materials` - Needs to be created
 
 ---
 
 ## Priority Summary
 
-| Requirement | Priority | Effort | Impact |
-|-------------|----------|--------|--------|
-| 1. Version Tracking Fix | P0 | Low | High |
-| 2. Unsaved Changes Warning | P0 | Medium | High |
-| 3. Image Upload | P0 | Medium | High |
-| 4. Auto-save (10s debounce) | P0 | Medium | High |
-| 5. useEditorState | P1 | Medium | Medium |
-| 6. Component Memoization | P1 | Low | Medium |
-| 7. Keyboard Shortcut Hints | P1 | Low | Medium |
-| 8. Link Behavior | P1 | Low | Low |
-| 9. Extension Centralization | P2 | Low | Medium |
-| 10. Extension Audit | P2 | Low | Low |
-| 11. DRY Utilities | P2 | Low | Medium |
-| 12. Prop Drilling Reduction | P2 | Medium | Medium |
-| 13. ManageContent Split | P2 | Medium | Medium |
-| 14. Content Preview | P2 | Low | Low |
-| 15. Editor Lifecycle | P2 | Low | Medium |
+| Requirement                 | Priority | Effort | Impact |
+| --------------------------- | -------- | ------ | ------ |
+| 1. Version Tracking Fix     | P0       | Low    | High   |
+| 2. Unsaved Changes Warning  | P0       | Medium | High   |
+| 3. Image Upload             | P0       | Medium | High   |
+| 4. Auto-save (10s debounce) | P0       | Medium | High   |
+| 5. useEditorState           | P1       | Medium | Medium |
+| 6. Component Memoization    | P1       | Low    | Medium |
+| 7. Keyboard Shortcut Hints  | P1       | Low    | Medium |
+| 8. Link Behavior            | P1       | Low    | Low    |
+| 9. Extension Centralization | P2       | Low    | Medium |
+| 10. Extension Audit         | P2       | Low    | Low    |
+| 11. DRY Utilities           | P2       | Low    | Medium |
+| 12. Prop Drilling Reduction | P2       | Medium | Medium |
+| 13. ManageContent Split     | P2       | Medium | Medium |
+| 14. Content Preview         | P2       | Low    | Low    |
+| 15. Editor Lifecycle        | P2       | Low    | Medium |
 
 **Total: 15 Requirements, ~90 Acceptance Criteria**
 

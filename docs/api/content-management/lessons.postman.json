@@ -6,12 +6,37 @@
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
-    { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus yang ada di DB (PUBLISHED) — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
+    {
+      "key": "courseSlug",
+      "value": "",
+      "type": "string",
+      "description": "Slug kursus yang ada di DB (PUBLISHED) — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID"
+    },
     { "key": "sectionId", "value": "", "type": "string", "description": "ID section yang valid" },
-    { "key": "lessonId", "value": "", "type": "string", "description": "ID lesson — auto-filled dari response POST" },
-    { "key": "lessonVersion", "value": "1", "type": "string", "description": "Version lesson sebelum edit — auto-filled" },
-    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — creator (course owner)" },
-    { "key": "otherUserToken", "value": "", "type": "string", "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403" }
+    {
+      "key": "lessonId",
+      "value": "",
+      "type": "string",
+      "description": "ID lesson — auto-filled dari response POST"
+    },
+    {
+      "key": "lessonVersion",
+      "value": "1",
+      "type": "string",
+      "description": "Version lesson sebelum edit — auto-filled"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string",
+      "description": "Clerk __session cookie value — creator (course owner)"
+    },
+    {
+      "key": "otherUserToken",
+      "value": "",
+      "type": "string",
+      "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403"
+    }
   ],
   "item": [
     {
@@ -214,7 +239,12 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }
+              {
+                "key": "Cookie",
+                "value": "__session={{otherUserToken}}",
+                "type": "text",
+                "description": "Token user lain — bukan owner"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -406,7 +436,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}"
+              ]
             },
             "description": "Public endpoint — tidak perlu auth. Ambil detail lesson dengan full content + section info."
           },
@@ -437,7 +475,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/nonexistent-lesson-id",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "nonexistent-lesson-id"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "nonexistent-lesson-id"
+              ]
             },
             "description": "Lesson tidak ada — expects 404."
           },
@@ -507,7 +553,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}"
+              ]
             },
             "description": "Update lesson content — version di response harus increment dari sebelumnya. Jalankan setelah Create Lesson Success."
           },
@@ -553,7 +607,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}"
+              ]
             },
             "description": "Second consecutive update — verify version increments monotonically (2→3). Client still sends version: 1, server handles increment."
           },
@@ -606,9 +668,262 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}"
+              ]
             },
             "description": "Third consecutive update — final validation of monotonic increment (3→4). Validates Property 1 across multiple updates."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4b. POST /api/lessons/[lessonId]/images",
+      "item": [
+        {
+          "name": "Upload Image - Success (200)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has image URL\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('url');",
+                  "    pm.expect(json).to.have.property('fileName');",
+                  "    pm.expect(json).to.have.property('path');",
+                  "    pm.expect(json.url).to.be.a('string');",
+                  "    pm.expect(json.url).to.include('lesson-images');",
+                  "});",
+                  "",
+                  "pm.test(\"[Image Upload] Public URL format is correct\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.url).to.match(/^https:\\/\\/.+\\.supabase\\.co\\/storage\\/v1\\/object\\/public\\/lesson-images\\/.+/);",
+                  "    console.log('✅ Image URL:', json.url);",
+                  "});",
+                  "",
+                  "pm.test(\"[Image Upload] FileName contains lessonId\", function () {",
+                  "    var json = pm.response.json();",
+                  "    var lessonId = pm.collectionVariables.get('lessonId');",
+                  "    pm.expect(json.fileName).to.include('lesson-' + lessonId);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Image file (JPG, PNG, GIF, or WebP, max 5MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lessons", "{{lessonId}}", "images"]
+            },
+            "description": "Upload gambar untuk lesson. Requires auth (Clerk session). File validation: JPG/PNG/GIF/WebP, max 5MB."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Image - File Too Large (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message about file size\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "    pm.expect(json.message).to.include('5MB');",
+                  "});",
+                  "",
+                  "pm.test(\"[Image Upload] Property 3: Size Validation\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.match(/5MB|maksimal/i);",
+                  "    console.log('✅ File size validation working');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "File > 5MB — should fail validation"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lessons", "{{lessonId}}", "images"]
+            },
+            "description": "Upload file > 5MB — expects 400 with size error message."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Image - Invalid MIME Type (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message about format\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "    pm.expect(json.message).to.match(/format|MIME|JPG|PNG/i);",
+                  "});",
+                  "",
+                  "pm.test(\"[Image Upload] Property 4: Type Validation\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.message).to.match(/format|tidak didukung/i);",
+                  "    console.log('✅ MIME type validation working');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Non-image file (e.g., .txt, .pdf) — should fail validation"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lessons", "{{lessonId}}", "images"]
+            },
+            "description": "Upload non-image file — expects 400 with format error message."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Image - Unauthenticated (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message about authentication\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "    pm.expect(json.message).to.match(/Unauthorized|login/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "",
+                  "description": "Valid image file"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lessons", "{{lessonId}}", "images"]
+            },
+            "description": "Upload tanpa auth — expects 401."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Image - Missing File (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Error message about missing file\", function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('message');",
+                  "    pm.expect(json.message).to.match(/File.*required|file.*missing/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lessons/{{lessonId}}/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "lessons", "{{lessonId}}", "images"]
+            },
+            "description": "Request tanpa file — expects 400."
           },
           "response": []
         }
@@ -644,7 +959,15 @@
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "courses", "{{courseSlug}}", "sections", "{{sectionId}}", "lessons", "{{lessonId}}"]
+              "path": [
+                "api",
+                "courses",
+                "{{courseSlug}}",
+                "sections",
+                "{{sectionId}}",
+                "lessons",
+                "{{lessonId}}"
+              ]
             },
             "description": "Hapus lesson beserta semua progress records. Response: { deletedProgress: N }."
           },
