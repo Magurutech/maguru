@@ -22,6 +22,7 @@ import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
 import { useUnsavedChanges } from '@/features/cms/hooks/manage/useUnsavedChanges'
+import { useLocalStorageDraft } from '@/features/cms/hooks/manage/useLocalStorageDraft'
 
 // Simple Editor node styles
 import '@/components/tiptap-node/heading-node/heading-node.scss'
@@ -173,6 +174,14 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
     enabled: !loadingLesson, // Skip dirty check while loading
   })
 
+  // Auto-save draft to localStorage
+  const { clearDraft, getDraft } = useLocalStorageDraft({
+    lessonId,
+    title,
+    editor,
+    isDirty,
+  })
+
   // Load lesson data in edit mode
   useEffect(() => {
     if (!isEditMode || !lessonId || !editor) return
@@ -182,28 +191,55 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
       .then((data) => {
         const loadedTitle = data.title || ''
         const loadedContent = data.content?.content || null
+        const lessonLastEdit = data.content?.lastEdit || ''
 
-        setTitle(loadedTitle)
-        setInitialTitle(loadedTitle)
-        setInitialContent(loadedContent)
+        // Check for draft in localStorage
+        const draft = getDraft()
+        const hasDraftNewer =
+          draft && lessonLastEdit && new Date(draft.savedAt) > new Date(lessonLastEdit)
 
-        if (loadedContent) {
-          editor.commands.setContent(loadedContent as JSONContent)
+        // Auto-restore draft if newer (no dialog, direct update)
+        if (hasDraftNewer && draft) {
+          setTitle(draft.title)
+          setInitialTitle(draft.title)
+          setInitialContent(draft.content)
 
-          // CRITICAL FIX: Use editor.getJSON() as single source of truth
-          // This prevents false dirty state from JSON stringify differences between
-          // raw initialContent and editor's normalized JSON output
-          const editorContent = editor.getJSON()
-          updateSavedContent(editorContent)
+          if (draft.content) {
+            editor.commands.setContent(draft.content as JSONContent)
 
-          // CRITICAL: Enable dirty check in next tick to ensure all refs are synced
-          // This prevents race condition where checkDirty runs before savedContentRef is stable
-          setTimeout(() => {
+            const editorContent = editor.getJSON()
+            updateSavedContent(editorContent)
+
+            setTimeout(() => {
+              setLoadingLesson(false)
+            }, 0)
+          } else {
             setLoadingLesson(false)
-          }, 0)
+          }
         } else {
-          console.warn('[LessonEditorPanel] no content.content found', data.content)
-          setLoadingLesson(false)
+          // Load server content (no draft or draft is older)
+          setTitle(loadedTitle)
+          setInitialTitle(loadedTitle)
+          setInitialContent(loadedContent)
+
+          if (loadedContent) {
+            editor.commands.setContent(loadedContent as JSONContent)
+
+            // CRITICAL FIX: Use editor.getJSON() as single source of truth
+            // This prevents false dirty state from JSON stringify differences between
+            // raw initialContent and editor's normalized JSON output
+            const editorContent = editor.getJSON()
+            updateSavedContent(editorContent)
+
+            // CRITICAL: Enable dirty check in next tick to ensure all refs are synced
+            // This prevents race condition where checkDirty runs before savedContentRef is stable
+            setTimeout(() => {
+              setLoadingLesson(false)
+            }, 0)
+          } else {
+            console.warn('[LessonEditorPanel] no content.content found', data.content)
+            setLoadingLesson(false)
+          }
         }
       })
       .catch(() => {
@@ -239,9 +275,19 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
 
     if (resultId) {
       resetDirty()
+      clearDraft() // Clear draft from localStorage after successful save
       setActiveView({ type: 'lesson', sectionId, lessonId: resultId })
     }
-  }, [title, editor, sectionId, lessonId, submitLessonFromPanel, setActiveView, resetDirty])
+  }, [
+    title,
+    editor,
+    sectionId,
+    lessonId,
+    submitLessonFromPanel,
+    setActiveView,
+    resetDirty,
+    clearDraft,
+  ])
 
   // Keep saveRef in sync
   useEffect(() => {

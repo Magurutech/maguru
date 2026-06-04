@@ -1,118 +1,94 @@
-# Simple template
+# Image extension
 
-The Simple Editor Template is a fully working setup for the Tiptap editor. It includes commonly used open source extensions and UI components, all MIT licensed and ready to customize.
+Use this extension to render `<img>` HTML tags. By default, those images are blocks. If you want to render images in line with text set the `inline` option to `true`.
 
-[
+### No Server Functionality
 
-View in Full Screen
+This extension is only responsible for displaying images. It doesn’t upload images to your server, for that you can integrate the [FileHandler extension](/docs/editor/extensions/functionality/filehandler)
 
-](https://template.tiptap.dev/preview/templates/simple)
-
-## [](#installation)Installation
-
-### [](#for-existing-projects)For existing projects
+## [](#install)Install
 
 ```
-npx @tiptap/cli@latest add simple-editor
+npm install @tiptap/extension-image
 ```
 
-### [](#for-new-projects)For new projects
+## [](#settings)Settings
+
+### [](#inline)inline
+
+Renders the image node inline, for example in a paragraph tag: `<p><img src="spacer.gif"></p>`. By default images are on the same level as paragraphs.
+
+It totally depends on what kind of editing experience you’d like to have, but can be useful if you (for example) migrate from Quill to Tiptap.
+
+Default: `false`
 
 ```
-npx @tiptap/cli@latest init simple-editor
+Image.configure({
+  inline: true,
+})
 ```
 
-## [](#styling)Styling
+### [](#resize)resize
 
-This template requires styling setup. We stay unopinionated about styling frameworks, so you'll need to integrate it with your setup. Follow the [style setup guide](/docs/ui-components/getting-started/style) to ensure the editor displays correctly.
+Options for resizable images. If defined the node will be wrapped in a [resizable node view](/docs/editor/api/resizable-nodeviews) making it possible to resize the image via resize handles.
 
-## [](#usage)Usage
-
-After installation, use the SimpleEditor component in your React or Next.js project:
+Default: `undefined`
 
 ```
-import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
-
-export default function App() {
-  return <SimpleEditor />
-}
+Image.configure({
+  resize: {
+    enabled: true,
+    directions: ['top', 'bottom', 'left', 'right'], // can be any direction or diagonal combination
+    minWidth: 50,
+    minHeight: 50,
+    alwaysPreserveAspectRatio: true,
+  }
+})
 ```
 
-## [](#features)Features
+### [](#allowbase64)allowBase64
 
-A fully responsive rich text editor with built-in support for common formatting and layout tools. All components are open source and easy to extend.
+Allow images to be parsed as base64 strings `<img src="data:image/jpg;base64...">`.
 
--   **Responsive design**: Mobile-friendly by default
--   **Dark and light mode**: Supported out-of-the-box
--   **Formatting**: Bold, Italic, Underline
--   **Lists**: Bullet, Ordered, Checkboxes
--   **Text alignment**: Left, Center, Right, Justified
--   **Headings**: Multiple levels via dropdown
--   **Image upload**
--   **Link editing:** UI for adding and editing links
--   **Undo / Redo:** History management
+Default: `false`
 
-### [](#used-reference-components)Used reference components
+```
+Image.configure({
+  allowBase64: true,
+})
+```
 
-#### [](#hooks)Hooks
+### [](#htmlattributes)HTMLAttributes
 
--   `use-mobile`
--   `use-window-size`
+Custom HTML attributes that should be added to the rendered HTML tag.
 
-#### [](#icons)Icons
+```
+Image.configure({
+  HTMLAttributes: {
+    class: 'my-custom-class',
+  },
+})
+```
 
--   `arrow-left-icon`
--   `highlighter-icon`
--   `link-icon`
--   `moon-star-icon`
--   `sun-icon`
+## [](#commands)Commands
 
-#### [](#extensions)Extensions
+### [](#setimage)setImage()
 
--   `selection-extension`
--   `link-extension`
--   `trailing-node-extension`
+Makes the current node an image.
 
-#### [](#lib)Lib
+```
+editor.commands.setImage({ src: 'https://example.com/foobar.png' })
+editor.commands.setImage({
+  src: 'https://example.com/foobar.png',
+  alt: 'A boring example image',
+  title: 'An example',
+})
+```
 
--   `tiptap-utils`
+## [](#examples)Examples
 
-#### [](#ui-components)UI Components
+### [](#resizable-images)Resizable Images
 
--   `blockquote-button`
--   `code-block-button`
--   `color-highlight-button`
--   `color-highlight-popover`
--   `heading-button`
--   `heading-dropdown-menu`
--   `image-upload-button`
--   `link-popover`
--   `list-button`
--   `list-dropdown-menu`
--   `mark-button`
--   `text-align-button`
--   `undo-redo-button`
+## [](#source-code)Source code
 
-#### [](#node-components)Node Components
-
--   `code-block-node`
--   `image-node`
--   `image-upload-node`
--   `list-node`
--   `paragraph-node`
-
-#### [](#primitives)Primitives
-
--   `button`
--   `spacer`
--   `toolbar`
-
-## [](#license)License
-
-The Simple Editor Template and all included components are MIT licensed. You’re free to use, modify, and extend the code as needed.
-
-## [](#future-compatibility)Future compatibility
-
-You can extend this template with additional features as your needs grow.
-
-Paid Tiptap Cloud features will have matching UI components that integrate just as easily! No rework needed./
+[packages/extension-image/](https://github.com/ueberdosis/tiptap/blob/main/packages/extension-image/)
