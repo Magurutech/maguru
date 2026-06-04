@@ -9,66 +9,21 @@
  * Tasks: 14.1 - 14.8
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { sectionTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
-
-// ── Helpers ────────────────────────────────────────────────────────────────
-
-/**
- * Login sebagai creator dan ambil slug course pertama yang tersedia.
- * Returns null jika tidak ada course.
- */
-async function loginAndGetCourseSlug(page: Parameters<typeof waitForPageLoad>[0]): Promise<string | null> {
-  await page.goto('/')
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: 'password',
-      identifier: testUsers.creatorUser.identifier,
-      password: testUsers.creatorUser.password,
-    },
-  })
-
-  await page.goto('/creator')
-  await waitForPageLoad(page)
-
-  const firstItem = page.getByTestId('creator-course-item').first()
-  const count = await page.getByTestId('creator-course-item').count()
-  if (count === 0) return null
-
-  // data-course-id berisi slug (sesuai CourseListItem: data-course-id={course.id})
-  // Tapi link href-nya pakai slug: /creator/courses/${course.slug}/manage
-  // Ambil dari href link langsung
-  const href = await firstItem.getAttribute('href')
-  if (!href) return null
-
-  // href format: /creator/courses/[slug]/manage
-  const match = href.match(/\/creator\/courses\/([^/]+)\/manage/)
-  return match ? match[1] : null
-}
 
 // ── Test Suite: Authenticated Creator ─────────────────────────────────────
 
-test.describe('Task 14: Creator Content Management Workflow', () => {
-  let courseSlug: string | null = null
-
-  test.beforeEach(async ({ page }) => {
-    courseSlug = await loginAndGetCourseSlug(page)
+sectionTest.describe('Task 14: Creator Content Management Workflow', () => {
+  sectionTest.beforeEach(async ({ page, testCourse }) => {
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
+    await waitForPageLoad(page)
   })
 
   // ── 14.2: Akses halaman manage ──────────────────────────────────────────
 
-  test('14.2 — akses halaman manage dengan auth creator', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
+  sectionTest('14.2 — akses halaman manage dengan auth creator', async ({ page }) => {
     // Halaman tampil — tidak redirect ke sign-in
     expect(page.url()).not.toContain('/sign-in')
 
@@ -84,74 +39,23 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.3: Buat seksi baru ───────────────────────────────────────────────
 
-  test('14.3 — buat seksi baru muncul di sidebar', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
-    // Tunggu sidebar selesai render
-    await page.waitForSelector('[data-testid="add-section-btn"]', { timeout: 15000 })
-
-    const sectionTitle = `Seksi E2E Test ${Date.now()}`
-
-    // Klik tombol Tambah Seksi
-    const addBtn = page.getByTestId('add-section-btn')
-    await expect(addBtn).toBeVisible()
-    await addBtn.click()
-
-    // Input inline muncul
-    const inlineInput = page.getByTestId('inline-section-input')
-    await expect(inlineInput).toBeVisible()
-    await expect(inlineInput).toBeFocused()
-
-    // Ketik judul dan tekan Enter
-    await inlineInput.fill(sectionTitle)
-    await inlineInput.press('Enter')
-
-    // Tunggu API response
-    await page.waitForTimeout(2000)
-
-    // Seksi baru muncul di sidebar
-    await expect(page.locator('aside').getByText(sectionTitle)).toBeVisible({ timeout: 10000 })
+  sectionTest('14.3 — buat seksi baru muncul di sidebar', async ({ page, testSection }) => {
+    // Section already created by fixture, verify it's visible
+    await expect(page.locator('aside').getByText(testSection.title)).toBeVisible({ timeout: 10000 })
   })
 
   // ── 14.4: Buat lesson baru dengan Tiptap content ────────────────────────
 
-  test('14.4 — buat lesson baru dengan Tiptap content', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
-    // Pastikan ada seksi — ambil seksi pertama
-    const sectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
-    const sectionCount = await sectionMenuBtns.count()
-
-    if (sectionCount === 0) {
-      console.log('ℹ️ No sections available, skipping lesson creation test')
-      return
-    }
-
+  sectionTest('14.4 — buat lesson baru dengan Tiptap content', async ({ page, testSection }) => {
     const lessonTitle = `Pelajaran E2E Test ${Date.now()}`
 
-    // Hover pada seksi pertama untuk munculkan menu
-    const firstSectionMenu = sectionMenuBtns.first()
-    await firstSectionMenu.scrollIntoViewIfNeeded()
-    await firstSectionMenu.click()
+    // Find section menu button
+    const sectionMenuBtn = page.getByTestId(`section-menu-btn-${testSection.id}`)
+    await sectionMenuBtn.scrollIntoViewIfNeeded()
+    await sectionMenuBtn.click()
 
     // Klik "Tambah Pelajaran" di dropdown
-    // Ambil section ID dari testid
-    const sectionId = await firstSectionMenu.getAttribute('data-testid')
-      .then((id) => id?.replace('section-menu-btn-', '') ?? '')
-
-    const addLessonBtn = page.getByTestId(`section-add-lesson-btn-${sectionId}`)
+    const addLessonBtn = page.getByTestId(`section-add-lesson-btn-${testSection.id}`)
     await expect(addLessonBtn).toBeVisible()
     await addLessonBtn.click()
 
@@ -182,25 +86,14 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.5: Edit lesson ───────────────────────────────────────────────────
 
-  test('14.5 — edit lesson, konten berubah setelah save', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
-
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
-
+  sectionTest('14.5 — edit lesson, konten berubah setelah save', async ({ page, testSection }) => {
     // Cari lesson pertama yang tersedia
     const lessonMenuBtns = page.locator('[data-testid^="lesson-menu-btn-"]')
 
-    // Expand semua section dulu untuk memunculkan lessons
-    const sectionToggles = page.locator('[data-testid^="section-toggle-"]')
-    const toggleCount = await sectionToggles.count()
-    for (let i = 0; i < toggleCount; i++) {
-      await sectionToggles.nth(i).click()
-      await page.waitForTimeout(300)
-    }
+    // Expand section to show lessons
+    const sectionToggle = page.getByTestId(`section-toggle-${testSection.id}`)
+    await sectionToggle.click()
+    await page.waitForTimeout(300)
 
     const lessonCount = await lessonMenuBtns.count()
     if (lessonCount === 0) {
@@ -212,7 +105,8 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
     const firstLessonMenu = lessonMenuBtns.first()
     await firstLessonMenu.click()
 
-    const lessonId = await firstLessonMenu.getAttribute('data-testid')
+    const lessonId = await firstLessonMenu
+      .getAttribute('data-testid')
       .then((id) => id?.replace('lesson-menu-btn-', '') ?? '')
 
     // Klik Edit
@@ -242,111 +136,120 @@ test.describe('Task 14: Creator Content Management Workflow', () => {
 
   // ── 14.6: Reorder section via drag and drop ─────────────────────────────
 
-  test('14.6 — reorder section via drag and drop', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
+  sectionTest(
+    '14.6 — reorder section via drag and drop',
+    async ({ page, testSection: _testSection }) => {
+      // Create a second section for reordering test
+      const secondSectionTitle = `Seksi Reorder Test ${Date.now()}`
+      await page.getByTestId('add-section-btn').click()
+      const inlineInput = page.getByTestId('inline-section-input')
+      await inlineInput.fill(secondSectionTitle)
+      await inlineInput.press('Enter')
+      await page.waitForTimeout(2000)
 
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
+      const sectionItems = page.locator('[data-testid^="section-item-"]')
+      const count = await sectionItems.count()
 
-    const sectionItems = page.locator('[data-testid^="section-item-"]')
-    const count = await sectionItems.count()
+      if (count < 2) {
+        console.log('ℹ️ Need at least 2 sections for reorder test, skipping')
+        return
+      }
 
-    if (count < 2) {
-      console.log('ℹ️ Need at least 2 sections for reorder test, skipping')
-      return
-    }
+      // Ambil judul section sebelum drag
+      const firstSectionToggle = page.locator('[data-testid^="section-toggle-"]').first()
+      const secondSectionToggle = page.locator('[data-testid^="section-toggle-"]').nth(1)
 
-    // Ambil judul section sebelum drag
-    const firstSectionToggle = page.locator('[data-testid^="section-toggle-"]').first()
-    const secondSectionToggle = page.locator('[data-testid^="section-toggle-"]').nth(1)
+      const firstTitleBefore = await firstSectionToggle.locator('span').first().textContent()
+      const secondTitleBefore = await secondSectionToggle.locator('span').first().textContent()
 
-    const firstTitleBefore = await firstSectionToggle.locator('span').first().textContent()
-    const secondTitleBefore = await secondSectionToggle.locator('span').first().textContent()
+      // Drag section kedua ke atas section pertama menggunakan grip handle
+      const secondGrip = sectionItems.nth(1).locator('[aria-label="Drag to reorder section"]')
+      const firstItem = sectionItems.first()
 
-    // Drag section kedua ke atas section pertama menggunakan grip handle
-    const secondGrip = sectionItems.nth(1).locator('[aria-label="Drag to reorder section"]')
-    const firstItem = sectionItems.first()
+      const firstBox = await firstItem.boundingBox()
+      if (!firstBox) return
 
-    const firstBox = await firstItem.boundingBox()
-    if (!firstBox) return
+      // Simulate drag dengan mouse events (DnD Kit pakai PointerSensor)
+      await secondGrip.hover()
+      await page.mouse.down()
+      await page.mouse.move(firstBox.x + firstBox.width / 2, firstBox.y + 5, { steps: 10 })
+      await page.waitForTimeout(500)
+      await page.mouse.up()
 
-    // Simulate drag dengan mouse events (DnD Kit pakai PointerSensor)
-    await secondGrip.hover()
-    await page.mouse.down()
-    await page.mouse.move(firstBox.x + firstBox.width / 2, firstBox.y + 5, { steps: 10 })
-    await page.waitForTimeout(500)
-    await page.mouse.up()
+      // Tunggu reorder API
+      await page.waitForTimeout(2000)
 
-    // Tunggu reorder API
-    await page.waitForTimeout(2000)
+      // Verifikasi urutan berubah — section yang tadinya kedua sekarang pertama
+      const firstTitleAfter = await page
+        .locator('[data-testid^="section-toggle-"]')
+        .first()
+        .locator('span')
+        .first()
+        .textContent()
 
-    // Verifikasi urutan berubah — section yang tadinya kedua sekarang pertama
-    const firstTitleAfter = await page.locator('[data-testid^="section-toggle-"]').first()
-      .locator('span').first().textContent()
-
-    // Urutan harus berbeda dari sebelumnya
-    expect(firstTitleAfter).not.toBe(firstTitleBefore)
-    expect(firstTitleAfter).toBe(secondTitleBefore)
-  })
+      // Urutan harus berbeda dari sebelumnya
+      expect(firstTitleAfter).not.toBe(firstTitleBefore)
+      expect(firstTitleAfter).toBe(secondTitleBefore)
+    },
+  )
 
   // ── 14.7: Delete section → cascade delete lessons ───────────────────────
 
-  test('14.7 — delete section cascade delete lessons', async ({ page }) => {
-    if (!courseSlug) {
-      console.log('ℹ️ No courses available, skipping')
-      return
-    }
+  sectionTest(
+    '14.7 — delete section cascade delete lessons',
+    async ({ page, testSection: _testSection }) => {
+      // Create a temp section to delete (to avoid breaking other tests)
+      const tempSectionTitle = `Seksi Hapus Test ${Date.now()}`
+      await page.getByTestId('add-section-btn').click()
+      const inlineInput = page.getByTestId('inline-section-input')
+      await inlineInput.fill(tempSectionTitle)
+      await inlineInput.press('Enter')
+      await page.waitForTimeout(2000)
 
-    await page.goto(`/creator/courses/${courseSlug}/manage`)
-    await waitForPageLoad(page)
+      // Pastikan seksi baru muncul
+      await expect(page.locator('aside').getByText(tempSectionTitle)).toBeVisible({
+        timeout: 10000,
+      })
 
-    // Buat seksi baru dulu untuk dihapus (agar tidak merusak data lain)
-    const tempSectionTitle = `Seksi Hapus Test ${Date.now()}`
-    await page.getByTestId('add-section-btn').click()
-    const inlineInput = page.getByTestId('inline-section-input')
-    await inlineInput.fill(tempSectionTitle)
-    await inlineInput.press('Enter')
-    await page.waitForTimeout(2000)
+      // Find the newly created section
+      const allSectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
+      const sectionCount = await allSectionMenuBtns.count()
 
-    // Pastikan seksi baru muncul
-    await expect(page.locator('aside').getByText(tempSectionTitle)).toBeVisible({ timeout: 10000 })
+      // Click menu on the last section (newly created)
+      const lastSectionMenu = allSectionMenuBtns.nth(sectionCount - 1)
+      await lastSectionMenu.click()
 
-    // Cari section item yang baru dibuat
-    const allSectionMenuBtns = page.locator('[data-testid^="section-menu-btn-"]')
-    const sectionCount = await allSectionMenuBtns.count()
+      const sectionId = await lastSectionMenu
+        .getAttribute('data-testid')
+        .then((id) => id?.replace('section-menu-btn-', '') ?? '')
 
-    // Klik menu pada seksi terakhir (yang baru dibuat)
-    const lastSectionMenu = allSectionMenuBtns.nth(sectionCount - 1)
-    await lastSectionMenu.click()
+      // Klik Hapus Seksi
+      const deleteBtn = page.getByTestId(`section-delete-btn-${sectionId}`)
+      await expect(deleteBtn).toBeVisible()
+      await deleteBtn.click()
 
-    const sectionId = await lastSectionMenu.getAttribute('data-testid')
-      .then((id) => id?.replace('section-menu-btn-', '') ?? '')
+      // Dialog konfirmasi muncul
+      const dialog = page.getByTestId('delete-section-dialog')
+      await expect(dialog).toBeVisible({ timeout: 5000 })
+      await expect(dialog).toContainText('Hapus Seksi')
 
-    // Klik Hapus Seksi
-    const deleteBtn = page.getByTestId(`section-delete-btn-${sectionId}`)
-    await expect(deleteBtn).toBeVisible()
-    await deleteBtn.click()
+      // Klik Ya, Hapus
+      await page.getByTestId('confirm-delete-section-btn').click()
 
-    // Dialog konfirmasi muncul
-    const dialog = page.getByTestId('delete-section-dialog')
-    await expect(dialog).toBeVisible({ timeout: 5000 })
-    await expect(dialog).toContainText('Hapus Seksi')
+      // Tunggu API response
+      await page.waitForTimeout(2000)
 
-    // Klik Ya, Hapus
-    await page.getByTestId('confirm-delete-section-btn').click()
-
-    // Tunggu API response
-    await page.waitForTimeout(2000)
-
-    // Seksi hilang dari sidebar
-    await expect(page.locator('aside').getByText(tempSectionTitle)).not.toBeVisible({ timeout: 10000 })
-  })
+      // Seksi hilang dari sidebar
+      await expect(page.locator('aside').getByText(tempSectionTitle)).not.toBeVisible({
+        timeout: 10000,
+      })
+    },
+  )
 })
 
 // ── Test Suite: Access Control ─────────────────────────────────────────────
+
+import { test } from '@playwright/test'
 
 test.describe('Task 14.8: Creator Manage Page — Access Control', () => {
   test.use({ storageState: { cookies: [], origins: [] } })
@@ -365,7 +268,8 @@ test.describe('Task 14.8: Creator Manage Page — Access Control', () => {
     if (!isRedirected) {
       // Fallback: cek konten halaman
       const bodyText = await page.locator('body').textContent()
-      const isBlocked = bodyText?.toLowerCase().includes('sign') ||
+      const isBlocked =
+        bodyText?.toLowerCase().includes('sign') ||
         bodyText?.toLowerCase().includes('login') ||
         bodyText?.toLowerCase().includes('akses')
       expect(isBlocked).toBeTruthy()

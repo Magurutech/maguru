@@ -2,13 +2,26 @@
 
 import { useRef, useEffect, useState } from 'react'
 import {
-  Plus, ChevronDown, ChevronRight, Folder, FolderOpen,
-  FileText, MoreHorizontal, Edit, Trash2, Settings, GripVertical,
-  PanelLeftClose, PanelLeftOpen,
+  Plus,
+  ChevronDown,
+  ChevronRight,
+  Folder,
+  FolderOpen,
+  FileText,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Settings,
+  GripVertical,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from 'lucide-react'
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
-  DropdownMenuSeparator, DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
   DndContext,
@@ -25,14 +38,19 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useManageContext } from '../../../context/creator/ManageContext'
+import { useManageContext } from '../../../Context/creator/ManageContext'
 import type { ManagedLesson } from '@/features/cms/hooks/manage'
 
 // ── Sortable Lesson Item ───────────────────────────────────────────────────
 
 function SortableLessonItem({
-  lesson, isActive, openLessonMenuId, setOpenLessonMenuId,
-  onSelect, onEdit, onDelete,
+  lesson,
+  isActive,
+  openLessonMenuId,
+  setOpenLessonMenuId,
+  onSelect,
+  onEdit,
+  onDelete,
 }: {
   lesson: ManagedLesson
   isActive: boolean
@@ -42,8 +60,14 @@ function SortableLessonItem({
   onEdit: () => void
   onDelete: () => void
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: lesson.id })
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 }
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: lesson.id,
+  })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  }
 
   return (
     <div
@@ -66,7 +90,9 @@ function SortableLessonItem({
       </button>
       <FileText className="h-3.5 w-3.5 shrink-0 text-beige-400" />
       <span className="text-xs flex-1 truncate">{lesson.title}</span>
-      <div className={`items-center shrink-0 ${openLessonMenuId === lesson.id ? 'flex' : 'hidden group-hover:flex'}`}>
+      <div
+        className={`items-center shrink-0 ${openLessonMenuId === lesson.id ? 'flex' : 'hidden group-hover:flex'}`}
+      >
         <DropdownMenu
           open={openLessonMenuId === lesson.id}
           onOpenChange={(open) => setOpenLessonMenuId(open ? lesson.id : null)}
@@ -75,7 +101,9 @@ function SortableLessonItem({
             <button
               onClick={(e) => e.stopPropagation()}
               className={`p-1 rounded text-beige-400 hover:text-beige-700 transition-colors ${
-                openLessonMenuId === lesson.id ? 'bg-beige-200 text-beige-700' : 'hover:bg-beige-200'
+                openLessonMenuId === lesson.id
+                  ? 'bg-beige-200 text-beige-700'
+                  : 'hover:bg-beige-200'
               }`}
               title="Opsi pelajaran"
               data-testid={`lesson-menu-btn-${lesson.id}`}
@@ -84,12 +112,27 @@ function SortableLessonItem({
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" align="start" className="w-36">
-            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit() }} data-testid={`lesson-edit-btn-${lesson.id}`}>
-              <Edit className="h-3.5 w-3.5 mr-2" />Edit
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation()
+                onEdit()
+              }}
+              data-testid={`lesson-edit-btn-${lesson.id}`}
+            >
+              <Edit className="h-3.5 w-3.5 mr-2" />
+              Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onClick={(e) => { e.stopPropagation(); onDelete() }} data-testid={`lesson-delete-btn-${lesson.id}`}>
-              <Trash2 className="h-3.5 w-3.5 mr-2" />Hapus
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete()
+              }}
+              data-testid={`lesson-delete-btn-${lesson.id}`}
+            >
+              <Trash2 className="h-3.5 w-3.5 mr-2" />
+              Hapus
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -101,14 +144,39 @@ function SortableLessonItem({
 // ── Sortable Section Item ──────────────────────────────────────────────────
 
 function SortableSectionItem({
-  section, isExpanded, lessons, isActiveSection, isPending,
-  isMenuOpen, isEditing, editingSectionTitle, editInputRef,
-  openLessonMenuId, activeView, setOpenMenuId, setOpenLessonMenuId,
-  setEditingSectionTitle, onToggle, onEditKeyDown, onEditBlur,
-  onStartEdit, onAddLesson, onDeleteSection,
-  onSelectLesson, onEditLesson, onDeleteLesson, onLessonDragEnd, sensors,
+  section,
+  isExpanded,
+  lessons,
+  isActiveSection,
+  isPending,
+  isMenuOpen,
+  isEditing,
+  editingSectionTitle,
+  editInputRef,
+  openLessonMenuId,
+  activeView,
+  setOpenMenuId,
+  setOpenLessonMenuId,
+  setEditingSectionTitle,
+  onToggle,
+  onEditKeyDown,
+  onEditBlur,
+  onStartEdit,
+  onAddLesson,
+  onDeleteSection,
+  onSelectLesson,
+  onEditLesson,
+  onDeleteLesson,
+  onLessonDragEnd,
+  sensors,
 }: {
-  section: { id: string; title: string; description: string | null; order: number; lessonCount: number }
+  section: {
+    id: string
+    title: string
+    description: string | null
+    order: number
+    lessonCount: number
+  }
   isExpanded: boolean
   lessons: ManagedLesson[]
   isActiveSection: boolean
@@ -134,11 +202,21 @@ function SortableSectionItem({
   onLessonDragEnd: (event: DragEndEvent) => void
   sensors: ReturnType<typeof useSensors>
 }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.id })
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 }
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: section.id,
+  })
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  }
 
   return (
-    <div ref={setNodeRef} style={style} className={`mb-1 ${isPending ? 'opacity-60 pointer-events-none' : ''}`}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`mb-1 ${isPending ? 'opacity-60 pointer-events-none' : ''}`}
+    >
       <div
         className={`group flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors ${
           isActiveSection || isMenuOpen || isEditing ? 'bg-beige-100' : 'hover:bg-beige-50'
@@ -153,9 +231,21 @@ function SortableSectionItem({
         >
           <GripVertical className="h-3.5 w-3.5" />
         </button>
-        <button onClick={onToggle} className="flex items-center gap-1 shrink-0" tabIndex={isEditing ? -1 : 0}>
-          {isExpanded ? <ChevronDown className="h-3.5 w-3.5 text-beige-400" /> : <ChevronRight className="h-3.5 w-3.5 text-beige-400" />}
-          {isExpanded ? <FolderOpen className="h-3.5 w-3.5 text-beige-500" /> : <Folder className="h-3.5 w-3.5 text-beige-500" />}
+        <button
+          onClick={onToggle}
+          className="flex items-center gap-1 shrink-0"
+          tabIndex={isEditing ? -1 : 0}
+        >
+          {isExpanded ? (
+            <ChevronDown className="h-3.5 w-3.5 text-beige-400" />
+          ) : (
+            <ChevronRight className="h-3.5 w-3.5 text-beige-400" />
+          )}
+          {isExpanded ? (
+            <FolderOpen className="h-3.5 w-3.5 text-beige-500" />
+          ) : (
+            <Folder className="h-3.5 w-3.5 text-beige-500" />
+          )}
         </button>
         {isEditing ? (
           <input
@@ -170,14 +260,23 @@ function SortableSectionItem({
             data-testid={`section-edit-input-${section.id}`}
           />
         ) : (
-          <button onClick={onToggle} className="flex-1 min-w-0 text-left flex items-center gap-1" data-testid={`section-toggle-${section.id}`}>
+          <button
+            onClick={onToggle}
+            className="flex-1 min-w-0 text-left flex items-center gap-1"
+            data-testid={`section-toggle-${section.id}`}
+          >
             <span className="text-sm text-beige-800 font-medium truncate">{section.title}</span>
             <span className="text-xs text-beige-400 shrink-0 ml-auto">{section.lessonCount}</span>
           </button>
         )}
         {!isEditing && (
-          <div className={`items-center shrink-0 ${isMenuOpen ? 'flex' : 'hidden group-hover:flex'}`}>
-            <DropdownMenu open={isMenuOpen} onOpenChange={(open) => setOpenMenuId(open ? section.id : null)}>
+          <div
+            className={`items-center shrink-0 ${isMenuOpen ? 'flex' : 'hidden group-hover:flex'}`}
+          >
+            <DropdownMenu
+              open={isMenuOpen}
+              onOpenChange={(open) => setOpenMenuId(open ? section.id : null)}
+            >
               <DropdownMenuTrigger asChild>
                 <button
                   onClick={(e) => e.stopPropagation()}
@@ -189,15 +288,28 @@ function SortableSectionItem({
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="right" align="start" className="w-44">
-                <DropdownMenuItem onClick={onStartEdit} data-testid={`section-edit-btn-${section.id}`}>
-                  <Edit className="h-3.5 w-3.5 mr-2" />Edit
+                <DropdownMenuItem
+                  onClick={onStartEdit}
+                  data-testid={`section-edit-btn-${section.id}`}
+                >
+                  <Edit className="h-3.5 w-3.5 mr-2" />
+                  Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onAddLesson} data-testid={`section-add-lesson-btn-${section.id}`}>
-                  <Plus className="h-3.5 w-3.5 mr-2" />Tambah
+                <DropdownMenuItem
+                  onClick={onAddLesson}
+                  data-testid={`section-add-lesson-btn-${section.id}`}
+                >
+                  <Plus className="h-3.5 w-3.5 mr-2" />
+                  Tambah
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive" onClick={onDeleteSection} data-testid={`section-delete-btn-${section.id}`}>
-                  <Trash2 className="h-3.5 w-3.5 mr-2" />Hapus Seksi
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={onDeleteSection}
+                  data-testid={`section-delete-btn-${section.id}`}
+                >
+                  <Trash2 className="h-3.5 w-3.5 mr-2" />
+                  Hapus Seksi
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -206,8 +318,15 @@ function SortableSectionItem({
       </div>
       {isExpanded && (
         <div className="ml-6 mt-0.5 space-y-0.5">
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onLessonDragEnd}>
-            <SortableContext items={lessons.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={onLessonDragEnd}
+          >
+            <SortableContext
+              items={lessons.map((l) => l.id)}
+              strategy={verticalListSortingStrategy}
+            >
               {lessons.map((lesson) => (
                 <SortableLessonItem
                   key={lesson.id}
@@ -222,8 +341,12 @@ function SortableSectionItem({
               ))}
             </SortableContext>
           </DndContext>
-          <button onClick={onAddLesson} className="w-full flex items-center gap-1.5 px-2 py-1 rounded text-xs text-beige-400 hover:text-hijau-600 hover:bg-hijau-50 transition-colors">
-            <Plus className="h-3 w-3" />Tambah
+          <button
+            onClick={onAddLesson}
+            className="w-full flex items-center gap-1.5 px-2 py-1 rounded text-xs text-beige-400 hover:text-hijau-600 hover:bg-hijau-50 transition-colors"
+          >
+            <Plus className="h-3 w-3" />
+            Tambah
           </button>
         </div>
       )}
@@ -235,12 +358,25 @@ function SortableSectionItem({
 
 export function ManageSidebar() {
   const {
-    sections, lessonsMap, expandedSections, activeView,
-    toggleSection, setActiveView,
-    isAddingSection, newSectionTitle, setNewSectionTitle,
-    startAddingSection, cancelAddingSection, confirmAddSection, updateSectionTitle,
-    handleDeleteSection, openAddLesson, openEditLesson, handleDeleteLesson,
-    reorderSections, reorderLessons,
+    sections,
+    lessonsMap,
+    expandedSections,
+    activeView,
+    toggleSection,
+    setActiveView,
+    isAddingSection,
+    newSectionTitle,
+    setNewSectionTitle,
+    startAddingSection,
+    cancelAddingSection,
+    confirmAddSection,
+    updateSectionTitle,
+    handleDeleteSection,
+    openAddLesson,
+    openEditLesson,
+    handleDeleteLesson,
+    reorderSections,
+    reorderLessons,
   } = useManageContext()
 
   const inlineInputRef = useRef<HTMLInputElement>(null)
@@ -253,30 +389,56 @@ export function ManageSidebar() {
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
 
-  useEffect(() => { if (isAddingSection) inlineInputRef.current?.focus() }, [isAddingSection])
-  useEffect(() => { if (editingSectionId) editInputRef.current?.select() }, [editingSectionId])
+  useEffect(() => {
+    if (isAddingSection) inlineInputRef.current?.focus()
+  }, [isAddingSection])
+  useEffect(() => {
+    if (editingSectionId) editInputRef.current?.select()
+  }, [editingSectionId])
 
   const handleInlineKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') { e.preventDefault(); confirmAddSection() }
-    if (e.key === 'Escape') { e.preventDefault(); cancelAddingSection() }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      confirmAddSection()
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      cancelAddingSection()
+    }
   }
   const handleInlineBlur = () => {
     if (newSectionTitle.trim()) confirmAddSection()
     else cancelAddingSection()
   }
   const startEditSection = (section: { id: string; title: string }) => {
-    setOpenMenuId(null); setEditingSectionId(section.id); setEditingSectionTitle(section.title)
+    setOpenMenuId(null)
+    setEditingSectionId(section.id)
+    setEditingSectionTitle(section.title)
   }
-  const cancelEditSection = () => { setEditingSectionId(null); setEditingSectionTitle('') }
+  const cancelEditSection = () => {
+    setEditingSectionId(null)
+    setEditingSectionTitle('')
+  }
   const confirmEditSection = async (sectionId: string, oldTitle: string) => {
     const title = editingSectionTitle.trim()
-    setEditingSectionId(null); setEditingSectionTitle('')
+    setEditingSectionId(null)
+    setEditingSectionTitle('')
     if (!title || title === oldTitle) return
     await updateSectionTitle(sectionId, title, oldTitle)
   }
-  const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, sectionId: string, oldTitle: string) => {
-    if (e.key === 'Enter') { e.preventDefault(); confirmEditSection(sectionId, oldTitle) }
-    if (e.key === 'Escape') { e.preventDefault(); cancelEditSection() }
+  const handleEditKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    sectionId: string,
+    oldTitle: string,
+  ) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      confirmEditSection(sectionId, oldTitle)
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      cancelEditSection()
+    }
   }
 
   const handleSectionDragEnd = (event: DragEndEvent) => {
@@ -301,11 +463,13 @@ export function ManageSidebar() {
   }
 
   return (
-    <aside className={`
+    <aside
+      className={`
       relative bg-white border-r border-beige-200 flex flex-col shrink-0 h-full
       transition-all duration-300 ease-in-out
       ${sidebarOpen ? 'w-72' : 'w-12'}
-    `}>
+    `}
+    >
       {/* Toggle button */}
       <button
         onClick={() => setSidebarOpen((v) => !v)}
@@ -313,10 +477,11 @@ export function ManageSidebar() {
         aria-label={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
         title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
       >
-        {sidebarOpen
-          ? <PanelLeftClose className="h-3.5 w-3.5 text-beige-500" />
-          : <PanelLeftOpen className="h-3.5 w-3.5 text-beige-500" />
-        }
+        {sidebarOpen ? (
+          <PanelLeftClose className="h-3.5 w-3.5 text-beige-500" />
+        ) : (
+          <PanelLeftOpen className="h-3.5 w-3.5 text-beige-500" />
+        )}
       </button>
 
       {/* Collapsed state — just icon */}
@@ -337,7 +502,9 @@ export function ManageSidebar() {
               onClick={() => setActiveView({ type: 'overview' })}
               data-testid="sidebar-overview-btn"
               className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
-                activeView.type === 'overview' ? 'bg-merah-50 text-merah-700 font-medium' : 'text-beige-700 hover:bg-beige-50'
+                activeView.type === 'overview'
+                  ? 'bg-merah-50 text-merah-700 font-medium'
+                  : 'text-beige-700 hover:bg-beige-50'
               }`}
             >
               <Settings className="h-4 w-4 shrink-0" />
@@ -350,15 +517,24 @@ export function ManageSidebar() {
               </p>
             )}
 
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleSectionDragEnd}>
-              <SortableContext items={sections.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleSectionDragEnd}
+            >
+              <SortableContext
+                items={sections.map((s) => s.id)}
+                strategy={verticalListSortingStrategy}
+              >
                 {sections.map((section) => (
                   <SortableSectionItem
                     key={section.id}
                     section={section}
                     isExpanded={expandedSections.has(section.id)}
                     lessons={lessonsMap[section.id] || []}
-                    isActiveSection={activeView.type === 'section' && activeView.sectionId === section.id}
+                    isActiveSection={
+                      activeView.type === 'section' && activeView.sectionId === section.id
+                    }
                     isPending={section.id.startsWith('temp-')}
                     isMenuOpen={openMenuId === section.id}
                     isEditing={editingSectionId === section.id}
@@ -375,7 +551,9 @@ export function ManageSidebar() {
                     onStartEdit={() => startEditSection(section)}
                     onAddLesson={() => openAddLesson(section.id)}
                     onDeleteSection={() => handleDeleteSection(section.id)}
-                    onSelectLesson={(lessonId) => setActiveView({ type: 'lesson', sectionId: section.id, lessonId })}
+                    onSelectLesson={(lessonId) =>
+                      setActiveView({ type: 'lesson', sectionId: section.id, lessonId })
+                    }
                     onEditLesson={(lesson) => openEditLesson(lesson, section.id)}
                     onDeleteLesson={(lessonId) => handleDeleteLesson(section.id, lessonId)}
                     onLessonDragEnd={handleLessonDragEnd(section.id)}

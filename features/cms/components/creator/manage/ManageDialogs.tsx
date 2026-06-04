@@ -1,12 +1,24 @@
 import { Trash2 } from 'lucide-react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { useManageContext } from '../../../context/creator/ManageContext'
+import { useManageContext } from '../../../Context/creator/ManageContext'
 
 export function ManageDialogs() {
   const {
-    pendingDeleteSectionId, confirmDeleteSection, cancelDeleteSection, sections,
-    pendingDeleteLesson, confirmDeleteLesson, cancelDeleteLesson,
+    pendingDeleteSectionId,
+    confirmDeleteSection,
+    cancelDeleteSection,
+    sections,
+    pendingDeleteLesson,
+    confirmDeleteLesson,
+    cancelDeleteLesson,
   } = useManageContext()
 
   const sectionToDelete = sections.find((s) => s.id === pendingDeleteSectionId)
@@ -14,7 +26,10 @@ export function ManageDialogs() {
   return (
     <>
       {/* Delete Section Dialog */}
-      <Dialog open={!!pendingDeleteSectionId} onOpenChange={(open) => !open && cancelDeleteSection()}>
+      <Dialog
+        open={!!pendingDeleteSectionId}
+        onOpenChange={(open) => !open && cancelDeleteSection()}
+      >
         <DialogContent className="max-w-sm" data-testid="delete-section-dialog">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -22,13 +37,23 @@ export function ManageDialogs() {
               Hapus Seksi
             </DialogTitle>
             <DialogDescription>
-              Hapus seksi{sectionToDelete ? ` "${sectionToDelete.title}"` : ''}?
-              Semua pelajaran di dalamnya juga akan dihapus dan tidak bisa dikembalikan.
+              Hapus seksi{sectionToDelete ? ` "${sectionToDelete.title}"` : ''}? Semua pelajaran di
+              dalamnya juga akan dihapus dan tidak bisa dikembalikan.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={cancelDeleteSection} data-testid="cancel-delete-section-btn">Batal</Button>
-            <Button variant="destructive" onClick={confirmDeleteSection} data-testid="confirm-delete-section-btn">
+            <Button
+              variant="outline"
+              onClick={cancelDeleteSection}
+              data-testid="cancel-delete-section-btn"
+            >
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteSection}
+              data-testid="confirm-delete-section-btn"
+            >
               Ya, Hapus
             </Button>
           </DialogFooter>
@@ -49,8 +74,18 @@ export function ManageDialogs() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={cancelDeleteLesson} data-testid="cancel-delete-lesson-btn">Batal</Button>
-            <Button variant="destructive" onClick={confirmDeleteLesson} data-testid="confirm-delete-lesson-btn">
+            <Button
+              variant="outline"
+              onClick={cancelDeleteLesson}
+              data-testid="cancel-delete-lesson-btn"
+            >
+              Batal
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteLesson}
+              data-testid="confirm-delete-lesson-btn"
+            >
               Ya, Hapus
             </Button>
           </DialogFooter>

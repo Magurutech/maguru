@@ -17,7 +17,7 @@ import {
   ManageContent,
   ManageDialogs,
 } from '@/features/cms/components/creator/manage'
-import { ManageProvider, useManageContext} from '@/features/cms/context/creator/ManageContext'
+import { ManageProvider, useManageContext } from '@/features/cms/Context/creator/ManageContext'
 
 function ManagePageInner() {
   const router = useRouter()

@@ -8,10 +8,7 @@ import { LessonViewer } from '@/features/cms/components/student/LessonViewer'
 import { ProgressBar } from '@/features/cms/components/student/ProgressBar'
 import { LessonNavigation } from '@/features/cms/components/student/LessonNavigation'
 import { LearnHeader } from '@/features/cms/components/student/LearnHeader'
-import {
-  LearnProvider,
-  useLearnContext,
-} from '@/features/cms/context/student/LearnContext'
+import { LearnProvider, useLearnContext } from '@/features/cms/Context/student/LearnContext'
 
 /**
  * Student Learn Page
@@ -71,9 +68,7 @@ function LearnPageInner() {
   }
 
   const allLessons = getAllLessons(sections)
-  const currentIndex = currentLesson
-    ? allLessons.findIndex((l) => l.id === currentLesson.id)
-    : -1
+  const currentIndex = currentLesson ? allLessons.findIndex((l) => l.id === currentLesson.id) : -1
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined
   const nextLesson =
     currentIndex >= 0 && currentIndex < allLessons.length - 1
@@ -100,62 +95,68 @@ function LearnPageInner() {
 
         <div className="flex flex-1 overflow-hidden">
           <CourseNavigation
-          sections={sections.map((s) => ({
-            id: s.id,
-            title: s.title,
-            lessons: (lessonsMap[s.id] || []).map((l) => ({
-              id: l.id,
-              title: l.title,
-              completed: completedLessonIds.has(l.id),
-            })),
-          }))}
-          currentLessonId={currentLesson?.id || ''}
-          onLessonClick={handleLessonClick}
-        />
+            sections={sections.map((s) => ({
+              id: s.id,
+              title: s.title,
+              lessons: (lessonsMap[s.id] || []).map((l) => ({
+                id: l.id,
+                title: l.title,
+                completed: completedLessonIds.has(l.id),
+              })),
+            }))}
+            currentLessonId={currentLesson?.id || ''}
+            onLessonClick={handleLessonClick}
+          />
 
-        <main className="flex-1 flex flex-col overflow-hidden">
-          {/* Progress bar */}
-          <div className="border-b border-beige-300 bg-beige-100 px-6 py-3">
-            <ProgressBar
-              percentage={progress.percentage}
-              completedLessons={progress.completedLessons}
-              totalLessons={progress.totalLessons}
-            />
-          </div>
+          <main className="flex-1 flex flex-col overflow-hidden">
+            {/* Progress bar */}
+            <div className="border-b border-beige-300 bg-beige-100 px-6 py-3">
+              <ProgressBar
+                percentage={progress.percentage}
+                completedLessons={progress.completedLessons}
+                totalLessons={progress.totalLessons}
+              />
+            </div>
 
-          {/* Lesson area */}
-          <div className="flex-1 overflow-y-auto p-6 bg-beige-50" data-testid="lesson-area">
-            {lessonLoading ? (
-              <div className="space-y-4 animate-pulse max-w-4xl mx-auto" data-testid="lesson-loading">
-                <div className="h-8 bg-beige-200 rounded w-2/3" />
-                <div className="h-4 bg-beige-200 rounded w-full" />
-                <div className="h-4 bg-beige-200 rounded w-5/6" />
-                <div className="h-32 bg-beige-200 rounded w-full mt-4" />
-              </div>
-            ) : lessonError ? (
-              <div className="text-center space-y-3 py-12 max-w-4xl mx-auto" data-testid="lesson-error">
-                <p className="text-merah-600">{lessonError}</p>
-              </div>
-            ) : currentLesson ? (
-              <div className="w-full max-w-5xl mx-auto">
-                <LessonViewer lesson={currentLesson} />
-                <div className="mt-8">
-                  <LessonNavigation
-                    previousLesson={prevLesson}
-                    nextLesson={nextLesson}
-                    onNavigate={handleLessonClick}
-                    onMarkComplete={() => markComplete(currentLesson.id)}
-                    isCompleted={completedLessonIds.has(currentLesson.id)}
-                  />
+            {/* Lesson area */}
+            <div className="flex-1 overflow-y-auto p-6 bg-beige-50" data-testid="lesson-area">
+              {lessonLoading ? (
+                <div
+                  className="space-y-4 animate-pulse max-w-4xl mx-auto"
+                  data-testid="lesson-loading"
+                >
+                  <div className="h-8 bg-beige-200 rounded w-2/3" />
+                  <div className="h-4 bg-beige-200 rounded w-full" />
+                  <div className="h-4 bg-beige-200 rounded w-5/6" />
+                  <div className="h-32 bg-beige-200 rounded w-full mt-4" />
                 </div>
-              </div>
-            ) : (
-              <div className="text-center text-beige-500 py-12">
-                Pilih pelajaran untuk mulai belajar
-              </div>
-            )}
-          </div>
-        </main>
+              ) : lessonError ? (
+                <div
+                  className="text-center space-y-3 py-12 max-w-4xl mx-auto"
+                  data-testid="lesson-error"
+                >
+                  <p className="text-merah-600">{lessonError}</p>
+                </div>
+              ) : currentLesson ? (
+                <div className="w-full max-w-5xl mx-auto">
+                  <LessonViewer lesson={currentLesson} />
+                  <div className="mt-8">
+                    <LessonNavigation
+                      previousLesson={prevLesson}
+                      nextLesson={nextLesson}
+                      onNavigate={handleLessonClick}
+                      onMarkComplete={() => markComplete(currentLesson.id)}
+                      isCompleted={completedLessonIds.has(currentLesson.id)}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center text-beige-500 py-12">
+                  Pilih pelajaran untuk mulai belajar
+                </div>
+              )}
+            </div>
+          </main>
         </div>
       </div>
     </SidebarProvider>
@@ -170,7 +171,9 @@ export default function LearnPage() {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [])
 
   return (

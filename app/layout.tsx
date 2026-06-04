@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           >
             {children}
-            <Toaster position="top-center" richColors closeButton />
+            <Toaster position="bottom-right" richColors closeButton />
           </UserRoleProvider>
         </Providers>
       </body>
