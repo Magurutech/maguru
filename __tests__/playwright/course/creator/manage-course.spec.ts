@@ -8,52 +8,17 @@
  * Task 17.4 (extended)
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { courseTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
 
-test.describe('Course Manage Page — Authenticated Creator', () => {
-  let managePath: string
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-    await clerk.signIn({
-      page,
-      signInParams: {
-        strategy: 'password',
-        identifier: testUsers.creatorUser.identifier,
-        password: testUsers.creatorUser.password,
-      },
-    })
-
-    // Navigate to dashboard to find a course to manage
-    await page.goto('/creator')
+courseTest.describe('Course Manage Page — Authenticated Creator', () => {
+  courseTest.beforeEach(async ({ page, testCourse }) => {
+    await page.goto(`/creator/courses/${testCourse.slug}/manage`)
     await waitForPageLoad(page)
-
-    const firstItem = page.getByTestId('creator-course-item').first()
-    const count = await page.getByTestId('creator-course-item').count()
-
-    if (count === 0) {
-      managePath = ''
-      return
-    }
-
-    // Ambil slug dari href link (data-course-id berisi ID bukan slug)
-    const href = await firstItem.getAttribute('href')
-    if (!href) { managePath = ''; return }
-    const match = href.match(/\/creator\/courses\/([^/]+)\/manage/)
-    managePath = match ? `/creator/courses/${match[1]}/manage` : ''
   })
 
-  test('manage page header shows course info and publish button', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('manage page header shows course info and publish button', async ({ page }) => {
 
     // Course title in header
     await expect(page.locator('header h1')).toBeVisible()
@@ -64,14 +29,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     expect(btnText).toMatch(/Publish|Unpublish/)
   })
 
-  test('publish/unpublish toggle changes status without full reload', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('publish/unpublish toggle changes status without full reload', async ({ page }) => {
 
     const toggleBtn = page.getByTestId('publish-toggle-btn')
     const initialText = await toggleBtn.textContent()
@@ -94,14 +52,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await expect(toggleBtn).not.toContainText('Menyimpan...', { timeout: 10000 })
   })
 
-  test('sidebar overview button shows course overview panel', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('sidebar overview button shows course overview panel', async ({ page }) => {
 
     const overviewBtn = page.getByTestId('sidebar-overview-btn')
     await expect(overviewBtn).toBeVisible()
@@ -114,14 +65,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await expect(page.locator('main')).toContainText('Deskripsi')
   })
 
-  test('+ Seksi button opens section creation dialog', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('+ Seksi button opens section creation dialog', async ({ page }) => {
 
     const addSectionBtn = page.getByTestId('add-section-btn')
     await expect(addSectionBtn).toBeVisible({ timeout: 10000 })
@@ -131,14 +75,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await expect(page.getByTestId('inline-section-input')).toBeVisible({ timeout: 5000 })
   })
 
-  test('back button redirects to /creator/courses', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('back button redirects to /creator/courses', async ({ page }) => {
 
     const backBtn = page.getByTestId('back-to-courses-btn')
     await expect(backBtn).toBeVisible({ timeout: 10000 })
@@ -148,14 +85,7 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
     await expect(page).toHaveURL('/creator/courses')
   })
 
-  test('section expand/collapse in sidebar', async ({ page }) => {
-    if (!managePath) {
-      console.log('ℹ️ No courses available, skipping test')
-      return
-    }
-
-    await page.goto(managePath)
-    await waitForPageLoad(page)
+  courseTest('section expand/collapse in sidebar', async ({ page }) => {
 
     // Check if there are sections
     const sectionToggleBtns = page.locator('aside nav button').filter({ hasNotText: 'Overview Kursus' })
@@ -178,6 +108,8 @@ test.describe('Course Manage Page — Authenticated Creator', () => {
 })
 
 // ─── Access Control ───────────────────────────────────────────────────────────
+
+import { test } from '@playwright/test'
 
 test.describe('Course Manage Page — Access Control', () => {
   test.use({ storageState: { cookies: [], origins: [] } })

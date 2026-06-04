@@ -109,6 +109,8 @@ Gunakan body ini untuk semua request yang membutuhkan lesson content:
 
 > **Catatan struktur:** `content` adalah wrapper object dengan `version`, `lastEdit`, dan `content` (Tiptap doc). Bukan flat object.
 
+> **Catatan version:** Client selalu mengirim `version: 1`. Untuk CREATE, server akan set version = 1. Untuk UPDATE, server akan membaca version saat ini dari database dan increment otomatis (version + 1). Client tidak perlu track version number.
+
 ---
 
 ## Test Scenarios & Checklist

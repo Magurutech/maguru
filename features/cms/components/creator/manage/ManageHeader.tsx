@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Globe, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { useManageContext } from '../../../context/creator/ManageContext'
+import { useManageContext } from '../../../Context/creator/ManageContext'
 
 export function ManageHeader() {
   const router = useRouter()

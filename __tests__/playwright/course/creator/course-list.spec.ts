@@ -7,28 +7,17 @@
  * Task 17.x
  */
 
-import { test, expect } from '@playwright/test'
-import { clerk } from '@clerk/testing/playwright'
-import { testUsers } from '../../fixtures/test-users'
+import { expect } from '@playwright/test'
+import { courseTest } from '../../fixtures'
 import { waitForPageLoad } from '../../utils/test-helpers'
 
-test.describe('Creator Course List Page — Authenticated Creator', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/')
-    await clerk.signIn({
-      page,
-      signInParams: {
-        strategy: 'password',
-        identifier: testUsers.creatorUser.identifier,
-        password: testUsers.creatorUser.password,
-      },
-    })
-  })
-
-  test('page loads with correct heading and stats', async ({ page }) => {
+courseTest.describe('Creator Course List Page — Authenticated Creator', () => {
+  courseTest.beforeEach(async ({ page }) => {
     await page.goto('/creator/courses')
     await waitForPageLoad(page)
+  })
 
+  courseTest('page loads with correct heading and stats', async ({ page }) => {
     // Tunggu loading skeleton selesai — h1 muncul setelah role check + data fetch
     await page.waitForSelector('h1', { timeout: 15000 })
 
@@ -40,57 +29,38 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await expect(page.locator('body')).toContainText(/draft/)
   })
 
-  test('course grid shows cards when courses exist', async ({ page }) => {
-    await page.goto('/creator/courses')
-    await waitForPageLoad(page)
+  courseTest(
+    'course grid shows cards when courses exist',
+    async ({ page, testCourse: _testCourse }) => {
+      // Wait for data to load
+      await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', {
+        timeout: 15000,
+      })
 
-    // Wait for data to load
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+      // Since we have a course from fixture, grid should be visible
+      const courseGrid = page.getByTestId('course-grid')
+      await expect(courseGrid).toBeVisible()
 
-    const emptyState = page.getByTestId('empty-state')
-    const hasEmpty = await emptyState.isVisible().catch(() => false)
+      const cards = courseGrid.getByTestId('course-card')
+      const count = await cards.count()
+      expect(count).toBeGreaterThan(0)
+    },
+  )
 
-    if (hasEmpty) {
-      console.log('ℹ️ Creator has no courses, skipping grid test')
-      return
-    }
-
-    const courseGrid = page.getByTestId('course-grid')
-    await expect(courseGrid).toBeVisible()
-
-    const cards = courseGrid.getByTestId('course-card')
-    const count = await cards.count()
-    expect(count).toBeGreaterThan(0)
-  })
-
-  test('"Manage" button on card redirects to manage page', async ({ page }) => {
-    await page.goto('/creator/courses')
-    await waitForPageLoad(page)
-
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
-
-    const emptyState = page.getByTestId('empty-state')
-    const hasEmpty = await emptyState.isVisible().catch(() => false)
-
-    if (hasEmpty) {
-      console.log('ℹ️ Creator has no courses, skipping manage button test')
-      return
-    }
+  courseTest('"Manage" button on card redirects to manage page', async ({ page, testCourse }) => {
+    await page.waitForSelector('[data-testid="course-grid"]', { timeout: 15000 })
 
     // Klik link Manage langsung (lebih reliable dari button di dalam Link)
-    const manageLink = page.locator('a[href*="/creator/courses/"][href*="/manage"]').first()
+    const manageLink = page.locator(`a[href*="/creator/courses/${testCourse.slug}/manage"]`).first()
     await expect(manageLink).toBeVisible({ timeout: 10000 })
     await manageLink.click()
 
-    await page.waitForURL(/\/creator\/courses\/.+\/manage/, { timeout: 15000 })
-    expect(page.url()).toMatch(/\/creator\/courses\/.+\/manage/)
+    await page.waitForURL(`/creator/courses/${testCourse.slug}/manage`, { timeout: 15000 })
+    expect(page.url()).toContain(`/creator/courses/${testCourse.slug}/manage`)
   })
 
-  test('"Buat Kursus Baru" button redirects to create page', async ({ page }) => {
-    await page.goto('/creator/courses')
-    await waitForPageLoad(page)
-
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+  courseTest('"Buat Kursus Baru" button redirects to create page', async ({ page }) => {
+    await page.waitForSelector('[data-testid="course-grid"]', { timeout: 15000 })
 
     const createBtn = page.getByRole('link', { name: /buat kursus baru/i }).first()
     await expect(createBtn).toBeVisible({ timeout: 10000 })
@@ -100,36 +70,9 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
     await expect(page).toHaveURL('/creator/courses/create')
   })
 
-  test('empty state shows "Buat Kursus Pertama" CTA', async ({ page }) => {
-    await page.goto('/creator/courses')
-    await waitForPageLoad(page)
-
-    // Wait for data to load
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
-
-    const emptyState = page.getByTestId('empty-state')
-    const hasEmpty = await emptyState.isVisible().catch(() => false)
-
-    if (!hasEmpty) {
-      console.log('ℹ️ Creator has courses, skipping empty state test')
-      return
-    }
-
-    await expect(emptyState).toContainText(/buat kursus pertama/i)
-    const ctaBtn = emptyState.getByRole('link', { name: /buat kursus pertama/i })
-    await expect(ctaBtn).toBeVisible()
-    await ctaBtn.click()
-
-    await page.waitForURL('/creator/courses/create', { timeout: 5000 })
-    await expect(page).toHaveURL('/creator/courses/create')
-  })
-
-  test('back button redirects to /creator dashboard', async ({ page }) => {
-    await page.goto('/creator/courses')
-    await waitForPageLoad(page)
-
+  courseTest('back button redirects to /creator dashboard', async ({ page }) => {
     // Wait for data to load — back button renders after loading skeleton resolves
-    await page.waitForSelector('[data-testid="course-grid"], [data-testid="empty-state"]', { timeout: 15000 })
+    await page.waitForSelector('[data-testid="course-grid"]', { timeout: 15000 })
 
     const backBtn = page.getByTestId('back-to-dashboard-btn')
     await expect(backBtn).toBeVisible({ timeout: 10000 })
@@ -141,6 +84,8 @@ test.describe('Creator Course List Page — Authenticated Creator', () => {
 })
 
 // ─── Access Control ───────────────────────────────────────────────────────────
+
+import { test } from '@playwright/test'
 
 test.describe('Creator Course List Page — Access Control', () => {
   test.use({ storageState: { cookies: [], origins: [] } })

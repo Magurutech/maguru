@@ -31,7 +31,7 @@ export class LessonService {
     sectionId: string,
     input: CreateLessonInput,
     userId?: string,
-    courseId?: string
+    courseId?: string,
   ): Promise<Lesson> {
     // Validate title
     if (!input.title || input.title.trim().length === 0) {
@@ -54,7 +54,7 @@ export class LessonService {
       validateLessonContent(input.content)
     } catch (error) {
       throw new Error(
-        `Invalid lesson content: ${error instanceof Error ? error.message : 'Unknown error'}`
+        `Invalid lesson content: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
     }
 
@@ -85,27 +85,52 @@ export class LessonService {
         _max: { order: true },
       })
       order = (maxOrderResult._max.order ?? 0) + 1
-    } else {
-      // Order already validated above — just check for duplicates
-      const existingLesson = await prisma.lessons.findUnique({
-        where: { sectionId_order: { sectionId, order } },
-      })
-      if (existingLesson) {
-        throw new Error(`Lesson with order ${order} already exists in this section`)
-      }
     }
 
-    // Create lesson
-    const lesson = await prisma.lessons.create({
-      data: {
-        id: crypto.randomUUID(),
-        sectionId,
-        title: input.title.trim(),
-        content: input.content as unknown as never,
-        order,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    // Use transaction to handle order conflicts with shift logic
+    // Requirements: Order conflict handling with atomic shift
+    const lesson = await prisma.$transaction(async (tx) => {
+      // If order is explicitly provided, shift existing lessons if needed
+      if (input.order !== undefined && input.order !== null) {
+        const existingLesson = await tx.lessons.findUnique({
+          where: { sectionId_order: { sectionId, order } },
+        })
+
+        if (existingLesson) {
+          // ✅ FIX: Shift in descending order to avoid unique constraint violations
+          // Get all lessons that need to be shifted (order >= input.order)
+          const lessonsToShift = await tx.lessons.findMany({
+            where: {
+              sectionId,
+              order: { gte: order },
+            },
+            orderBy: { order: 'desc' }, // Process from highest to lowest
+            select: { id: true, order: true },
+          })
+
+          // Update each lesson individually in descending order
+          // This prevents temporary duplicates that cause unique constraint violations
+          for (const lesson of lessonsToShift) {
+            await tx.lessons.update({
+              where: { id: lesson.id },
+              data: { order: lesson.order + 1 },
+            })
+          }
+        }
+      }
+
+      // Create lesson with the specified order
+      return await tx.lessons.create({
+        data: {
+          id: crypto.randomUUID(),
+          sectionId,
+          title: input.title.trim(),
+          content: input.content as unknown as never,
+          order,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
     })
 
     return lesson
@@ -146,9 +171,7 @@ export class LessonService {
    * Selects only needed fields (excludes heavy `content` JSON).
    * Requirements: 2.2, 8.3
    */
-  async getLessonsBySectionWithValidation(
-    sectionId: string
-  ): Promise<LessonWithPreview[] | null> {
+  async getLessonsBySectionWithValidation(sectionId: string): Promise<LessonWithPreview[] | null> {
     const section = await prisma.sections.findUnique({
       where: { id: sectionId },
       relationLoadStrategy: 'join',
@@ -215,11 +238,7 @@ export class LessonService {
    * Requirements: 2.4, 2.6, 2.7, 2.8, 3.2, 9.2, 9.3
    * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
    */
-  async updateLesson(
-    lessonId: string,
-    input: UpdateLessonInput,
-    userId?: string
-  ): Promise<Lesson> {
+  async updateLesson(lessonId: string, input: UpdateLessonInput, userId?: string): Promise<Lesson> {
     // Check if lesson exists and get courseId
     const existingLesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
@@ -236,10 +255,7 @@ export class LessonService {
 
     // Check course ownership using Course Service
     if (userId) {
-      const hasOwnership = await checkCourseOwnership(
-        existingLesson.sections.courseId,
-        userId
-      )
+      const hasOwnership = await checkCourseOwnership(existingLesson.sections.courseId, userId)
       if (!hasOwnership) {
         throw new Error('Unauthorized: You do not own this course')
       }
@@ -261,24 +277,6 @@ export class LessonService {
       if (!Number.isInteger(input.order) || input.order < 1) {
         throw new Error('Lesson order must be a positive integer')
       }
-
-      // Check for duplicate order (if order is changing)
-      if (input.order !== existingLesson.order) {
-        const duplicateLesson = await prisma.lessons.findUnique({
-          where: {
-            sectionId_order: {
-              sectionId: existingLesson.sectionId,
-              order: input.order,
-            },
-          },
-        })
-
-        if (duplicateLesson) {
-          throw new Error(
-            `Lesson with order ${input.order} already exists in this section`
-          )
-        }
-      }
     }
 
     // Validate and increment version if content is updated
@@ -288,12 +286,12 @@ export class LessonService {
         validateLessonContent(input.content)
       } catch (error) {
         throw new Error(
-          `Invalid lesson content: ${error instanceof Error ? error.message : 'Unknown error'}`
+          `Invalid lesson content: ${error instanceof Error ? error.message : 'Unknown error'}`,
         )
       }
 
       const currentContent = existingLesson.content as unknown as LessonContent
-      
+
       // Increment version and update lastEdit
       updatedContent = {
         ...input.content,
@@ -302,15 +300,82 @@ export class LessonService {
       }
     }
 
-    // Update lesson
-    const updatedLesson = await prisma.lessons.update({
-      where: { id: lessonId },
-      data: {
-        title: input.title?.trim(),
-        content: updatedContent as unknown as never,
-        order: input.order,
-        updatedAt: new Date(),
-      },
+    // Use transaction to handle order conflicts with shift logic
+    // Requirements: Order conflict handling with atomic shift
+    const updatedLesson = await prisma.$transaction(async (tx) => {
+      // If order is changing and conflicts exist, shift other lessons
+      if (input.order !== undefined && input.order !== existingLesson.order) {
+        const duplicateLesson = await tx.lessons.findUnique({
+          where: {
+            sectionId_order: {
+              sectionId: existingLesson.sectionId,
+              order: input.order,
+            },
+          },
+        })
+
+        if (duplicateLesson) {
+          // Determine shift direction
+          const movingUp = input.order < existingLesson.order
+
+          if (movingUp) {
+            // ✅ FIX: Moving up - shift in descending order to avoid conflicts
+            // Get lessons in range [newOrder, oldOrder) ordered by order DESC
+            const lessonsToShift = await tx.lessons.findMany({
+              where: {
+                sectionId: existingLesson.sectionId,
+                order: {
+                  gte: input.order,
+                  lt: existingLesson.order,
+                },
+              },
+              orderBy: { order: 'desc' },
+              select: { id: true, order: true },
+            })
+
+            // Update each lesson individually in descending order
+            for (const lesson of lessonsToShift) {
+              await tx.lessons.update({
+                where: { id: lesson.id },
+                data: { order: lesson.order + 1 },
+              })
+            }
+          } else {
+            // ✅ FIX: Moving down - shift in ascending order to avoid conflicts
+            // Get lessons in range (oldOrder, newOrder] ordered by order ASC
+            const lessonsToShift = await tx.lessons.findMany({
+              where: {
+                sectionId: existingLesson.sectionId,
+                order: {
+                  gt: existingLesson.order,
+                  lte: input.order,
+                },
+              },
+              orderBy: { order: 'asc' },
+              select: { id: true, order: true },
+            })
+
+            // Update each lesson individually in ascending order
+            for (const lesson of lessonsToShift) {
+              await tx.lessons.update({
+                where: { id: lesson.id },
+                data: { order: lesson.order - 1 },
+              })
+            }
+          }
+        }
+      }
+
+      // Update the lesson
+      return await tx.lessons.update({
+        where: { id: lessonId },
+        data: {
+          title: input.title?.trim(),
+          content: updatedContent as unknown as never,
+          order: input.order,
+          updatedAt: new Date(),
+        },
+      })
     })
 
     return updatedLesson
@@ -321,10 +386,7 @@ export class LessonService {
    * Requirements: 2.5, 2.7, 2.8, 12.7
    * Authorization: Uses Course Service (Requirements: 0.5, 0.8)
    */
-  async deleteLesson(
-    lessonId: string,
-    userId?: string
-  ): Promise<DeleteLessonResult> {
+  async deleteLesson(lessonId: string, userId?: string): Promise<DeleteLessonResult> {
     // Single query: get only what's needed for auth check
     const existingLesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
@@ -340,10 +402,7 @@ export class LessonService {
     }
 
     if (userId) {
-      const hasOwnership = await checkCourseOwnership(
-        existingLesson.sections.courseId,
-        userId
-      )
+      const hasOwnership = await checkCourseOwnership(existingLesson.sections.courseId, userId)
       if (!hasOwnership) {
         throw new Error('Unauthorized: You do not own this course')
       }
@@ -366,10 +425,7 @@ export class LessonService {
    * Check if a lesson belongs to a specific section
    * Helper method for authorization
    */
-  async verifyLessonBelongsToSection(
-    lessonId: string,
-    sectionId: string
-  ): Promise<boolean> {
+  async verifyLessonBelongsToSection(lessonId: string, sectionId: string): Promise<boolean> {
     const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       select: { sectionId: true },
@@ -401,26 +457,26 @@ export class LessonService {
   extractContentPreview(content: LessonContent): string {
     const extractText = (nodes: TiptapNode[]): string => {
       let text = ''
-      
+
       for (const node of nodes) {
         if (node.type === 'text') {
           text += node.text
         } else if ('content' in node && node.content) {
           text += extractText(node.content as TiptapNode[])
         }
-        
+
         // Add space between nodes
         if (text && !text.endsWith(' ')) {
           text += ' '
         }
       }
-      
+
       return text
     }
 
     const plainText = extractText(content.content.content || [])
     const trimmed = plainText.trim()
-    
+
     // Return first 200 characters
     return trimmed.length > 200 ? trimmed.substring(0, 200) + '...' : trimmed
   }
