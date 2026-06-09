@@ -7,7 +7,7 @@
  * Parent MUST wrap with <EditorContext.Provider value={{ editor }}>.
  */
 
-import { useRef, useState } from 'react'
+import { useRef, useState, memo } from 'react'
 import { Image as ImageIcon, Loader2 } from 'lucide-react'
 import { useCurrentEditor } from '@tiptap/react'
 import { toast } from 'sonner'
@@ -82,7 +82,7 @@ function ImageUploadButton({ lessonId }: { lessonId?: string }) {
   )
 }
 
-export function EditorToolbar({ lessonId }: { lessonId?: string }) {
+export const EditorToolbar = memo(function EditorToolbar({ lessonId }: { lessonId?: string }) {
   return (
     <Toolbar>
       <Spacer />
@@ -138,4 +138,4 @@ export function EditorToolbar({ lessonId }: { lessonId?: string }) {
       <Spacer />
     </Toolbar>
   )
-}
+})

@@ -377,26 +377,6 @@ Implementasi dibagi 3 fase sesuai prioritas. Setiap feature akan langsung ditest
   - Wrap `EditorToolbar` dengan `React.memo` di `EditorToolbar.tsx`
   - _Requirements: 6.1, 6.2, 6.5_
 
-**Testing:**
-
-- [~] 5.2 Unit Test: Test memoization behavior
-  - Test SortableSectionItem tidak re-render saat props unchanged
-  - Test SortableLessonItem tidak re-render saat props unchanged
-  - Test EditorToolbar tidak re-render saat editor state unchanged
-  - Use React Testing Library dengan custom render counter
-  - File: `__tests__/unit/components/memoization.test.tsx`
-
-- [~] 5.3 Performance Test: Measure re-render reduction
-  - Benchmark DnD operations sebelum dan sesudah memoization
-  - Measure render count dengan React DevTools Profiler
-  - Document performance improvement di test file
-  - File: `__tests__/performance/component-memoization.test.ts`
-
-- [~] 5.4 E2E Test (Playwright): Test DnD performance
-  - Test: Drag section → verify smooth animation
-  - Test: Drag lesson → verify no lag
-  - Test: Multiple rapid drags → verify performance stable
-  - File: `__tests__/e2e/dnd-performance.spec.ts`
 
 **Verification:**
 

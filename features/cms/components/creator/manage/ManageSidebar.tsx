@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, memo } from 'react'
 import {
   Plus,
   ChevronDown,
@@ -43,7 +43,7 @@ import type { ManagedLesson } from '@/features/cms/hooks/manage'
 
 // ── Sortable Lesson Item ───────────────────────────────────────────────────
 
-function SortableLessonItem({
+const SortableLessonItem = memo(function SortableLessonItem({
   lesson,
   isActive,
   openLessonMenuId,
@@ -139,11 +139,11 @@ function SortableLessonItem({
       </div>
     </div>
   )
-}
+})
 
 // ── Sortable Section Item ──────────────────────────────────────────────────
 
-function SortableSectionItem({
+const SortableSectionItem = memo(function SortableSectionItem({
   section,
   isExpanded,
   lessons,
@@ -352,7 +352,7 @@ function SortableSectionItem({
       )}
     </div>
   )
-}
+})
 
 // ── Main Sidebar ───────────────────────────────────────────────────────────
 
