@@ -15,6 +15,10 @@
 .clerk
 .serena
 .next
+.agents
+.open-design
+.next
+.claude
 rules/error.md
 
 # testing
