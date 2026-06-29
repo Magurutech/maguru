@@ -150,6 +150,7 @@ exports.Prisma.CoursesScalarFieldEnum = {
   category: 'category',
   difficulty: 'difficulty',
   creatorId: 'creatorId',
+  outcomes: 'outcomes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -192,12 +193,29 @@ exports.Prisma.SectionsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.Creator_profilesScalarFieldEnum = {
+  userId: 'userId',
+  name: 'name',
+  title: 'title',
+  bio: 'bio',
+  experience: 'experience',
+  avatarUrl: 'avatarUrl',
+  socialLinks: 'socialLinks',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
 exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull
 };
 
@@ -227,7 +245,8 @@ exports.Prisma.ModelName = {
   enrollments: 'enrollments',
   lesson_progress: 'lesson_progress',
   lessons: 'lessons',
-  sections: 'sections'
+  sections: 'sections',
+  creator_profiles: 'creator_profiles'
 };
 
 /**

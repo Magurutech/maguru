@@ -84,8 +84,8 @@ const SortableLessonItem = memo(function SortableLessonItem({
       ref={setNodeRef}
       style={style}
       className={`group flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all border border-transparent cursor-pointer select-none ${
-        isActive 
-          ? 'bg-accent-coral/5 text-accent-coral border-accent-coral/10 font-semibold' 
+        isActive
+          ? 'bg-accent-coral/5 text-accent-coral border-accent-coral/10 font-semibold'
           : 'hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary'
       }`}
       onClick={onSelect}
@@ -100,9 +100,11 @@ const SortableLessonItem = memo(function SortableLessonItem({
       >
         <GripVertical className="h-3.5 w-3.5" />
       </button>
-      <FileText className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-accent-coral' : 'text-text-muted'}`} />
+      <FileText
+        className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-accent-coral' : 'text-text-muted'}`}
+      />
       <span className="text-xs flex-1 truncate">{lesson.title}</span>
-      
+
       {/* Dropdown Menu trigger */}
       <div
         className={`items-center shrink-0 ${openLessonMenuId === lesson.id ? 'flex' : 'hidden group-hover:flex'}`}
@@ -233,8 +235,8 @@ const SortableSectionItem = memo(function SortableSectionItem({
     >
       <div
         className={`group flex items-center gap-1 px-3 py-2 rounded-xl transition-all border border-transparent ${
-          isActiveSection || isMenuOpen || isEditing 
-            ? 'bg-bg-bone/80 border-border/5' 
+          isActiveSection || isMenuOpen || isEditing
+            ? 'bg-bg-bone/80 border-border/5'
             : 'hover:bg-bg-surface-accent'
         }`}
         data-testid={`section-item-${section.id}`}
@@ -263,7 +265,7 @@ const SortableSectionItem = memo(function SortableSectionItem({
             <Folder className="h-3.5 w-3.5 text-text-muted" />
           )}
         </button>
-        
+
         {isEditing ? (
           <input
             ref={editInputRef}
@@ -282,13 +284,15 @@ const SortableSectionItem = memo(function SortableSectionItem({
             className="flex-1 min-w-0 text-left flex items-center gap-1 cursor-pointer"
             data-testid={`section-toggle-${section.id}`}
           >
-            <span className="text-xs text-text-primary font-bold truncate font-sans">{section.title}</span>
+            <span className="text-xs text-text-primary font-bold truncate font-sans">
+              {section.title}
+            </span>
             <span className="text-[10px] font-mono text-text-muted bg-bg-bone/80 px-2 py-0.5 rounded-full shrink-0 ml-auto">
               {section.lessonCount}
             </span>
           </button>
         )}
-        
+
         {!isEditing && (
           <div
             className={`items-center shrink-0 ${isMenuOpen ? 'flex' : 'hidden group-hover:flex'}`}
@@ -301,7 +305,9 @@ const SortableSectionItem = memo(function SortableSectionItem({
                 <button
                   onClick={(e) => e.stopPropagation()}
                   className={`p-1 rounded-full text-text-muted hover:text-text-primary transition-colors cursor-pointer ${
-                    isMenuOpen ? 'bg-bg-surface-accent text-text-primary' : 'hover:bg-bg-surface-accent'
+                    isMenuOpen
+                      ? 'bg-bg-surface-accent text-text-primary'
+                      : 'hover:bg-bg-surface-accent'
                   }`}
                   title="Opsi seksi"
                   data-testid={`section-menu-btn-${section.id}`}
@@ -338,7 +344,7 @@ const SortableSectionItem = memo(function SortableSectionItem({
           </div>
         )}
       </div>
-      
+
       {isExpanded && (
         <div className="ml-5 mt-1 pl-2 border-l border-border/5 space-y-1 animate-fade-in">
           <DndContext
@@ -364,7 +370,7 @@ const SortableSectionItem = memo(function SortableSectionItem({
               ))}
             </SortableContext>
           </DndContext>
-          
+
           <button
             onClick={onAddLesson}
             className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold text-text-muted hover:text-accent-coral hover:bg-accent-coral/5 transition-colors cursor-pointer select-none"
@@ -522,33 +528,32 @@ export function ManageSidebar() {
       {/* Expanded state */}
       {sidebarOpen && (
         <>
-          {/* Header */}
-          <div className="p-5 border-b border-border/10">
-            <span className="text-[10px] font-bold text-text-primary tracking-wider uppercase font-cinzel">
-              KONTEN &amp; KURIKULUM
-            </span>
-          </div>
-
           {/* 1. Course Overview Card (as mandated by spec) */}
           {course && (
-            <div 
+            <div
               onClick={() => setActiveView({ type: 'overview' })}
               className={`mx-4 my-4 p-4 bg-bg-bone/60 border border-border/10 rounded-2xl relative overflow-hidden paper-texture cursor-pointer select-none transition-all duration-180 hover:shadow-sm hover:border-accent-coral/15 hover:bg-bg-bone ${
-                activeView.type === 'overview' ? 'border-accent-coral/30 ring-1 ring-accent-coral/10 bg-bg-bone shadow-sm' : ''
+                activeView.type === 'overview'
+                  ? 'border-accent-coral/30 ring-1 ring-accent-coral/10 bg-bg-bone shadow-sm'
+                  : ''
               }`}
             >
               <div className="flex items-center gap-3">
                 {/* Small thumbnail icon wrapper */}
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-coral/15 to-accent-mustard/15 flex items-center justify-center shrink-0 border border-border/10 font-serif italic text-base text-accent-coral font-bold select-none">
+                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-accent-coral/15 to-accent-mustard/15 flex items-center justify-center shrink-0 border border-border/10 font-serif italic text-base text-accent-coral font-bold select-none">
                   {course.title.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider block leading-none mb-0.5">KELAS</span>
+                  <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider block leading-none mb-0.5">
+                    KELAS
+                  </span>
                   <h4 className="text-xs font-bold text-text-primary truncate leading-tight hover:text-accent-coral">
                     {course.title}
                   </h4>
                   <p className="text-[9px] text-text-muted font-medium mt-0.5 leading-none">
-                    {sections.length} Modul &middot; {Object.values(lessonsMap).reduce((sum, list) => sum + (list?.length || 0), 0)} Pelajaran
+                    {sections.length} Modul &middot;{' '}
+                    {Object.values(lessonsMap).reduce((sum, list) => sum + (list?.length || 0), 0)}{' '}
+                    Pelajaran
                   </p>
                 </div>
               </div>

@@ -1,0 +1,60 @@
+{
+  "specName": "course-outcomes-management",
+  "specType": "feature",
+  "workflowType": "requirements-first",
+  "version": "1.0.0",
+  "createdAt": "2026-06-29T10:00:00Z",
+  "status": "active",
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Requirements & Analysis",
+      "documents": ["requirements.md"],
+      "status": "completed"
+    },
+    {
+      "phase": 2,
+      "name": "Design & Architecture",
+      "documents": ["design.md"],
+      "status": "completed"
+    },
+    {
+      "phase": 3,
+      "name": "Task Planning",
+      "documents": ["tasks.md"],
+      "status": "completed"
+    },
+    {
+      "phase": 4,
+      "name": "Implementation",
+      "status": "pending"
+    }
+  ],
+  "keyFeatures": [
+    "Learning Outcomes Management (per-course)",
+    "Creator Profile Management",
+    "Course Detail Real Data Integration"
+  ],
+  "tags": ["cms", "course", "database", "api", "frontend"],
+  "timeline": {
+    "estimatedDays": 6,
+    "estimatedHours": 45,
+    "phases": {
+      "backend": 2,
+      "frontendCreator": 3.5,
+      "frontendStudent": 1.5,
+      "testing": 2
+    }
+  },
+  "team": {
+    "backendDeveloper": 1,
+    "frontendDeveloper": 2,
+    "qaEngineer": 1
+  },
+  "repositories": {
+    "database": ".kiro/specs/course-outcomes-management/database-schema.md",
+    "api": ".kiro/specs/course-outcomes-management/design.md",
+    "components": "features/cms/components/creator/manage/panels/",
+    "services": "features/cms/services/"
+  }
+}
