@@ -1,16 +1,14 @@
 import { NextResponse } from 'next/server'
 import { currentUser } from '@clerk/nextjs/server'
 import prisma from '@/prisma/lib/client'
+import { validateOutcomes, sanitizeOutcomes } from '@/features/cms/services/course.service'
 
 /**
  * PATCH /api/courses/[slug]
- * Update course title and/or description.
+ * Update course title, description, and/or outcomes.
  * Only the course owner can update.
  */
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
     const user = await currentUser()
@@ -32,18 +30,39 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { title, description } = body
+    const { title, description, outcomes } = body
+
+    // Validate outcomes if provided
+    if (outcomes !== undefined) {
+      const validation = validateOutcomes(outcomes)
+      if (!validation.valid) {
+        return NextResponse.json(
+          { error: validation.error, code: validation.code },
+          { status: 400 },
+        )
+      }
+    }
+
+    // Sanitize outcomes if provided
+    const sanitizedOutcomes = outcomes !== undefined ? sanitizeOutcomes(outcomes) : undefined
 
     const updated = await prisma.courses.update({
       where: { slug },
       data: {
         ...(title !== undefined && { title }),
         ...(description !== undefined && { description }),
+        ...(sanitizedOutcomes !== undefined && { outcomes: sanitizedOutcomes }),
         updatedAt: new Date(),
       },
       select: {
-        id: true, title: true, description: true,
-        category: true, difficulty: true, status: true, slug: true,
+        id: true,
+        title: true,
+        description: true,
+        outcomes: true,
+        category: true,
+        difficulty: true,
+        status: true,
+        slug: true,
       },
     })
 
@@ -61,10 +80,7 @@ export async function PATCH(
  * - PUBLISHED courses: accessible by anyone (anonymous, student, creator)
  * - DRAFT courses: only accessible by the course owner
  */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
 
@@ -74,6 +90,7 @@ export async function GET(
         id: true,
         title: true,
         description: true,
+        outcomes: true,
         category: true,
         difficulty: true,
         creatorId: true,
@@ -82,37 +99,28 @@ export async function GET(
         updatedAt: true,
         students: true,
         duration: true,
-        rating: true
-      }
+        rating: true,
+      },
     })
 
     if (!course) {
-      return NextResponse.json(
-        { error: 'Course not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
     }
 
     // DRAFT courses are only visible to the owner
     if (course.status === 'DRAFT') {
       const user = await currentUser()
       if (!user || course.creatorId !== user.id) {
-        return NextResponse.json(
-          { error: 'Course not found' },
-          { status: 404 }
-        )
+        return NextResponse.json({ error: 'Course not found' }, { status: 404 })
       }
     }
 
     return NextResponse.json({
       ...course,
-      slug: slug
+      slug: slug,
     })
   } catch (error) {
     console.error('Error fetching course:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch course' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch course' }, { status: 500 })
   }
 }

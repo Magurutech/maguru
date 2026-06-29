@@ -15,11 +15,11 @@ import { usePathname } from 'next/navigation'
 import { PenTool, BookOpen, FileText, Video, Users, Sun, Moon, LogOut } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { UserButton, useClerk } from '@clerk/nextjs'
-import { 
-  SidebarProvider, 
-  Sidebar, 
-  SidebarContent, 
-  SidebarFooter, 
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
   SidebarHeader,
   SidebarTrigger,
   SidebarRail,
@@ -27,7 +27,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  useSidebar
+  useSidebar,
 } from '@/components/ui/sidebar'
 
 interface CreatorLayoutProps {
@@ -55,7 +55,7 @@ function CreatorSidebar() {
     },
     {
       label: 'Kursus Saya',
-      href: '/creator/course-manage',
+      href: '/creator/courses',
       icon: BookOpen,
     },
     {
@@ -104,7 +104,7 @@ function CreatorSidebar() {
             const Icon = item.icon
             return (
               <SidebarMenuItem key={item.label}>
-                <SidebarMenuButton 
+                <SidebarMenuButton
                   isActive={isActive}
                   tooltip={isCollapsed ? item.label : undefined}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all duration-180 select-none cursor-pointer ${
@@ -129,7 +129,7 @@ function CreatorSidebar() {
             <h4 className="text-[10px] font-bold text-text-primary tracking-wider uppercase mb-2">
               Mulai Kelas Baru
             </h4>
-            <button 
+            <button
               onClick={() => console.log('Create new course')}
               className="w-full btn-primary text-xs py-2 px-4 rounded-full font-bold select-none cursor-pointer"
             >
@@ -141,7 +141,9 @@ function CreatorSidebar() {
 
       {/* 3. Sidebar Footer */}
       <SidebarFooter className="p-4 border-t border-border/10 bg-card space-y-3">
-        <div className={`flex items-center ${isCollapsed ? 'flex-col gap-3 justify-center' : 'justify-between px-2'}`}>
+        <div
+          className={`flex items-center ${isCollapsed ? 'flex-col gap-3 justify-center' : 'justify-between px-2'}`}
+        >
           {/* Theme Toggle */}
           {mounted && (
             <button
@@ -168,7 +170,9 @@ function CreatorSidebar() {
         </div>
 
         {/* User Profile Info */}
-        <div className={`flex items-center ${isCollapsed ? 'justify-center p-1' : 'space-x-3 p-2 bg-background/50 border border-border/5 rounded-2xl min-w-0'}`}>
+        <div
+          className={`flex items-center ${isCollapsed ? 'justify-center p-1' : 'space-x-3 p-2 bg-background/50 border border-border/5 rounded-2xl min-w-0'}`}
+        >
           <div className="shrink-0 flex items-center justify-center">
             <UserButton
               appearance={{
@@ -200,11 +204,15 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-300 flex w-full">
         {/* CSS Override untuk menyembunyikan NavbarGlass landing page di halaman studio */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           nav[aria-label="Primary navigation"] {
             display: none !important;
           }
-        `}} />
+        `,
+          }}
+        />
 
         {/* Sidebar Component */}
         <CreatorSidebar />
@@ -219,10 +227,12 @@ export default function CreatorLayout({ children }: CreatorLayoutProps) {
                 MAGURU CREATOR STUDIO
               </span>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-              <span className="text-[9px] font-bold font-sans tracking-wider uppercase text-text-muted">Creator Assistant Active</span>
+              <span className="text-[9px] font-bold font-sans tracking-wider uppercase text-text-muted">
+                Creator Assistant Active
+              </span>
             </div>
           </header>
 
