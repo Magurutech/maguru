@@ -155,7 +155,7 @@ describe('CourseFilters — filter kategori (BUG FIX: no double push)', () => {
       fireEvent.click(categoryTrigger)
     })
 
-    const option = screen.getByText('Pemrograman')
+    const option = screen.getByRole('option', { name: 'Pemrograman' })
     await act(async () => {
       fireEvent.click(option)
       // Simulasi searchParams berubah setelah push — ini yang dulu memicu loop
@@ -194,7 +194,7 @@ describe('CourseFilters — filter kategori (BUG FIX: no double push)', () => {
       fireEvent.click(categoryTrigger)
     })
 
-    const option = screen.getByText('Desain')
+    const option = screen.getByRole('option', { name: 'Desain' })
     await act(async () => {
       fireEvent.click(option)
       simulateNavigationEffect({ category: 'Desain' })
@@ -214,7 +214,7 @@ describe('CourseFilters — filter kategori (BUG FIX: no double push)', () => {
       fireEvent.click(screen.getByLabelText('Filter kategori'))
     })
     await act(async () => {
-      fireEvent.click(screen.getByText('Bisnis'))
+      fireEvent.click(screen.getByRole('option', { name: 'Bisnis' }))
       simulateNavigationEffect({ category: 'Bisnis' })
       jest.advanceTimersByTime(400)
     })

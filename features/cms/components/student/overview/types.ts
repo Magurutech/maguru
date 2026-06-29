@@ -16,6 +16,33 @@ export interface CourseDetail {
   students?: number
   duration?: string
   rating?: number
+  outcomes?: string[]
+}
+
+export interface CreatorProfile {
+  name: string | null
+  title: string | null
+  bio: string | null
+  experience: string | null
+  avatarUrl: string | null
+  socialLinks: {
+    linkedin?: string
+    youtube?: string
+    github?: string
+  } | null
+  stats: {
+    rating: number
+    studentsCount: number
+    coursesCount: number
+  }
+}
+
+export interface Review {
+  id: string
+  name: string
+  date: string
+  rating: number
+  comment: string
 }
 
 export interface OverviewLesson {
@@ -30,3 +57,4 @@ export interface OverviewSection {
   order: number
   lessons: OverviewLesson[]
 }
+

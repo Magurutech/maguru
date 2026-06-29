@@ -15,13 +15,13 @@ Maguru adalah platform pembelajaran coding berbasis AI di mana siswa belajar mel
 - Belajar mandiri dengan AI sebagai co-teacher
 
 ### Tech Stack MVP
-| Component | Technology | Rationale |
-|-----------|------------|-----------|
-| **UI Framework** | Streamlit | Rapid prototyping, Python-native, sufficient for MVP |
+| Component        | Technology                   | Rationale                                                         |
+| ------------------| ------------------------------| -------------------------------------------------------------------|
+| **UI Framework** | Streamlit                    | Rapid prototyping, Python-native, sufficient for MVP              |
 | **AI Framework** | LangChain (LCEL + LangGraph) | Industry standard for AI applications, flexible chain composition |
-| **LLM** | GPT-3.5-turbo | Cost efficiency while maintaining quality |
-| **Auth** | Anonymous (no login) | Reduce friction for MVP, focus on learning experience |
-| **Data Storage** | Streamlit Session State | In-memory storage sufficient for anonymous sessions |
+| **LLM**          | GPT-3.5-turbo                | Cost efficiency while maintaining quality                         |
+| **Auth**         | Anonymous (no login)         | Reduce friction for MVP, focus on learning experience             |
+| **Data Storage** | Streamlit Session State      | In-memory storage sufficient for anonymous sessions               |
 
 ---
 

@@ -12,7 +12,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { PenTool, BookOpen, FileText, Video, Users, Sun, Moon, LogOut } from 'lucide-react'
+import { PenTool, BookOpen, FileText, Video, Users, Sun, Moon, LogOut, User } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { UserButton, useClerk } from '@clerk/nextjs'
 import {
@@ -72,6 +72,11 @@ function CreatorSidebar() {
       label: 'Daftar Siswa',
       href: '/creator/students',
       icon: Users,
+    },
+    {
+      label: 'Profil Saya',
+      href: '/creator/profile',
+      icon: User,
     },
   ]
 

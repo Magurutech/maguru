@@ -10,10 +10,11 @@
  */
 
 import { useState } from 'react'
-import { Edit, Sparkles, Layers, FileText } from 'lucide-react'
+import { Edit, Layers, FileText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
 import { DescriptionEditor } from './DescriptionEditor'
+import { LearningOutcomesEditor } from './LearningOutcomesEditor'
 
 const DIFFICULTY_LABEL: Record<string, string> = {
   BEGINNER: 'Pemula',
@@ -32,25 +33,6 @@ export function CourseOverview() {
     (sum, s) => sum + (lessonsMap[s.id]?.length ?? s.lessonCount),
     0,
   )
-
-  // AI suggestions merged directly into overview page
-  const aiRecommendations = [
-    {
-      id: 1,
-      text: 'Kelengkapan draf kurikulum terdeteksi 60%. Siswa aktif dari materi React sebelumnya sedang menanti perilisan kelas ini.',
-      impact: 'Tinggi',
-    },
-    {
-      id: 2,
-      text: 'Statistik kelulusan kuis di Bab 3.2 (Optimasi Server Actions) turun 12%. Pertimbangkan untuk menambahkan penjelasan visual atau micro-exercise.',
-      impact: 'Tinggi',
-    },
-    {
-      id: 3,
-      text: 'Ada 3 pertanyaan diskusi siswa baru yang belum terlayani lebih dari 24 jam.',
-      impact: 'Sedang',
-    },
-  ]
 
   return (
     <div className="space-y-8 select-none" data-testid="course-overview-panel">
@@ -93,106 +75,83 @@ export function CourseOverview() {
         </div>
       </div>
 
-      <hr className="border-border/10" />
-
-      {/* 2. Grid layout: Left (Description) & Right (Stats + AI Recommendations) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Description Editor */}
-        <div className="lg:col-span-7 space-y-4">
-          <div className="group">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
-                Deskripsi Kelas
-              </span>
-              {!editingDesc && (
-                <button
-                  onClick={() => setEditingDesc(true)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-bg-surface-accent text-text-muted hover:text-text-primary cursor-pointer"
-                  title="Edit deskripsi"
-                >
-                  <Edit className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
-
-            {editingDesc ? (
-              <DescriptionEditor
-                courseSlug={course.slug}
-                initialText={course.description ?? ''}
-                onSave={(text) => {
-                  setCourse((prev) => (prev ? { ...prev, description: text } : prev))
-                  setEditingDesc(false)
-                }}
-                onCancel={() => setEditingDesc(false)}
-              />
-            ) : (
-              <p
-                className="text-text-secondary text-sm leading-relaxed cursor-text hover:bg-bg-surface-accent/30 rounded-xl p-3 border border-transparent hover:border-border/10 transition-all font-sans"
-                onClick={() => setEditingDesc(true)}
-              >
-                {course.description || (
-                  <span className="text-text-faint italic font-medium">
-                    Tambahkan deskripsi lengkap materi kelas...
-                  </span>
-                )}
-              </p>
-            )}
+      {/* 2. Quick stats row below header */}
+      <div className="grid grid-cols-2 gap-4 max-w-md">
+        <div className="p-4 bg-bg-bone/45 border border-border/10 rounded-2xl paper-texture flex flex-col justify-between min-h-22.5">
+          <div className="flex justify-between items-center text-text-muted">
+            <span className="text-[9px] font-bold uppercase tracking-wider">Modul</span>
+            <Layers className="w-3.5 h-3.5" />
           </div>
+          <p className="font-manrope text-xl font-black text-text-primary mt-1">
+            {sections.length} Seksi
+          </p>
         </div>
 
-        {/* Right Column: Dynamic Bento Cards & AI Recommendations */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Quick stats grid */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="p-4 bg-bg-bone/45 border border-border/10 rounded-2xl paper-texture flex flex-col justify-between min-h-22.5">
-              <div className="flex justify-between items-center text-text-muted">
-                <span className="text-[9px] font-bold uppercase tracking-wider">Modul</span>
-                <Layers className="w-3.5 h-3.5" />
-              </div>
-              <p className="font-manrope text-xl font-black text-text-primary mt-1">
-                {sections.length} Seksi
-              </p>
-            </div>
+        <div className="p-4 bg-bg-bone/45 border border-border/10 rounded-2xl paper-texture flex flex-col justify-between min-h-22.5">
+          <div className="flex justify-between items-center text-text-muted">
+            <span className="text-[9px] font-bold uppercase tracking-wider">Pelajaran</span>
+            <FileText className="w-3.5 h-3.5" />
+          </div>
+          <p className="font-manrope text-xl font-black text-text-primary mt-1">
+            {totalLessons} Materi
+          </p>
+        </div>
+      </div>
 
-            <div className="p-4 bg-bg-bone/45 border border-border/10 rounded-2xl paper-texture flex flex-col justify-between min-h-22.5">
-              <div className="flex justify-between items-center text-text-muted">
-                <span className="text-[9px] font-bold uppercase tracking-wider">Pelajaran</span>
-                <FileText className="w-3.5 h-3.5" />
-              </div>
-              <p className="font-manrope text-xl font-black text-text-primary mt-1">
-                {totalLessons} Materi
-              </p>
-            </div>
+      <hr className="border-border/10" />
+
+      {/* 3. Main Content: Outcomes & Description Editors */}
+      <div className="space-y-8 max-w-4xl">
+        {/* Learning Outcomes Editor */}
+        <div className="bg-bg-bone/20 p-4 border border-border/10 rounded-2xl paper-texture">
+          <LearningOutcomesEditor
+            courseSlug={course.slug}
+            initialOutcomes={course.outcomes ?? []}
+            onSave={(nextOutcomes) => {
+              setCourse((prev) => (prev ? { ...prev, outcomes: nextOutcomes } : prev))
+            }}
+          />
+        </div>
+
+        {/* Description Editor */}
+        <div className="group space-y-2">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
+              Deskripsi Kelas
+            </span>
+            {!editingDesc && (
+              <button
+                onClick={() => setEditingDesc(true)}
+                className="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-bg-surface-accent text-text-muted hover:text-text-primary cursor-pointer"
+                title="Edit deskripsi"
+              >
+                <Edit className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
 
-          {/* AI Advisor Panel (Moved from inspector) */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 pb-1.5 border-b border-border/5">
-              <Sparkles className="w-4 h-4 text-accent-coral" />
-              <h3 className="text-[10px] font-bold text-text-primary uppercase tracking-wider">
-                Masukan AI Kreator (Mago AI)
-              </h3>
-            </div>
-
-            <div className="space-y-2">
-              {aiRecommendations.map((rec) => (
-                <div
-                  key={rec.id}
-                  className="bg-accent-coral/5 border border-accent-coral/10 p-3.5 rounded-2xl text-xs text-text-secondary leading-relaxed transition-all hover:bg-accent-coral/8"
-                >
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[9px] font-bold text-accent-coral tracking-wider font-mono">
-                      REKOMENDASI
-                    </span>
-                    <span className="text-[8px] font-bold bg-accent-coral/10 text-accent-coral px-2 py-0.5 rounded-full uppercase">
-                      Dampak {rec.impact}
-                    </span>
-                  </div>
-                  <p>{rec.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {editingDesc ? (
+            <DescriptionEditor
+              courseSlug={course.slug}
+              initialText={course.description ?? ''}
+              onSave={(text) => {
+                setCourse((prev) => (prev ? { ...prev, description: text } : prev))
+                setEditingDesc(false)
+              }}
+              onCancel={() => setEditingDesc(false)}
+            />
+          ) : (
+            <p
+              className="text-text-secondary text-sm leading-relaxed cursor-text hover:bg-bg-surface-accent/30 rounded-xl p-3 border border-transparent hover:border-border/10 transition-all font-sans"
+              onClick={() => setEditingDesc(true)}
+            >
+              {course.description || (
+                <span className="text-text-faint italic font-medium">
+                  Tambahkan deskripsi lengkap materi kelas...
+                </span>
+              )}
+            </p>
+          )}
         </div>
       </div>
     </div>

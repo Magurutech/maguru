@@ -11,6 +11,7 @@ export interface ManagedCourse {
   status: string
   category: string | null
   difficulty: string | null
+  outcomes?: string[]
 }
 
 export interface ManagedSection {

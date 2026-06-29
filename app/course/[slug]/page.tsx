@@ -8,13 +8,11 @@ import { PremiumCourseTabs } from '@/features/cms/components/student/overview/Pr
 import { PremiumSidebar } from '@/features/cms/components/student/overview/PremiumSidebar'
 import { CourseEnrollButton } from '@/features/cms/components/student/overview/CourseEnrollButton'
 
-// Mock Data Mapper
-import { getCourseDetailMock } from '@/features/cms/components/student/overview/CourseDetailMock'
-
 // Types
 import type {
   CourseDetail,
   OverviewSection as SectionType,
+  CreatorProfile,
 } from '@/features/cms/components/student/overview/types'
 
 interface PageProps {
@@ -36,6 +34,13 @@ async function fetchCourseSections(slug: string): Promise<SectionType[]> {
   return data.sections ?? []
 }
 
+async function fetchCourseCreator(slug: string): Promise<CreatorProfile | null> {
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/api/courses/${slug}/creator`, { cache: 'no-store' })
+  if (!res.ok) return null
+  return res.json()
+}
+
 async function checkEnrollment(userId: string, courseId: string): Promise<boolean> {
   const enrollment = await prisma.enrollments.findFirst({
     where: { userId, courseId },
@@ -47,7 +52,11 @@ async function checkEnrollment(userId: string, courseId: string): Promise<boolea
 export default async function CourseDetailPage({ params }: PageProps) {
   const { slug } = await params
 
-  const [course, sections] = await Promise.all([fetchCourseDetail(slug), fetchCourseSections(slug)])
+  const [course, sections, creator] = await Promise.all([
+    fetchCourseDetail(slug),
+    fetchCourseSections(slug),
+    fetchCourseCreator(slug),
+  ])
 
   if (!course) notFound()
 
@@ -56,7 +65,6 @@ export default async function CourseDetailPage({ params }: PageProps) {
   const enrolled = user ? await checkEnrollment(user.id, course.id) : false
 
   const totalLessons = sections.reduce((sum, s) => sum + s.lessons.length, 0)
-  const mockData = getCourseDetailMock(slug, course.category)
 
   return (
     <div className="relative min-h-screen text-text-primary  bg-bg-canvas paper-texture pb-20 md:pb-32">
@@ -81,16 +89,17 @@ export default async function CourseDetailPage({ params }: PageProps) {
             <PremiumHero
               course={course}
               totalLessons={totalLessons}
-              instructorRating={mockData.instructor.rating}
+              instructorRating={4.8}
+              creatorRating={creator?.stats?.rating}
             />
 
             {/* Premium Course Tabs: Description, Learning Path, Testimonials */}
-            <PremiumCourseTabs course={course} sections={sections} mockData={mockData} />
+            <PremiumCourseTabs course={course} sections={sections} creator={creator} />
           </main>
 
           {/* Sticky Enrollment Sidebar Panel wrapper column (stretches to allow sticky child sliding) */}
           <aside className="lg:col-span-4">
-            <PremiumSidebar course={course} enrolled={enrolled}>
+            <PremiumSidebar course={course} enrolled={enrolled} creator={creator}>
               <CourseEnrollButton
                 courseSlug={course.slug}
                 courseTitle={course.title}

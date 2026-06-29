@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { CourseDetail, OverviewSection } from './types'
-import type { CourseMockData } from './CourseDetailMock'
+import type { CourseDetail, OverviewSection, CreatorProfile, Review } from './types'
 
 // Imported Sub-sections
 import { UnifiedDescriptionSection, ReviewsSection } from './PremiumSections'
@@ -11,12 +10,36 @@ import { PremiumCurriculum } from './PremiumCurriculum'
 interface PremiumCourseTabsProps {
   course: CourseDetail
   sections: OverviewSection[]
-  mockData: CourseMockData
+  creator: CreatorProfile | null
 }
 
 type TabType = 'description' | 'path' | 'testimonials'
 
-export function PremiumCourseTabs({ course, sections, mockData }: PremiumCourseTabsProps) {
+const DUMMY_REVIEWS: Review[] = [
+  {
+    id: 'rev-1',
+    name: 'Rian Hidayat',
+    date: '12 Juni 2026',
+    rating: 5,
+    comment: 'Materi yang disajikan sangat sistematis dan terstruktur. Adanya AI Co-Teacher sangat membantu ketika saya stuck di latihan praktis malam hari!'
+  },
+  {
+    id: 'rev-2',
+    name: 'Siti Rahma',
+    date: '28 Mei 2026',
+    rating: 4.8,
+    comment: 'Penjelasan instrukturnya sangat jelas dan mudah dipahami. Proyek akhir benar-benar melatih problem solving di dunia nyata.'
+  },
+  {
+    id: 'rev-3',
+    name: 'Budi Santoso',
+    date: '15 Mei 2026',
+    rating: 5,
+    comment: 'Pengalaman belajar editorial yang sangat tenang dan menakjubkan. Jauh berbeda dari platform kursus e-learning biasa.'
+  }
+]
+
+export function PremiumCourseTabs({ course, sections, creator }: PremiumCourseTabsProps) {
   const [activeTab, setActiveTab] = useState<TabType>('description')
 
   const tabs = [
@@ -53,8 +76,8 @@ export function PremiumCourseTabs({ course, sections, mockData }: PremiumCourseT
         {activeTab === 'description' && (
           <UnifiedDescriptionSection
             description={course.description}
-            outcomes={mockData.outcomes}
-            instructor={mockData.instructor}
+            outcomes={course.outcomes ?? []}
+            instructor={creator}
           />
         )}
 
@@ -66,7 +89,7 @@ export function PremiumCourseTabs({ course, sections, mockData }: PremiumCourseT
 
         {activeTab === 'testimonials' && (
           <div className="space-y-6">
-            <ReviewsSection reviews={mockData.reviews} />
+            <ReviewsSection reviews={DUMMY_REVIEWS} />
           </div>
         )}
       </div>

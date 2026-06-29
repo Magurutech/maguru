@@ -1,15 +1,16 @@
 'use client'
 
 import { ShieldCheck, Sparkles, BookOpen, Clock, FileText, Code, Layers, BarChart3 } from 'lucide-react'
-import type { CourseDetail } from './types'
+import type { CourseDetail, CreatorProfile } from './types'
 
 interface PremiumSidebarProps {
   course: CourseDetail
   enrolled: boolean
   children: React.ReactNode // Slot for CourseEnrollButton
+  creator?: CreatorProfile | null
 }
 
-export function PremiumSidebar({ course, enrolled, children }: PremiumSidebarProps) {
+export function PremiumSidebar({ course, enrolled, children, creator }: PremiumSidebarProps) {
   const normCategory = (course.category || '').toLowerCase()
 
   // 3D Tilt handlers for sidebar card
@@ -113,6 +114,29 @@ export function PremiumSidebar({ course, enrolled, children }: PremiumSidebarPro
                 <span>Akses Selamanya & Update Materi</span>
               </li>
             </ul>
+
+            {/* Instructor Widget in Sidebar */}
+            {creator && creator.name && (
+              <div className="pt-4 border-t border-text-primary/8 dark:border-white/8 space-y-3 font-sans">
+                <span className="text-[9px] font-sans font-bold tracking-wider text-text-faint uppercase block">
+                  Instruktur Kelas
+                </span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e8e0c8] to-[#d4c8a8] dark:from-[#37353e] dark:to-[#2d2a33] border border-text-primary/8 dark:border-white/8 flex items-center justify-center font-sans text-sm font-bold text-text-primary overflow-hidden select-none">
+                    {creator.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={creator.avatarUrl} alt={creator.name} className="w-full h-full object-cover" />
+                    ) : (
+                      creator.name.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h5 className="text-xs font-bold text-text-primary leading-tight truncate">{creator.name}</h5>
+                    <span className="text-[10px] text-accent-coral font-medium block mt-0.5 truncate">{creator.title || 'Pendidik'}</span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

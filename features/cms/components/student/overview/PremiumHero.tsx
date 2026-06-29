@@ -6,11 +6,12 @@ interface PremiumHeroProps {
   course: CourseDetail
   totalLessons: number
   instructorRating: number
+  creatorRating?: number
 }
 
-export function PremiumHero({ course, totalLessons, instructorRating }: PremiumHeroProps) {
+export function PremiumHero({ course, totalLessons, instructorRating, creatorRating }: PremiumHeroProps) {
   // Safe default calculations
-  const ratingValue = course.rating || instructorRating || 4.8
+  const ratingValue = creatorRating || course.rating || instructorRating || 4.8
   const studentsCount = course.students || 1284
   const duration = course.duration || '8 Minggu'
   const difficulty = course.difficulty || 'Intermediate'
@@ -59,15 +60,6 @@ export function PremiumHero({ course, totalLessons, instructorRating }: PremiumH
           {course.title}
           <span className="text-accent-coral">.</span>
         </h1>
-
-        {course.description && (
-          <p
-            data-testid="hero-description"
-            className="text-text-secondary text-sm sm:text-base leading-relaxed max-w-2xl font-sans"
-          >
-            {course.description}
-          </p>
-        )}
 
         {/* Hero Meta Badges */}
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-4 text-xs font-sans text-text-muted">

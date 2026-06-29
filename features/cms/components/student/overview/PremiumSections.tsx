@@ -1,6 +1,22 @@
 import { Check, Sparkles, FolderKanban, Star, Users, Award, BookOpen } from 'lucide-react'
 import type { CourseMockData } from './CourseDetailMock'
 
+import type { CreatorProfile, Review } from './types'
+
+const PLACEHOLDER_INSTRUCTOR: CreatorProfile = {
+  name: 'Instruktur Maguru',
+  title: 'Pendidik Profesional',
+  bio: 'Pengajar ahli di platform Maguru yang berdedikasi untuk membantu Anda menguasai keahlian baru secara mendalam.',
+  experience: 'Maguru Certified Instructor',
+  avatarUrl: null,
+  socialLinks: null,
+  stats: {
+    rating: 4.8,
+    studentsCount: 150,
+    coursesCount: 1,
+  },
+}
+
 // ─── 1. UNIFIED DESCRIPTION SECTION (OVERVIEW + OUTCOMES + INSTRUCTOR) ───
 export function UnifiedDescriptionSection({
   description,
@@ -8,10 +24,14 @@ export function UnifiedDescriptionSection({
   instructor,
 }: {
   description: string | null
-  outcomes: string[]
-  instructor: CourseMockData['instructor']
+  outcomes: string[] | undefined
+  instructor: CreatorProfile | null
 }) {
   if (!description) return null
+
+  // Use real instructor if set (has name), otherwise fallback to default placeholder
+  const activeInstructor = (instructor && instructor.name) ? instructor : PLACEHOLDER_INSTRUCTOR
+
   return (
     <section className="space-y-8" id="course-description">
       {/* Unified Section coordinate header */}
@@ -38,33 +58,35 @@ export function UnifiedDescriptionSection({
         </div>
       </div>
 
-      {/* 2. Learning Outcomes (2 Columns grid: 50% left, 50% right) */}
-      <div className="space-y-5 pt-6 border-t border-text-primary/8 dark:border-white/8">
-        <div className="space-y-1">
-          <span className="text-[10px] font-sans font-bold tracking-wider text-accent-coral uppercase">
-            Learning Outcomes
-          </span>
-          <h3 className="font-sans text-lg font-bold text-text-primary">
-            Kemampuan yang akan Anda kuasai
-          </h3>
-        </div>
+      {/* 2. Learning Outcomes (2 Columns grid) */}
+      {outcomes && outcomes.length > 0 && (
+        <div className="space-y-5 pt-6 border-t border-text-primary/8 dark:border-white/8">
+          <div className="space-y-1">
+            <span className="text-[10px] font-sans font-bold tracking-wider text-accent-coral uppercase">
+              Learning Outcomes
+            </span>
+            <h3 className="font-sans text-lg font-bold text-text-primary">
+              Kemampuan yang akan Anda kuasai
+            </h3>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {outcomes.map((outcome, idx) => (
-            <div
-              key={idx}
-              className="flex items-start gap-3 p-4 bg-bg-bone/40 dark:bg-bg-bone/10 border border-text-primary/8 dark:border-white/8 rounded-xl"
-            >
-              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent-olive/12 dark:bg-accent-olive/20 flex items-center justify-center mt-0.5">
-                <Check className="w-3 h-3 text-accent-olive" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {outcomes.map((outcome, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-3 p-4 bg-bg-bone/40 dark:bg-bg-bone/10 border border-text-primary/8 dark:border-white/8 rounded-xl"
+              >
+                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent-olive/12 dark:bg-accent-olive/20 flex items-center justify-center mt-0.5">
+                  <Check className="w-3 h-3 text-accent-olive" />
+                </div>
+                <span className="font-sans text-xs sm:text-sm text-text-secondary leading-relaxed">
+                  {outcome}
+                </span>
               </div>
-              <span className="font-sans text-xs sm:text-sm text-text-secondary leading-relaxed">
-                {outcome}
-              </span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 3. Instructor Profile (Below outcomes, full width) */}
       <div className="space-y-5 pt-6 border-t border-text-primary/8 dark:border-white/8">
@@ -79,28 +101,39 @@ export function UnifiedDescriptionSection({
 
         <div className="flex flex-col sm:flex-row gap-6 p-6 bg-bg-bone/40 dark:bg-bg-bone/10 border border-text-primary/8 dark:border-white/8 rounded-xl">
           {/* Avatar block */}
-          <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-[#e8e0c8] to-[#d4c8a8] dark:from-[#37353e] dark:to-[#2d2a33] border border-text-primary/8 dark:border-white/8 flex items-center justify-center font-sans text-2xl font-extrabold text-text-primary shadow-sm select-none">
-            {instructor.avatar}
+          <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-[#e8e0c8] to-[#d4c8a8] dark:from-[#37353e] dark:to-[#2d2a33] border border-text-primary/8 dark:border-white/8 flex items-center justify-center font-sans text-2xl font-extrabold text-text-primary shadow-sm select-none overflow-hidden">
+            {activeInstructor.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={activeInstructor.avatarUrl}
+                alt={activeInstructor.name || ''}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              (activeInstructor.name || 'I').charAt(0).toUpperCase()
+            )}
           </div>
 
           {/* Bio block */}
           <div className="flex-grow space-y-3">
             <div className="space-y-0.5">
               <h4 className="font-sans text-lg font-bold text-text-primary leading-tight">
-                {instructor.name}
+                {activeInstructor.name}
               </h4>
               <span className="text-xs font-sans text-accent-coral font-medium">
-                {instructor.title}
+                {activeInstructor.title}
               </span>
             </div>
 
             <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-sans">
-              {instructor.bio}
+              {activeInstructor.bio}
             </p>
 
-            <p className="text-xs text-text-muted font-sans font-medium">
-              Pengalaman: {instructor.experience}
-            </p>
+            {activeInstructor.experience && (
+              <p className="text-xs text-text-muted font-sans font-medium">
+                Pengalaman: {activeInstructor.experience}
+              </p>
+            )}
 
             {/* Instructor metrics */}
             <div className="grid grid-cols-3 gap-4 pt-3 border-t border-text-primary/8 dark:border-white/8">
@@ -110,7 +143,7 @@ export function UnifiedDescriptionSection({
                 </span>
                 <span className="font-sans text-sm font-extrabold text-text-primary flex items-center gap-1">
                   <Users className="w-3.5 h-3.5 text-text-faint" />
-                  {instructor.studentsCount.toLocaleString('id-ID')}
+                  {activeInstructor.stats.studentsCount.toLocaleString('id-ID')}
                 </span>
               </div>
               <div className="space-y-0.5 border-l border-text-primary/8 dark:border-white/8 pl-4">
@@ -119,7 +152,7 @@ export function UnifiedDescriptionSection({
                 </span>
                 <span className="font-sans text-sm font-extrabold text-text-primary flex items-center gap-1">
                   <Star className="w-3.5 h-3.5 text-accent-mustard fill-accent-mustard" />
-                  {instructor.rating.toFixed(1)}
+                  {activeInstructor.stats.rating.toFixed(1)}
                 </span>
               </div>
               <div className="space-y-0.5 border-l border-text-primary/8 dark:border-white/8 pl-4">
@@ -128,7 +161,7 @@ export function UnifiedDescriptionSection({
                 </span>
                 <span className="font-sans text-sm font-extrabold text-text-primary flex items-center gap-1">
                   <BookOpen className="w-3.5 h-3.5 text-text-faint" />
-                  {instructor.coursesCount}
+                  {activeInstructor.stats.coursesCount}
                 </span>
               </div>
             </div>
@@ -268,7 +301,7 @@ export function ProjectSection({ data }: { data: CourseMockData['courseProject']
 
 
 // ─── 6. REVIEWS SECTION ───
-export function ReviewsSection({ reviews }: { reviews: CourseMockData['reviews'] }) {
+export function ReviewsSection({ reviews }: { reviews: Review[] }) {
   return (
     <section className="space-y-4" id="reviews">
       <div className="border-t border-text-primary/12 dark:border-white/12 pt-3 flex justify-between items-center text-[10px] tracking-[0.18em] uppercase text-text-faint font-sans">
