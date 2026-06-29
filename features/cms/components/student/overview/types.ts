@@ -13,6 +13,9 @@ export interface CourseDetail {
   createdAt: string
   updatedAt: string
   slug: string
+  students?: number
+  duration?: string
+  rating?: number
 }
 
 export interface OverviewLesson {

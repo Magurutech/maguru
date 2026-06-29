@@ -1,5 +1,5 @@
-import nextConfig from 'eslint-config-next';
-import tseslint from 'typescript-eslint';
+import nextConfig from 'eslint-config-next'
+import tseslint from 'typescript-eslint'
 
 const config = [
   // Global ignores - harus di awal
@@ -16,7 +16,8 @@ const config = [
       'tsconfig.tsbuildinfo',
       'prisma/generated/**',
       '**/*.wasm-base64.js',
-      // Tiptap Simple Editor template — third-party generated code
+      // ReactBits — third-party component library, exclude from lint
+      'components/reactbits/**',
       'components/tiptap-templates/**',
       'components/tiptap-ui/**',
       'components/tiptap-ui-primitive/**',
@@ -54,6 +55,6 @@ const config = [
       ],
     },
   },
-];
+]
 
-export default config;
+export default config

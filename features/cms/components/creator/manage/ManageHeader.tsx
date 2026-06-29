@@ -1,10 +1,15 @@
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Globe, EyeOff } from 'lucide-react'
+import { ArrowLeft, Globe, EyeOff, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useManageContext } from '../../../Context/creator/ManageContext'
 
-export function ManageHeader() {
+interface ManageHeaderProps {
+  onToggleInspector?: () => void
+  isInspectorOpen?: boolean
+}
+
+export function ManageHeader({ onToggleInspector, isInspectorOpen }: ManageHeaderProps) {
   const router = useRouter()
   const { course, publishing, handleTogglePublish } = useManageContext()
   if (!course) return null
@@ -12,40 +17,52 @@ export function ManageHeader() {
   const isPublished = course.status === 'PUBLISHED'
 
   return (
-    <header className="bg-white border-b border-beige-200 shadow-sm px-6 py-4 flex items-center gap-4 shrink-0">
+    <header className="bg-card border-b border-border/10 px-6 py-4 flex items-center gap-4 shrink-0 paper-texture select-none">
       <Button
         variant="ghost"
         size="sm"
         onClick={() => router.push('/creator/courses')}
-        className="text-beige-600 hover:text-beige-900 hover:bg-beige-100 -ml-2"
+        className="text-text-secondary hover:text-text-primary hover:bg-bg-surface-accent -ml-2 rounded-full px-3 cursor-pointer"
         data-testid="back-to-courses-btn"
       >
         <ArrowLeft className="h-4 w-4 mr-1.5" />
-        Kursus
+        Kembali ke Pustaka
       </Button>
 
-      <div className="h-5 w-px bg-beige-200" />
+      <div className="h-5 w-px bg-border/10" />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-lg font-bold text-beige-900 truncate">{course.title}</h1>
+          <span className="text-[10px] font-bold text-accent-coral uppercase tracking-widest">
+            {course.category || 'Materi'}
+          </span>
+          <h1 className="text-sm font-bold text-text-primary truncate">{course.title}</h1>
           <Badge
             variant="outline"
             className={
               isPublished
-                ? 'bg-hijau-50 text-hijau-700 border-hijau-200 text-xs'
-                : 'bg-kuning-50 text-kuning-700 border-kuning-200 text-xs'
+                ? 'bg-success/5 text-success border-success/10 text-[10px] font-bold uppercase tracking-wider'
+                : 'bg-accent-mustard/15 text-accent-mustard border-accent-mustard/10 text-[10px] font-bold uppercase tracking-wider'
             }
           >
             {course.status}
           </Badge>
-          {course.category && <span className="text-xs text-beige-500">{course.category}</span>}
-          {course.difficulty && <span className="text-xs text-beige-500">{course.difficulty}</span>}
         </div>
-        {course.description && (
-          <p className="text-xs text-beige-500 mt-0.5 truncate">{course.description}</p>
-        )}
       </div>
+
+      {onToggleInspector && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onToggleInspector}
+          className={`text-text-secondary hover:text-text-primary hover:bg-bg-surface-accent rounded-full w-9 h-9 p-0 flex items-center justify-center cursor-pointer ${
+            isInspectorOpen ? 'bg-bg-surface-accent text-accent-coral border border-accent-coral/20' : ''
+          }`}
+          title="Tampilkan Inspector"
+        >
+          <Sparkles className="w-4 h-4" />
+        </Button>
+      )}
 
       <Button
         size="sm"
@@ -54,8 +71,8 @@ export function ManageHeader() {
         data-testid="publish-toggle-btn"
         className={
           isPublished
-            ? 'border-kuning-300 text-kuning-700 bg-kuning-50 hover:bg-kuning-100 border'
-            : 'bg-hijau-500 hover:bg-hijau-600 text-white'
+            ? 'border-accent-mustard/20 text-accent-mustard bg-accent-mustard/5 hover:bg-accent-mustard/10 border cursor-pointer rounded-full px-4 text-xs font-bold'
+            : 'bg-accent-coral hover:bg-accent-coral/95 text-white cursor-pointer rounded-full px-4 text-xs font-bold shadow-glow'
         }
       >
         {publishing ? (

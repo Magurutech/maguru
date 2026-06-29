@@ -174,6 +174,7 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
     enabled: !loadingLesson, // Skip dirty check while loading
   })
 
+
   // Auto-save draft to localStorage
   const { clearDraft, getDraft } = useLocalStorageDraft({
     lessonId,
@@ -304,89 +305,98 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
   if (loadingLesson) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-merah-500" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-coral" />
       </div>
     )
   }
 
   return (
     <EditorContext.Provider value={{ editor }}>
-      <div className="w-full max-w-none">
-        {/* Header: Kembali | Toolbar | Save/Cancel */}
-        <div className="sticky top-0 z-10 bg-beige-50 border-b border-beige-200 mb-6 pb-2 pt-1">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleCancel}
-              className="flex items-center gap-1.5 text-sm text-beige-500 hover:text-beige-800 transition-colors shrink-0"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Kembali
-            </button>
-            <div className="flex-1 min-w-0">
-              <EditorToolbar lessonId={lessonId} />
-            </div>
-            <div className="flex items-center shrink-0">
-              <Button
-                size="sm"
-                onClick={handleSave}
-                disabled={saving || !title.trim() || (isEditMode && !isDirty)}
-                data-testid="lesson-save-btn"
-                className="bg-merah-500 hover:bg-merah-600 text-white rounded-r-none border-r border-merah-400"
-              >
-                {saving ? 'Menyimpan...' : isEditMode ? 'Save' : 'Create'}
-                {isDirty && !saving && (
-                  <span
-                    className="ml-1.5 text-red-200"
-                    aria-label="Perubahan belum disimpan"
-                    data-testid="dirty-indicator"
-                  >
-                    •
-                  </span>
-                )}
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size="sm"
-                    disabled={saving}
-                    className="bg-merah-500 hover:bg-merah-600 text-white rounded-l-none px-2"
-                    aria-label="Opsi lainnya"
-                  >
-                    <ChevronDown className="h-3.5 w-3.5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-32">
-                  <DropdownMenuItem onClick={handleCancel} className="text-beige-700">
-                    Cancel
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
+      {/* ── Toolbar strip: full-width, white, sticky at top:0 of the scroll container ─
+           Because <main> has no padding-top and overflow-y-auto, this div locks
+           flush to the ManageHeader — exactly like Confluence toolbar layout.      */}
+      <div className="sticky top-0 z-30 w-full bg-white border-b border-border/10 flex items-center select-none overflow-x-auto no-scrollbar">
+        {/* Cancel — left */}
+        <div className="flex items-center px-3 shrink-0 border-r border-border/10 h-full py-1.5">
+          <button
+            onClick={handleCancel}
+            className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-text-primary transition-colors font-bold bg-bg-bone/80 border border-border/10 px-3 py-1.5 rounded-full cursor-pointer whitespace-nowrap"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Batal
+          </button>
         </div>
 
+        {/* Tiptap formatting toolbar — center, left-aligned */}
+        <div className="flex-1 overflow-x-auto no-scrollbar">
+          <EditorToolbar lessonId={lessonId} />
+        </div>
+
+        {/* Save — right */}
+        <div className="flex items-center px-3 shrink-0 border-l border-border/10 h-full py-1.5">
+          <Button
+            size="sm"
+            onClick={handleSave}
+            disabled={saving || !title.trim() || (isEditMode && !isDirty)}
+            data-testid="lesson-save-btn"
+            className="bg-accent-coral hover:bg-accent-coral/95 text-white rounded-l-full rounded-r-none border-r border-white/10 px-4 text-xs font-bold cursor-pointer shadow-glow"
+          >
+            {saving ? 'Menyimpan...' : isEditMode ? 'Simpan' : 'Buat'}
+            {isDirty && !saving && (
+              <span
+                className="ml-1.5 text-red-200"
+                aria-label="Perubahan belum disimpan"
+                data-testid="dirty-indicator"
+              >
+                •
+              </span>
+            )}
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="sm"
+                disabled={saving}
+                className="bg-accent-coral hover:bg-accent-coral/95 text-white rounded-r-full rounded-l-none px-2.5 cursor-pointer"
+                aria-label="Opsi lainnya"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-32 paper-texture">
+              <DropdownMenuItem onClick={handleCancel} className="text-text-secondary">
+                Batal
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      {/* ── Editable content area: padded, max-width centered ───────────────── */}
+      <div className="max-w-4xl mx-auto px-8 md:px-12 py-8">
+        {/* Title input */}
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && editor?.commands.focus()}
           placeholder="Judul pelajaran..."
-          className="w-full text-3xl font-bold text-beige-900 bg-transparent border-none outline-none placeholder:text-beige-300 mb-2"
+          className="w-full text-2xl font-extrabold font-manrope text-text-primary bg-transparent border-none outline-none placeholder:text-text-faint/60 mb-3 focus:outline-none"
           maxLength={200}
           autoFocus={!isEditMode}
           data-testid="lesson-title-input"
         />
 
-        <hr className="border-beige-200 mb-4" />
+        <hr className="border-border/10 mb-6" />
 
         <div
-          className="min-h-100 cursor-text max-w-full lesson-editor-body"
+          className="min-h-[400px] cursor-text max-w-full lesson-editor-body"
           onClick={() => editor?.commands.focus()}
         >
           <EditorContent
             editor={editor}
             role="presentation"
-            className="simple-editor-content max-w-full [&_.tiptap]:min-h-[200px] [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-8"
+            className="simple-editor-content max-w-full [&_.tiptap]:min-h-[200px] [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-8 text-text-secondary text-sm font-sans"
           />
         </div>
       </div>

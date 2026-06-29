@@ -5,6 +5,8 @@
  *
  * Uses EditorContext (via useCurrentEditor) — no editor prop needed.
  * Parent MUST wrap with <EditorContext.Provider value={{ editor }}>.
+ * 
+ * Styled as a flat, full-width, left-aligned Confluence-style editor toolbar.
  */
 
 import { useRef, useState, memo } from 'react'
@@ -22,7 +24,6 @@ import { TextAlignButton } from '@/components/tiptap-ui/text-align-button'
 import { ColorHighlightPopover } from '@/components/tiptap-ui/color-highlight-popover'
 import { Button } from '@/components/tiptap-ui-primitive/button'
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from '@/components/tiptap-ui-primitive/toolbar'
-import { Spacer } from '@/components/tiptap-ui-primitive/spacer'
 import { uploadLessonImage } from '@/lib/tiptap/image-upload'
 
 /**
@@ -84,58 +85,56 @@ function ImageUploadButton({ lessonId }: { lessonId?: string }) {
 
 export const EditorToolbar = memo(function EditorToolbar({ lessonId }: { lessonId?: string }) {
   return (
-    <Toolbar>
-      <Spacer />
+    <div className="w-full bg-white border-y border-border/10 py-1 flex items-center justify-start overflow-x-auto select-none no-scrollbar">
+      <Toolbar>
+        <ToolbarGroup>
+          <UndoRedoButton action="undo" />
+          <UndoRedoButton action="redo" />
+        </ToolbarGroup>
 
-      <ToolbarGroup>
-        <UndoRedoButton action="undo" />
-        <UndoRedoButton action="redo" />
-      </ToolbarGroup>
+        <ToolbarSeparator />
 
-      <ToolbarSeparator />
+        <ToolbarGroup>
+          <HeadingDropdownMenu modal={false} levels={[1, 2, 3]} />
+          <ListDropdownMenu modal={false} types={['bulletList', 'orderedList']} />
+          <BlockquoteButton />
+          <CodeBlockButton />
+        </ToolbarGroup>
 
-      <ToolbarGroup>
-        <HeadingDropdownMenu modal={false} levels={[1, 2, 3]} />
-        <ListDropdownMenu modal={false} types={['bulletList', 'orderedList']} />
-        <BlockquoteButton />
-        <CodeBlockButton />
-      </ToolbarGroup>
+        <ToolbarSeparator />
 
-      <ToolbarSeparator />
+        <ToolbarGroup>
+          <MarkButton type="bold" />
+          <MarkButton type="italic" />
+          <MarkButton type="strike" />
+          <MarkButton type="code" />
+          <MarkButton type="underline" />
+          <ColorHighlightPopover />
+          <LinkPopover />
+        </ToolbarGroup>
 
-      <ToolbarGroup>
-        <MarkButton type="bold" />
-        <MarkButton type="italic" />
-        <MarkButton type="strike" />
-        <MarkButton type="code" />
-        <MarkButton type="underline" />
-        <ColorHighlightPopover />
-        <LinkPopover />
-      </ToolbarGroup>
+        <ToolbarSeparator />
 
-      <ToolbarSeparator />
+        <ToolbarGroup>
+          <MarkButton type="superscript" />
+          <MarkButton type="subscript" />
+        </ToolbarGroup>
 
-      <ToolbarGroup>
-        <MarkButton type="superscript" />
-        <MarkButton type="subscript" />
-      </ToolbarGroup>
+        <ToolbarSeparator />
 
-      <ToolbarSeparator />
+        <ToolbarGroup>
+          <TextAlignButton align="left" />
+          <TextAlignButton align="center" />
+          <TextAlignButton align="right" />
+          <TextAlignButton align="justify" />
+        </ToolbarGroup>
 
-      <ToolbarGroup>
-        <TextAlignButton align="left" />
-        <TextAlignButton align="center" />
-        <TextAlignButton align="right" />
-        <TextAlignButton align="justify" />
-      </ToolbarGroup>
+        <ToolbarSeparator />
 
-      <ToolbarSeparator />
-
-      <ToolbarGroup>
-        <ImageUploadButton lessonId={lessonId} />
-      </ToolbarGroup>
-
-      <Spacer />
-    </Toolbar>
+        <ToolbarGroup>
+          <ImageUploadButton lessonId={lessonId} />
+        </ToolbarGroup>
+      </Toolbar>
+    </div>
   )
 })

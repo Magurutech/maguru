@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { Button } from '@/components/ui/button'
 import { BookOpen, ArrowRight } from 'lucide-react'
 
 /**
@@ -68,35 +67,35 @@ export function CourseEnrollButton({
 
   if (enrolled) {
     return (
-      <Button
-        size="lg"
+      <button
+        type="button"
         data-testid="continue-learning-btn"
         onClick={() => router.push(`/course/${courseSlug}/learn`)}
-        className="bg-hijau-500 hover:bg-hijau-600 text-white hover:scale-105 transition-all duration-200 px-8"
+        className="w-full inline-flex items-center justify-center gap-2 p-[12px_24px] rounded-full bg-text-primary text-bg-canvas dark:bg-white dark:text-text-primary hover:opacity-90 font-sans text-sm font-semibold hover:-translate-y-px transition-all duration-180 cursor-pointer shadow-sm border-none"
       >
-        <BookOpen className="w-4 h-4 mr-2" />
+        <BookOpen className="w-4 h-4" />
         Lanjut Belajar
-      </Button>
+      </button>
     )
   }
 
   return (
-    <Button
-      size="lg"
+    <button
+      type="button"
       onClick={handleEnroll}
       disabled={enrolling}
       data-testid="enroll-btn"
       aria-label={`Daftar ke kursus ${courseTitle}`}
-      className="bg-merah-500 hover:bg-merah-600 text-white hover:scale-105 transition-all duration-200 px-8 disabled:opacity-60 disabled:cursor-not-allowed"
+      className="w-full inline-flex items-center justify-center gap-2 p-[12px_24px] rounded-full bg-accent-coral hover:bg-[#e25e4a] text-white font-sans text-sm font-semibold hover:-translate-y-px transition-all duration-180 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer shadow-sm border-none"
     >
       {enrolling ? (
         'Mendaftar...'
       ) : (
         <>
           Daftar Sekarang
-          <ArrowRight className="w-4 h-4 ml-2" />
+          <ArrowRight className="w-4 h-4" />
         </>
       )}
-    </Button>
+    </button>
   )
 }

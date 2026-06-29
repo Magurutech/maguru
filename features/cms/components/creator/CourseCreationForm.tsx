@@ -117,11 +117,11 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" data-testid="course-creation-form">
+    <form onSubmit={handleSubmit} className="space-y-5 select-none" data-testid="course-creation-form">
       {serverError && (
         <div
           data-testid="server-error"
-          className="rounded-md bg-merah-50 border border-merah-200 px-4 py-3 text-sm text-merah-700"
+          className="rounded-2xl bg-accent-coral/5 border border-accent-coral/15 px-4 py-3 text-xs font-bold text-accent-coral uppercase font-mono tracking-wide"
         >
           {serverError}
         </div>
@@ -129,104 +129,104 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
 
       {/* Title */}
       <div className="space-y-1.5">
-        <Label htmlFor="title" className="text-beige-800 font-medium">
-          Judul Kursus <span className="text-merah-500">*</span>
+        <Label htmlFor="title" className="text-[10px] font-bold text-text-primary uppercase tracking-wider block">
+          Judul Kursus <span className="text-accent-coral">*</span>
         </Label>
         <Input
           id="title"
           value={form.title}
           onChange={e => handleChange('title', e.target.value)}
-          placeholder="Contoh: Belajar React dari Nol"
+          placeholder="Contoh: Belajar Next.js dari Nol"
           maxLength={100}
           data-testid="input-title"
           aria-describedby={errors.title ? 'title-error' : undefined}
-          className={errors.title ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
+          className={`bg-card border-border/10 rounded-xl px-4 focus-visible:ring-accent-coral/20 focus-visible:border-accent-coral font-sans ${errors.title ? 'border-accent-coral focus-visible:ring-accent-coral/20' : ''}`}
           disabled={submitting}
         />
-        {errors.title && <p id="title-error" data-testid="error-title" className="text-xs text-merah-600">{errors.title}</p>}
-        <p className="text-xs text-beige-500">{form.title.length}/100 karakter</p>
+        {errors.title && <p id="title-error" data-testid="error-title" className="text-xs text-accent-coral font-bold font-sans">{errors.title}</p>}
+        <p className="text-[10px] text-text-muted font-bold font-mono text-right">{form.title.length}/100 karakter</p>
       </div>
 
       {/* Description */}
       <div className="space-y-1.5">
-        <Label htmlFor="description" className="text-beige-800 font-medium">
-          Deskripsi <span className="text-merah-500">*</span>
+        <Label htmlFor="description" className="text-[10px] font-bold text-text-primary uppercase tracking-wider block">
+          Deskripsi <span className="text-accent-coral">*</span>
         </Label>
         <Textarea
           id="description"
           value={form.description}
           onChange={e => handleChange('description', e.target.value)}
-          placeholder="Jelaskan apa yang akan dipelajari dalam kursus ini..."
+          placeholder="Jelaskan apa saja yang akan dibahas di materi kursus ini..."
           rows={4}
           data-testid="input-description"
           aria-describedby={errors.description ? 'description-error' : undefined}
-          className={errors.description ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
+          className={`bg-card border-border/10 rounded-xl px-4 py-3 focus-visible:ring-accent-coral/20 focus-visible:border-accent-coral font-sans ${errors.description ? 'border-accent-coral focus-visible:ring-accent-coral/20' : ''}`}
           disabled={submitting}
         />
-        {errors.description && <p id="description-error" data-testid="error-description" className="text-xs text-merah-600">{errors.description}</p>}
+        {errors.description && <p id="description-error" data-testid="error-description" className="text-xs text-accent-coral font-bold font-sans">{errors.description}</p>}
       </div>
 
       {/* Category */}
       <div className="space-y-1.5">
-        <Label htmlFor="category" className="text-beige-800 font-medium">
-          Kategori <span className="text-merah-500">*</span>
+        <Label htmlFor="category" className="text-[10px] font-bold text-text-primary uppercase tracking-wider block">
+          Kategori <span className="text-accent-coral">*</span>
         </Label>
         <Input
           id="category"
           value={form.category}
           onChange={e => handleChange('category', e.target.value)}
-          placeholder="Contoh: Pemrograman Web, Data Science, Desain"
+          placeholder="Contoh: Pemrograman Web, Desain Interface, dll."
           data-testid="input-category"
           aria-describedby={errors.category ? 'category-error' : undefined}
-          className={errors.category ? 'border-merah-400 focus-visible:ring-merah-400' : ''}
+          className={`bg-card border-border/10 rounded-xl px-4 focus-visible:ring-accent-coral/20 focus-visible:border-accent-coral font-sans ${errors.category ? 'border-accent-coral focus-visible:ring-accent-coral/20' : ''}`}
           disabled={submitting}
         />
-        {errors.category && <p id="category-error" data-testid="error-category" className="text-xs text-merah-600">{errors.category}</p>}
+        {errors.category && <p id="category-error" data-testid="error-category" className="text-xs text-accent-coral font-bold font-sans">{errors.category}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {/* Difficulty */}
         <div className="space-y-1.5">
-          <Label className="text-beige-800 font-medium">
-            Tingkat Kesulitan <span className="text-merah-500">*</span>
+          <Label className="text-[10px] font-bold text-text-primary uppercase tracking-wider block">
+            Tingkat Kesulitan <span className="text-accent-coral">*</span>
           </Label>
           <Select
             value={form.difficulty}
             onValueChange={val => handleChange('difficulty', val)}
             disabled={submitting}
           >
-            <SelectTrigger className={errors.difficulty ? 'border-merah-400' : ''}>
+            <SelectTrigger className={`bg-card border-border/10 rounded-xl focus:ring-accent-coral/20 ${errors.difficulty ? 'border-accent-coral' : ''}`}>
               <SelectValue placeholder="Pilih tingkat kesulitan" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="paper-texture">
               {DIFFICULTY_OPTIONS.map(opt => (
                 <SelectItem key={opt} value={opt}>{opt}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.difficulty && <p className="text-xs text-merah-600">{errors.difficulty}</p>}
+          {errors.difficulty && <p className="text-xs text-accent-coral font-bold font-sans">{errors.difficulty}</p>}
         </div>
 
         {/* Status */}
         <div className="space-y-1.5">
-          <Label className="text-beige-800 font-medium">
-            Status <span className="text-merah-500">*</span>
+          <Label className="text-[10px] font-bold text-text-primary uppercase tracking-wider block">
+            Status <span className="text-accent-coral">*</span>
           </Label>
           <Select
             value={form.status}
             onValueChange={val => handleChange('status', val)}
             disabled={submitting}
           >
-            <SelectTrigger className={errors.status ? 'border-merah-400' : ''}>
+            <SelectTrigger className={`bg-card border-border/10 rounded-xl focus:ring-accent-coral/20 ${errors.status ? 'border-accent-coral' : ''}`}>
               <SelectValue placeholder="Pilih status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="paper-texture">
               {STATUS_OPTIONS.map(opt => (
                 <SelectItem key={opt} value={opt}>{opt}</SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.status && <p className="text-xs text-merah-600">{errors.status}</p>}
+          {errors.status && <p className="text-xs text-accent-coral font-bold font-sans">{errors.status}</p>}
         </div>
       </div>
 
@@ -234,10 +234,10 @@ export function CourseCreationForm({ onSuccess }: CourseCreationFormProps) {
         type="submit"
         disabled={submitting}
         data-testid="submit-course-btn"
-        className="w-full bg-merah-500 hover:bg-merah-600 text-white font-semibold py-2.5 transition-all duration-200"
+        className="w-full bg-accent-coral hover:bg-accent-coral/95 text-white font-bold py-2.5 transition-all duration-200 rounded-full shadow-glow cursor-pointer text-sm"
       >
         {submitting ? (
-          <span className="flex items-center gap-2">
+          <span className="flex items-center justify-center gap-2">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
             Membuat Kursus...
           </span>

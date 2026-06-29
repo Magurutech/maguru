@@ -79,7 +79,10 @@ export async function GET(
         creatorId: true,
         status: true,
         createdAt: true,
-        updatedAt: true
+        updatedAt: true,
+        students: true,
+        duration: true,
+        rating: true
       }
     })
 

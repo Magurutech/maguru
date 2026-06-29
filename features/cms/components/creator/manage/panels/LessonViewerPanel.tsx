@@ -85,26 +85,34 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-merah-500" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-coral" />
       </div>
     )
   }
 
   return (
-    <div className="w-full max-w-none">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-beige-900 leading-tight">{title}</h1>
-        <div className="flex items-center gap-3 shrink-0">
+    <div className="w-full max-w-none select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div className="space-y-1">
+          <span className="text-[10px] font-bold text-accent-coral uppercase tracking-widest block leading-none">
+            MATERI PELAJARAN
+          </span>
+          <h1 className="font-manrope text-2xl font-extrabold text-text-primary leading-tight tracking-tight">
+            {title}
+          </h1>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
           {lessonData && (
-            <div className="flex items-center gap-3 text-xs text-beige-600 border border-beige-200 rounded-lg px-3 py-1.5 bg-beige-50">
-              <div className="flex items-center gap-1.5">
-                <span className="font-medium">Order:</span>
-                <span className="font-mono font-semibold text-beige-900">{lessonData.order}</span>
+            <div className="flex items-center gap-3 text-[10px] text-text-secondary border border-border/10 rounded-xl px-3 py-1.5 bg-bg-bone/80 font-mono font-bold uppercase">
+              <div className="flex items-center gap-1">
+                <span>Urutan:</span>
+                <span className="text-text-primary">{lessonData.order}</span>
               </div>
-              <div className="h-3 w-px bg-beige-300" />
-              <div className="flex items-center gap-1.5">
-                <span className="font-medium">Version:</span>
-                <span className="font-mono font-semibold text-beige-900">{lessonData.version}</span>
+              <div className="h-3 w-px bg-border/15" />
+              <div className="flex items-center gap-1">
+                <span>Versi:</span>
+                <span className="text-text-primary">{lessonData.version}</span>
               </div>
             </div>
           )}
@@ -112,23 +120,23 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
             <Button
               size="sm"
               variant="outline"
-              className="border-beige-300 text-beige-700 hover:bg-beige-50"
+              className="border-border/10 rounded-full hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary cursor-pointer px-4 font-bold text-xs"
               onClick={() => openEditLesson(lesson, sectionId)}
             >
-              <Edit className="h-3.5 w-3.5 mr-1.5" />
+              <Edit className="h-3.5 w-3.5 mr-1.5 text-accent-coral" />
               Edit Pelajaran
             </Button>
           )}
         </div>
       </div>
 
-      <hr className="border-beige-200 mb-6" />
+      <hr className="border-border/10 mb-6" />
 
       <div className="lesson-editor-body">
         <EditorContent
           editor={editor}
           role="presentation"
-          className="simple-editor-content max-w-full [&_.simple-editor-content]:h-auto [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0"
+          className="simple-editor-content max-w-full [&_.simple-editor-content]:h-auto [&_.tiptap]:px-0 [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0 text-text-secondary leading-relaxed text-sm font-sans"
         />
       </div>
     </div>
