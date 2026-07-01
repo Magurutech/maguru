@@ -16,7 +16,7 @@ import { Highlight } from '@tiptap/extension-highlight'
 import { Typography } from '@tiptap/extension-typography'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
-import { Selection } from '@tiptap/extensions'
+import { Selection } from '@tiptap/extensions/selection'
 import Image from '@tiptap/extension-image'
 import { toast } from 'sonner'
 import { EditorToolbar } from '@/features/cms/components/creator/EditorToolbar'
@@ -24,12 +24,27 @@ import { useManageContext } from '../../../../Context/creator/ManageContext'
 import { useUnsavedChanges } from '@/features/cms/hooks/manage/useUnsavedChanges'
 import { useLocalStorageDraft } from '@/features/cms/hooks/manage/useLocalStorageDraft'
 
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
+import { SlashCommand } from '../editor/extensions/SlashCommand'
+import { Small } from '../editor/extensions/Small'
+import { Columns, Column } from '../editor/extensions/Columns'
+import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table'
+import { Details, DetailsSummary, DetailsContent } from '@tiptap/extension-details'
+import { PasteMarkdown } from '../editor/extensions/PasteMarkdown'
+import { BrowseModal } from '../editor/components/BrowseModal'
+
 // Simple Editor node styles
 import '@/components/tiptap-node/heading-node/heading-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/code-block-node/code-block-node.scss'
 import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss'
+import '@/components/tiptap-node/image-node/image-node.scss'
+import '@/components/tiptap-node/table-node/table-node.scss'
+import '@/components/tiptap-node/columns-node/columns-node.scss'
 import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 // ── Editor extensions (module-level, created once) ─────────────────────────
@@ -69,6 +84,17 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
 
   const [saving, setSaving] = useState(false)
   const [loadingLesson, setLoadingLesson] = useState(!!lessonId)
+
+  const [isBrowseOpen, setIsBrowseOpen] = useState(false)
+
+  useEffect(() => {
+    // openBrowseModal is called by suggestion.ts after it has already run
+    // deleteRange — so we only need to open the dialog here, no range needed.
+    ;(window as any).openBrowseModal = () => setIsBrowseOpen(true)
+    return () => {
+      delete (window as any).openBrowseModal
+    }
+  }, [])
 
   // Initial values for dirty state tracking - use cached values if available
   const [initialTitle, setInitialTitle] = useState(() => {
@@ -158,7 +184,28 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
       Superscript,
       Subscript,
       Selection,
-      Image.configure({ inline: false, allowBase64: false }),
+      Image.configure({ inline: false, allowBase64: false, HTMLAttributes: { class: 'tiptap-image' } }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      HorizontalRule,
+      SlashCommand,
+      Small,
+      Columns,
+      Column,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      Details.configure({
+        HTMLAttributes: {
+          class: 'details-block',
+        },
+      }),
+      DetailsSummary,
+      DetailsContent,
+      PasteMarkdown,
       HeadingShortcuts,
       saveShortcutExtension,
     ],
@@ -381,7 +428,7 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && editor?.commands.focus()}
           placeholder="Judul pelajaran..."
-          className="w-full text-2xl font-extrabold font-manrope text-text-primary bg-transparent border-none outline-none placeholder:text-text-faint/60 mb-3 focus:outline-none"
+          className="w-full text-2xl font-medium font-sans text-text-primary bg-transparent border-none outline-none placeholder:text-text-faint/60 mb-3 focus:outline-none"
           maxLength={200}
           autoFocus={!isEditMode}
           data-testid="lesson-title-input"
@@ -400,6 +447,11 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
           />
         </div>
       </div>
+      <BrowseModal
+        isOpen={isBrowseOpen}
+        onClose={() => setIsBrowseOpen(false)}
+        editor={editor}
+      />
     </EditorContext.Provider>
   )
 }

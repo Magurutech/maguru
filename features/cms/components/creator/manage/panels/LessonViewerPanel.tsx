@@ -10,10 +10,17 @@ import { Highlight } from '@tiptap/extension-highlight'
 import { Typography } from '@tiptap/extension-typography'
 import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
-import { Selection } from '@tiptap/extensions'
+import { Selection } from '@tiptap/extensions/selection'
 import Image from '@tiptap/extension-image'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
 import { toast } from 'sonner'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
+
+import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table'
+import { Details, DetailsSummary, DetailsContent } from '@tiptap/extension-details'
+import { Small } from '../editor/extensions/Small'
+import { Columns, Column } from '../editor/extensions/Columns'
 
 // Simple Editor node styles
 import '@/components/tiptap-node/heading-node/heading-node.scss'
@@ -21,6 +28,11 @@ import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/code-block-node/code-block-node.scss'
 import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss'
+import '@/components/tiptap-node/image-node/image-node.scss'
+import '@/components/tiptap-node/table-node/table-node.scss'
+import '@/components/tiptap-node/columns-node/columns-node.scss'
+import '@/components/tiptap-node/details-node/details-node.scss'
 import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 interface LessonViewerPanelProps {
@@ -53,6 +65,24 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
       Subscript,
       Selection,
       Image,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      Small,
+      Columns,
+      Column,
+      Table.configure({
+        resizable: false,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      Details.configure({
+        HTMLAttributes: {
+          class: 'details-block',
+        },
+      }),
+      DetailsSummary,
+      DetailsContent,
     ],
     content: { type: 'doc', content: [] },
     editable: false,
@@ -97,7 +127,7 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
           <span className="text-[10px] font-bold text-accent-coral uppercase tracking-widest block leading-none">
             MATERI PELAJARAN
           </span>
-          <h1 className="font-manrope text-2xl font-extrabold text-text-primary leading-tight tracking-tight">
+          <h1 className="font-sans text-2xl font-medium text-text-primary leading-tight tracking-tight">
             {title}
           </h1>
         </div>

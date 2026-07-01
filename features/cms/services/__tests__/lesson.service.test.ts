@@ -38,6 +38,8 @@ describe('LessonService', () => {
     jest.clearAllMocks()
     // Default: user has ownership
     ;(checkCourseOwnership as jest.Mock).mockResolvedValue(true)
+    // Mock $transaction globally to execute callback with prismaMock as tx
+    prismaMock.$transaction.mockImplementation(async (fn: any) => fn(prismaMock))
   })
 
   const validLessonContent: LessonContent = {
@@ -215,7 +217,7 @@ describe('LessonService', () => {
       ).rejects.toThrow('Section not found')
     })
 
-    it('should reject duplicate order within same section', async () => {
+    it('should handle duplicate order within same section by shifting', async () => {
       const sectionId = 'section-1'
       const input = {
         title: 'Test Lesson',
@@ -242,13 +244,27 @@ describe('LessonService', () => {
         createdAt: new Date(),
         updatedAt: new Date(),
       }
-//eslint-disable-next-line 
+
+      const mockLesson = {
+        id: 'new-lesson',
+        sectionId,
+        title: input.title,
+        content: input.content,
+        order: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+
       prismaMock.sections.findUnique.mockResolvedValue(mockSection as any)
       prismaMock.lessons.findUnique.mockResolvedValue(existingLesson as unknown as never)
+      prismaMock.lessons.findMany.mockResolvedValue([existingLesson] as unknown as never)
+      prismaMock.lessons.update.mockResolvedValue({} as never)
+      prismaMock.lessons.create.mockResolvedValue(mockLesson as unknown as never)
 
-      await expect(
-        lessonService.createLesson(sectionId, input, mockUserId)
-      ).rejects.toThrow('Lesson with order 1 already exists in this section')
+      const result = await lessonService.createLesson(sectionId, input, mockUserId)
+      expect(result).toEqual(mockLesson)
+      expect(prismaMock.lessons.update).toHaveBeenCalled()
+      expect(prismaMock.lessons.create).toHaveBeenCalled()
     })
   })
 
@@ -471,7 +487,7 @@ describe('LessonService', () => {
       ).rejects.toThrow('Lesson not found')
     })
 
-    it('should reject duplicate order', async () => {
+    it('should handle duplicate order by shifting', async () => {
       const input = { order: 2 }
 
       const duplicateLesson = {
@@ -484,13 +500,22 @@ describe('LessonService', () => {
         updatedAt: new Date(),
       }
 
+      const mockUpdatedLesson = {
+        ...existingLesson,
+        order: 2,
+      }
+
       prismaMock.lessons.findUnique
         .mockResolvedValueOnce(existingLesson as unknown as never) // First call: get existing
         .mockResolvedValueOnce(duplicateLesson as unknown as never) // Second call: check duplicate
+      
+      prismaMock.lessons.findMany.mockResolvedValue([duplicateLesson] as unknown as never)
+      prismaMock.lessons.update
+        .mockResolvedValueOnce({} as never) // shift update
+        .mockResolvedValueOnce(mockUpdatedLesson as unknown as never) // final update
 
-      await expect(
-        lessonService.updateLesson('lesson-1', input, mockUserId)
-      ).rejects.toThrow('Lesson with order 2 already exists in this section')
+      const result = await lessonService.updateLesson('lesson-1', input, mockUserId)
+      expect(result).toEqual(mockUpdatedLesson)
     })
   })
 

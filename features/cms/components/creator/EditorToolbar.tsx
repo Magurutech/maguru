@@ -10,17 +10,17 @@
  */
 
 import { useRef, useState, memo } from 'react'
-import { Image as ImageIcon, Loader2 } from 'lucide-react'
+import { Image as ImageIcon, Loader2, Columns as ColumnsIcon, ChevronsUpDown } from 'lucide-react'
 import { useCurrentEditor } from '@tiptap/react'
 import { toast } from 'sonner'
-import { MarkButton } from '@/components/tiptap-ui/mark-button'
 import { HeadingDropdownMenu } from '@/components/tiptap-ui/heading-dropdown-menu'
 import { ListDropdownMenu } from '@/components/tiptap-ui/list-dropdown-menu'
-import { BlockquoteButton } from '@/components/tiptap-ui/blockquote-button'
+import { StyleTextDropdownMenu } from '@/components/tiptap-ui/style-text-dropdown-menu'
+import { AlignDropdownMenu } from '@/components/tiptap-ui/align-dropdown-menu'
+import { TableDropdownMenu } from '@/components/tiptap-ui/table-dropdown-menu'
 import { CodeBlockButton } from '@/components/tiptap-ui/code-block-button'
 import { LinkPopover } from '@/components/tiptap-ui/link-popover'
 import { UndoRedoButton } from '@/components/tiptap-ui/undo-redo-button'
-import { TextAlignButton } from '@/components/tiptap-ui/text-align-button'
 import { ColorHighlightPopover } from '@/components/tiptap-ui/color-highlight-popover'
 import { Button } from '@/components/tiptap-ui-primitive/button'
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from '@/components/tiptap-ui-primitive/toolbar'
@@ -84,6 +84,8 @@ function ImageUploadButton({ lessonId }: { lessonId?: string }) {
 }
 
 export const EditorToolbar = memo(function EditorToolbar({ lessonId }: { lessonId?: string }) {
+  const { editor } = useCurrentEditor()
+
   return (
     <div className="w-full bg-white border-y border-border/10 py-1 flex items-center justify-start overflow-x-auto select-none no-scrollbar">
       <Toolbar>
@@ -95,44 +97,61 @@ export const EditorToolbar = memo(function EditorToolbar({ lessonId }: { lessonI
         <ToolbarSeparator />
 
         <ToolbarGroup>
-          <HeadingDropdownMenu modal={false} levels={[1, 2, 3]} />
-          <ListDropdownMenu modal={false} types={['bulletList', 'orderedList']} />
-          <BlockquoteButton />
-          <CodeBlockButton />
-        </ToolbarGroup>
-
-        <ToolbarSeparator />
-
-        <ToolbarGroup>
-          <MarkButton type="bold" />
-          <MarkButton type="italic" />
-          <MarkButton type="strike" />
-          <MarkButton type="code" />
-          <MarkButton type="underline" />
+          <HeadingDropdownMenu modal={false} />
+          <StyleTextDropdownMenu modal={false} />
           <ColorHighlightPopover />
+        </ToolbarGroup>
+
+        <ToolbarSeparator />
+
+        <ToolbarGroup>
+          <ListDropdownMenu modal={false} />
+          <AlignDropdownMenu modal={false} />
+        </ToolbarGroup>
+
+        <ToolbarSeparator />
+
+        <ToolbarGroup>
           <LinkPopover />
-        </ToolbarGroup>
-
-        <ToolbarSeparator />
-
-        <ToolbarGroup>
-          <MarkButton type="superscript" />
-          <MarkButton type="subscript" />
-        </ToolbarGroup>
-
-        <ToolbarSeparator />
-
-        <ToolbarGroup>
-          <TextAlignButton align="left" />
-          <TextAlignButton align="center" />
-          <TextAlignButton align="right" />
-          <TextAlignButton align="justify" />
-        </ToolbarGroup>
-
-        <ToolbarSeparator />
-
-        <ToolbarGroup>
+          <CodeBlockButton />
           <ImageUploadButton lessonId={lessonId} />
+        </ToolbarGroup>
+
+        <ToolbarSeparator />
+
+        <ToolbarGroup>
+          <TableDropdownMenu modal={false} />
+          <Button
+            type="button"
+            variant="ghost"
+            tooltip="Layout Kolom"
+            onClick={() => editor?.chain().focus().insertColumns(2).run()}
+            disabled={!editor}
+            aria-label="Insert 2 columns layout"
+          >
+            <ColumnsIcon className="tiptap-button-icon h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            tooltip="Expand Block (Collapsible)"
+            onClick={() =>
+              editor
+                ?.chain()
+                .focus()
+                .insertContent(
+                  `<details class="details-block">
+                    <summary>Ringkasan</summary>
+                    <p>Tulis detail konten di sini...</p>
+                  </details>`
+                )
+                .run()
+            }
+            disabled={!editor || editor.isActive('details')}
+            aria-label="Insert expand details block"
+          >
+            <ChevronsUpDown className="tiptap-button-icon h-4 w-4" />
+          </Button>
         </ToolbarGroup>
       </Toolbar>
     </div>

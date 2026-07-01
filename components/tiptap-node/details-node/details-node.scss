@@ -1,0 +1,147 @@
+.tiptap.ProseMirror {
+  /* Token Warna Design System Maguru */
+  --details-border-color: var(--color-text-faint, #8b8676);
+  --details-bg-color: var(--color-bg-bone, #f7f1de);
+  --details-summary-color: var(--color-text-muted, #5a5448);
+  --details-content-color: var(--color-text-primary, #15140f);
+  --details-summary-hover-bg: var(--color-bg-surface, #ece4cf);
+
+  .dark & {
+    --details-border-color: var(--color-text-faint, #777367);
+    --details-bg-color: var(--color-bg-bone, #2d2a33);
+    --details-summary-color: var(--color-text-secondary, #ddd2b6);
+    --details-content-color: var(--color-text-primary, #efe7d2);
+    --details-summary-hover-bg: var(--color-bg-surface-accent, #37353e);
+  }
+}
+
+/* =====================
+     COLLAPSIBLE DETAILS BLOCK
+     ===================== */
+.tiptap.ProseMirror {
+  /* 1. Box Utama (Border tipis solid, warna bone/parchment) */
+  details,
+  div[data-type="details"] {
+    border: 1px solid var(--details-border-color) !important;
+    border-radius: 6px !important;
+    background-color: var(--details-bg-color) !important;
+    margin: 0.75rem 0 !important;
+    padding: 0.5rem 0.75rem !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* 2. Ringkasan/Summary (Polos, tanpa border/kotak internal) */
+  details summary,
+  div[data-type="details"] summary {
+    cursor: pointer !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+    color: var(--details-summary-color) !important;
+    padding: 0.25rem 0.5rem 0.25rem 1.5rem !important; /* Jarak kiri untuk chevron */
+    border: none !important;
+    background: none !important;
+    outline: none !important;
+    display: flex !important;
+    align-items: center !important;
+    user-select: none !important;
+    list-style: none !important;
+    list-style-type: none !important;
+
+    &::marker {
+      content: "" !important;
+      display: none !important;
+    }
+    &::-webkit-details-marker {
+      display: none !important;
+    }
+
+    &:hover {
+      background-color: var(--details-summary-hover-bg) !important;
+      border-radius: 4px !important;
+    }
+  }
+
+  /* 3. Chevron Presisi */
+  /* Mode Viewer (Native HTML) */
+  details summary::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 0.75rem !important;
+    top: 0.85rem !important; /* Rata tengah vertikal dengan teks */
+    width: 0.4rem !important;
+    height: 0.4rem !important;
+    border-top: 1.5px solid var(--details-summary-color) !important;
+    border-right: 1.5px solid var(--details-summary-color) !important;
+    transform: translateY(-50%) rotate(45deg) !important; /* Menghadap ke kanan */
+    transition: transform 0.15s ease !important;
+    transform-origin: center !important;
+  }
+  details[open] summary::before {
+    transform: translateY(-75%) rotate(135deg) !important; /* Menghadap ke bawah */
+  }
+
+  /* Mode Editor (Tiptap Toggle Button) */
+  div[data-type="details"] {
+    display: flex;
+    flex-direction: column;
+
+    /* Tiptap NodeView renders button and contentDOM as sibling divs */
+    > button {
+      position: absolute !important;
+      left: 0.75rem !important;
+      top: 0.75rem !important; /* Rata tengah vertikal dengan teks */
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      cursor: pointer !important;
+      outline: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 1rem !important;
+      height: 1rem !important;
+      transition: transform 0.15s ease !important;
+      z-index: 10 !important;
+
+      &::before {
+        content: "" !important;
+        width: 0.4rem !important;
+        height: 0.4rem !important;
+        border-top: 1.5px solid var(--details-summary-color) !important;
+        border-right: 1.5px solid var(--details-summary-color) !important;
+        transform: rotate(45deg) !important;
+      }
+    }
+    &.is-open > button {
+      transform: rotate(90deg) !important;
+    }
+    summary {
+      padding-left: 2rem !important; /* Beri ruang untuk tombol absolut di editor */
+    }
+  }
+
+  /* 4. Konten Lipat (Hanya 1 baris jarak, tanpa garis putus-putus pembatas) */
+  details .details-content,
+  div[data-type="detailsContent"] {
+    padding: 0 0.5rem 0.25rem 1.5rem !important; /* Indentasi agar sejajar teks summary */
+    border-top: none !important; /* Hapus garis pembatas */
+    margin-top: 0.25rem !important; /* Jarak minimal 1 baris */
+    color: var(--details-content-color) !important;
+    
+    /* Hilangkan gaya bullet atau list dari child elements di dalam kontainer lipat */
+    li {
+      list-style-type: none !important;
+    }
+
+    > *:first-child {
+      margin-top: 0 !important;
+    }
+    > *:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+}

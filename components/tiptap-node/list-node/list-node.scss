@@ -197,6 +197,10 @@
             opacity: 1;
           }
         }
+
+        input[type="checkbox"]:disabled + span {
+          cursor: default;
+        }
       }
 
       div {

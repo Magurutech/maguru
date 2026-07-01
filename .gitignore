@@ -24,6 +24,10 @@ rules/error.md
 # testing
 /coverage
 
+# File Module Name 
+CLAUDE.md
+GEMINI.md
+
 # next.js
 /.next/
 /out/

@@ -22,6 +22,11 @@ jest.mock('./LearningOutcomesEditor', () => ({
   LearningOutcomesEditor: () => <div data-testid="mock-outcomes-editor">Outcomes Editor Mock</div>
 }))
 
+// Mock DescriptionEditor
+jest.mock('./DescriptionEditor', () => ({
+  DescriptionEditor: () => <div data-testid="mock-description-editor">Description Editor Mock</div>
+}))
+
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect } from '@jest/globals'

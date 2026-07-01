@@ -51,7 +51,7 @@ body,
 }
 
 .tiptap.ProseMirror {
-  font-family: "DM Sans", sans-serif;
+  font-family: var(--font-sans), sans-serif;
 }
 
 .simple-editor-wrapper {
@@ -61,7 +61,7 @@ body,
 }
 
 .simple-editor-content {
-  max-width: 648px;
+  max-width: 768px;
   width: 100%;
   margin: 0 auto;
   height: 100%;
@@ -72,11 +72,11 @@ body,
 
 .simple-editor-content .tiptap.ProseMirror.simple-editor {
   flex: 1;
-  padding: 3rem 3rem 10vh;
+  padding: 1.5rem 0 5vh;
 }
 
 @media screen and (max-width: 480px) {
   .simple-editor-content .tiptap.ProseMirror.simple-editor {
-    padding: 1rem 1.5rem 10vh;
+    padding: 0.5rem 0 5vh;
   }
 }

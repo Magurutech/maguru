@@ -279,3 +279,10 @@ global.console = {
   error: jest.fn(),
   warn: jest.fn(),
 }
+
+// Mock marked library to avoid ESM syntax error in Jest
+jest.mock('marked', () => ({
+  marked: {
+    parse: jest.fn((str) => str),
+  },
+}))
