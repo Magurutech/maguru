@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   useCourseManage,
   useLessonHandlers,
@@ -35,6 +36,11 @@ interface ManageContextValue {
   pendingDeleteLesson: { sectionId: string; lessonId: string; title: string } | null
   confirmDeleteLesson: () => Promise<void>
   cancelDeleteLesson: () => void
+  // Delete course confirmation
+  courseDeleteDialogOpen: boolean
+  setCourseDeleteDialogOpen: (open: boolean) => void
+  isDeletingCourse: boolean
+  confirmDeleteCourse: () => Promise<void>
   // Inline section creation
   isAddingSection: boolean
   newSectionTitle: string
@@ -58,6 +64,7 @@ interface ManageContextValue {
   reorderLessons: (sectionId: string, newLessons: ManagedLesson[], previousLessons: ManagedLesson[]) => Promise<void>
 }
 
+
 const ManageContext = createContext<ManageContextValue | null>(null)
 
 export function useManageContext() {
@@ -69,8 +76,28 @@ export function useManageContext() {
 // ── Provider ───────────────────────────────────────────────────────────────
 
 export function ManageProvider({ courseSlug, children }: { courseSlug: string; children: ReactNode }) {
-  const { course, setCourse, sections, setSections, loading, error, publishing, handleTogglePublish } =
-    useCourseManage(courseSlug)
+  const router = useRouter()
+  const {
+    course,
+    setCourse,
+    sections,
+    setSections,
+    loading,
+    error,
+    publishing,
+    handleTogglePublish,
+    isDeletingCourse,
+    handleDeleteCourse,
+  } = useCourseManage(courseSlug)
+
+  const [courseDeleteDialogOpen, setCourseDeleteDialogOpen] = useState(false)
+
+  const confirmDeleteCourse = async () => {
+    await handleDeleteCourse(() => {
+      setCourseDeleteDialogOpen(false)
+      router.push('/creator/courses')
+    })
+  }
 
   const { activeView, setActiveView } = useManageView()
 
@@ -201,6 +228,7 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
       lessonsMap, expandedSections, toggleSection, handleDeleteSection, handleDeleteLesson,
       pendingDeleteSectionId, confirmDeleteSection, cancelDeleteSection,
       pendingDeleteLesson, confirmDeleteLesson, cancelDeleteLesson,
+      courseDeleteDialogOpen, setCourseDeleteDialogOpen, isDeletingCourse, confirmDeleteCourse,
       isAddingSection, newSectionTitle, setNewSectionTitle,
       startAddingSection, cancelAddingSection, confirmAddSection, updateSectionTitle,
       sectionFormOpen, editingSection, openEditSection, closeSectionDialog, handleSectionSubmit,

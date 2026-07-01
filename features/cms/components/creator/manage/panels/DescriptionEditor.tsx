@@ -41,6 +41,11 @@ export function DescriptionEditor({
   const [saving, setSaving] = useState(false)
 
   const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class: 'simple-editor',
+      },
+    },
     extensions: [
       StarterKit.configure({ link: { openOnClick: false } }),
       TextAlign.configure({ types: ['heading', 'paragraph'] }),

@@ -1,7 +1,13 @@
 import { Check, Sparkles, FolderKanban, Star, Users, Award, BookOpen } from 'lucide-react'
-import type { CourseMockData } from './CourseDetailMock'
-
 import type { CreatorProfile, Review } from './types'
+
+// Import Tiptap node styles for proper rendering (same as creator)
+import '@/components/tiptap-node/heading-node/heading-node.scss'
+import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
+import '@/components/tiptap-node/list-node/list-node.scss'
+import '@/components/tiptap-node/code-block-node/code-block-node.scss'
+import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 const PLACEHOLDER_INSTRUCTOR: CreatorProfile = {
   name: 'Instruktur Maguru',
@@ -27,6 +33,8 @@ export function UnifiedDescriptionSection({
   outcomes: string[] | undefined
   instructor: CreatorProfile | null
 }) {
+
+
   if (!description) return null
 
   // Use real instructor if set (has name), otherwise fallback to default placeholder
@@ -51,10 +59,12 @@ export function UnifiedDescriptionSection({
           </h2>
         </div>
 
-        <div className="text-text-secondary text-[14px] leading-relaxed space-y-4 max-w-3xl font-sans">
-          {description.split('\n').filter(p => p.trim() !== '').map((para, i) => (
-            <p key={i}>{para}</p>
-          ))}
+        <div className="text-text-secondary text-[14px] leading-relaxed max-w-3xl font-sans">
+          {/* ponytail: render html deskripsi secara native tanpa membebani runtime tiptap */}
+          <div
+            dangerouslySetInnerHTML={{ __html: description }}
+            className="tiptap ProseMirror simple-editor"
+          />
         </div>
       </div>
 

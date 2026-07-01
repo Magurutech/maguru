@@ -124,3 +124,43 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     return NextResponse.json({ error: 'Failed to fetch course' }, { status: 500 })
   }
 }
+
+/**
+ * DELETE /api/courses/[slug]
+ * Delete the course and all associated completions.
+ * Other tables (sections, lessons, enrollments) will cascade delete via DB constraints.
+ */
+export async function DELETE(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  try {
+    const { slug } = await params
+    const user = await currentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const course = await prisma.courses.findUnique({
+      where: { slug },
+      select: { id: true, creatorId: true },
+    })
+
+    if (!course) {
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+
+    if (course.creatorId !== user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    // Perform transaction to clean up tables without cascade in prisma or direct constraints
+    await prisma.$transaction([
+      prisma.course_completions.deleteMany({ where: { courseId: course.id } }),
+      prisma.courses.delete({ where: { slug } }),
+    ])
+
+    return NextResponse.json({ message: 'Course deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting course:', error)
+    return NextResponse.json({ error: 'Failed to delete course' }, { status: 500 })
+  }
+}
+

@@ -9,24 +9,10 @@
  * ada di panel Inspektur kanan.
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Edit, Layers, FileText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { useEditor, EditorContent } from '@tiptap/react'
-import { StarterKit } from '@tiptap/starter-kit'
-import { TextAlign } from '@tiptap/extension-text-align'
-import { Highlight } from '@tiptap/extension-highlight'
-import { Typography } from '@tiptap/extension-typography'
-import { Superscript } from '@tiptap/extension-superscript'
-import { Subscript } from '@tiptap/extension-subscript'
-import { Selection } from '@tiptap/extensions/selection'
-import Image from '@tiptap/extension-image'
-import TaskList from '@tiptap/extension-task-list'
-import TaskItem from '@tiptap/extension-task-item'
-import { Small } from '../editor/extensions/Small'
-import { Columns, Column } from '../editor/extensions/Columns'
-import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table'
-import { Details, DetailsSummary, DetailsContent } from '@tiptap/extension-details'
+import { Button } from '@/components/ui/button'
 import { useManageContext } from '../../../../Context/creator/ManageContext'
 import { DescriptionEditor } from './DescriptionEditor'
 import { LearningOutcomesEditor } from './LearningOutcomesEditor'
@@ -38,42 +24,10 @@ const DIFFICULTY_LABEL: Record<string, string> = {
 }
 
 export function CourseOverview() {
-  const { course, setCourse, sections, lessonsMap } = useManageContext()
+  const { course, setCourse, sections, lessonsMap, setCourseDeleteDialogOpen } = useManageContext()
   const [editingDesc, setEditingDesc] = useState(false)
 
-  const viewEditor = useEditor({
-    immediatelyRender: false,
-    extensions: [
-      StarterKit.configure({ link: { openOnClick: false } }),
-      TextAlign.configure({ types: ['heading', 'paragraph'] }),
-      Highlight.configure({ multicolor: true }),
-      Typography,
-      Superscript,
-      Subscript,
-      Selection,
-      Image,
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      Small,
-      Columns,
-      Column,
-      Table.configure({ resizable: false }),
-      TableRow,
-      TableHeader,
-      TableCell,
-      Details.configure({ HTMLAttributes: { class: 'details-block' } }),
-      DetailsSummary,
-      DetailsContent,
-    ],
-    content: course?.description || '',
-    editable: false,
-  })
 
-  useEffect(() => {
-    if (viewEditor && course?.description) {
-      viewEditor.commands.setContent(course.description)
-    }
-  }, [course?.description, viewEditor])
 
   if (!course) return null
 
@@ -121,6 +75,17 @@ export function CourseOverview() {
           >
             {isPublished ? 'Published' : 'Draft'}
           </Badge>
+
+          <div className="ml-auto">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setCourseDeleteDialogOpen(true)}
+              className="bg-red-50/50 hover:bg-red-50 hover:text-red-700 text-red-600 border border-red-200/50 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full cursor-pointer transition-all"
+            >
+              Hapus Kelas
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -195,7 +160,11 @@ export function CourseOverview() {
               onClick={() => setEditingDesc(true)}
             >
               {course.description ? (
-                <EditorContent editor={viewEditor} />
+                /* ponytail: render html deskripsi secara native tanpa membebani runtime tiptap */
+                <div
+                  dangerouslySetInnerHTML={{ __html: course.description }}
+                  className="tiptap ProseMirror simple-editor"
+                />
               ) : (
                 <span className="text-text-faint italic font-medium">
                   Tambahkan deskripsi lengkap materi kelas...

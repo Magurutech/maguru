@@ -1,4 +1,5 @@
 // Mock ManageContext first using global jest (hoisted)
+const mockSetCourseDeleteDialogOpen = jest.fn()
 jest.mock('../../../../Context/creator/ManageContext', () => ({
   useManageContext: () => ({
     course: {
@@ -13,7 +14,8 @@ jest.mock('../../../../Context/creator/ManageContext', () => ({
     },
     setCourse: jest.fn(),
     sections: [],
-    lessonsMap: {}
+    lessonsMap: {},
+    setCourseDeleteDialogOpen: mockSetCourseDeleteDialogOpen,
   })
 }))
 
@@ -28,13 +30,26 @@ jest.mock('./DescriptionEditor', () => ({
 }))
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from '@jest/globals'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { describe, it, expect, beforeEach } from '@jest/globals'
 import { CourseOverview } from './CourseOverview'
 
 describe('CourseOverview Panel', () => {
+  beforeEach(() => {
+    mockSetCourseDeleteDialogOpen.mockClear()
+  })
+
   it('renders the LearningOutcomesEditor component', () => {
     render(<CourseOverview />)
     expect(screen.getByTestId('mock-outcomes-editor')).toBeInTheDocument()
   })
+
+  it('renders Hapus Kelas button and triggers dialog when clicked', () => {
+    render(<CourseOverview />)
+    const deleteBtn = screen.getByRole('button', { name: /Hapus Kelas/i })
+    expect(deleteBtn).toBeInTheDocument()
+    fireEvent.click(deleteBtn)
+    expect(mockSetCourseDeleteDialogOpen).toHaveBeenCalledWith(true)
+  })
 })
+

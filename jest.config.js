@@ -17,6 +17,7 @@ const customJestConfig = {
     '^@/features/(.*)$': '<rootDir>/features/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
     '^@/hooks/(.*)$': '<rootDir>/hooks/$1',
+    '^@/prisma/(.*)$': '<rootDir>/prisma/$1',
   },
   // Konfigurasi untuk menentukan file mana yang dianggap sebagai test
   testMatch: [
