@@ -1,0 +1,80 @@
+.tiptap.ProseMirror {
+  --column-gap: 1.5rem;
+  --column-border-color: var(--ink-faint, #706a5c);
+
+  .dark & {
+    --column-border-color: var(--text-faint, #777367);
+  }
+}
+
+/* =====================
+     LAYOUT COLUMNS
+     ===================== */
+.tiptap.ProseMirror {
+  .layout-columns {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--column-gap);
+    margin: 1.5rem 0;
+    width: 100%;
+    
+    .layout-column {
+      min-height: 50px;
+      box-sizing: border-box;
+      
+      > *:first-child {
+        margin-top: 0;
+      }
+      > *:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+/* Edit Mode Outline */
+.tiptap.ProseMirror[contenteditable="true"] {
+  .layout-columns {
+    // Default transparent vertical borders (2px solid) to prevent layout shifts
+    border-left: 2px solid transparent;
+    border-right: 2px solid transparent;
+    padding: 0.5rem 0;
+    transition: border-color 0.2s ease;
+
+    .layout-column {
+      border: none;
+      padding: 0.5rem 1rem;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+
+      &:not(:last-child) {
+        border-right: 2px solid transparent;
+      }
+
+      &:focus-within {
+        background-color: rgba(237, 111, 92, 0.04); /* Subtle coral accent tint on edit focus */
+      }
+    }
+
+    // Solid 2px lines appear only on hover or focus-within
+    &:hover,
+    &:focus-within {
+      border-left-color: var(--column-border-color);
+      border-right-color: var(--column-border-color);
+
+      .layout-column:not(:last-child) {
+        border-right-color: var(--column-border-color);
+      }
+    }
+  }
+}
+
+/* Read-only / Viewer Mode */
+.tiptap.ProseMirror[contenteditable="false"] {
+  .layout-columns {
+    border: none;
+    .layout-column {
+      border: none;
+      padding: 0;
+    }
+  }
+}

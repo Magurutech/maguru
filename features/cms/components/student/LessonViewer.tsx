@@ -102,10 +102,10 @@ export function LessonViewer({ lesson }: LessonViewerProps) {
   }
 
   return (
-    <div className="lesson-viewer w-full max-w-none text-beige-900 dark:text-beige-900 p-6 rounded-lg
+    <div className="lesson-viewer w-full max-w-none text-text-secondary p-6 rounded-lg
       [&_.simple-editor-content]:h-auto [&_.simple-editor-content]:flex-none [&_.simple-editor-content]:max-w-none
       [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0">
-      <h1 data-testid="lesson-title" className="text-3xl font-bold text-beige-900 mb-6">{lesson.title}</h1>
+      <h1 data-testid="lesson-title" className="text-3xl font-manrope font-extrabold text-text-primary mb-6">{lesson.title}</h1>
       <EditorContent 
         editor={editor} 
         className="simple-editor-content max-w-none! w-full [&_.tiptap]:px-0 [&_.tiptap]:max-w-none! [&_.tiptap]:w-full"
@@ -113,4 +113,5 @@ export function LessonViewer({ lesson }: LessonViewerProps) {
       />
     </div>
   )
+
 }

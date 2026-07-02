@@ -38,7 +38,7 @@ export const LessonNavigation = memo(function LessonNavigation({
   }
   return (
     <nav
-      className="flex items-center justify-between gap-4 pt-6 border-t border-beige-200"
+      className="flex items-center justify-between gap-4 pt-6 border-t border-border/10"
       aria-label="Navigasi pelajaran"
     >
       {/* Previous */}
@@ -46,12 +46,12 @@ export const LessonNavigation = memo(function LessonNavigation({
         <Button
           variant="outline"
           onClick={() => onNavigate(previousLesson.id)}
-          className="flex items-center gap-2 border-beige-300 text-beige-700 hover:bg-beige-100 max-w-[45%]"
+          className="flex items-center gap-2 border-border/15 text-text-secondary hover:bg-bg-surface-accent rounded-full px-5 py-2 text-xs font-bold font-sans cursor-pointer transition-all"
           aria-label={`Pelajaran sebelumnya: ${previousLesson.title}`}
           data-testid="prev-lesson-btn"
         >
-          <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span className="text-sm font-medium truncate">{previousLesson.title}</span>
+          <ChevronLeft className="h-4 w-4 shrink-0 text-text-muted" aria-hidden="true" />
+          <span className="text-sm font-semibold truncate">{previousLesson.title}</span>
         </Button>
       ) : (
         <div /> /* spacer so Next stays right when no Prev */
@@ -60,18 +60,19 @@ export const LessonNavigation = memo(function LessonNavigation({
       {/* Next */}
       {nextLesson ? (
         <Button
-          variant="outline"
+          variant="default"
           onClick={() => handleNext(nextLesson.id)}
-          className="flex items-center gap-2 border-beige-300 text-beige-700 hover:bg-beige-100 max-w-[45%] ml-auto"
+          className="flex items-center gap-2 bg-accent-coral hover:bg-accent-coral/95 text-white rounded-full px-5 py-2 text-xs font-bold shadow-glow ml-auto cursor-pointer transition-all border border-transparent"
           aria-label={`Pelajaran berikutnya: ${nextLesson.title}`}
           data-testid="next-lesson-btn"
         >
-          <span className="text-sm font-medium truncate">{nextLesson.title}</span>
-          <ChevronRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <span className="text-sm font-semibold truncate">{nextLesson.title}</span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-white" aria-hidden="true" />
         </Button>
       ) : (
         <div className="ml-auto" /> /* spacer */
       )}
     </nav>
   )
+
 })

@@ -4,6 +4,8 @@ import { UserRoleProvider } from '../features/auth'
 import { Providers } from '../lib/providers'
 import '../styles/globals.css'
 import { Toaster } from 'sonner'
+import { NavbarGlass } from '../features/homepage/components/NavbarGlass'
+import { EditorialSideRails } from '../features/homepage/components/EditorialSideRails'
 
 // Load Google Fonts via next/font/google
 import { Poppins, Playfair_Display, Fira_Code } from 'next/font/google'
@@ -52,6 +54,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               enableSessionStorage: process.env.NEXT_PUBLIC_ENABLE_ROLE_CACHE !== 'false',
             }}
           >
+            {/* Global navbar — fixed pill nav, visible on all pages */}
+            <NavbarGlass />
+            
+            {/* Editorial Side Rails (Conditional client component) */}
+            <EditorialSideRails />
+
             {children}
             <Toaster position="bottom-right" richColors closeButton />
           </UserRoleProvider>

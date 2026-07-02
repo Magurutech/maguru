@@ -10,9 +10,8 @@ import { useTiptapEditor } from "@/hooks/use-tiptap-editor"
 import { ChevronDownIcon } from "@/components/tiptap-icons/chevron-down-icon"
 
 // --- Tiptap UI ---
-import { ListButton, type ListType } from "@/components/tiptap-ui/list-button"
-
 import { useListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu/use-list-dropdown-menu"
+import type { ListType } from "@/components/tiptap-ui/list-button"
 
 // --- UI Primitives ---
 import type { ButtonProps } from "@/components/tiptap-ui-primitive/button"
@@ -23,29 +22,16 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuGroup,
-} from "@/components/tiptap-ui-primitive/dropdown-menu"
+  DropdownMenuShortcut,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 export interface ListDropdownMenuProps extends Omit<ButtonProps, "type"> {
-  /**
-   * The Tiptap editor instance.
-   */
   editor?: Editor
-  /**
-   * The list types to display in the dropdown.
-   */
   types?: ListType[]
-  /**
-   * Whether the dropdown should be hidden when no list types are available
-   * @default false
-   */
   hideWhenUnavailable?: boolean
-  /**
-   * Callback for when the dropdown opens or closes
-   */
   onOpenChange?: (isOpen: boolean) => void
-  /**
-   * Whether the dropdown should use a modal
-   */
   modal?: boolean
 }
 
@@ -60,7 +46,7 @@ export function ListDropdownMenu({
   const { editor } = useTiptapEditor(providedEditor)
   const [isOpen, setIsOpen] = useState(false)
 
-  const { filteredLists, canToggle, isActive, isVisible, Icon } =
+  const { canToggle, isActive, isVisible, Icon } =
     useListDropdownMenu({
       editor,
       types,
@@ -75,8 +61,32 @@ export function ListDropdownMenu({
     [onOpenChange]
   )
 
-  if (!isVisible) {
+  if (!editor || !isVisible) {
     return null
+  }
+
+  const canIndent = () => {
+    return editor.isActive("bulletList") || editor.isActive("orderedList") || editor.isActive("taskList")
+  }
+
+  const canOutdent = () => {
+    return editor.isActive("bulletList") || editor.isActive("orderedList") || editor.isActive("taskList")
+  }
+
+  const handleIndent = () => {
+    if (editor.isActive("taskList")) {
+      editor.chain().focus().sinkListItem("taskItem").run()
+    } else {
+      editor.chain().focus().sinkListItem("listItem").run()
+    }
+  }
+
+  const handleOutdent = () => {
+    if (editor.isActive("taskList")) {
+      editor.chain().focus().liftListItem("taskItem").run()
+    } else {
+      editor.chain().focus().liftListItem("listItem").run()
+    }
   }
 
   return (
@@ -91,7 +101,7 @@ export function ListDropdownMenu({
           disabled={!canToggle}
           data-disabled={!canToggle}
           aria-label="List options"
-          tooltip="List"
+          tooltip="List formatting"
           {...props}
         >
           <Icon className="tiptap-button-icon" />
@@ -99,18 +109,60 @@ export function ListDropdownMenu({
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent align="start" className="min-w-[200px] z-50">
         <DropdownMenuGroup>
-          {filteredLists.map((option) => (
-            <DropdownMenuItem key={option.type} asChild>
-              <ListButton
-                editor={editor}
-                type={option.type}
-                text={option.label}
-                showTooltip={false}
-              />
-            </DropdownMenuItem>
-          ))}
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={cn(
+              "flex justify-between items-center text-sm cursor-pointer",
+              editor.isActive("bulletList") && "bg-accent/60 text-accent-foreground font-medium"
+            )}
+          >
+            <span>Bulleted list</span>
+            <DropdownMenuShortcut>Ctrl+Shift+8</DropdownMenuShortcut>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={cn(
+              "flex justify-between items-center text-sm cursor-pointer",
+              editor.isActive("orderedList") && "bg-accent/60 text-accent-foreground font-medium"
+            )}
+          >
+            <span>Numbered list</span>
+            <DropdownMenuShortcut>Ctrl+Shift+7</DropdownMenuShortcut>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            className={cn(
+              "flex justify-between items-center text-sm cursor-pointer",
+              editor.isActive("taskList") && "bg-accent/60 text-accent-foreground font-medium"
+            )}
+          >
+            <span>Task list</span>
+            <DropdownMenuShortcut>Ctrl+Shift+6</DropdownMenuShortcut>
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            onClick={handleOutdent}
+            className="flex justify-between items-center text-sm cursor-pointer"
+            disabled={!canOutdent()}
+          >
+            <span className="text-text-secondary">Outdent</span>
+            <DropdownMenuShortcut>Shift+Tab</DropdownMenuShortcut>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem
+            onClick={handleIndent}
+            className="flex justify-between items-center text-sm cursor-pointer"
+            disabled={!canIndent()}
+          >
+            <span className="text-text-secondary">Indent</span>
+            <DropdownMenuShortcut>Tab</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -118,3 +170,4 @@ export function ListDropdownMenu({
 }
 
 export default ListDropdownMenu
+

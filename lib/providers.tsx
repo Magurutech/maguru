@@ -5,6 +5,8 @@ import { useState, type ReactNode } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { ClerkProvider } from '@clerk/nextjs'
 
+import { TooltipProvider } from '@/components/ui/tooltip'
+
 interface ProvidersProps {
   children: ReactNode
 }
@@ -32,7 +34,11 @@ export function Providers({ children }: ProvidersProps) {
     <QueryClientProvider client={queryClient}>
       {' '}
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-        <ClerkProvider>{children}</ClerkProvider>
+        <ClerkProvider>
+          <TooltipProvider delayDuration={0}>
+            {children}
+          </TooltipProvider>
+        </ClerkProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

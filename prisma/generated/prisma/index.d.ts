@@ -43,6 +43,11 @@ export type lessons = $Result.DefaultSelection<Prisma.$lessonsPayload>
  * 
  */
 export type sections = $Result.DefaultSelection<Prisma.$sectionsPayload>
+/**
+ * Model creator_profiles
+ * 
+ */
+export type creator_profiles = $Result.DefaultSelection<Prisma.$creator_profilesPayload>
 
 /**
  * Enums
@@ -241,6 +246,16 @@ export class PrismaClient<
     * ```
     */
   get sections(): Prisma.sectionsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.creator_profiles`: Exposes CRUD operations for the **creator_profiles** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Creator_profiles
+    * const creator_profiles = await prisma.creator_profiles.findMany()
+    * ```
+    */
+  get creator_profiles(): Prisma.creator_profilesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -680,7 +695,8 @@ export namespace Prisma {
     enrollments: 'enrollments',
     lesson_progress: 'lesson_progress',
     lessons: 'lessons',
-    sections: 'sections'
+    sections: 'sections',
+    creator_profiles: 'creator_profiles'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -696,7 +712,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "course_completions" | "courses" | "enrollments" | "lesson_progress" | "lessons" | "sections"
+      modelProps: "course_completions" | "courses" | "enrollments" | "lesson_progress" | "lessons" | "sections" | "creator_profiles"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1144,6 +1160,80 @@ export namespace Prisma {
           }
         }
       }
+      creator_profiles: {
+        payload: Prisma.$creator_profilesPayload<ExtArgs>
+        fields: Prisma.creator_profilesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.creator_profilesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.creator_profilesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          findFirst: {
+            args: Prisma.creator_profilesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.creator_profilesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          findMany: {
+            args: Prisma.creator_profilesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>[]
+          }
+          create: {
+            args: Prisma.creator_profilesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          createMany: {
+            args: Prisma.creator_profilesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.creator_profilesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>[]
+          }
+          delete: {
+            args: Prisma.creator_profilesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          update: {
+            args: Prisma.creator_profilesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          deleteMany: {
+            args: Prisma.creator_profilesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.creator_profilesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.creator_profilesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>[]
+          }
+          upsert: {
+            args: Prisma.creator_profilesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$creator_profilesPayload>
+          }
+          aggregate: {
+            args: Prisma.Creator_profilesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCreator_profiles>
+          }
+          groupBy: {
+            args: Prisma.creator_profilesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Creator_profilesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.creator_profilesCountArgs<ExtArgs>
+            result: $Utils.Optional<Creator_profilesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1258,6 +1348,7 @@ export namespace Prisma {
     lesson_progress?: lesson_progressOmit
     lessons?: lessonsOmit
     sections?: sectionsOmit
+    creator_profiles?: creator_profilesOmit
   }
 
   /* Types for Logging */
@@ -2590,6 +2681,7 @@ export namespace Prisma {
     category: number
     difficulty: number
     creatorId: number
+    outcomes: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2658,6 +2750,7 @@ export namespace Prisma {
     category?: true
     difficulty?: true
     creatorId?: true
+    outcomes?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2763,6 +2856,7 @@ export namespace Prisma {
     category: string
     difficulty: string | null
     creatorId: string
+    outcomes: string[]
     createdAt: Date
     updatedAt: Date
     _count: CoursesCountAggregateOutputType | null
@@ -2800,6 +2894,7 @@ export namespace Prisma {
     category?: boolean
     difficulty?: boolean
     creatorId?: boolean
+    outcomes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     enrollments?: boolean | courses$enrollmentsArgs<ExtArgs>
@@ -2821,6 +2916,7 @@ export namespace Prisma {
     category?: boolean
     difficulty?: boolean
     creatorId?: boolean
+    outcomes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["courses"]>
@@ -2839,6 +2935,7 @@ export namespace Prisma {
     category?: boolean
     difficulty?: boolean
     creatorId?: boolean
+    outcomes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["courses"]>
@@ -2857,11 +2954,12 @@ export namespace Prisma {
     category?: boolean
     difficulty?: boolean
     creatorId?: boolean
+    outcomes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
+  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "outcomes" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
   export type coursesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enrollments?: boolean | courses$enrollmentsArgs<ExtArgs>
     sections?: boolean | courses$sectionsArgs<ExtArgs>
@@ -2890,6 +2988,7 @@ export namespace Prisma {
       category: string
       difficulty: string | null
       creatorId: string
+      outcomes: string[]
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["courses"]>
@@ -3330,6 +3429,7 @@ export namespace Prisma {
     readonly category: FieldRef<"courses", 'String'>
     readonly difficulty: FieldRef<"courses", 'String'>
     readonly creatorId: FieldRef<"courses", 'String'>
+    readonly outcomes: FieldRef<"courses", 'String[]'>
     readonly createdAt: FieldRef<"courses", 'DateTime'>
     readonly updatedAt: FieldRef<"courses", 'DateTime'>
   }
@@ -8266,6 +8366,1058 @@ export namespace Prisma {
 
 
   /**
+   * Model creator_profiles
+   */
+
+  export type AggregateCreator_profiles = {
+    _count: Creator_profilesCountAggregateOutputType | null
+    _min: Creator_profilesMinAggregateOutputType | null
+    _max: Creator_profilesMaxAggregateOutputType | null
+  }
+
+  export type Creator_profilesMinAggregateOutputType = {
+    userId: string | null
+    name: string | null
+    title: string | null
+    bio: string | null
+    experience: string | null
+    avatarUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Creator_profilesMaxAggregateOutputType = {
+    userId: string | null
+    name: string | null
+    title: string | null
+    bio: string | null
+    experience: string | null
+    avatarUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type Creator_profilesCountAggregateOutputType = {
+    userId: number
+    name: number
+    title: number
+    bio: number
+    experience: number
+    avatarUrl: number
+    socialLinks: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type Creator_profilesMinAggregateInputType = {
+    userId?: true
+    name?: true
+    title?: true
+    bio?: true
+    experience?: true
+    avatarUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Creator_profilesMaxAggregateInputType = {
+    userId?: true
+    name?: true
+    title?: true
+    bio?: true
+    experience?: true
+    avatarUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type Creator_profilesCountAggregateInputType = {
+    userId?: true
+    name?: true
+    title?: true
+    bio?: true
+    experience?: true
+    avatarUrl?: true
+    socialLinks?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type Creator_profilesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which creator_profiles to aggregate.
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of creator_profiles to fetch.
+     */
+    orderBy?: creator_profilesOrderByWithRelationInput | creator_profilesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: creator_profilesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` creator_profiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` creator_profiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned creator_profiles
+    **/
+    _count?: true | Creator_profilesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Creator_profilesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Creator_profilesMaxAggregateInputType
+  }
+
+  export type GetCreator_profilesAggregateType<T extends Creator_profilesAggregateArgs> = {
+        [P in keyof T & keyof AggregateCreator_profiles]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCreator_profiles[P]>
+      : GetScalarType<T[P], AggregateCreator_profiles[P]>
+  }
+
+
+
+
+  export type creator_profilesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: creator_profilesWhereInput
+    orderBy?: creator_profilesOrderByWithAggregationInput | creator_profilesOrderByWithAggregationInput[]
+    by: Creator_profilesScalarFieldEnum[] | Creator_profilesScalarFieldEnum
+    having?: creator_profilesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Creator_profilesCountAggregateInputType | true
+    _min?: Creator_profilesMinAggregateInputType
+    _max?: Creator_profilesMaxAggregateInputType
+  }
+
+  export type Creator_profilesGroupByOutputType = {
+    userId: string
+    name: string | null
+    title: string | null
+    bio: string | null
+    experience: string | null
+    avatarUrl: string | null
+    socialLinks: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: Creator_profilesCountAggregateOutputType | null
+    _min: Creator_profilesMinAggregateOutputType | null
+    _max: Creator_profilesMaxAggregateOutputType | null
+  }
+
+  type GetCreator_profilesGroupByPayload<T extends creator_profilesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Creator_profilesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Creator_profilesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Creator_profilesGroupByOutputType[P]>
+            : GetScalarType<T[P], Creator_profilesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type creator_profilesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    name?: boolean
+    title?: boolean
+    bio?: boolean
+    experience?: boolean
+    avatarUrl?: boolean
+    socialLinks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["creator_profiles"]>
+
+  export type creator_profilesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    name?: boolean
+    title?: boolean
+    bio?: boolean
+    experience?: boolean
+    avatarUrl?: boolean
+    socialLinks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["creator_profiles"]>
+
+  export type creator_profilesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    name?: boolean
+    title?: boolean
+    bio?: boolean
+    experience?: boolean
+    avatarUrl?: boolean
+    socialLinks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["creator_profiles"]>
+
+  export type creator_profilesSelectScalar = {
+    userId?: boolean
+    name?: boolean
+    title?: boolean
+    bio?: boolean
+    experience?: boolean
+    avatarUrl?: boolean
+    socialLinks?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type creator_profilesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "name" | "title" | "bio" | "experience" | "avatarUrl" | "socialLinks" | "createdAt" | "updatedAt", ExtArgs["result"]["creator_profiles"]>
+
+  export type $creator_profilesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "creator_profiles"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      userId: string
+      name: string | null
+      title: string | null
+      bio: string | null
+      experience: string | null
+      avatarUrl: string | null
+      socialLinks: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["creator_profiles"]>
+    composites: {}
+  }
+
+  type creator_profilesGetPayload<S extends boolean | null | undefined | creator_profilesDefaultArgs> = $Result.GetResult<Prisma.$creator_profilesPayload, S>
+
+  type creator_profilesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<creator_profilesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: Creator_profilesCountAggregateInputType | true
+    }
+
+  export interface creator_profilesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['creator_profiles'], meta: { name: 'creator_profiles' } }
+    /**
+     * Find zero or one Creator_profiles that matches the filter.
+     * @param {creator_profilesFindUniqueArgs} args - Arguments to find a Creator_profiles
+     * @example
+     * // Get one Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends creator_profilesFindUniqueArgs>(args: SelectSubset<T, creator_profilesFindUniqueArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Creator_profiles that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {creator_profilesFindUniqueOrThrowArgs} args - Arguments to find a Creator_profiles
+     * @example
+     * // Get one Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends creator_profilesFindUniqueOrThrowArgs>(args: SelectSubset<T, creator_profilesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Creator_profiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesFindFirstArgs} args - Arguments to find a Creator_profiles
+     * @example
+     * // Get one Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends creator_profilesFindFirstArgs>(args?: SelectSubset<T, creator_profilesFindFirstArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Creator_profiles that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesFindFirstOrThrowArgs} args - Arguments to find a Creator_profiles
+     * @example
+     * // Get one Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends creator_profilesFindFirstOrThrowArgs>(args?: SelectSubset<T, creator_profilesFindFirstOrThrowArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Creator_profiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findMany()
+     * 
+     * // Get first 10 Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const creator_profilesWithUserIdOnly = await prisma.creator_profiles.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends creator_profilesFindManyArgs>(args?: SelectSubset<T, creator_profilesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Creator_profiles.
+     * @param {creator_profilesCreateArgs} args - Arguments to create a Creator_profiles.
+     * @example
+     * // Create one Creator_profiles
+     * const Creator_profiles = await prisma.creator_profiles.create({
+     *   data: {
+     *     // ... data to create a Creator_profiles
+     *   }
+     * })
+     * 
+     */
+    create<T extends creator_profilesCreateArgs>(args: SelectSubset<T, creator_profilesCreateArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Creator_profiles.
+     * @param {creator_profilesCreateManyArgs} args - Arguments to create many Creator_profiles.
+     * @example
+     * // Create many Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends creator_profilesCreateManyArgs>(args?: SelectSubset<T, creator_profilesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Creator_profiles and returns the data saved in the database.
+     * @param {creator_profilesCreateManyAndReturnArgs} args - Arguments to create many Creator_profiles.
+     * @example
+     * // Create many Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Creator_profiles and only return the `userId`
+     * const creator_profilesWithUserIdOnly = await prisma.creator_profiles.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends creator_profilesCreateManyAndReturnArgs>(args?: SelectSubset<T, creator_profilesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Creator_profiles.
+     * @param {creator_profilesDeleteArgs} args - Arguments to delete one Creator_profiles.
+     * @example
+     * // Delete one Creator_profiles
+     * const Creator_profiles = await prisma.creator_profiles.delete({
+     *   where: {
+     *     // ... filter to delete one Creator_profiles
+     *   }
+     * })
+     * 
+     */
+    delete<T extends creator_profilesDeleteArgs>(args: SelectSubset<T, creator_profilesDeleteArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Creator_profiles.
+     * @param {creator_profilesUpdateArgs} args - Arguments to update one Creator_profiles.
+     * @example
+     * // Update one Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends creator_profilesUpdateArgs>(args: SelectSubset<T, creator_profilesUpdateArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Creator_profiles.
+     * @param {creator_profilesDeleteManyArgs} args - Arguments to filter Creator_profiles to delete.
+     * @example
+     * // Delete a few Creator_profiles
+     * const { count } = await prisma.creator_profiles.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends creator_profilesDeleteManyArgs>(args?: SelectSubset<T, creator_profilesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Creator_profiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends creator_profilesUpdateManyArgs>(args: SelectSubset<T, creator_profilesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Creator_profiles and returns the data updated in the database.
+     * @param {creator_profilesUpdateManyAndReturnArgs} args - Arguments to update many Creator_profiles.
+     * @example
+     * // Update many Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Creator_profiles and only return the `userId`
+     * const creator_profilesWithUserIdOnly = await prisma.creator_profiles.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends creator_profilesUpdateManyAndReturnArgs>(args: SelectSubset<T, creator_profilesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Creator_profiles.
+     * @param {creator_profilesUpsertArgs} args - Arguments to update or create a Creator_profiles.
+     * @example
+     * // Update or create a Creator_profiles
+     * const creator_profiles = await prisma.creator_profiles.upsert({
+     *   create: {
+     *     // ... data to create a Creator_profiles
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Creator_profiles we want to update
+     *   }
+     * })
+     */
+    upsert<T extends creator_profilesUpsertArgs>(args: SelectSubset<T, creator_profilesUpsertArgs<ExtArgs>>): Prisma__creator_profilesClient<$Result.GetResult<Prisma.$creator_profilesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Creator_profiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesCountArgs} args - Arguments to filter Creator_profiles to count.
+     * @example
+     * // Count the number of Creator_profiles
+     * const count = await prisma.creator_profiles.count({
+     *   where: {
+     *     // ... the filter for the Creator_profiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends creator_profilesCountArgs>(
+      args?: Subset<T, creator_profilesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Creator_profilesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Creator_profiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Creator_profilesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Creator_profilesAggregateArgs>(args: Subset<T, Creator_profilesAggregateArgs>): Prisma.PrismaPromise<GetCreator_profilesAggregateType<T>>
+
+    /**
+     * Group by Creator_profiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {creator_profilesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends creator_profilesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: creator_profilesGroupByArgs['orderBy'] }
+        : { orderBy?: creator_profilesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, creator_profilesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCreator_profilesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the creator_profiles model
+   */
+  readonly fields: creator_profilesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for creator_profiles.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__creator_profilesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the creator_profiles model
+   */
+  interface creator_profilesFieldRefs {
+    readonly userId: FieldRef<"creator_profiles", 'String'>
+    readonly name: FieldRef<"creator_profiles", 'String'>
+    readonly title: FieldRef<"creator_profiles", 'String'>
+    readonly bio: FieldRef<"creator_profiles", 'String'>
+    readonly experience: FieldRef<"creator_profiles", 'String'>
+    readonly avatarUrl: FieldRef<"creator_profiles", 'String'>
+    readonly socialLinks: FieldRef<"creator_profiles", 'Json'>
+    readonly createdAt: FieldRef<"creator_profiles", 'DateTime'>
+    readonly updatedAt: FieldRef<"creator_profiles", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * creator_profiles findUnique
+   */
+  export type creator_profilesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter, which creator_profiles to fetch.
+     */
+    where: creator_profilesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles findUniqueOrThrow
+   */
+  export type creator_profilesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter, which creator_profiles to fetch.
+     */
+    where: creator_profilesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles findFirst
+   */
+  export type creator_profilesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter, which creator_profiles to fetch.
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of creator_profiles to fetch.
+     */
+    orderBy?: creator_profilesOrderByWithRelationInput | creator_profilesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for creator_profiles.
+     */
+    cursor?: creator_profilesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` creator_profiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` creator_profiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of creator_profiles.
+     */
+    distinct?: Creator_profilesScalarFieldEnum | Creator_profilesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles findFirstOrThrow
+   */
+  export type creator_profilesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter, which creator_profiles to fetch.
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of creator_profiles to fetch.
+     */
+    orderBy?: creator_profilesOrderByWithRelationInput | creator_profilesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for creator_profiles.
+     */
+    cursor?: creator_profilesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` creator_profiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` creator_profiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of creator_profiles.
+     */
+    distinct?: Creator_profilesScalarFieldEnum | Creator_profilesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles findMany
+   */
+  export type creator_profilesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter, which creator_profiles to fetch.
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of creator_profiles to fetch.
+     */
+    orderBy?: creator_profilesOrderByWithRelationInput | creator_profilesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing creator_profiles.
+     */
+    cursor?: creator_profilesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` creator_profiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` creator_profiles.
+     */
+    skip?: number
+    distinct?: Creator_profilesScalarFieldEnum | Creator_profilesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles create
+   */
+  export type creator_profilesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a creator_profiles.
+     */
+    data: XOR<creator_profilesCreateInput, creator_profilesUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles createMany
+   */
+  export type creator_profilesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many creator_profiles.
+     */
+    data: creator_profilesCreateManyInput | creator_profilesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * creator_profiles createManyAndReturn
+   */
+  export type creator_profilesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * The data used to create many creator_profiles.
+     */
+    data: creator_profilesCreateManyInput | creator_profilesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * creator_profiles update
+   */
+  export type creator_profilesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a creator_profiles.
+     */
+    data: XOR<creator_profilesUpdateInput, creator_profilesUncheckedUpdateInput>
+    /**
+     * Choose, which creator_profiles to update.
+     */
+    where: creator_profilesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles updateMany
+   */
+  export type creator_profilesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update creator_profiles.
+     */
+    data: XOR<creator_profilesUpdateManyMutationInput, creator_profilesUncheckedUpdateManyInput>
+    /**
+     * Filter which creator_profiles to update
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * Limit how many creator_profiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * creator_profiles updateManyAndReturn
+   */
+  export type creator_profilesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * The data used to update creator_profiles.
+     */
+    data: XOR<creator_profilesUpdateManyMutationInput, creator_profilesUncheckedUpdateManyInput>
+    /**
+     * Filter which creator_profiles to update
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * Limit how many creator_profiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * creator_profiles upsert
+   */
+  export type creator_profilesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the creator_profiles to update in case it exists.
+     */
+    where: creator_profilesWhereUniqueInput
+    /**
+     * In case the creator_profiles found by the `where` argument doesn't exist, create a new creator_profiles with this data.
+     */
+    create: XOR<creator_profilesCreateInput, creator_profilesUncheckedCreateInput>
+    /**
+     * In case the creator_profiles was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<creator_profilesUpdateInput, creator_profilesUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles delete
+   */
+  export type creator_profilesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+    /**
+     * Filter which creator_profiles to delete.
+     */
+    where: creator_profilesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * creator_profiles deleteMany
+   */
+  export type creator_profilesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which creator_profiles to delete
+     */
+    where?: creator_profilesWhereInput
+    /**
+     * Limit how many creator_profiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * creator_profiles without action
+   */
+  export type creator_profilesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the creator_profiles
+     */
+    select?: creator_profilesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the creator_profiles
+     */
+    omit?: creator_profilesOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8315,6 +9467,7 @@ export namespace Prisma {
     category: 'category',
     difficulty: 'difficulty',
     creatorId: 'creatorId',
+    outcomes: 'outcomes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8372,6 +9525,21 @@ export namespace Prisma {
   export type SectionsScalarFieldEnum = (typeof SectionsScalarFieldEnum)[keyof typeof SectionsScalarFieldEnum]
 
 
+  export const Creator_profilesScalarFieldEnum: {
+    userId: 'userId',
+    name: 'name',
+    title: 'title',
+    bio: 'bio',
+    experience: 'experience',
+    avatarUrl: 'avatarUrl',
+    socialLinks: 'socialLinks',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type Creator_profilesScalarFieldEnum = (typeof Creator_profilesScalarFieldEnum)[keyof typeof Creator_profilesScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -8385,6 +9553,14 @@ export namespace Prisma {
   };
 
   export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -8598,6 +9774,7 @@ export namespace Prisma {
     category?: StringFilter<"courses"> | string
     difficulty?: StringNullableFilter<"courses"> | string | null
     creatorId?: StringFilter<"courses"> | string
+    outcomes?: StringNullableListFilter<"courses">
     createdAt?: DateTimeFilter<"courses"> | Date | string
     updatedAt?: DateTimeFilter<"courses"> | Date | string
     enrollments?: EnrollmentsListRelationFilter
@@ -8618,6 +9795,7 @@ export namespace Prisma {
     category?: SortOrder
     difficulty?: SortOrderInput | SortOrder
     creatorId?: SortOrder
+    outcomes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     enrollments?: enrollmentsOrderByRelationAggregateInput
@@ -8641,6 +9819,7 @@ export namespace Prisma {
     category?: StringFilter<"courses"> | string
     difficulty?: StringNullableFilter<"courses"> | string | null
     creatorId?: StringFilter<"courses"> | string
+    outcomes?: StringNullableListFilter<"courses">
     createdAt?: DateTimeFilter<"courses"> | Date | string
     updatedAt?: DateTimeFilter<"courses"> | Date | string
     enrollments?: EnrollmentsListRelationFilter
@@ -8661,6 +9840,7 @@ export namespace Prisma {
     category?: SortOrder
     difficulty?: SortOrderInput | SortOrder
     creatorId?: SortOrder
+    outcomes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: coursesCountOrderByAggregateInput
@@ -8687,6 +9867,7 @@ export namespace Prisma {
     category?: StringWithAggregatesFilter<"courses"> | string
     difficulty?: StringNullableWithAggregatesFilter<"courses"> | string | null
     creatorId?: StringWithAggregatesFilter<"courses"> | string
+    outcomes?: StringNullableListFilter<"courses">
     createdAt?: DateTimeWithAggregatesFilter<"courses"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"courses"> | Date | string
   }
@@ -8955,6 +10136,78 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"sections"> | Date | string
   }
 
+  export type creator_profilesWhereInput = {
+    AND?: creator_profilesWhereInput | creator_profilesWhereInput[]
+    OR?: creator_profilesWhereInput[]
+    NOT?: creator_profilesWhereInput | creator_profilesWhereInput[]
+    userId?: StringFilter<"creator_profiles"> | string
+    name?: StringNullableFilter<"creator_profiles"> | string | null
+    title?: StringNullableFilter<"creator_profiles"> | string | null
+    bio?: StringNullableFilter<"creator_profiles"> | string | null
+    experience?: StringNullableFilter<"creator_profiles"> | string | null
+    avatarUrl?: StringNullableFilter<"creator_profiles"> | string | null
+    socialLinks?: JsonNullableFilter<"creator_profiles">
+    createdAt?: DateTimeFilter<"creator_profiles"> | Date | string
+    updatedAt?: DateTimeFilter<"creator_profiles"> | Date | string
+  }
+
+  export type creator_profilesOrderByWithRelationInput = {
+    userId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
+    socialLinks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type creator_profilesWhereUniqueInput = Prisma.AtLeast<{
+    userId?: string
+    AND?: creator_profilesWhereInput | creator_profilesWhereInput[]
+    OR?: creator_profilesWhereInput[]
+    NOT?: creator_profilesWhereInput | creator_profilesWhereInput[]
+    name?: StringNullableFilter<"creator_profiles"> | string | null
+    title?: StringNullableFilter<"creator_profiles"> | string | null
+    bio?: StringNullableFilter<"creator_profiles"> | string | null
+    experience?: StringNullableFilter<"creator_profiles"> | string | null
+    avatarUrl?: StringNullableFilter<"creator_profiles"> | string | null
+    socialLinks?: JsonNullableFilter<"creator_profiles">
+    createdAt?: DateTimeFilter<"creator_profiles"> | Date | string
+    updatedAt?: DateTimeFilter<"creator_profiles"> | Date | string
+  }, "userId">
+
+  export type creator_profilesOrderByWithAggregationInput = {
+    userId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    title?: SortOrderInput | SortOrder
+    bio?: SortOrderInput | SortOrder
+    experience?: SortOrderInput | SortOrder
+    avatarUrl?: SortOrderInput | SortOrder
+    socialLinks?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: creator_profilesCountOrderByAggregateInput
+    _max?: creator_profilesMaxOrderByAggregateInput
+    _min?: creator_profilesMinOrderByAggregateInput
+  }
+
+  export type creator_profilesScalarWhereWithAggregatesInput = {
+    AND?: creator_profilesScalarWhereWithAggregatesInput | creator_profilesScalarWhereWithAggregatesInput[]
+    OR?: creator_profilesScalarWhereWithAggregatesInput[]
+    NOT?: creator_profilesScalarWhereWithAggregatesInput | creator_profilesScalarWhereWithAggregatesInput[]
+    userId?: StringWithAggregatesFilter<"creator_profiles"> | string
+    name?: StringNullableWithAggregatesFilter<"creator_profiles"> | string | null
+    title?: StringNullableWithAggregatesFilter<"creator_profiles"> | string | null
+    bio?: StringNullableWithAggregatesFilter<"creator_profiles"> | string | null
+    experience?: StringNullableWithAggregatesFilter<"creator_profiles"> | string | null
+    avatarUrl?: StringNullableWithAggregatesFilter<"creator_profiles"> | string | null
+    socialLinks?: JsonNullableWithAggregatesFilter<"creator_profiles">
+    createdAt?: DateTimeWithAggregatesFilter<"creator_profiles"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"creator_profiles"> | Date | string
+  }
+
   export type course_completionsCreateInput = {
     id: string
     courseId: string
@@ -9046,6 +10299,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
@@ -9066,6 +10320,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -9086,6 +10341,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -9106,6 +10362,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -9126,6 +10383,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
   }
@@ -9144,6 +10402,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9162,6 +10421,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9436,6 +10696,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type creator_profilesCreateInput = {
+    userId: string
+    name?: string | null
+    title?: string | null
+    bio?: string | null
+    experience?: string | null
+    avatarUrl?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type creator_profilesUncheckedCreateInput = {
+    userId: string
+    name?: string | null
+    title?: string | null
+    bio?: string | null
+    experience?: string | null
+    avatarUrl?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type creator_profilesUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type creator_profilesUncheckedUpdateInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type creator_profilesCreateManyInput = {
+    userId: string
+    name?: string | null
+    title?: string | null
+    bio?: string | null
+    experience?: string | null
+    avatarUrl?: string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type creator_profilesUpdateManyMutationInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type creator_profilesUncheckedUpdateManyInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    experience?: NullableStringFieldUpdateOperationsInput | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    socialLinks?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -9643,6 +10987,14 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type EnrollmentsListRelationFilter = {
     every?: enrollmentsWhereInput
     some?: enrollmentsWhereInput
@@ -9677,6 +11029,7 @@ export namespace Prisma {
     category?: SortOrder
     difficulty?: SortOrder
     creatorId?: SortOrder
+    outcomes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10004,6 +11357,89 @@ export namespace Prisma {
   export type sectionsSumOrderByAggregateInput = {
     order?: SortOrder
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type creator_profilesCountOrderByAggregateInput = {
+    userId?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    bio?: SortOrder
+    experience?: SortOrder
+    avatarUrl?: SortOrder
+    socialLinks?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type creator_profilesMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    bio?: SortOrder
+    experience?: SortOrder
+    avatarUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type creator_profilesMinOrderByAggregateInput = {
+    userId?: SortOrder
+    name?: SortOrder
+    title?: SortOrder
+    bio?: SortOrder
+    experience?: SortOrder
+    avatarUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
+  }
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
@@ -10027,6 +11463,10 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type coursesCreateoutcomesInput = {
+    set: string[]
   }
 
   export type enrollmentsCreateNestedManyWithoutCoursesInput = {
@@ -10071,6 +11511,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type coursesUpdateoutcomesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type enrollmentsUpdateManyWithoutCoursesNestedInput = {
@@ -10498,6 +11943,29 @@ export namespace Prisma {
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type enrollmentsCreateWithoutCoursesInput = {
     id: string
@@ -10626,6 +12094,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     sections?: sectionsCreateNestedManyWithoutCoursesInput
@@ -10645,6 +12114,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
@@ -10680,6 +12150,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: sectionsUpdateManyWithoutCoursesNestedInput
@@ -10699,6 +12170,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
@@ -10914,6 +12386,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
@@ -10933,6 +12406,7 @@ export namespace Prisma {
     category: string
     difficulty?: string | null
     creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
@@ -10997,6 +12471,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
@@ -11016,6 +12491,7 @@ export namespace Prisma {
     category?: StringFieldUpdateOperationsInput | string
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput

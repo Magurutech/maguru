@@ -45,6 +45,10 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
     // Modern image optimization
     formats: ['image/webp', 'image/avif'],

@@ -59,7 +59,7 @@ export const CourseNavigation = memo(function CourseNavigation({
   return (
     <div
       className={`
-        relative flex flex-col shrink-0 border-r border-beige-200 bg-beige-50
+        relative flex flex-col shrink-0 border-r border-border/10 bg-card z-10
         transition-all duration-300 ease-in-out
         ${sidebarOpen ? 'w-72' : 'w-12'}
       `}
@@ -67,20 +67,20 @@ export const CourseNavigation = memo(function CourseNavigation({
       {/* Toggle button — always visible */}
       <button
         onClick={() => setSidebarOpen((v) => !v)}
-        className="absolute -right-3 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-beige-200 bg-beige-50 shadow-sm hover:bg-beige-100 transition-colors"
+        className="absolute -right-3 top-4 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-border/10 bg-card shadow-sm hover:bg-bg-surface-accent text-text-muted transition-colors"
         aria-label={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
         title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
       >
         {sidebarOpen
-          ? <PanelLeftClose className="h-3.5 w-3.5 text-beige-500" />
-          : <PanelLeftOpen className="h-3.5 w-3.5 text-beige-500" />
+          ? <PanelLeftClose className="h-3.5 w-3.5 text-text-muted" />
+          : <PanelLeftOpen className="h-3.5 w-3.5 text-text-muted" />
         }
       </button>
 
       {/* Collapsed state — just icon */}
       {!sidebarOpen && (
         <div className="flex flex-col items-center pt-4 gap-3">
-          <BookOpen className="h-4 w-4 text-merah-500" />
+          <BookOpen className="h-4 w-4 text-accent-coral" />
         </div>
       )}
 
@@ -88,17 +88,17 @@ export const CourseNavigation = memo(function CourseNavigation({
       {sidebarOpen && (
         <>
           {/* Header */}
-          <div className="border-b border-beige-100 px-4 py-3">
+          <div className="border-b border-border/10 px-4 py-3">
             <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-merah-500 shrink-0" />
-              <span className="text-sm font-semibold text-beige-800">Konten Kursus</span>
+              <BookOpen className="h-4 w-4 text-accent-coral shrink-0" />
+              <span className="text-[10px] font-manrope font-extrabold uppercase tracking-wider text-text-primary">Konten Kursus</span>
             </div>
           </div>
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto px-2 py-2">
             {sections.length === 0 && (
-              <p className="text-xs text-beige-400 px-3 py-6 text-center">
+              <p className="text-xs text-text-faint px-3 py-6 text-center">
                 Belum ada materi tersedia.
               </p>
             )}
@@ -116,28 +116,28 @@ export const CourseNavigation = memo(function CourseNavigation({
                 >
                   <CollapsibleTrigger asChild>
                     <button
-                      className="w-full flex items-center gap-1.5 px-2 py-2 rounded-lg text-left transition-colors hover:bg-beige-100 mb-0.5"
+                      className="w-full flex items-center gap-1.5 px-2 py-2 rounded-lg text-left transition-colors hover:bg-bg-surface-accent/60 mb-0.5"
                       aria-expanded={isOpen}
                     >
                       {isOpen
-                        ? <FolderOpen className="h-3.5 w-3.5 shrink-0 text-merah-400" />
-                        : <Folder className="h-3.5 w-3.5 shrink-0 text-beige-400" />
+                        ? <FolderOpen className="h-3.5 w-3.5 shrink-0 text-accent-coral/90" />
+                        : <Folder className="h-3.5 w-3.5 shrink-0 text-text-faint" />
                       }
-                      <span className="flex-1 text-sm font-medium text-beige-800 truncate">
+                      <span className="flex-1 text-sm font-semibold text-text-primary truncate">
                         {section.title}
                       </span>
-                      <span className="text-xs text-beige-400 shrink-0 mr-1">
+                      <span className="text-xs text-text-muted shrink-0 mr-1">
                         {completedCount}/{section.lessons.length}
                       </span>
                       {isOpen
-                        ? <ChevronDown className="h-3.5 w-3.5 text-beige-400 shrink-0" />
-                        : <ChevronRight className="h-3.5 w-3.5 text-beige-400 shrink-0" />
+                        ? <ChevronDown className="h-3.5 w-3.5 text-text-faint shrink-0" />
+                        : <ChevronRight className="h-3.5 w-3.5 text-text-faint shrink-0" />
                       }
                     </button>
                   </CollapsibleTrigger>
 
                   <CollapsibleContent>
-                    <ul className="ml-4 mb-1 border-l border-beige-200 pl-2 space-y-0.5">
+                    <ul className="ml-4 mb-1 border-l border-border/10 pl-2 space-y-0.5">
                       {section.lessons.map((lesson) => {
                         const isActive = currentLessonId === lesson.id
 
@@ -151,19 +151,19 @@ export const CourseNavigation = memo(function CourseNavigation({
                                 w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs
                                 transition-colors cursor-pointer text-left
                                 ${isActive
-                                  ? 'bg-merah-100 text-merah-700 font-semibold'
-                                  : 'text-beige-700 hover:bg-beige-100 hover:text-beige-900'
+                                  ? 'bg-accent-coral/10 text-accent-coral font-bold'
+                                  : 'text-text-secondary hover:bg-bg-surface-accent/60 hover:text-text-primary'
                                 }
                               `}
                             >
                               {lesson.completed ? (
                                 <Check
-                                  className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-merah-500' : 'text-hijau-600'}`}
+                                  className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-accent-coral' : 'text-success'}`}
                                   aria-label="Selesai"
                                   data-testid={`lesson-completed-${lesson.id}`}
                                 />
                               ) : (
-                                <span className={`h-3.5 w-3.5 shrink-0 rounded-full border ${isActive ? 'border-merah-400' : 'border-beige-300'}`} />
+                                <span className={`h-3.5 w-3.5 shrink-0 rounded-full border ${isActive ? 'border-accent-coral' : 'border-border/15'}`} />
                               )}
                               <span className="flex-1 truncate">{lesson.title}</span>
                             </button>

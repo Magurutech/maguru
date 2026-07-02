@@ -1,0 +1,78 @@
+.tiptap.ProseMirror {
+  --table-border-color: var(--ink-faint, #706a5c);
+  --table-header-bg: var(--paper-dark, #ddd2b6);
+  --table-selected-bg: rgba(14, 165, 233, 0.08);
+  --table-selected-border: #0ea5e9;
+
+  .dark & {
+    --table-border-color: var(--text-faint, #777367);
+    --table-header-bg: var(--bg-surface-accent, #37353e);
+    --table-selected-bg: rgba(56, 189, 248, 0.12);
+    --table-selected-border: #38bdf8;
+  }
+}
+
+/* =====================
+     TABLES
+     ===================== */
+.tiptap.ProseMirror {
+  table {
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    table-layout: fixed;
+    width: 100%;
+    
+    td,
+    th {
+      border: 1px solid var(--table-border-color);
+      padding: 0.75rem 1rem;
+      min-width: 1em;
+      position: relative;
+      vertical-align: top;
+      box-sizing: border-box;
+
+      > * {
+        margin-bottom: 0;
+      }
+    }
+
+    th {
+      background-color: var(--table-header-bg);
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .selectedCell:after {
+      background: var(--table-selected-bg);
+      content: "";
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      pointer-events: none;
+      position: absolute;
+      z-index: 2;
+    }
+
+    .column-resize-handle {
+      background-color: var(--table-selected-border);
+      bottom: -2px;
+      position: absolute;
+      right: -2px;
+      pointer-events: none;
+      top: -2px;
+      width: 4px;
+      z-index: 20;
+    }
+  }
+
+  .tableWrapper {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  &.resize-cursor {
+    cursor: col-resize;
+  }
+}

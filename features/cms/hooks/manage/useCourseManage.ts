@@ -11,6 +11,7 @@ export interface ManagedCourse {
   status: string
   category: string | null
   difficulty: string | null
+  outcomes?: string[]
 }
 
 export interface ManagedSection {
@@ -34,6 +35,7 @@ export function useCourseManage(courseSlug: string) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [publishing, setPublishing] = useState(false)
+  const [isDeletingCourse, setIsDeletingCourse] = useState(false)
 
   const fetchCourse = useCallback(async () => {
     const res = await fetch(`/api/courses/${courseSlug}`)
@@ -84,10 +86,31 @@ export function useCourseManage(courseSlug: string) {
     }
   }
 
+  const handleDeleteCourse = async (onSuccess: () => void) => {
+    setIsDeletingCourse(true)
+    try {
+      const res = await fetch(`/api/courses/${courseSlug}`, {
+        method: 'DELETE',
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || 'Gagal menghapus kursus')
+      }
+      toast.success('Kursus berhasil dihapus')
+      onSuccess()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Gagal menghapus kursus')
+    } finally {
+      setIsDeletingCourse(false)
+    }
+  }
+
   return {
     course, setCourse,
     sections, setSections,
     loading, error,
     publishing, handleTogglePublish,
+    isDeletingCourse, handleDeleteCourse,
   }
 }
+

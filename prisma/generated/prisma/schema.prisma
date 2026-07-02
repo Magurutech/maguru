@@ -37,6 +37,7 @@ model courses {
   category    String        @db.VarChar(50)
   difficulty  String?       @db.VarChar(50)
   creatorId   String        @db.VarChar(255)
+  outcomes    String[]      @default([])
   createdAt   DateTime      @default(now())
   updatedAt   DateTime
   enrollments enrollments[]
@@ -103,6 +104,18 @@ model sections {
 
   @@unique([courseId, order])
   @@index([courseId, order])
+}
+
+model creator_profiles {
+  userId      String   @id @db.VarChar(255)
+  name        String?  @db.VarChar(100)
+  title       String?  @db.VarChar(100)
+  bio         String?  @db.Text
+  experience  String?  @db.Text
+  avatarUrl   String?  @db.VarChar(255)
+  socialLinks Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum CourseStatus {

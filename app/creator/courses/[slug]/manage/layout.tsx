@@ -6,7 +6,7 @@ export default function ManageLayout({ children }: { children: ReactNode }) {
   return (
     <UserRoleProvider>
       <TooltipProvider>
-        <div className="fixed inset-0 z-50 bg-beige-50">
+        <div className="fixed inset-0 z-50 bg-background">
           {children}
         </div>
       </TooltipProvider>

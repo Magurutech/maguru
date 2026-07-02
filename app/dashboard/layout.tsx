@@ -1,132 +1,261 @@
+'use client'
+
 /**
- * User Layout
+ * User Dashboard Layout
  *
  * Layout khusus untuk user role yang menyediakan:
- * - Role-specific navigation
- * - User-focused sidebar
- * - Consistent styling untuk user pages
+ * - Navigasi yang disesuaikan dengan peran Learner.
+ * - Sidebar modular berbasis shadcn/ui.
+ * - Custom styling 5px margin, 40px rounded corners, dan collapse mode support.
+ * - Integrasi tema gelap (Dark Mode) dan Clerk UserButton.
+ * - Override CSS untuk menyembunyikan Navbar landing page global.
  */
 
-import React from 'react'
-import { UserRoleProvider } from '@/features/auth'
-import { BookOpen, User, Award, Settings, Home } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import React, { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { BookOpen, User, Award, Settings, Home, Sun, Moon, LogOut } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { UserButton, useClerk } from '@clerk/nextjs'
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarTrigger,
+  SidebarRail,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  useSidebar,
+} from '@/components/ui/sidebar'
 
 interface UserLayoutProps {
   children: React.ReactNode
 }
 
-export default function UserLayout({ children }: UserLayoutProps) {
+// App Sidebar subcomponent inside SidebarProvider
+function AppSidebar() {
+  const pathname = usePathname()
+  const { theme, setTheme } = useTheme()
+  const { signOut } = useClerk()
+  const { state } = useSidebar()
+  const [mounted, setMounted] = useState(false)
+  const isCollapsed = state === 'collapsed'
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true)
+  }, [])
+
+  const navItems = [
+    {
+      label: 'Dashboard',
+      href: '/dashboard',
+      icon: Home,
+    },
+    {
+      label: 'Kursus Saya',
+      href: '/student/courses',
+      icon: BookOpen,
+    },
+    {
+      label: 'Sertifikat',
+      href: '#certificates',
+      icon: Award,
+    },
+    {
+      label: 'Profil',
+      href: '#profile',
+      icon: User,
+    },
+    {
+      label: 'Pengaturan',
+      href: '#settings',
+      icon: Settings,
+    },
+  ]
+
   return (
-    <UserRoleProvider>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-        {/* Sidebar Navigation */}
-        <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 shadow-sm z-40">
-          <div className="flex flex-col h-full">
-            {/* Logo */}
-            <div className="flex items-center space-x-3 p-6 border-b border-gray-200">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Maguru
+    <Sidebar className="border-none bg-transparent">
+      {/* 1. Sidebar Header */}
+      <SidebarHeader className="p-4 border-b border-border/10">
+        <div className="flex items-center space-x-3 overflow-hidden transition-all duration-300">
+          <div className="w-9 h-9 border border-text-primary rounded-full flex items-center justify-center font-serif italic text-lg text-text-primary bg-background shrink-0 select-none">
+            M
+          </div>
+          {!isCollapsed && (
+            <div className="flex flex-col animate-fade-in">
+              <span className="font-manrope font-bold text-base tracking-tight text-text-primary">
+                MAGURU
               </span>
-              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full font-medium">
-                Learner
+              <span className="text-[9px] tracking-[0.14em] uppercase text-text-muted font-sans font-semibold leading-none">
+                AI Co-Teacher
               </span>
             </div>
+          )}
+        </div>
+      </SidebarHeader>
 
-            {/* Navigation Menu */}
-            <nav className="flex-1 p-6">
-              <div className="space-y-2">
-                <Link href="/user/dashboard">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <Home className="mr-3 h-4 w-4" />
-                    Dashboard
-                  </Button>
-                </Link>
+      {/* 2. Sidebar Navigation Items */}
+      <SidebarContent className="px-3 py-6 space-y-1.5 overflow-y-auto">
+        <SidebarMenu className="space-y-1.5">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href
+            const Icon = item.icon
+            return (
+              <SidebarMenuItem key={item.label}>
+                <SidebarMenuButton
+                  isActive={isActive}
+                  tooltip={isCollapsed ? item.label : undefined}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-full text-sm font-medium transition-all duration-180 select-none cursor-pointer ${
+                    isActive
+                      ? 'bg-accent-coral text-white font-semibold shadow-glow [&_svg]:text-white'
+                      : 'text-text-secondary hover:bg-bg-surface-accent hover:text-text-primary [&_svg]:text-text-muted hover:[&_svg]:text-text-primary'
+                  }`}
+                >
+                  <a href={item.href} className="flex items-center gap-3 w-full">
+                    <Icon className="w-4 h-4 shrink-0 transition-colors" />
+                    {!isCollapsed && <span className="animate-fade-in">{item.label}</span>}
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )
+          })}
+        </SidebarMenu>
 
-                <Link href="/student/courses">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <BookOpen className="mr-3 h-4 w-4" />
-                    Kursus Saya
-                  </Button>
-                </Link>
-
-                <Link href="course/id">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <Award className="mr-3 h-4 w-4" />
-                    Sertifikat
-                  </Button>
-                </Link>
-
-                <Link href="/user/profile">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <User className="mr-3 h-4 w-4" />
-                    Profil
-                  </Button>
-                </Link>
-
-                <Link href="/user/settings">
-                  <Button
-                    variant="ghost"
-                    className="w-full justify-start hover:bg-blue-50 hover:text-blue-700"
-                  >
-                    <Settings className="mr-3 h-4 w-4" />
-                    Pengaturan
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg">
-                <h3 className="text-sm font-semibold text-blue-900 mb-3">Progress Anda</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-blue-700">Kursus Aktif</span>
-                    <span className="font-semibold text-blue-900">3</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-blue-700">Selesai</span>
-                    <span className="font-semibold text-blue-900">2</span>
-                  </div>
-                  <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '60%' }}></div>
-                  </div>
-                  <p className="text-xs text-blue-600 text-center mt-1">60% Progress</p>
+        {/* Quick Learning Progress Widget (Hidden when collapsed) */}
+        {!isCollapsed && (
+          <div className="mt-8 p-5 bg-bg-bone/60 border border-border/10 rounded-2xl relative overflow-hidden paper-texture animate-fade-in mx-1">
+            <div className="relative z-10 space-y-3">
+              <h4 className="text-[10px] font-semibold text-text-primary tracking-wider uppercase">
+                Progres Belajar
+              </h4>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs text-text-secondary font-medium">
+                  <span>Kursus Saya</span>
+                  <span className="font-bold text-text-primary">3 / 5</span>
+                </div>
+                <div className="w-full bg-bg-surface-accent rounded-full h-1.5 overflow-hidden">
+                  <div
+                    className="bg-success h-full rounded-full transition-all duration-300"
+                    style={{ width: '60%' }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-[10px] text-text-muted font-semibold uppercase tracking-wider">
+                  <span>Target Hari Ini</span>
+                  <span className="text-accent-coral font-bold">1 / 3 Selesai</span>
                 </div>
               </div>
-            </nav>
-
-            {/* Footer */}
-            <div className="p-6 border-t border-gray-200">
-              <p className="text-xs text-gray-500 text-center">© 2024 Maguru Learning Platform</p>
             </div>
           </div>
-        </aside>
+        )}
+      </SidebarContent>
 
-        {/* Main Content */}
-        <div className="ml-64">{children}</div>
-
-        {/* Mobile overlay (hidden on desktop) */}
+      {/* 3. Sidebar Footer */}
+      <SidebarFooter className="p-4 border-t border-border/10 bg-card space-y-3">
         <div
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30 hidden"
-          id="sidebar-overlay"
-        ></div>
+          className={`flex items-center ${isCollapsed ? 'flex-col gap-3 justify-center' : 'justify-between px-2'}`}
+        >
+          {/* Theme Toggle */}
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle theme mode"
+              className="w-9 h-9 flex items-center justify-center rounded-full bg-background border border-border/10 hover:bg-bg-surface-accent text-text-secondary transition-colors duration-180 cursor-pointer"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-accent-mustard" />
+              ) : (
+                <Moon className="w-4 h-4 text-accent-olive" />
+              )}
+            </button>
+          )}
+
+          {/* Logout button */}
+          <button
+            onClick={() => signOut({ redirectUrl: '/' })}
+            aria-label="Keluar dari akun"
+            className="w-9 h-9 flex items-center justify-center rounded-full bg-background border border-border/10 hover:bg-error hover:text-white text-text-muted transition-all duration-180 cursor-pointer"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* User Profile Info */}
+        <div
+          className={`flex items-center ${isCollapsed ? 'justify-center p-1' : 'space-x-3 p-2 bg-background/50 border border-border/5 rounded-2xl min-w-0'}`}
+        >
+          <div className="shrink-0 flex items-center justify-center">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: 'w-8 h-8 rounded-full border border-accent-coral/20',
+                },
+              }}
+            />
+          </div>
+          {!isCollapsed && (
+            <div className="flex flex-col min-w-0 animate-fade-in">
+              <span className="text-xs font-semibold text-text-primary truncate font-sans">
+                Budi Upskiller
+              </span>
+              <span className="text-[10px] text-text-muted font-medium font-sans truncate">
+                budi@career.com
+              </span>
+            </div>
+          )}
+        </div>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+export default function UserLayout({ children }: UserLayoutProps) {
+  return (
+    <SidebarProvider defaultOpen={true}>
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-300 flex w-full">
+        {/* CSS Override untuk menyembunyikan NavbarGlass landing page di halaman dashboard */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+          nav[aria-label="Primary navigation"] {
+            display: none !important;
+          }
+        `,
+          }}
+        />
+
+        {/* Sidebar Component */}
+        <AppSidebar />
+
+        {/* Main Content Area */}
+        <SidebarInset className="bg-transparent flex-1 min-h-screen flex flex-col relative overflow-x-hidden">
+          {/* Dashboard Sticky header bar */}
+          <header className="px-6 md:px-12 pt-6 flex items-center justify-between border-b border-border/5 pb-4">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger className="w-9 h-9 border border-border/10 rounded-full flex items-center justify-center hover:bg-bg-surface-accent text-text-secondary cursor-pointer" />
+              <span className="text-[10px] font-bold font-mono tracking-widest text-text-muted">
+                MAGURU LEARNING COMMAND CENTER
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+              <span className="text-[9px] font-bold font-sans tracking-wider uppercase text-text-muted">
+                Co-Teacher Online
+              </span>
+            </div>
+          </header>
+
+          {/* Children Dashboard Content */}
+          <div className="flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 py-6 md:py-8">
+            {children}
+          </div>
+        </SidebarInset>
       </div>
-    </UserRoleProvider>
+    </SidebarProvider>
   )
 }

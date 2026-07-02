@@ -15,10 +15,18 @@
 .clerk
 .serena
 .next
+.agents
+.open-design
+.next
+.claude
 rules/error.md
 
 # testing
 /coverage
+
+# File Module Name 
+CLAUDE.md
+GEMINI.md
 
 # next.js
 /.next/

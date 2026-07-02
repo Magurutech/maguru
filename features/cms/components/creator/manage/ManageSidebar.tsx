@@ -1,6 +1,15 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+/**
+ * ManageSidebar Component
+ *
+ * Sidebar struktur kurikulum (Course Structure sidebar) untuk Ruang Kerja Penulisan.
+ * Menyediakan daftar modul dan pelajaran interaktif, drag-and-drop reordering,
+ * penambahan seksi/pelajaran inline, serta dilengkapi Course Overview Card
+ * di bagian atas sesuai dengan Atelier Zero design system.
+ */
+
+import { useRef, useEffect, useState, memo } from 'react'
 import {
   Plus,
   ChevronDown,
@@ -15,6 +24,7 @@ import {
   GripVertical,
   PanelLeftClose,
   PanelLeftOpen,
+  BookOpen,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -43,7 +53,7 @@ import type { ManagedLesson } from '@/features/cms/hooks/manage'
 
 // ── Sortable Lesson Item ───────────────────────────────────────────────────
 
-function SortableLessonItem({
+const SortableLessonItem = memo(function SortableLessonItem({
   lesson,
   isActive,
   openLessonMenuId,
@@ -73,8 +83,10 @@ function SortableLessonItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`group flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors cursor-pointer ${
-        isActive ? 'bg-merah-50 text-merah-700' : 'hover:bg-beige-50 text-beige-700'
+      className={`group flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all border border-transparent cursor-pointer select-none ${
+        isActive
+          ? 'bg-accent-coral/5 text-accent-coral border-accent-coral/10 font-semibold'
+          : 'hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary'
       }`}
       onClick={onSelect}
       data-testid={`lesson-item-${lesson.id}`}
@@ -83,13 +95,17 @@ function SortableLessonItem({
         {...attributes}
         {...listeners}
         onClick={(e) => e.stopPropagation()}
-        className="shrink-0 cursor-grab active:cursor-grabbing text-beige-300 hover:text-beige-500 touch-none"
-        aria-label="Drag to reorder"
+        className="shrink-0 cursor-grab active:cursor-grabbing text-text-faint hover:text-text-muted touch-none"
+        aria-label="Tarik untuk memindahkan pelajaran"
       >
-        <GripVertical className="h-3 w-3" />
+        <GripVertical className="h-3.5 w-3.5" />
       </button>
-      <FileText className="h-3.5 w-3.5 shrink-0 text-beige-400" />
+      <FileText
+        className={`h-3.5 w-3.5 shrink-0 ${isActive ? 'text-accent-coral' : 'text-text-muted'}`}
+      />
       <span className="text-xs flex-1 truncate">{lesson.title}</span>
+
+      {/* Dropdown Menu trigger */}
       <div
         className={`items-center shrink-0 ${openLessonMenuId === lesson.id ? 'flex' : 'hidden group-hover:flex'}`}
       >
@@ -100,18 +116,18 @@ function SortableLessonItem({
           <DropdownMenuTrigger asChild>
             <button
               onClick={(e) => e.stopPropagation()}
-              className={`p-1 rounded text-beige-400 hover:text-beige-700 transition-colors ${
+              className={`p-1 rounded-full text-text-muted hover:text-text-primary transition-colors ${
                 openLessonMenuId === lesson.id
-                  ? 'bg-beige-200 text-beige-700'
-                  : 'hover:bg-beige-200'
+                  ? 'bg-bg-surface-accent text-text-primary'
+                  : 'hover:bg-bg-surface-accent'
               }`}
               title="Opsi pelajaran"
               data-testid={`lesson-menu-btn-${lesson.id}`}
             >
-              <MoreHorizontal className="h-3 w-3" />
+              <MoreHorizontal className="h-3.5 w-3.5" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent side="right" align="start" className="w-36">
+          <DropdownMenuContent side="right" align="start" className="w-36 paper-texture">
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation()
@@ -139,11 +155,11 @@ function SortableLessonItem({
       </div>
     </div>
   )
-}
+})
 
 // ── Sortable Section Item ──────────────────────────────────────────────────
 
-function SortableSectionItem({
+const SortableSectionItem = memo(function SortableSectionItem({
   section,
   isExpanded,
   lessons,
@@ -215,38 +231,41 @@ function SortableSectionItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`mb-1 ${isPending ? 'opacity-60 pointer-events-none' : ''}`}
+      className={`mb-1.5 ${isPending ? 'opacity-60 pointer-events-none' : ''}`}
     >
       <div
-        className={`group flex items-center gap-1 px-2 py-1.5 rounded-lg transition-colors ${
-          isActiveSection || isMenuOpen || isEditing ? 'bg-beige-100' : 'hover:bg-beige-50'
+        className={`group flex items-center gap-1 px-3 py-2 rounded-xl transition-all border border-transparent ${
+          isActiveSection || isMenuOpen || isEditing
+            ? 'bg-bg-bone/80 border-border/5'
+            : 'hover:bg-bg-surface-accent'
         }`}
         data-testid={`section-item-${section.id}`}
       >
         <button
           {...attributes}
           {...listeners}
-          className="shrink-0 cursor-grab active:cursor-grabbing text-beige-300 hover:text-beige-500 touch-none"
-          aria-label="Drag to reorder section"
+          className="shrink-0 cursor-grab active:cursor-grabbing text-text-faint hover:text-text-muted touch-none"
+          aria-label="Tarik untuk memindahkan modul"
         >
           <GripVertical className="h-3.5 w-3.5" />
         </button>
         <button
           onClick={onToggle}
-          className="flex items-center gap-1 shrink-0"
+          className="flex items-center gap-1 shrink-0 cursor-pointer"
           tabIndex={isEditing ? -1 : 0}
         >
           {isExpanded ? (
-            <ChevronDown className="h-3.5 w-3.5 text-beige-400" />
+            <ChevronDown className="h-3.5 w-3.5 text-text-muted" />
           ) : (
-            <ChevronRight className="h-3.5 w-3.5 text-beige-400" />
+            <ChevronRight className="h-3.5 w-3.5 text-text-muted" />
           )}
           {isExpanded ? (
-            <FolderOpen className="h-3.5 w-3.5 text-beige-500" />
+            <FolderOpen className="h-3.5 w-3.5 text-accent-coral" />
           ) : (
-            <Folder className="h-3.5 w-3.5 text-beige-500" />
+            <Folder className="h-3.5 w-3.5 text-text-muted" />
           )}
         </button>
+
         {isEditing ? (
           <input
             ref={editInputRef}
@@ -255,20 +274,25 @@ function SortableSectionItem({
             onChange={(e) => setEditingSectionTitle(e.target.value)}
             onKeyDown={onEditKeyDown}
             onBlur={onEditBlur}
-            className="flex-1 min-w-0 text-sm font-medium bg-white border border-merah-300 rounded px-1.5 py-0.5 outline-none focus:ring-1 focus:ring-merah-300 text-beige-800"
+            className="flex-1 min-w-0 text-xs font-semibold bg-white border border-accent-coral rounded-lg px-2 py-0.5 outline-none focus:ring-1 focus:ring-accent-coral/25 text-text-primary font-sans"
             maxLength={200}
             data-testid={`section-edit-input-${section.id}`}
           />
         ) : (
           <button
             onClick={onToggle}
-            className="flex-1 min-w-0 text-left flex items-center gap-1"
+            className="flex-1 min-w-0 text-left flex items-center gap-1 cursor-pointer"
             data-testid={`section-toggle-${section.id}`}
           >
-            <span className="text-sm text-beige-800 font-medium truncate">{section.title}</span>
-            <span className="text-xs text-beige-400 shrink-0 ml-auto">{section.lessonCount}</span>
+            <span className="text-xs text-text-primary font-bold truncate font-sans">
+              {section.title}
+            </span>
+            <span className="text-[10px] font-mono text-text-muted bg-bg-bone/80 px-2 py-0.5 rounded-full shrink-0 ml-auto">
+              {section.lessonCount}
+            </span>
           </button>
         )}
+
         {!isEditing && (
           <div
             className={`items-center shrink-0 ${isMenuOpen ? 'flex' : 'hidden group-hover:flex'}`}
@@ -280,27 +304,31 @@ function SortableSectionItem({
               <DropdownMenuTrigger asChild>
                 <button
                   onClick={(e) => e.stopPropagation()}
-                  className={`p-1 rounded text-beige-400 hover:text-beige-700 transition-colors ${isMenuOpen ? 'bg-beige-200 text-beige-700' : 'hover:bg-beige-200'}`}
+                  className={`p-1 rounded-full text-text-muted hover:text-text-primary transition-colors cursor-pointer ${
+                    isMenuOpen
+                      ? 'bg-bg-surface-accent text-text-primary'
+                      : 'hover:bg-bg-surface-accent'
+                  }`}
                   title="Opsi seksi"
                   data-testid={`section-menu-btn-${section.id}`}
                 >
                   <MoreHorizontal className="h-3.5 w-3.5" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent side="right" align="start" className="w-44">
+              <DropdownMenuContent side="right" align="start" className="w-44 paper-texture">
                 <DropdownMenuItem
                   onClick={onStartEdit}
                   data-testid={`section-edit-btn-${section.id}`}
                 >
                   <Edit className="h-3.5 w-3.5 mr-2" />
-                  Edit
+                  Edit Nama Modul
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={onAddLesson}
                   data-testid={`section-add-lesson-btn-${section.id}`}
                 >
                   <Plus className="h-3.5 w-3.5 mr-2" />
-                  Tambah
+                  Tambah Pelajaran
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -309,15 +337,16 @@ function SortableSectionItem({
                   data-testid={`section-delete-btn-${section.id}`}
                 >
                   <Trash2 className="h-3.5 w-3.5 mr-2" />
-                  Hapus Seksi
+                  Hapus Modul
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         )}
       </div>
+
       {isExpanded && (
-        <div className="ml-6 mt-0.5 space-y-0.5">
+        <div className="ml-5 mt-1 pl-2 border-l border-border/5 space-y-1 animate-fade-in">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -341,23 +370,25 @@ function SortableSectionItem({
               ))}
             </SortableContext>
           </DndContext>
+
           <button
             onClick={onAddLesson}
-            className="w-full flex items-center gap-1.5 px-2 py-1 rounded text-xs text-beige-400 hover:text-hijau-600 hover:bg-hijau-50 transition-colors"
+            className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold text-text-muted hover:text-accent-coral hover:bg-accent-coral/5 transition-colors cursor-pointer select-none"
           >
             <Plus className="h-3 w-3" />
-            Tambah
+            <span>Tambah Pelajaran</span>
           </button>
         </div>
       )}
     </div>
   )
-}
+})
 
 // ── Main Sidebar ───────────────────────────────────────────────────────────
 
 export function ManageSidebar() {
   const {
+    course,
     sections,
     lessonsMap,
     expandedSections,
@@ -465,55 +496,79 @@ export function ManageSidebar() {
   return (
     <aside
       className={`
-      relative bg-white border-r border-beige-200 flex flex-col shrink-0 h-full
-      transition-all duration-300 ease-in-out
-      ${sidebarOpen ? 'w-72' : 'w-12'}
+      relative bg-card border-r border-border/10 flex flex-col shrink-0 h-full
+      transition-all duration-300 ease-in-out paper-texture select-none
+      ${sidebarOpen ? 'w-76' : 'w-12'}
     `}
+      aria-label="Kurikulum"
     >
       {/* Toggle button */}
       <button
         onClick={() => setSidebarOpen((v) => !v)}
-        className="absolute -right-3 top-4 z-50 flex h-6 w-6 items-center justify-center rounded-full border border-beige-200 bg-white shadow-md hover:bg-beige-50 hover:shadow-lg transition-all"
-        aria-label={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
+        className="absolute -right-3.5 top-4 z-50 flex h-7 w-7 items-center justify-center rounded-full border border-border/10 bg-card shadow-sm hover:bg-bg-surface-accent text-text-secondary cursor-pointer select-none transition-all"
+        aria-label={sidebarOpen ? 'Tutup panel navigasi' : 'Buka panel navigasi'}
         title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}
       >
         {sidebarOpen ? (
-          <PanelLeftClose className="h-3.5 w-3.5 text-beige-500" />
+          <PanelLeftClose className="h-3.5 w-3.5 text-text-muted" />
         ) : (
-          <PanelLeftOpen className="h-3.5 w-3.5 text-beige-500" />
+          <PanelLeftOpen className="h-3.5 w-3.5 text-text-muted" />
         )}
       </button>
 
       {/* Collapsed state — just icon */}
       {!sidebarOpen && (
-        <div className="flex flex-col items-center pt-4 gap-3">
-          <Settings className="h-4 w-4 text-merah-500" />
+        <div className="flex flex-col items-center pt-5 gap-4">
+          <BookOpen className="h-4 w-4 text-accent-coral animate-float" />
+          <div className="h-px w-6 bg-border/5" />
+          <Settings className="h-4 w-4 text-text-faint hover:text-text-muted transition-colors cursor-pointer" />
         </div>
       )}
 
       {/* Expanded state */}
       {sidebarOpen && (
         <>
-          <div className="p-4 border-b border-beige-100">
-            <span className="text-sm font-semibold text-beige-700">Konten Kursus</span>
-          </div>
-          <nav className="flex-1 overflow-y-auto p-2">
-            <button
+          {/* 1. Course Overview Card (as mandated by spec) */}
+          {course && (
+            <div
               onClick={() => setActiveView({ type: 'overview' })}
-              data-testid="sidebar-overview-btn"
-              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors mb-1 ${
+              className={`mx-4 my-4 p-4 bg-bg-bone/60 border border-border/10 rounded-2xl relative overflow-hidden paper-texture cursor-pointer select-none transition-all duration-180 hover:shadow-sm hover:border-accent-coral/15 hover:bg-bg-bone ${
                 activeView.type === 'overview'
-                  ? 'bg-merah-50 text-merah-700 font-medium'
-                  : 'text-beige-700 hover:bg-beige-50'
+                  ? 'border-accent-coral/30 ring-1 ring-accent-coral/10 bg-bg-bone shadow-sm'
+                  : ''
               }`}
             >
-              <Settings className="h-4 w-4 shrink-0" />
-              Overview Kursus
-            </button>
+              <div className="flex items-center gap-3">
+                {/* Small thumbnail icon wrapper */}
+                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-accent-coral/15 to-accent-mustard/15 flex items-center justify-center shrink-0 border border-border/10 font-serif italic text-base text-accent-coral font-bold select-none">
+                  {course.title.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[8px] font-mono text-text-muted uppercase tracking-wider block leading-none mb-0.5">
+                    KELAS
+                  </span>
+                  <h4 className="text-xs font-bold text-text-primary truncate leading-tight hover:text-accent-coral">
+                    {course.title}
+                  </h4>
+                  <p className="text-[9px] text-text-muted font-medium mt-0.5 leading-none">
+                    {sections.length} Modul &middot;{' '}
+                    {Object.values(lessonsMap).reduce((sum, list) => sum + (list?.length || 0), 0)}{' '}
+                    Pelajaran
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
+          <div className="px-4 pb-2">
+            <div className="h-px w-full bg-border/5" />
+          </div>
+
+          {/* 2. Course Structure Modul & Pelajaran Tree */}
+          <nav className="flex-1 overflow-y-auto p-4 space-y-2">
             {sections.length === 0 && !isAddingSection && (
-              <p className="text-xs text-beige-400 px-3 py-4 text-center">
-                Belum ada seksi. Klik + Tambah Seksi untuk mulai.
+              <p className="text-[10px] text-text-muted font-semibold px-3 py-6 text-center italic bg-bg-bone/40 rounded-2xl border border-dashed border-border/10">
+                Belum ada modul terdaftar. Klik tombol Tambah Modul di bawah untuk memulai.
               </p>
             )}
 
@@ -563,10 +618,11 @@ export function ManageSidebar() {
               </SortableContext>
             </DndContext>
 
+            {/* Inline Add Section Form Input */}
             {isAddingSection && (
-              <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-beige-50 mb-1">
-                <ChevronRight className="h-3.5 w-3.5 text-beige-300 shrink-0" />
-                <Folder className="h-3.5 w-3.5 text-beige-400 shrink-0" />
+              <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-bg-bone/80 border border-border/5 mb-1.5 animate-fade-in">
+                <ChevronRight className="h-3.5 w-3.5 text-text-muted shrink-0" />
+                <Folder className="h-3.5 w-3.5 text-text-muted shrink-0" />
                 <input
                   ref={inlineInputRef}
                   type="text"
@@ -574,20 +630,21 @@ export function ManageSidebar() {
                   onChange={(e) => setNewSectionTitle(e.target.value)}
                   onKeyDown={handleInlineKeyDown}
                   onBlur={handleInlineBlur}
-                  placeholder="Nama seksi..."
-                  className="flex-1 text-sm bg-transparent outline-none text-beige-800 placeholder:text-beige-300"
+                  placeholder="Nama modul baru..."
+                  className="flex-1 text-xs bg-transparent outline-none text-text-primary placeholder:text-text-faint font-semibold font-sans"
                   data-testid="inline-section-input"
                 />
               </div>
             )}
 
+            {/* Add Section Button */}
             <button
               onClick={startAddingSection}
-              className="w-full flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-beige-700 hover:text-merah-600 hover:bg-merah-50 transition-colors mt-1"
+              className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-bold text-text-secondary hover:text-accent-coral hover:bg-accent-coral/5 border border-border/10 transition-colors mt-2 cursor-pointer select-none"
               data-testid="add-section-btn"
             >
               <Plus className="h-3.5 w-3.5" />
-              Tambah Seksi
+              <span>Tambah Modul</span>
             </button>
           </nav>
         </>

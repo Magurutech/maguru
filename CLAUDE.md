@@ -157,12 +157,14 @@ The project follows a **Simplified Feature-First Modular Monolith** optimized fo
 The `langserve` feature provides AI-powered learning assistance through LangServe backend:
 
 **Key Components:**
+
 - **SSE Streaming**: Server-Sent Events for real-time AI responses
 - **AI Chains**: Multiple specialized chains (chatbot, explain-code, hint, quiz-feedback, greeting)
 - **Error Handling**: Comprehensive timeout and error management
 - **Logging**: Integrated with the logger service
 
 **Available Chains:**
+
 - `streamChatbot`: Personal AI tutor for course questions
 - `streamExplainCode`: Code explanation for students
 - `streamHint`: Progressive hints for exercises
@@ -170,6 +172,7 @@ The `langserve` feature provides AI-powered learning assistance through LangServ
 - `streamGreeting`: Personalized student greetings
 
 **Configuration:**
+
 - LangServe URL: `NEXT_PUBLIC_LANGSERVE_URL` (default: `http://localhost:8000`)
 - Default timeout: 30 seconds
 - Health check endpoint: `/health`
@@ -179,6 +182,7 @@ The `langserve` feature provides AI-powered learning assistance through LangServ
 The `services/` folder contains shared utilities used across the application:
 
 **logger.ts**: Centralized logging utility compatible with Next.js (server and client)
+
 - **Log levels**: error, warn, info, http, verbose, debug
 - **Context-aware**: Separate logs by service/module
 - **Performance tracking**: Built-in timer and memory usage tracking
@@ -186,6 +190,7 @@ The `services/` folder contains shared utilities used across the application:
 - **Environment-based**: Debug level in development, info level in production
 
 **Usage pattern:**
+
 ```typescript
 import { logger } from '@/services/logger'
 
@@ -214,6 +219,7 @@ logger.error('ContextName', 'functionName', 'Error message', errorObject)
 ### State Management
 
 **Simplified Approach for Small Teams:**
+
 - **Custom Hooks** for feature-specific business logic (preferred)
 - **TanStack Query** for server state caching and API calls
 - **useState/useReducer** for local component state
@@ -231,6 +237,7 @@ logger.error('ContextName', 'functionName', 'Error message', errorObject)
 ### Architecture Principles for Small Teams
 
 **Priority Order:**
+
 1. **Simplicity over Enterprise Patterns** - Avoid over-engineering for 2-developer team
 2. **Eliminate Duplicate Code** - Create shared utilities and hooks instead of copying
 3. **Easy Onboarding** - New developers should understand architecture quickly
@@ -255,6 +262,7 @@ logger.error('ContextName', 'functionName', 'Error message', errorObject)
 ### Feature Development Pattern (Simplified)
 
 **For New Features, Create:**
+
 1. **UI Components** in `features/[feature]/components/`
 2. **Business Logic** in `features/[feature]/hooks/` (custom hooks for state + logic)
 3. **API Client** in `features/[feature]/api.ts`
@@ -262,6 +270,7 @@ logger.error('ContextName', 'functionName', 'Error message', errorObject)
 5. **Utilities** in `features/[feature]/lib/` if needed
 
 **Example Feature Structure:**
+
 ```
 features/course/
 ├── components/
@@ -280,11 +289,13 @@ features/course/
 ### Current Architectural Debt & Migration Plan
 
 **Issue**: The `features/auth/` folder contains over-engineered complexity (856 lines):
+
 - `context/UserRoleContext.tsx` (456 lines) with cross-tab sync, caching, error boundaries
 - `hooks/useUserRole.ts` (400+ lines) with multiple specialized hooks
 - Features like cross-tab synchronization and TTL caching that are likely unused
 
 **Recommended Migration:**
+
 1. **Replace auth context** with simple `useAuth()` hook (reduce from 856 to ~50 lines)
 2. **Eliminate duplicate code** by creating shared utilities in `lib/`
 3. **Focus on MVP functionality** for the 3 roles: admin, creator, user
@@ -332,6 +343,7 @@ Environment validation runs automatically via `lib/env-validation.ts` (skipped i
 ### PowerShell Environment
 
 This project runs in PowerShell environment:
+
 - Use `;` instead of `&&` for command chaining
 - Use quotes around paths with spaces: `"features\auth"`
 - Use backslashes for Windows paths: `features\auth\components`
@@ -358,6 +370,7 @@ The project uses Clerk for authentication. E2E tests include authentication stat
 The project uses an **"Ancient Fantasy Asia"** theme with whimsical, cartoonish, and hand-drawn aesthetic. This creates an engaging, approachable learning environment that differentiates from typical corporate e-learning platforms.
 
 **Core Design Principles:**
+
 - **Shadcn UI First**: Use Shadcn UI components as foundation, custom only when needed
 - **Design Tokens**: All colors, radius, shadows, fonts defined in Tailwind config
 - **Consistency**: Focus on user experience, responsive design, minimalism, and consistency
@@ -375,6 +388,7 @@ The design system uses a 4-palette approach with semantic color mapping:
 ```
 
 **Usage Guidelines:**
+
 - **Primary Actions**: Red 500 (`#FF4D4D`) for main CTAs and buttons
 - **Secondary/Highlights**: Yellow-orange 400 (`#FFB148`) for accents and decorative elements
 - **Backgrounds**: Beige 50-200 (`#F5EDE0` - `#E8D9C6`) for main backgrounds
@@ -383,6 +397,7 @@ The design system uses a 4-palette approach with semantic color mapping:
 ### Typography & Spacing
 
 **Font Stack:**
+
 - **Primary**: Poppins (headings, body text)
 - **Accent**: Playfair Display (optional, quotes/special headings)
 - **Code**: Fira Code (technical content)
@@ -392,11 +407,13 @@ The design system uses a 4-palette approach with semantic color mapping:
 ### Interactive States
 
 **Hover Effects:**
+
 - Scale transforms (`scale-105`) for subtle feedback
 - Color shifts with shadow enhancements
 - Consistent 200-300ms transitions using `cubic-bezier(0.4, 0, 0.2, 1)`
 
 **Focus Management:**
+
 - 2px red outline with 2px offset for accessibility
 - Input-specific focus states with border and shadow changes
 - ARIA labels and screen reader support
@@ -404,11 +421,13 @@ The design system uses a 4-palette approach with semantic color mapping:
 ### Animation Guidelines
 
 **Performance-Optimized:**
+
 - Use `transform` and `opacity` properties (avoid width/height)
 - Hardware acceleration with `transform3d`
 - Respect `prefers-reduced-motion` setting
 
 **Timing:**
+
 - **Micro-interactions**: 150ms
 - **Modal/Panel transitions**: 300ms
 - **Complex animations**: 500ms
@@ -416,6 +435,7 @@ The design system uses a 4-palette approach with semantic color mapping:
 ### Component Guidelines
 
 **When Creating UI Components:**
+
 1. **Check Shadcn UI first** - use existing components when possible
 2. **Follow color palette** - use semantic color tokens from design system
 3. **Apply consistent spacing** - use 4px scale for padding/margins

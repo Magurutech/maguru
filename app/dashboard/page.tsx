@@ -1,136 +1,161 @@
 'use client'
 
 /**
- * User Dashboard Page
+ * User Dashboard Page (Learning Command Center)
  *
- * Halaman dashboard utama untuk semua authenticated users.
- * Dapat diakses oleh user, creator, dan admin dengan konten yang sesuai role.
+ * Halaman utama dasbor pengguna MAGURU yang telah direfaktorisasi secara modular
+ * ke dalam subkomponen reusable di features/user-dashboard untuk kebersihan,
+ * keterbacaan, dan pemeliharaan kode yang mudah.
  */
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { useUser } from '@clerk/nextjs'
-
-// Auth hooks
+import { useRouter } from 'next/navigation'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
-
-// Dashboard components
-import {
-  DashboardLayout,
-  DashboardHeader,
-  StatsGrid,
-  RecentCourses,
-  QuickActions,
-  Recommendations,
-  DashboardHeaderSkeleton,
-  StatsGridSkeleton,
-  RecentCoursesSkeleton,
-  QuickActionsSkeleton,
-  RecommendationsSkeleton,
-} from '@/features/dashboard/components'
-
-// API client
 import { getDashboardData } from '@/features/dashboard/api'
 import type { DashboardData } from '@/features/dashboard/types'
 
+// Import modular components dari features/user-dashboard
+import {
+  DashboardHeader,
+  ContinueLearningCard,
+  TodaysGoalCard,
+  AICoTeacherCard,
+  LearningProgressCard,
+  LearningStreakCard,
+  UpcomingActivitiesCard,
+  AchievementsCard,
+  RecommendedLearning
+} from '@/features/user-dashboard'
+
 export default function DashboardPage() {
-  // Auth state
   const { user } = useUser()
   const { role } = useUserRole()
   const { canAccessUser } = useRoleGuard()
   const { shouldShowLoader } = useRoleLoadingState()
+  const router = useRouter()
 
-  // Dashboard data state
+  // Dashboard Data State
   const [data, setData] = useState<DashboardData | null>(null)
+  
+  // Interactive Local States for Goals Checklist
+  const [goals, setGoals] = useState([
+    { id: 1, text: 'Tonton video Lesson 4.3 (useState vs useReducer)', completed: true },
+    { id: 2, text: 'Selesaikan Kuis Mandiri Modul 4', completed: false },
+    { id: 3, text: 'Tulis ulang kode contoh useReducer di Sandbox', completed: false },
+  ])
 
-  // Fetch dashboard data when role is available
+  // Fetch dashboard data
   useEffect(() => {
     if (role) {
+      // Jika role adalah creator atau admin, alihkan ke dashboard masing-masing
+      if (role === 'creator') {
+        router.push('/creator')
+        return
+      }
+      if (role === 'admin') {
+        router.push('/admin')
+        return
+      }
+
       getDashboardData(role)
         .then(setData)
         .catch((err) => {
           console.error('Failed to fetch dashboard data:', err)
         })
     }
-  }, [role])
+  }, [role, router])
 
-  // Loading state - show skeletons
-  if (shouldShowLoader || !data) {
-    return (
-      <DashboardLayout role={role || 'user'}>
-        <header>
-          <DashboardHeaderSkeleton />
-        </header>
-
-        <main className="space-y-8">
-          <section aria-label="Statistik">
-            <StatsGridSkeleton />
-          </section>
-
-          <section aria-label="Kursus Terbaru">
-            <RecentCoursesSkeleton />
-          </section>
-
-          <section aria-label="Aksi Cepat">
-            <QuickActionsSkeleton />
-          </section>
-
-          <section aria-label="Rekomendasi">
-            <RecommendationsSkeleton />
-          </section>
-        </main>
-      </DashboardLayout>
-    )
+  // Toggle Goal status
+  const toggleGoal = (id: number) => {
+    setGoals(prev => prev.map(g => g.id === id ? { ...g, completed: !g.completed } : g))
   }
 
-  // Error state - access denied
-  if (!canAccessUser() || !role) {
+  // Calculate Goal Progress
+  const completedGoalsCount = goals.filter(g => g.completed).length
+  const goalProgressPercent = Math.round((completedGoalsCount / goals.length) * 100)
+
+  // Loading State / Skeleton
+  if (shouldShowLoader || !data || !role) {
     return (
-      <div className="min-h-screen bg-ancient-fantasy flex items-center justify-center p-6">
-        <div className="glass-panel-light rounded-lg p-8 max-w-md text-center">
-          <div className="text-6xl mb-4">🚫</div>
-          <h1 className="text-2xl font-bold text-beige-900 mb-2">Akses Ditolak</h1>
-          <p className="text-beige-600 mb-6">Anda perlu login untuk mengakses dashboard.</p>
-          <Link href="/sign-in">
-            <button className="bg-merah-500 hover:bg-merah-600 text-white px-6 py-2 rounded-lg transition-colors">
-              Login
-            </button>
-          </Link>
+      <div className="space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="h-28 bg-bg-bone rounded-2xl border border-border/10 p-6 flex flex-col justify-between">
+          <div className="h-6 w-1/4 bg-bg-surface-accent rounded"></div>
+          <div className="h-4 w-1/3 bg-bg-surface-accent rounded"></div>
+        </div>
+        
+        {/* Bento Grid Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="md:col-span-8 h-80 bg-bg-bone rounded-2xl border border-border/10"></div>
+          <div className="md:col-span-4 h-80 bg-bg-bone rounded-2xl border border-border/10"></div>
+          <div className="md:col-span-7 h-72 bg-bg-bone rounded-2xl border border-border/10"></div>
+          <div className="md:col-span-5 h-72 bg-bg-bone rounded-2xl border border-border/10"></div>
         </div>
       </div>
     )
   }
 
-  // Main dashboard rendering
+  // Error State - Access Denied
+  if (!canAccessUser()) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center p-6">
+        <div className="bg-card border border-border/15 rounded-2xl p-8 max-w-md text-center paper-texture">
+          <div className="text-5xl mb-4">🚫</div>
+          <h1 className="text-xl font-manrope font-bold text-text-primary mb-2">Akses Ditolak</h1>
+          <p className="text-text-secondary text-sm mb-6">Anda tidak memiliki otorisasi untuk mengakses dashboard ini.</p>
+          <button 
+            onClick={() => router.push('/')}
+            className="btn-primary"
+          >
+            Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <DashboardLayout role={role}>
-      <header>
-        <DashboardHeader userName={user?.firstName || 'User'} role={role} />
-      </header>
+    <div className="space-y-8 animate-fade-in">
+      {/* 1. Welcome Header Section */}
+      <DashboardHeader userName={user?.firstName || 'Budi'} />
 
-      <main className="space-y-8">
-        <section aria-label="Statistik">
-          <StatsGrid stats={data.stats} />
-        </section>
+      {/* Main Bento Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        {/* 2. Continue Learning Card */}
+        <ContinueLearningCard onResume={() => console.log('Resume learning')} />
 
-        <section aria-label="Kursus Terbaru">
-          <RecentCourses
-            courses={data.recentCourses}
-            onContinue={(id) => console.log('Continue course:', id)}
-            onViewAll={() => console.log('View all courses')}
-          />
-        </section>
+        {/* 3. Today's Goal Card */}
+        <TodaysGoalCard 
+          goals={goals}
+          onToggleGoal={toggleGoal}
+          completedCount={completedGoalsCount}
+          progressPercent={goalProgressPercent}
+        />
 
-        <section aria-label="Aksi Cepat">
-          <QuickActions actions={data.quickActions} />
-        </section>
+        {/* 4. AI Co-Teacher Card */}
+        <AICoTeacherCard />
 
-        {data.recommendations.length > 0 && (
-          <section aria-label="Rekomendasi">
-            <Recommendations recommendations={data.recommendations} />
-          </section>
-        )}
-      </main>
-    </DashboardLayout>
+        {/* 5. Learning Progress Chart Card */}
+        <LearningProgressCard />
+
+        {/* 6. Learning Streak Consistency Card */}
+        <LearningStreakCard />
+
+        {/* 7. Upcoming Activities Timeline Card */}
+        <UpcomingActivitiesCard />
+
+        {/* 8. Achievements Milestones Card */}
+        <AchievementsCard onClaim={() => console.log('Claim certificates')} />
+
+        {/* 9. Recommended Learning AI Carousel */}
+        <RecommendedLearning 
+          recommendations={data.recommendations}
+          onEnroll={(id) => console.log('Enrolling in course:', id)}
+        />
+
+      </div>
+    </div>
   )
 }
