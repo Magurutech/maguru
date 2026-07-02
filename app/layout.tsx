@@ -5,6 +5,7 @@ import { Providers } from '../lib/providers'
 import '../styles/globals.css'
 import { Toaster } from 'sonner'
 import { NavbarGlass } from '../features/homepage/components/NavbarGlass'
+import { EditorialSideRails } from '../features/homepage/components/EditorialSideRails'
 
 // Load Google Fonts via next/font/google
 import { Poppins, Playfair_Display, Fira_Code } from 'next/font/google'
@@ -56,17 +57,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {/* Global navbar — fixed pill nav, visible on all pages */}
             <NavbarGlass />
             
-            {/* Editorial Side Rails (Visible on desktop viewports) */}
-            <div className="hidden xl:flex fixed left-0 top-0 bottom-0 w-9 z-40 pointer-events-none items-center justify-center" aria-hidden="true">
-              <span className="font-sans text-[10px] font-bold tracking-[0.42em] uppercase text-text-faint/50 [writing-mode:vertical-rl] select-none">
-                Maguru · EdTech Platform · MMXXVI
-              </span>
-            </div>
-            <div className="hidden xl:flex fixed right-0 top-0 bottom-0 w-9 z-40 pointer-events-none items-center justify-center" aria-hidden="true">
-              <span className="font-sans text-[10px] font-bold tracking-[0.42em] uppercase text-text-faint/50 [writing-mode:vertical-rl] select-none rotate-180">
-                AI Co-Teacher · Penguasaan Kompetensi
-              </span>
-            </div>
+            {/* Editorial Side Rails (Conditional client component) */}
+            <EditorialSideRails />
 
             {children}
             <Toaster position="bottom-right" richColors closeButton />

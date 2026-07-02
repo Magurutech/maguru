@@ -29,10 +29,10 @@ export const ProgressBar = memo(function ProgressBar({
   // Pick fill color based on progress milestone
   const fillColor =
     clamped >= 100
-      ? 'bg-[var(--color-hijau-500)]'
+      ? 'bg-success'
       : clamped >= 50
-        ? 'bg-[var(--color-kuning-500)]'
-        : 'bg-[var(--color-merah-500)]'
+        ? 'bg-accent-mustard'
+        : 'bg-accent-coral'
 
   return (
     <div
@@ -43,7 +43,7 @@ export const ProgressBar = memo(function ProgressBar({
     >
       {/* Label */}
       <span
-        className="shrink-0 text-sm font-medium text-beige-800 whitespace-nowrap"
+        className="shrink-0 text-xs font-bold text-text-muted uppercase tracking-wider whitespace-nowrap font-sans"
         data-testid="progress-count"
       >
         {completedLessons} / {totalLessons} pelajaran selesai
@@ -51,7 +51,7 @@ export const ProgressBar = memo(function ProgressBar({
 
       {/* Track */}
       <div
-        className="flex-1 h-2.5 rounded-full bg-beige-200 overflow-hidden"
+        className="flex-1 h-2.5 rounded-full bg-bg-surface-accent overflow-hidden"
         role="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}
@@ -68,7 +68,7 @@ export const ProgressBar = memo(function ProgressBar({
 
       {/* Percentage badge */}
       <span
-        className="shrink-0 text-sm font-semibold text-(--color-beige-900) tabular-nums"
+        className="shrink-0 text-sm font-black text-text-primary tabular-nums font-manrope"
         aria-live="polite"
         data-testid="progress-percentage"
       >
@@ -76,4 +76,5 @@ export const ProgressBar = memo(function ProgressBar({
       </span>
     </div>
   )
+
 })

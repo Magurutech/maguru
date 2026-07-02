@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import { SidebarProvider } from '@/components/ui/sidebar'
 import { CourseNavigation } from '@/features/cms/components/student/CourseNavigation'
 import { LessonViewer } from '@/features/cms/components/student/LessonViewer'
 import { ProgressBar } from '@/features/cms/components/student/ProgressBar'
@@ -42,10 +41,10 @@ function LearnPageInner() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-beige-50">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-merah-500 mx-auto" />
-          <p className="mt-3 text-beige-600">Memuat kursus...</p>
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-coral mx-auto" />
+          <p className="mt-3 text-text-muted text-sm">Memuat kursus...</p>
         </div>
       </div>
     )
@@ -53,12 +52,12 @@ function LearnPageInner() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-beige-50">
-        <div className="text-center space-y-3">
-          <p className="text-merah-600">{error}</p>
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <div className="text-center space-y-3 p-8 bg-card border border-border/10 rounded-3xl paper-texture max-w-sm">
+          <p className="text-error text-sm font-bold">{error}</p>
           <button
             onClick={() => router.push(`/course/${slug}`)}
-            className="px-4 py-2 border border-beige-300 rounded-lg hover:bg-beige-100 text-beige-700"
+            className="w-full py-2 bg-accent-coral hover:bg-accent-coral/95 text-white rounded-full font-bold text-xs shadow-glow transition-all cursor-pointer"
           >
             Kembali ke Kursus
           </button>
@@ -87,79 +86,87 @@ function LearnPageInner() {
     }
   }
 
+  // ponytail: Removed SidebarProvider wrapper. The sidebar navigation handles its own state.
   return (
-    <SidebarProvider>
-      <div className="flex h-screen w-full flex-col" data-testid="learn-page">
-        {/* Compact header — back + dashboard + avatar */}
-        <LearnHeader courseSlug={slug} />
-
-        <div className="flex flex-1 overflow-hidden">
-          <CourseNavigation
-            sections={sections.map((s) => ({
-              id: s.id,
-              title: s.title,
-              lessons: (lessonsMap[s.id] || []).map((l) => ({
-                id: l.id,
-                title: l.title,
-                completed: completedLessonIds.has(l.id),
-              })),
-            }))}
-            currentLessonId={currentLesson?.id || ''}
-            onLessonClick={handleLessonClick}
-          />
-
-          <main className="flex-1 flex flex-col overflow-hidden">
-            {/* Progress bar */}
-            <div className="border-b border-beige-300 bg-beige-100 px-6 py-3">
-              <ProgressBar
-                percentage={progress.percentage}
-                completedLessons={progress.completedLessons}
-                totalLessons={progress.totalLessons}
-              />
-            </div>
-
-            {/* Lesson area */}
-            <div className="flex-1 overflow-y-auto p-6 bg-beige-50" data-testid="lesson-area">
-              {lessonLoading ? (
-                <div
-                  className="space-y-4 animate-pulse max-w-4xl mx-auto"
-                  data-testid="lesson-loading"
-                >
-                  <div className="h-8 bg-beige-200 rounded w-2/3" />
-                  <div className="h-4 bg-beige-200 rounded w-full" />
-                  <div className="h-4 bg-beige-200 rounded w-5/6" />
-                  <div className="h-32 bg-beige-200 rounded w-full mt-4" />
-                </div>
-              ) : lessonError ? (
-                <div
-                  className="text-center space-y-3 py-12 max-w-4xl mx-auto"
-                  data-testid="lesson-error"
-                >
-                  <p className="text-merah-600">{lessonError}</p>
-                </div>
-              ) : currentLesson ? (
-                <div className="w-full max-w-5xl mx-auto">
-                  <LessonViewer lesson={currentLesson} />
-                  <div className="mt-8">
-                    <LessonNavigation
-                      previousLesson={prevLesson}
-                      nextLesson={nextLesson}
-                      onNavigate={handleLessonClick}
-                      onMarkComplete={() => markComplete(currentLesson.id)}
-                      isCompleted={completedLessonIds.has(currentLesson.id)}
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center text-beige-500 py-12">
-                  Pilih pelajaran untuk mulai belajar
-                </div>
-              )}
-            </div>
-          </main>
-        </div>
+    <div className="relative flex h-screen w-full flex-col bg-background text-foreground overflow-hidden select-none" data-testid="learn-page">
+      {/* Ambient backgrounds - ponytail: added premium ambient radial glow */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-bg-canvas"
+      >
+        <div className="absolute top-[-10%] right-[-10%] w-[60vw] h-[60vw] rounded-full blur-[120px] opacity-[0.06] dark:opacity-[0.08] bg-accent-coral" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full blur-[120px] opacity-[0.05] dark:opacity-[0.07] bg-accent-mustard" />
       </div>
-    </SidebarProvider>
+
+      {/* Compact header — back + dashboard + avatar */}
+      <LearnHeader courseSlug={slug} />
+
+      <div className="flex flex-1 overflow-hidden h-[calc(100vh-3.5rem)] relative z-10">
+        <CourseNavigation
+          sections={sections.map((s) => ({
+            id: s.id,
+            title: s.title,
+            lessons: (lessonsMap[s.id] || []).map((l) => ({
+              id: l.id,
+              title: l.title,
+              completed: completedLessonIds.has(l.id),
+            })),
+          }))}
+          currentLessonId={currentLesson?.id || ''}
+          onLessonClick={handleLessonClick}
+        />
+
+        <main className="flex-1 flex flex-col overflow-hidden bg-bg-bone/10">
+          {/* Progress bar */}
+          <div className="border-b border-border/10 bg-bg-bone/45 px-6 py-4 paper-texture">
+            <ProgressBar
+              percentage={progress.percentage}
+              completedLessons={progress.completedLessons}
+              totalLessons={progress.totalLessons}
+            />
+          </div>
+
+          {/* Lesson area */}
+          <div className="flex-1 overflow-y-auto p-6 md:p-10 bg-transparent animate-fade-in" data-testid="lesson-area">
+            {lessonLoading ? (
+              <div
+                className="space-y-4 animate-pulse max-w-4xl mx-auto"
+                data-testid="lesson-loading"
+              >
+                <div className="h-8 bg-bg-bone/80 rounded w-2/3" />
+                <div className="h-4 bg-bg-bone/80 rounded w-full" />
+                <div className="h-4 bg-bg-bone/80 rounded w-5/6" />
+                <div className="h-32 bg-bg-bone/80 rounded w-full mt-4" />
+              </div>
+            ) : lessonError ? (
+              <div
+                className="text-center space-y-3 py-12 max-w-4xl mx-auto"
+                data-testid="lesson-error"
+              >
+                <p className="text-error font-bold text-sm">{lessonError}</p>
+              </div>
+            ) : currentLesson ? (
+              <div className="w-full max-w-4xl mx-auto">
+                <LessonViewer lesson={currentLesson} />
+                <div className="mt-8">
+                  <LessonNavigation
+                    previousLesson={prevLesson}
+                    nextLesson={nextLesson}
+                    onNavigate={handleLessonClick}
+                    onMarkComplete={() => markComplete(currentLesson.id)}
+                    isCompleted={completedLessonIds.has(currentLesson.id)}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="text-center text-text-muted py-12">
+                Pilih pelajaran untuk mulai belajar
+              </div>
+            )}
+          </div>
+        </main>
+      </div>
+    </div>
   )
 }
 
@@ -182,3 +189,4 @@ export default function LearnPage() {
     </LearnProvider>
   )
 }
+

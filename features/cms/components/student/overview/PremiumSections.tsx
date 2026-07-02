@@ -1,5 +1,6 @@
 import { Check, Sparkles, FolderKanban, Star, Users, Award, BookOpen } from 'lucide-react'
 import type { CreatorProfile, Review } from './types'
+import type { CourseMockData } from './CourseDetailMock'
 
 // Import Tiptap node styles for proper rendering (same as creator)
 import '@/components/tiptap-node/heading-node/heading-node.scss'
@@ -213,7 +214,7 @@ export function AICoTeacherSection({ data }: { data: CourseMockData['aiCoTeacher
           </div>
 
           <ul className="space-y-2 text-xs sm:text-sm text-text-secondary font-sans">
-            {data.benefits.map((benefit, idx) => (
+            {data.benefits.map((benefit: string, idx: number) => (
               <li key={idx} className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-coral flex-shrink-0" />
                 <span>{benefit}</span>
@@ -280,7 +281,7 @@ export function ProjectSection({ data }: { data: CourseMockData['courseProject']
               Deliverables Proyek:
             </span>
             <ul className="grid grid-cols-1 gap-2">
-              {data.deliverables.map((del, idx) => (
+              {data.deliverables.map((del: string, idx: number) => (
                 <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm text-text-secondary font-sans">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-olive mt-1.5 flex-shrink-0" />
                   <span>{del}</span>

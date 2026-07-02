@@ -8,6 +8,7 @@ import { gsap } from 'gsap'
 import Link from 'next/link'
 import { useUser, UserButton } from '@clerk/nextjs'
 import { useRoleNavigation } from '@/features/auth'
+import { usePathname } from 'next/navigation'
 
 // ─── Nav items data ────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -21,12 +22,23 @@ const EASE = 'power3.out'
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 export function NavbarGlass() {
+  const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const { isSignedIn } = useUser()
   const { getDashboardUrl } = useRoleNavigation()
+
+  // ponytail: Hide NavbarGlass on full-screen workspace and auth pages
+  const isWorkspace =
+    pathname?.includes('/learn') ||
+    pathname?.startsWith('/creator') ||
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/sign-in') ||
+    pathname?.startsWith('/sign-up')
+
+  if (isWorkspace) return null
 
   // GSAP refs
   const circleRefs = useRef<Array<HTMLSpanElement | null>>([])
