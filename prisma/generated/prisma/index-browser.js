@@ -205,6 +205,31 @@ exports.Prisma.Creator_profilesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.Assessment_questionsScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  sectionId: 'sectionId',
+  question: 'question',
+  options: 'options',
+  correct: 'correct',
+  topic: 'topic',
+  difficulty: 'difficulty',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.User_assessmentsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  courseId: 'courseId',
+  sectionId: 'sectionId',
+  score: 'score',
+  type: 'type',
+  answers: 'answers',
+  durationSeconds: 'durationSeconds',
+  completedAt: 'completedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -246,7 +271,9 @@ exports.Prisma.ModelName = {
   lesson_progress: 'lesson_progress',
   lessons: 'lessons',
   sections: 'sections',
-  creator_profiles: 'creator_profiles'
+  creator_profiles: 'creator_profiles',
+  assessment_questions: 'assessment_questions',
+  user_assessments: 'user_assessments'
 };
 
 /**

@@ -24,24 +24,26 @@ model course_completions {
 }
 
 model courses {
-  id          String        @id
-  slug        String        @unique @db.VarChar(150)
-  title       String        @db.VarChar(100)
-  description String
-  thumbnail   String?       @db.VarChar(255)
-  status      CourseStatus  @default(DRAFT)
-  students    Int           @default(0)
-  lessons     Int           @default(0)
-  duration    String        @default("0 jam")
-  rating      Float         @default(0.0)
-  category    String        @db.VarChar(50)
-  difficulty  String?       @db.VarChar(50)
-  creatorId   String        @db.VarChar(255)
-  outcomes    String[]      @default([])
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime
-  enrollments enrollments[]
-  sections    sections[]
+  id                   String                 @id
+  slug                 String                 @unique @db.VarChar(150)
+  title                String                 @db.VarChar(100)
+  description          String
+  thumbnail            String?                @db.VarChar(255)
+  status               CourseStatus           @default(DRAFT)
+  students             Int                    @default(0)
+  lessons              Int                    @default(0)
+  duration             String                 @default("0 jam")
+  rating               Float                  @default(0.0)
+  category             String                 @db.VarChar(50)
+  difficulty           String?                @db.VarChar(50)
+  creatorId            String                 @db.VarChar(255)
+  outcomes             String[]               @default([])
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  enrollments          enrollments[]
+  sections             sections[]
+  assessment_questions assessment_questions[]
+  user_assessments     user_assessments[]
 
   @@index([status])
   @@index([category])
@@ -92,15 +94,17 @@ model lessons {
 }
 
 model sections {
-  id          String    @id
-  courseId    String
-  order       Int
-  title       String    @db.VarChar(200)
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime
-  lessons     lessons[]
-  courses     courses   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  id                   String                 @id
+  courseId             String
+  order                Int
+  title                String                 @db.VarChar(200)
+  description          String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  lessons              lessons[]
+  courses              courses                @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  assessment_questions assessment_questions[]
+  user_assessments     user_assessments[]
 
   @@unique([courseId, order])
   @@index([courseId, order])
@@ -121,4 +125,45 @@ model creator_profiles {
 enum CourseStatus {
   DRAFT
   PUBLISHED
+}
+
+model assessment_questions {
+  id         String   @id @default(cuid())
+  courseId   String   @db.VarChar(255)
+  sectionId  String?  @db.VarChar(255) // Null jika untuk Initial Assessment
+  question   String   @db.Text
+  options    Json // { "a": "...", "b": "...", "c": "...", "d": "..." }
+  correct    String   @db.Char(1) // "a" | "b" | "c" | "d"
+  topic      String   @db.VarChar(100)
+  difficulty String   @default("medium") @db.VarChar(20)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  courses  courses   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sections sections? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([courseId])
+  @@index([sectionId])
+  @@index([topic])
+  @@index([courseId, topic])
+}
+
+model user_assessments {
+  id              String   @id @default(cuid())
+  userId          String   @db.VarChar(255)
+  courseId        String   @db.VarChar(255)
+  sectionId       String?  @db.VarChar(255) // Null jika kuis PRE_TEST
+  score           Float // 0.0 - 100.0
+  type            String   @default("PRE_TEST") @db.VarChar(20) // "PRE_TEST" | "SECTION_QUIZ"
+  answers         Json // { "questionId": "a" }
+  durationSeconds Int? // Durasi kuis dalam detik
+  completedAt     DateTime @default(now())
+
+  courses  courses   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sections sections? @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId, sectionId, type])
+  @@index([userId])
+  @@index([courseId])
+  @@index([sectionId])
 }
