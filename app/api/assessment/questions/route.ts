@@ -10,10 +10,26 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const courseId = searchParams.get('courseId')
-    if (!courseId) {
+    const courseIdParam = searchParams.get('courseId')
+    if (!courseIdParam) {
       return NextResponse.json({ error: 'courseId required' }, { status: 400 })
     }
+
+    // Resolve course CUID dynamically (accepts slug or CUID)
+    const course = await prisma.courses.findFirst({
+      where: {
+        OR: [
+          { id: courseIdParam },
+          { slug: courseIdParam },
+        ],
+      },
+      select: { id: true },
+    })
+
+    if (!course) {
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+    const courseId = course.id
 
     const sectionId = searchParams.get('sectionId') || null
     const quizType = sectionId ? 'SECTION_QUIZ' : 'PRE_TEST'

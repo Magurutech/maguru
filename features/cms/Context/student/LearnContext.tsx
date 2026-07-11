@@ -15,6 +15,8 @@ interface LearnContextValue {
   sections: LearnSection[]
   loading: boolean
   error: string | null
+  preTestCompleted: boolean
+  fetchData: () => Promise<void>
   // Progress
   completedLessonIds: Set<string>
   progress: CourseProgress
@@ -50,6 +52,8 @@ interface LearnProviderProps {
 export function LearnProvider({ courseSlug, initialLessonId, children }: LearnProviderProps) {
   const {
     sections,
+    preTestCompleted,
+    fetchData,
     completedLessonIds,
     setCompletedLessonIds,
     progress,
@@ -117,6 +121,8 @@ export function LearnProvider({ courseSlug, initialLessonId, children }: LearnPr
         sections,
         loading,
         error,
+        preTestCompleted,
+        fetchData,
         completedLessonIds,
         progress,
         completing,

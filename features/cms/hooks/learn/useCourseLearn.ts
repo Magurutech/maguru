@@ -7,6 +7,7 @@ export interface LearnSection {
   title: string
   order: number
   lessonCount: number
+  isLocked?: boolean
   lessons?: Array<{
     id: string
     title: string

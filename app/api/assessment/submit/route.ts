@@ -21,7 +21,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { courseId, sectionId, answers, durationSeconds } = parsed.data
+    const { courseId: courseIdParam, sectionId, answers, durationSeconds } = parsed.data
+
+    // Resolve course CUID dynamically (accepts slug or CUID)
+    const course = await prisma.courses.findFirst({
+      where: {
+        OR: [
+          { id: courseIdParam },
+          { slug: courseIdParam },
+        ],
+      },
+      select: { id: true },
+    })
+
+    if (!course) {
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+    const courseId = course.id
+
     const targetSectionId = sectionId || null
     const quizType = targetSectionId ? 'SECTION_QUIZ' : 'PRE_TEST'
 

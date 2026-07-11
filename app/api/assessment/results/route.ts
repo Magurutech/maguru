@@ -10,8 +10,25 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const courseId = searchParams.get('courseId')
+    const courseIdParam = searchParams.get('courseId')
     const sectionId = searchParams.get('sectionId') || null
+
+    // Resolve course CUID dynamically (accepts slug or CUID)
+    let courseId = courseIdParam
+    if (courseIdParam) {
+      const course = await prisma.courses.findFirst({
+        where: {
+          OR: [
+            { id: courseIdParam },
+            { slug: courseIdParam },
+          ],
+        },
+        select: { id: true },
+      })
+      if (course) {
+        courseId = course.id
+      }
+    }
 
     const results = await prisma.user_assessments.findMany({
       where: {
