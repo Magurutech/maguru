@@ -39,6 +39,7 @@ function LearnPageInner() {
     loading,
     error,
     preTestCompleted,
+    preTestScore,
     fetchData,
     completedLessonIds,
     progress,
@@ -55,6 +56,8 @@ function LearnPageInner() {
   // Track active quiz and quiz submission outcome in local state
   const [activeQuizSectionId, setActiveQuizSectionId] = useState<string | null>(null)
   const [activeResult, setActiveResult] = useState<CompletedResult | null>(null)
+  const [isPreTestReviewActive, setIsPreTestReviewActive] = useState(false)
+  const [preTestResult, setPreTestResult] = useState<CompletedResult | null>(null)
 
   if (loading) {
     return (
@@ -100,12 +103,13 @@ function LearnPageInner() {
   // Find current lesson's section ID to trigger the correct Section Quiz
   const currentLessonSectionId = currentLesson
     ? Object.entries(lessonsMap).find(([_, lessons]) =>
-        lessons.some((l) => l.id === currentLesson.id)
+        lessons.some((l) => l.id === currentLesson.id),
       )?.[0]
     : undefined
   const currentLessonSection = sections.find((s) => s.id === currentLessonSectionId)
 
   const handleLessonClick = (lessonId: string) => {
+    setIsPreTestReviewActive(false)
     for (const [sectionId, lessons] of Object.entries(lessonsMap)) {
       if (lessons.some((l) => l.id === lessonId)) {
         selectLesson(lessonId, sectionId)
@@ -127,6 +131,39 @@ function LearnPageInner() {
     await fetchData()
   }
 
+  const handleRetryQuiz = () => {
+    setActiveResult(null)
+  }
+
+  const handlePreTestClick = async () => {
+    if (!preTestCompleted) {
+      setActiveQuizSectionId(null)
+      setActiveResult(null)
+      setIsPreTestReviewActive(false)
+      selectLesson('', '')
+    } else {
+      try {
+        const res = await fetch(`/api/assessment/results?courseId=${slug}`)
+        if (res.ok) {
+          const data = await res.json()
+          const preTest = data.results.find((r: any) => r.type === 'PRE_TEST')
+          if (preTest) {
+            setPreTestResult({
+              overallScore: preTest.overallScore,
+              topicScores: preTest.topicScores,
+              skippedLessonIds: preTest.skippedLessonIds,
+              unlockedNextSection: preTest.unlockedNextSection,
+            })
+            setIsPreTestReviewActive(true)
+            setActiveResult(null)
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching pre-test result:', err)
+      }
+    }
+  }
+
   const handleExitQuiz = () => {
     if (!preTestCompleted) {
       // Exit pre-test goes back to course detail page
@@ -144,7 +181,10 @@ function LearnPageInner() {
   }))
 
   return (
-    <div className="relative flex h-screen w-full bg-background text-foreground overflow-hidden select-none" data-testid="learn-page">
+    <div
+      className="relative flex h-screen w-full bg-background text-foreground overflow-hidden select-none"
+      data-testid="learn-page"
+    >
       {/* Ambient backgrounds - premium ambient radial glow */}
       <div
         aria-hidden="true"
@@ -168,6 +208,10 @@ function LearnPageInner() {
         }))}
         currentLessonId={currentLesson?.id || ''}
         onLessonClick={handleLessonClick}
+        preTestCompleted={preTestCompleted}
+        preTestScore={preTestScore}
+        isPreTestActive={isPreTestReviewActive || (!preTestCompleted && !activeResult)}
+        onPreTestClick={handlePreTestClick}
       />
 
       {/* Main Content Area Column */}
@@ -183,7 +227,7 @@ function LearnPageInner() {
 
         <main className="flex-1 flex flex-col overflow-hidden bg-bg-bone/10">
           {activeResult ? (
-            <div className="flex-1 overflow-y-auto py-10">
+            <div className="flex-1 overflow-y-auto ">
               <AssessmentResultPage
                 score={activeResult.overallScore}
                 topicScores={activeResult.topicScores}
@@ -192,10 +236,25 @@ function LearnPageInner() {
                 isPreTest={!preTestCompleted}
                 sectionsOutline={sectionsOutlineForLookup}
                 onContinueAction={handleContinueFromResults}
+                onRetryAction={handleRetryQuiz}
+                onExitAction={handleExitQuiz}
+              />
+            </div>
+          ) : isPreTestReviewActive && preTestResult ? (
+            <div className="flex-1 overflow-y-auto">
+              <AssessmentResultPage
+                score={preTestResult.overallScore}
+                topicScores={preTestResult.topicScores}
+                skippedLessonIds={preTestResult.skippedLessonIds}
+                unlockedNextSection={preTestResult.unlockedNextSection}
+                isPreTest={true}
+                sectionsOutline={sectionsOutlineForLookup}
+                onContinueAction={() => setIsPreTestReviewActive(false)}
+                onExitAction={() => setIsPreTestReviewActive(false)}
               />
             </div>
           ) : !preTestCompleted ? (
-            <div className="flex-1 overflow-y-auto py-6">
+            <div className="flex-1 overflow-y-auto">
               <AssessmentErrorBoundary>
                 <AssessmentPage
                   courseId={slug}
@@ -231,7 +290,10 @@ function LearnPageInner() {
               </div>
 
               {/* Lesson area */}
-              <div className="flex-1 overflow-y-auto p-6 md:p-10 bg-transparent animate-fade-in" data-testid="lesson-area">
+              <div
+                className="flex-1 overflow-y-auto p-6 md:p-10 bg-transparent animate-fade-in"
+                data-testid="lesson-area"
+              >
                 {lessonLoading ? (
                   <div
                     className="space-y-4 animate-pulse max-w-4xl mx-auto"
@@ -303,4 +365,3 @@ export default function LearnPage() {
     </LearnProvider>
   )
 }
-

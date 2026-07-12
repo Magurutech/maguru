@@ -171,6 +171,7 @@ export async function GET(
     // Fetch assessment progress for the authenticated user (if any)
     const { userId } = await auth()
     let preTestCompleted = false
+    let preTestScore: number | null = null
     const passedSectionIds = new Set<string>()
 
     if (userId) {
@@ -181,9 +182,10 @@ export async function GET(
           courseId: result.courseId,
           type: 'PRE_TEST',
         },
-        select: { id: true },
+        select: { id: true, score: true },
       })
       preTestCompleted = !!preTest
+      preTestScore = preTest?.score ?? null
 
       // 2. Fetch all completed/passed section quizzes
       const passedQuizzes = await prisma.user_assessments.findMany({
@@ -218,6 +220,7 @@ export async function GET(
     return NextResponse.json({
       sections: sectionsWithGating,
       preTestCompleted,
+      preTestScore,
     })
   } catch (error) {
     console.error('Error fetching sections:', error)

@@ -10,6 +10,7 @@ import {
   PanelLeftOpen,
   Lock,
   Star,
+  Trophy,
 } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
@@ -35,12 +36,20 @@ interface CourseNavigationProps {
   }>
   currentLessonId: string
   onLessonClick: (lessonId: string) => void
+  preTestCompleted?: boolean
+  preTestScore?: number | null
+  isPreTestActive?: boolean
+  onPreTestClick?: () => void
 }
 
 function CourseNavigationContent({
   sections,
   currentLessonId,
   onLessonClick,
+  preTestCompleted = false,
+  preTestScore = null,
+  isPreTestActive = false,
+  onPreTestClick,
 }: CourseNavigationProps) {
   const { state, setOpen } = useSidebar()
   const sidebarOpen = state === 'expanded'
@@ -102,11 +111,26 @@ function CourseNavigationContent({
         {!sidebarOpen ? (
           <div className="flex flex-col items-center gap-6 pt-4 pb-4">
             <div className="w-8 border-t border-[#b89a57]/15 my-2" />
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex-col items-center gap-2 flex">
               <span className="text-[10px] font-manrope font-extrabold text-accent-coral">
                 {progressPercent}%
               </span>
             </div>
+            {preTestCompleted && (
+              <div className="flex flex-col items-center gap-1 mt-2">
+                <button
+                  onClick={onPreTestClick}
+                  className={`p-2 rounded-xl border transition-all cursor-pointer hover:scale-105 ${
+                    isPreTestActive
+                      ? 'bg-[#efe7d2] dark:bg-[#19181d] border-[#b89a57]/20 text-accent-coral animate-pulse'
+                      : 'bg-transparent border-transparent text-accent-mustard'
+                  }`}
+                  title="Review Placement Test"
+                >
+                  <Trophy className="h-4 w-4" />
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <>
@@ -131,6 +155,36 @@ function CourseNavigationContent({
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Assessment Section */}
+            <div className="mx-4 mb-4">
+              <span className="text-[9px] font-manrope font-extrabold uppercase tracking-widest text-text-faint block mb-2 pl-1">
+                ASSESSMENT
+              </span>
+              <button
+                onClick={onPreTestClick}
+                className={`
+                  w-full flex items-center gap-3 p-3 rounded-2xl text-left transition-all duration-200 border border-[#b89a57]/10 cursor-pointer
+                  ${isPreTestActive
+                    ? 'bg-[#efe7d2] dark:bg-[#19181d] border-[#b89a57]/20 shadow-[inset_0_1px_2px_rgba(0,0,0,0.06)] text-accent-coral font-bold font-extrabold'
+                    : 'bg-transparent hover:bg-bg-surface-accent/40 text-text-primary'
+                  }
+                `}
+              >
+                <div className="h-8 w-8 rounded-xl bg-bg-bone/80 dark:bg-bg-surface-accent border border-border/5 flex items-center justify-center shadow-sm shrink-0">
+                  <Trophy className={`h-4 w-4 ${isPreTestActive ? 'text-accent-coral' : 'text-accent-mustard'}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[11px] font-bold block truncate leading-tight">
+                    Initial Placement Test
+                  </span>
+                  <span className="text-[9px] font-medium text-text-muted leading-none block mt-0.5">
+                    {preTestCompleted ? `Terpetakan (Skor: ${preTestScore || 0}%)` : 'Belum Dikerjakan'}
+                  </span>
+                </div>
+                <ChevronRight className="h-3.5 w-3.5 text-text-faint shrink-0" />
+              </button>
             </div>
 
             {/* Course Content Section */}
