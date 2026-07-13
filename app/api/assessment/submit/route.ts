@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       where: {
         id: { in: submittedQuestionIds },
         courseId,
-        sectionId: targetSectionId,
+        ...(quizType === 'SECTION_QUIZ' ? { sectionId: targetSectionId } : {}),
       },
       select: {
         id: true,

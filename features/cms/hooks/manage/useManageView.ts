@@ -7,6 +7,7 @@ export type ActiveView =
   | { type: 'section'; sectionId: string }
   | { type: 'lesson'; sectionId: string; lessonId: string }
   | { type: 'lesson-editor'; sectionId: string; lessonId?: string }
+  | { type: 'quiz-editor'; quizType: 'PRE_TEST' | 'SECTION_QUIZ'; sectionId?: string }
 
 export function useManageView() {
   const [activeView, setActiveView] = useState<ActiveView>({ type: 'overview' })

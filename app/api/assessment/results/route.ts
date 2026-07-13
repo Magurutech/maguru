@@ -76,8 +76,10 @@ export async function GET(request: NextRequest) {
     const detailedResults = results.map((r) => {
       const answers = (r.answers || {}) as Record<string, string>
       
-      // Filter questions matching this assessment's section
-      const rQuestions = questions.filter((q) => q.sectionId === r.sectionId)
+      // Filter questions matching this assessment
+      const rQuestions = r.type === 'PRE_TEST'
+        ? questions.filter((q) => Object.keys(answers).includes(q.id))
+        : questions.filter((q) => q.sectionId === r.sectionId)
       
       // Calculate scores
       const { topicScores } = calculateScores(rQuestions, answers)

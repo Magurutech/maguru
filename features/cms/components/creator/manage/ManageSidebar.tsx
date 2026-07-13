@@ -25,6 +25,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   BookOpen,
+  Trophy,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -185,6 +186,8 @@ const SortableSectionItem = memo(function SortableSectionItem({
   onDeleteLesson,
   onLessonDragEnd,
   sensors,
+  quizQuestionCount = 0,
+  onSelectQuiz,
 }: {
   section: {
     id: string
@@ -202,7 +205,7 @@ const SortableSectionItem = memo(function SortableSectionItem({
   editingSectionTitle: string
   editInputRef: React.RefObject<HTMLInputElement | null>
   openLessonMenuId: string | null
-  activeView: { type: string; sectionId?: string; lessonId?: string }
+  activeView: any
   setOpenMenuId: (id: string | null) => void
   setOpenLessonMenuId: (id: string | null) => void
   setEditingSectionTitle: (t: string) => void
@@ -217,6 +220,8 @@ const SortableSectionItem = memo(function SortableSectionItem({
   onDeleteLesson: (lessonId: string) => void
   onLessonDragEnd: (event: DragEndEvent) => void
   sensors: ReturnType<typeof useSensors>
+  quizQuestionCount?: number
+  onSelectQuiz?: () => void
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: section.id,
@@ -371,6 +376,30 @@ const SortableSectionItem = memo(function SortableSectionItem({
             </SortableContext>
           </DndContext>
 
+          {/* Section Quiz Node */}
+          <div
+            onClick={onSelectQuiz}
+            className={`
+              group flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all border border-transparent cursor-pointer select-none
+              ${activeView.type === 'quiz-editor' && activeView.quizType === 'SECTION_QUIZ' && activeView.sectionId === section.id
+                ? 'bg-accent-coral/5 text-accent-coral border-accent-coral/10 font-bold'
+                : 'hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary'
+              }
+            `}
+          >
+            <Trophy
+              className={`h-3.5 w-3.5 shrink-0 ${
+                activeView.type === 'quiz-editor' && activeView.quizType === 'SECTION_QUIZ' && activeView.sectionId === section.id
+                  ? 'text-accent-coral animate-pulse'
+                  : 'text-accent-mustard'
+              }`}
+            />
+            <span className="text-xs flex-1 truncate">Kuis Bab</span>
+            <span className="text-[10px] font-mono text-text-muted bg-bg-bone/80 px-2 py-0.5 rounded-full shrink-0 ml-auto group-hover:bg-bg-surface-accent transition-colors">
+              {quizQuestionCount} soal
+            </span>
+          </div>
+
           <button
             onClick={onAddLesson}
             className="w-full flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-bold text-text-muted hover:text-accent-coral hover:bg-accent-coral/5 transition-colors cursor-pointer select-none"
@@ -408,6 +437,7 @@ export function ManageSidebar() {
     handleDeleteLesson,
     reorderSections,
     reorderLessons,
+    questions,
   } = useManageContext()
 
   const inlineInputRef = useRef<HTMLInputElement>(null)
@@ -566,6 +596,31 @@ export function ManageSidebar() {
 
           {/* 2. Course Structure Modul & Pelajaran Tree */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+            {/* Pre-test (Initial Assessment) Node */}
+            <div
+              onClick={() => setActiveView({ type: 'quiz-editor', quizType: 'PRE_TEST' })}
+              className={`
+                group flex items-center gap-3 p-3 rounded-2xl text-left transition-all duration-200 border cursor-pointer select-none mb-4
+                ${activeView.type === 'quiz-editor' && activeView.quizType === 'PRE_TEST'
+                  ? 'bg-accent-coral/5 text-accent-coral border-accent-coral/20 font-bold shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)]'
+                  : 'bg-transparent border-border/10 hover:bg-bg-surface-accent text-text-primary'
+                }
+              `}
+            >
+              <div className="h-8 w-8 rounded-xl bg-bg-bone/80 dark:bg-bg-surface-accent border border-border/5 flex items-center justify-center shadow-sm shrink-0">
+                <Trophy className={`h-4 w-4 ${activeView.type === 'quiz-editor' && activeView.quizType === 'PRE_TEST' ? 'text-accent-coral animate-pulse' : 'text-accent-mustard'}`} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-[11px] font-bold block truncate leading-tight">
+                  Pre-test (Assessment Awal)
+                </span>
+                <span className="text-[9px] font-medium text-text-muted leading-none block mt-0.5">
+                  {questions.filter((q) => q.sectionId !== null).length} soal
+                </span>
+              </div>
+              <Settings className="h-3.5 w-3.5 text-text-faint group-hover:text-text-muted transition-colors shrink-0" />
+            </div>
+
             {sections.length === 0 && !isAddingSection && (
               <p className="text-[10px] text-text-muted font-semibold px-3 py-6 text-center italic bg-bg-bone/40 rounded-2xl border border-dashed border-border/10">
                 Belum ada modul terdaftar. Klik tombol Tambah Modul di bawah untuk memulai.
@@ -613,6 +668,8 @@ export function ManageSidebar() {
                     onDeleteLesson={(lessonId) => handleDeleteLesson(section.id, lessonId)}
                     onLessonDragEnd={handleLessonDragEnd(section.id)}
                     sensors={sensors}
+                    quizQuestionCount={questions.filter((q) => q.sectionId === section.id).length}
+                    onSelectQuiz={() => setActiveView({ type: 'quiz-editor', quizType: 'SECTION_QUIZ', sectionId: section.id })}
                   />
                 ))}
               </SortableContext>

@@ -48,24 +48,44 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Assessment already completed' }, { status: 409 })
     }
 
-    // Retrieve the questions, sorting by topic then difficulty
-    const questions = await prisma.assessment_questions.findMany({
-      where: {
-        courseId,
-        sectionId,
-      },
-      select: {
-        id: true,
-        question: true,
-        options: true,
-        topic: true,
-        difficulty: true,
-      },
-      orderBy: [
-        { topic: 'asc' },
-        { difficulty: 'asc' },
-      ],
-    })
+    // Retrieve the questions dynamically based on assessment type
+    let questions
+    if (quizType === 'PRE_TEST') {
+      const allQuestions = await prisma.assessment_questions.findMany({
+        where: {
+          courseId,
+        },
+        select: {
+          id: true,
+          question: true,
+          options: true,
+          topic: true,
+          difficulty: true,
+        },
+      })
+      // Shuffle list and return up to 40 questions
+      questions = allQuestions
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 40)
+    } else {
+      questions = await prisma.assessment_questions.findMany({
+        where: {
+          courseId,
+          sectionId,
+        },
+        select: {
+          id: true,
+          question: true,
+          options: true,
+          topic: true,
+          difficulty: true,
+        },
+        orderBy: [
+          { topic: 'asc' },
+          { difficulty: 'asc' },
+        ],
+      })
+    }
 
     return NextResponse.json({ questions })
   } catch (error) {
