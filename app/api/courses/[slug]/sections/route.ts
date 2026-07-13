@@ -7,6 +7,8 @@
  */
 
 import { NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import prisma from '@/prisma/lib/client'
 import { sectionService } from '@/features/cms/services/section.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
 
@@ -166,7 +168,60 @@ export async function GET(
       }
     }
 
-    return NextResponse.json({ sections: result.sections })
+    // Fetch assessment progress for the authenticated user (if any)
+    const { userId } = await auth()
+    let preTestCompleted = false
+    let preTestScore: number | null = null
+    const passedSectionIds = new Set<string>()
+
+    if (userId) {
+      // 1. Check if PRE_TEST is completed
+      const preTest = await prisma.user_assessments.findFirst({
+        where: {
+          userId,
+          courseId: result.courseId,
+          type: 'PRE_TEST',
+        },
+        select: { id: true, score: true },
+      })
+      preTestCompleted = !!preTest
+      preTestScore = preTest?.score ?? null
+
+      // 2. Fetch all completed/passed section quizzes
+      const passedQuizzes = await prisma.user_assessments.findMany({
+        where: {
+          userId,
+          courseId: result.courseId,
+          type: 'SECTION_QUIZ',
+          score: { gte: 70 },
+        },
+        select: { sectionId: true },
+      })
+      for (const pq of passedQuizzes) {
+        if (pq.sectionId) {
+          passedSectionIds.add(pq.sectionId)
+        }
+      }
+    }
+
+    // Compute lock status per section
+    const sectionsWithGating = result.sections.map((section, index) => {
+      let isLocked = false
+      if (index > 0) {
+        const prevSection = result.sections[index - 1]
+        isLocked = !passedSectionIds.has(prevSection.id)
+      }
+      return {
+        ...section,
+        isLocked,
+      }
+    })
+
+    return NextResponse.json({
+      sections: sectionsWithGating,
+      preTestCompleted,
+      preTestScore,
+    })
   } catch (error) {
     console.error('Error fetching sections:', error)
     return NextResponse.json(

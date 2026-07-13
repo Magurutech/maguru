@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   useCourseManage,
@@ -23,6 +23,10 @@ interface ManageContextValue {
   handleTogglePublish: () => void
   activeView: ActiveView
   setActiveView: (view: ActiveView) => void
+  questions: any[]
+  setQuestions: React.Dispatch<React.SetStateAction<any[]>>
+  questionsLoading: boolean
+  fetchQuestions: () => Promise<void>
   lessonsMap: Record<string, ManagedLesson[]>
   expandedSections: Set<string>
   toggleSection: (sectionId: string) => void
@@ -100,6 +104,30 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
   }
 
   const { activeView, setActiveView } = useManageView()
+
+  // ── Creator Quiz Questions State ─────────────────────────────────────────
+  const [questions, setQuestions] = useState<any[]>([])
+  const [questionsLoading, setQuestionsLoading] = useState(false)
+
+  const fetchQuestions = useCallback(async () => {
+    if (!courseSlug) return
+    try {
+      setQuestionsLoading(true)
+      const res = await fetch(`/api/creator/courses/${courseSlug}/assessments`)
+      if (res.ok) {
+        const data = await res.json()
+        setQuestions(data.questions || [])
+      }
+    } catch (err) {
+      console.error('Error fetching creator questions:', err)
+    } finally {
+      setQuestionsLoading(false)
+    }
+  }, [courseSlug])
+
+  useEffect(() => {
+    fetchQuestions()
+  }, [fetchQuestions])
 
   const {
     lessonsMap, setLessonsMap, expandedSections,
@@ -234,6 +262,7 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
       sectionFormOpen, editingSection, openEditSection, closeSectionDialog, handleSectionSubmit,
       openAddLesson, openEditLesson, submitLessonFromPanel,
       reorderSections, reorderLessons,
+      questions, setQuestions, questionsLoading, fetchQuestions,
     }}>
       {children}
     </ManageContext.Provider>

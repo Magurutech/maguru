@@ -1,0 +1,95 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import prisma from '@/prisma/lib/client'
+
+export async function GET(request: NextRequest) {
+  try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { searchParams } = new URL(request.url)
+    const courseIdParam = searchParams.get('courseId')
+    if (!courseIdParam) {
+      return NextResponse.json({ error: 'courseId required' }, { status: 400 })
+    }
+
+    // Resolve course CUID dynamically (accepts slug or CUID)
+    const course = await prisma.courses.findFirst({
+      where: {
+        OR: [
+          { id: courseIdParam },
+          { slug: courseIdParam },
+        ],
+      },
+      select: { id: true },
+    })
+
+    if (!course) {
+      return NextResponse.json({ error: 'Course not found' }, { status: 404 })
+    }
+    const courseId = course.id
+
+    const sectionId = searchParams.get('sectionId') || null
+    const quizType = sectionId ? 'SECTION_QUIZ' : 'PRE_TEST'
+
+    // Check if the assessment of this type was already completed
+    const existing = await prisma.user_assessments.findFirst({
+      where: {
+        userId,
+        courseId,
+        sectionId,
+        type: quizType,
+      },
+    })
+
+    if (existing) {
+      return NextResponse.json({ error: 'Assessment already completed' }, { status: 409 })
+    }
+
+    // Retrieve the questions dynamically based on assessment type
+    let questions
+    if (quizType === 'PRE_TEST') {
+      const allQuestions = await prisma.assessment_questions.findMany({
+        where: {
+          courseId,
+        },
+        select: {
+          id: true,
+          question: true,
+          options: true,
+          topic: true,
+          difficulty: true,
+        },
+      })
+      // Shuffle list and return up to 40 questions
+      questions = allQuestions
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 40)
+    } else {
+      questions = await prisma.assessment_questions.findMany({
+        where: {
+          courseId,
+          sectionId,
+        },
+        select: {
+          id: true,
+          question: true,
+          options: true,
+          topic: true,
+          difficulty: true,
+        },
+        orderBy: [
+          { topic: 'asc' },
+          { difficulty: 'asc' },
+        ],
+      })
+    }
+
+    return NextResponse.json({ questions })
+  } catch (error) {
+    console.error('Error fetching assessment questions:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}

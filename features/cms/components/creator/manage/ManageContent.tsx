@@ -3,6 +3,7 @@
 import { CourseOverview } from './panels/CourseOverview'
 import { LessonEditorPanel } from './panels/LessonEditorPanel'
 import { LessonViewerPanel } from './panels/LessonViewerPanel'
+import { QuizEditorPanel } from './panels/QuizEditorPanel'
 import { useManageContext } from '@/features/cms/Context/creator/ManageContext'
 
 // ── Main export ────────────────────────────────────────────────────────────
@@ -14,6 +15,11 @@ export function ManageContent() {
   // Lesson editor: full-width (toolbar breaks out), then padded content
   if (activeView.type === 'lesson-editor') {
     return <LessonEditorPanel sectionId={activeView.sectionId} lessonId={activeView.lessonId} />
+  }
+
+  // Quiz editor: custom dashboard panel
+  if (activeView.type === 'quiz-editor') {
+    return <QuizEditorPanel quizType={activeView.quizType} sectionId={activeView.sectionId} />
   }
 
   // All other views: standard editorial padding + max-width container

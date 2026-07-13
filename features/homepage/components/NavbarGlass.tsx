@@ -38,8 +38,6 @@ export function NavbarGlass() {
     pathname?.startsWith('/sign-in') ||
     pathname?.startsWith('/sign-up')
 
-  if (isWorkspace) return null
-
   // GSAP refs
   const circleRefs = useRef<Array<HTMLSpanElement | null>>([])
   const tlRefs = useRef<Array<gsap.core.Timeline | null>>([])
@@ -159,6 +157,8 @@ export function NavbarGlass() {
 
     return () => window.removeEventListener('resize', layout)
   }, [])
+
+  if (isWorkspace) return null
 
   // ── Pill hover handlers ───────────────────────────────────────────────────────
   const handleEnter = (i: number) => {

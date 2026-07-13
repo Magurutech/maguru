@@ -7,6 +7,7 @@ export interface LearnSection {
   title: string
   order: number
   lessonCount: number
+  isLocked?: boolean
   lessons?: Array<{
     id: string
     title: string
@@ -23,6 +24,8 @@ export interface CourseProgress {
 
 export function useCourseLearn(courseSlug: string) {
   const [sections, setSections] = useState<LearnSection[]>([])
+  const [preTestCompleted, setPreTestCompleted] = useState(false)
+  const [preTestScore, setPreTestScore] = useState<number | null>(null)
   const [completedLessonIds, setCompletedLessonIds] = useState<Set<string>>(new Set())
   const [progress, setProgress] = useState<CourseProgress>({
     percentage: 0,
@@ -48,6 +51,8 @@ export function useCourseLearn(courseSlug: string) {
 
       const sectionsData = await sectionsRes.json()
       setSections(sectionsData.sections || [])
+      setPreTestCompleted(sectionsData.preTestCompleted ?? false)
+      setPreTestScore(sectionsData.preTestScore ?? null)
 
       if (progressRes.ok) {
         const progressData = await progressRes.json()
@@ -75,6 +80,11 @@ export function useCourseLearn(courseSlug: string) {
 
   return {
     sections,
+    preTestCompleted,
+    setPreTestCompleted,
+    preTestScore,
+    setPreTestScore,
+    fetchData,
     completedLessonIds,
     setCompletedLessonIds,
     progress,

@@ -20,6 +20,8 @@ interface LessonNavigationProps {
   onNavigate: (lessonId: string) => void
   onMarkComplete?: () => Promise<void>
   isCompleted?: boolean
+  onTakeQuiz?: () => void
+  quizSectionTitle?: string
 }
 
 export const LessonNavigation = memo(function LessonNavigation({
@@ -28,6 +30,8 @@ export const LessonNavigation = memo(function LessonNavigation({
   onNavigate,
   onMarkComplete,
   isCompleted,
+  onTakeQuiz,
+  quizSectionTitle,
 }: LessonNavigationProps) {
   const handleNext = async (lessonId: string) => {
     // Auto mark current lesson complete when navigating forward
@@ -36,6 +40,16 @@ export const LessonNavigation = memo(function LessonNavigation({
     }
     onNavigate(lessonId)
   }
+
+  const handleTakeQuiz = async () => {
+    if (onMarkComplete && !isCompleted) {
+      await onMarkComplete()
+    }
+    if (onTakeQuiz) {
+      onTakeQuiz()
+    }
+  }
+
   return (
     <nav
       className="flex items-center justify-between gap-4 pt-6 border-t border-border/10"
@@ -57,8 +71,21 @@ export const LessonNavigation = memo(function LessonNavigation({
         <div /> /* spacer so Next stays right when no Prev */
       )}
 
-      {/* Next */}
-      {nextLesson ? (
+      {/* Next / Take Quiz */}
+      {onTakeQuiz ? (
+        <Button
+          variant="default"
+          onClick={handleTakeQuiz}
+          className="flex items-center gap-2 bg-accent-coral hover:bg-accent-coral/95 text-white rounded-full px-5 py-2 text-xs font-bold shadow-glow ml-auto cursor-pointer transition-all border border-transparent"
+          aria-label="Ambil Kuis Section"
+          data-testid="take-quiz-btn"
+        >
+          <span className="text-sm font-semibold truncate">
+            Ambil Kuis {quizSectionTitle || 'Section'}
+          </span>
+          <ChevronRight className="h-4 w-4 shrink-0 text-white" aria-hidden="true" />
+        </Button>
+      ) : nextLesson ? (
         <Button
           variant="default"
           onClick={() => handleNext(nextLesson.id)}

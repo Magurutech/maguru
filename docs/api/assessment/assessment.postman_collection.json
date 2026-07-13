@@ -1,0 +1,338 @@
+{
+  "info": {
+    "name": "Assessment Engine API",
+    "description": "API testing collection for Maguru Assessment Engine (Pre-Test & Section Quiz)\n\nRequirements: Wave 0 to Wave 7",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "courseId",
+      "value": "a953070e-d025-4a94-a25f-e244bbae9877",
+      "type": "string",
+      "description": "Course CUID or Course Slug (e.g., test-course-double-postman-dari-postman)"
+    },
+    {
+      "key": "sectionId",
+      "value": "4b2637a9-1133-4612-a0a6-5863d37a840d",
+      "type": "string",
+      "description": "Section CUID to test Section Quiz"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string",
+      "description": "Clerk session token for authenticated requests"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. GET /api/assessment/questions",
+      "item": [
+        {
+          "name": "Get Questions - Success (Pre-Test)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has questions array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('questions');",
+                  "    pm.expect(jsonData.questions).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test(\"Each question has required fields without answers\", function () {",
+                  "    var questions = pm.response.json().questions;",
+                  "    if (questions.length > 0) {",
+                  "        var q = questions[0];",
+                  "        pm.expect(q).to.have.property('id');",
+                  "        pm.expect(q).to.have.property('question');",
+                  "        pm.expect(q).to.have.property('options');",
+                  "        pm.expect(q).to.have.property('topic');",
+                  "        pm.expect(q).to.have.property('difficulty');",
+                  "        // Ensure the correct answer key is NOT leaked to students",
+                  "        pm.expect(q).to.not.have.property('correct');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/questions?courseId={{courseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "questions"],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            },
+            "description": "Fetch Pre-Test questions for a course. Requires authToken and courseId (either CUID or slug)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Questions - Success (Section Quiz)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has questions array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('questions');",
+                  "    pm.expect(jsonData.questions).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/questions?courseId={{courseId}}&sectionId={{sectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "questions"],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                },
+                {
+                  "key": "sectionId",
+                  "value": "{{sectionId}}"
+                }
+              ]
+            },
+            "description": "Fetch Section Quiz questions for a specific section. Requires authToken, courseId and sectionId."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Questions - Failure (Unauthorized)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "",
+                  "pm.test(\"Response has error message\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "    pm.expect(jsonData.error).to.include('Unauthorized');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/questions?courseId={{courseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "questions"],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            },
+            "description": "Verify that requesting questions without auth token fails."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. POST /api/assessment/submit",
+      "item": [
+        {
+          "name": "Submit Pre-Test - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains scores and skipped lessons\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('overallScore');",
+                  "    pm.expect(jsonData).to.have.property('topicScores');",
+                  "    pm.expect(jsonData).to.have.property('skippedLessonIds');",
+                  "    pm.expect(jsonData.skippedLessonIds).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": \"{{courseId}}\",\n  \"sectionId\": null,\n  \"answers\": {\n    \"pre-q1\": \"b\",\n    \"pre-q2\": \"a\",\n    \"pre-q3\": \"c\",\n    \"pre-q4\": \"b\"\n  },\n  \"durationSeconds\": 150\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "submit"]
+            },
+            "description": "Submit Pre-Test answers. Requires courseId (slug or CUID) and answers."
+          },
+          "response": []
+        },
+        {
+          "name": "Submit Quiz - Failure (Bad Request)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains details or error message\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('error');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"courseId\": \"\",\n  \"answers\": {}\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/submit",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "submit"]
+            },
+            "description": "Verify validation failure on missing courseId or answers."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. GET /api/assessment/results",
+      "item": [
+        {
+          "name": "Get Results - Success",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Response contains results array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('results');",
+                  "    pm.expect(jsonData.results).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": "__session={{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/assessment/results?courseId={{courseId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "assessment", "results"],
+              "query": [
+                {
+                  "key": "courseId",
+                  "value": "{{courseId}}"
+                }
+              ]
+            },
+            "description": "Fetch user's assessment attempt history for the course."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
