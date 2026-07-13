@@ -40,6 +40,8 @@ GEMINI.md
 .DS_Store
 *.pem
 
+/docs/plans
+
 # debug
 npm-debug.log*
 yarn-debug.log*
