@@ -8,7 +8,7 @@ import { NavbarGlass } from '../features/homepage/components/NavbarGlass'
 import { EditorialSideRails } from '../features/homepage/components/EditorialSideRails'
 
 // Load Google Fonts via next/font/google
-import { Poppins, Playfair_Display, Fira_Code } from 'next/font/google'
+import { Poppins, Fraunces, Fira_Code, Cinzel } from 'next/font/google'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -17,9 +17,9 @@ const poppins = Poppins({
   display: 'swap',
 })
 
-const playfair = Playfair_Display({
+const fraunces = Fraunces({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-serif',
   display: 'swap',
 })
@@ -28,6 +28,13 @@ const firaCode = Fira_Code({
   subsets: ['latin'],
   weight: ['300', '400', '500'],
   variable: '--font-mono',
+  display: 'swap',
+})
+
+const cinzel = Cinzel({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-cinzel',
   display: 'swap',
 })
 
@@ -41,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id" suppressHydrationWarning data-scroll-behavior="smooth">
       <body
-        className={`${poppins.variable} ${playfair.variable} ${firaCode.variable} font-sans antialiased`}
+        className={`${poppins.variable} ${fraunces.variable} ${firaCode.variable} ${cinzel.variable} font-sans antialiased`}
       >
         <Providers>
           <UserRoleProvider

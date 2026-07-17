@@ -20,32 +20,32 @@ const colorTokensGroup = [
       {
         name: 'Accent Coral (Primary Brand)',
         variable: '--color-accent-coral',
-        lightHex: '#ed6f5c',
-        darkHex: '#f08e7c',
+        lightHex: '#b34d3d',
+        darkHex: '#c76554',
         usage: 'Aksen utama, tautan aktif, bullet points, dan tombol primer (.coral-skeuo).',
-        gradientDesc: 'Gradien: #f28f80 ke #ed6f5c',
+        gradientDesc: 'Gradien: #cc5a4a ke #b34d3d',
       },
       {
         name: 'AI Blue (Co-Teacher)',
         variable: '--color-ai-blue',
-        lightHex: '#4a90e2',
-        darkHex: '#5da9ff',
+        lightHex: '#2d4a6b',
+        darkHex: '#6a8bb5',
         usage: 'Akses khusus asisten AI Co-Teacher dan aksi interaktif AI (.ai-blue-skeuo).',
-        gradientDesc: 'Gradien: #7cb4f5 ke #4a90e2',
+        gradientDesc: 'Gradien: #3c5e87 ke #2d4a6b',
       },
       {
         name: 'Accent Mustard (Premium Badge)',
         variable: '--color-accent-mustard',
-        lightHex: '#e9b94a',
-        darkHex: '#f4cf74',
+        lightHex: '#cfa04a',
+        darkHex: '#dfb163',
         usage: 'Mustard - Elemen status khusus dan lencana kreator terverifikasi (.gold-skeuo).',
       },
       {
         name: 'Accent Olive (Natural)',
         variable: '--color-accent-olive',
-        lightHex: '#6e7448',
-        darkHex: '#8a915e',
-        usage: 'Olive - Aksen lempengan zaitun tanah liat Makassar (.olive-skeuo).',
+        lightHex: '#4e533b',
+        darkHex: '#7f8566',
+        usage: 'Olive - Aksen zaitun hutan Spruce Shadow (.olive-skeuo).',
       },
     ],
   },
@@ -86,11 +86,11 @@ const colorTokensGroup = [
     category: 'Warna Teks & Status',
     tokens: [
       {
-        name: 'Text Primary (Ink)',
+        name: 'Text Primary (Medium Walnut)',
         variable: '--color-text-primary',
-        lightHex: '#15140f',
+        lightHex: '#4a3a34',
         darkHex: '#efe7d2',
-        usage: 'Warna tinta utama untuk judul, teks utama, dan tombol primer.',
+        usage: 'Warna tinta walnut utama untuk judul, teks utama, dan tombol primer.',
       },
       {
         name: 'Text Secondary (Muted Ink)',
@@ -223,15 +223,14 @@ export default function ColorsShowcase() {
               return (
                 <div
                   key={tokenIndex}
-                  className="grid grid-cols-1 sm:grid-cols-3 rounded-2xl overflow-hidden border border-text-faint/15 shadow-sm paper-skeuo min-h-[200px]"
+                  className="grid grid-cols-1 sm:grid-cols-3 rounded-2xl overflow-hidden border border-text-faint/15 shadow-sm bg-bg-bone min-h-[200px]"
                 >
                   {/* Left part: Big Diagonal Color Split Container */}
                   <div
                     style={splitGradientStyle}
                     className="relative flex items-stretch min-h-[140px] sm:min-h-full overflow-hidden border-b sm:border-b-0 sm:border-r border-text-faint/15 shadow-inner"
                   >
-                    {/* SVG Noise overlay for texture */}
-                    <div className="absolute inset-0 pointer-events-none paper-texture opacity-30" />
+
 
                     {/* Text overlays inside the split colors */}
                     <div className="absolute top-3 left-3 text-[10px] font-bold tracking-widest px-2 py-0.5 rounded bg-white/85 text-[#15140f] shadow-sm">
@@ -366,7 +365,7 @@ export default function ColorsShowcase() {
             return (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-3 rounded-2xl overflow-hidden border border-text-faint/15 shadow-sm paper-skeuo min-h-[200px]"
+                className="grid grid-cols-1 sm:grid-cols-3 rounded-2xl overflow-hidden border border-text-faint/15 shadow-sm bg-bg-bone min-h-[200px]"
               >
                 {/* Left part: Live 3D CSS Render Block */}
                 <div className="relative flex items-stretch min-h-[140px] sm:min-h-full overflow-hidden">
@@ -376,8 +375,7 @@ export default function ColorsShowcase() {
                       util.className,
                     )}
                   >
-                    {/* SVG Noise overlay for skeuomorphic texture */}
-                    <div className="absolute inset-0 pointer-events-none paper-texture opacity-25" />
+
 
                     <span
                       className={cn(
@@ -444,6 +442,123 @@ export default function ColorsShowcase() {
               </div>
             )
           })}
+        </div>
+      </section>
+
+      {/* SECTION 3: ACCESSIBILITY, GLASS & STATES */}
+      <section className="space-y-6 pt-10 border-t border-text-faint/12">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-accent-olive/10 flex items-center justify-center border border-accent-olive/20 text-accent-olive">
+            <Info className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="text-xl font-serif font-bold text-text-primary tracking-wide">
+              Accessibility, States & Translucent Tokens
+            </h2>
+            <p className="text-xs text-text-secondary">
+              Panduan aksesibilitas WCAG, parameter kaca kertas kalkir, dan status interaktif.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Box Left: WCAG Contrast */}
+          <div className="bg-bg-bone rounded-3xl border border-text-faint/12 p-6 space-y-4">
+            <h3 className="text-body-lg font-manrope font-bold text-text-primary">
+              A. WCAG 2.1 Contrast (on Warm Parchment #efe7d2)
+            </h3>
+            <p className="text-caption text-text-secondary leading-relaxed">
+              Keterbacaan teks utama diatur secara ketat untuk menjamin kelulusan kontras AA/AAA.
+            </p>
+            
+            <div className="space-y-3 pt-2">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-text-faint/5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-[#4a3a34] border border-text-faint/10" />
+                  <span className="text-caption font-bold text-text-primary">Medium Walnut</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs bg-bg-bone px-2 py-0.5 rounded text-text-muted">6.2:1</span>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-success/15 text-success">AAA PASS</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-text-faint/5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-[#4e533b] border border-text-faint/10" />
+                  <span className="text-caption font-bold text-text-primary">Spruce Shadow</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs bg-bg-bone px-2 py-0.5 rounded text-text-muted">6.8:1</span>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-success/15 text-success">AAA PASS</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-text-faint/5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-[#b34d3d] border border-text-faint/10" />
+                  <span className="text-caption font-bold text-text-primary">Rust Terracotta</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs bg-bg-bone px-2 py-0.5 rounded text-text-muted">4.8:1</span>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-accent-mustard/15 text-accent-mustard">AA PASS</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-xl bg-bg-surface border border-text-faint/5 opacity-70">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-4 h-4 rounded-full bg-[#cfa04a] border border-text-faint/10" />
+                  <span className="text-caption font-bold text-text-primary">Raw Sienna (Decorative)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs bg-bg-bone px-2 py-0.5 rounded text-text-muted">2.1:1</span>
+                  <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded bg-error/15 text-error">AA FAIL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Box Right: Parchment Glassmorphism & Interactive States */}
+          <div className="bg-bg-bone rounded-3xl border border-text-faint/12 p-6 flex flex-col justify-between space-y-4">
+            <div className="space-y-3">
+              <h3 className="text-body-lg font-manrope font-bold text-text-primary">
+                B. Parchment Glassmorphism & States
+              </h3>
+              <p className="text-caption text-text-secondary leading-relaxed">
+                Token transparansi kaca taktil (`--glass-*`) dan simulasi transisi saat kursor melayang (hover).
+              </p>
+
+              {/* Real-time Interactive Sandbox */}
+              <div className="p-4 rounded-2xl bg-bg-surface/50 border border-text-faint/10 flex flex-col gap-3">
+                <span className="text-[9px] font-mono text-accent-coral font-bold tracking-wider uppercase">INTERACTIVE SANDBOX</span>
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Active Hover Card */}
+                  <div className="p-4 rounded-xl border border-text-faint/10 bg-[#f7f1de]/45 hover:bg-[#ece4cf]/60 hover:translate-y-[1px] transition-all duration-200 cursor-pointer text-center group">
+                    <span className="text-xs font-bold text-text-primary group-hover:text-accent-coral">Hover Me</span>
+                    <p className="text-[9px] text-text-muted mt-1">Y-Translate + Deepen BG</p>
+                  </div>
+                  
+                  {/* Disabled Card */}
+                  <div className="p-4 rounded-xl border border-text-faint/10 bg-[#f7f1de]/45 opacity-[0.38] cursor-not-allowed text-center">
+                    <span className="text-xs font-bold text-text-muted">Disabled State</span>
+                    <p className="text-[9px] text-text-muted mt-1">Opacity: 38%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-1.5 pt-3 border-t border-text-faint/10 text-[11px] text-text-secondary font-mono leading-relaxed">
+              <div>
+                <strong className="text-text-primary">--glass-bg:</strong> rgba(247, 241, 222, 0.45)
+              </div>
+              <div>
+                <strong className="text-text-primary">--glass-border:</strong> rgba(21, 20, 15, 0.08)
+              </div>
+              <div>
+                <strong className="text-text-primary">--glass-shadow:</strong> rgba(21, 20, 15, 0.05)
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>

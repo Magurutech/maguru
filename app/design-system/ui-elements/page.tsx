@@ -37,10 +37,10 @@ export default function UIElementsShowcase() {
           variant="paper" 
           size="small" 
           titleText="Tombol Primer & Sekunder" 
-          descriptionText="Tombol fisis dengan arah cahaya 45°"
+          descriptionText="Tombol fisis dengan gaya deckle edge & outline ink"
         >
           <div className="flex flex-col gap-4 mt-2">
-            <button className="px-6 py-3 rounded-xl font-semibold btn-interactive coral-skeuo text-center w-full">
+            <button className="px-6 py-3 font-semibold btn-interactive btn-primary btn-deckle text-center w-full">
               Tombol Coral (Primer)
             </button>
             <button className="px-6 py-3 rounded-xl font-semibold btn-interactive ai-blue-skeuo text-center w-full flex items-center justify-center gap-2">
@@ -69,8 +69,8 @@ export default function UIElementsShowcase() {
               <Award className="w-3.5 h-3.5 fill-white/20" />
               COMPETENCY III
             </span>
-
-            <span className="px-3 py-1.5 rounded-full text-xs font-bold font-mono debossed-skeuo flex items-center gap-1">
+ 
+            <span className="bg-bg-bone px-3 py-1.5 rounded-full text-xs font-bold font-mono border border-text-faint/10 flex items-center gap-1 shadow-sm">
               STATUS: STABLE
             </span>
             
@@ -185,14 +185,14 @@ export default function UIElementsShowcase() {
           titleText="Lencana Kompetensi (Mastery Medal & Badge)" 
           descriptionText="Sertifikasi pencapaian kompetensi bertema material fisik"
         >
-          <div className="flex flex-col sm:flex-row items-center gap-6 mt-4 p-4 rounded-xl debossed-skeuo bg-bg-canvas/50">
+          <div className="flex flex-col sm:flex-row items-center gap-6 mt-4 p-4 rounded-xl bg-bg-bone border border-text-faint/10 shadow-sm">
             {/* Medal Visual */}
-            <div className="relative w-20 h-20 shrink-0 flex items-center justify-center rounded-full gold-skeuo shadow-md border-t-2 border-t-white/80">
+            <div className="relative w-20 h-20 shrink-0 flex items-center justify-center rounded-full gold-skeuo shadow-sm border border-text-faint/10">
               <div className="absolute inset-1.5 rounded-full border-2 border-dashed border-[#3E5237]/30 flex items-center justify-center">
                 <GraduationCap className="w-8 h-8 text-[#3E5237]" />
               </div>
             </div>
-
+ 
             {/* Badge Content */}
             <div className="text-center sm:text-left space-y-1">
               <div className="text-roman font-cinzel text-accent-coral tracking-widest">CHAPTER II • WEB DEV</div>
@@ -219,7 +219,7 @@ export default function UIElementsShowcase() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 items-center">
             {/* Card Thumbnail */}
             <div className="rounded-xl h-40 bg-nature-blend flex flex-col justify-between p-4 relative overflow-hidden border border-text-faint/15">
-              <div className="absolute inset-0 pointer-events-none paper-texture opacity-30" />
+
               <div className="px-2 py-1 rounded bg-[#566B4D] text-white text-xs font-cinzel max-w-max font-bold tracking-widest shadow-sm">
                 SKEUO - C2
               </div>
@@ -263,10 +263,10 @@ export default function UIElementsShowcase() {
         >
           <div className="py-12 flex flex-col items-center justify-center text-center max-w-md mx-auto space-y-4">
             {/* Empy Icon Frame */}
-            <div className="w-16 h-16 rounded-2xl debossed-skeuo bg-bg-canvas flex items-center justify-center text-text-faint shadow-inner">
+            <div className="w-16 h-16 rounded-2xl bg-bg-bone flex items-center justify-center text-text-faint border border-text-faint/10 shadow-sm">
               <Search className="w-8 h-8" />
             </div>
-
+ 
             <div className="space-y-1">
               <h4 className="text-body-lg font-manrope font-semibold text-text-primary">
                 Belum Ada Kelas yang Diikuti
@@ -275,8 +275,8 @@ export default function UIElementsShowcase() {
                 Daftar kelas atau kursus Anda masih kosong. Mulailah petualangan belajar Anda dengan menjelajahi katalog kursus kami sekarang.
               </p>
             </div>
-
-            <button className="px-6 py-2.5 rounded-xl font-semibold btn-interactive coral-skeuo text-center flex items-center gap-2">
+ 
+            <button className="px-6 py-2.5 font-semibold btn-interactive btn-primary btn-deckle text-center flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-white" />
               Jelajahi Kelas Baru
             </button>
@@ -287,11 +287,9 @@ export default function UIElementsShowcase() {
           variant="paper" 
           size="large" 
           titleText="AI Chat Input Bar (Floating Interface)" 
-          descriptionText="Struktur input mengambang taktil glassmorphic di bagian bawah layar"
+          descriptionText="Struktur input mengambang taktil paper-texture di bagian bawah layar"
         >
-          <div className="p-4 rounded-2xl glass-panel relative border border-text-faint/15 shadow-md">
-            <div className="absolute inset-0 pointer-events-none paper-texture opacity-30 rounded-2xl" />
-            
+          <div className="p-4 rounded-2xl bg-bg-bone relative border border-text-faint/12 shadow-sm">
             <div className="flex items-center gap-3 relative z-10">
               {/* Bot Icon Indicator */}
               <div className="w-10 h-10 rounded-xl bg-bg-surface-accent flex items-center justify-center border border-text-faint/10 text-accent-coral shrink-0">
@@ -306,7 +304,7 @@ export default function UIElementsShowcase() {
               />
 
               {/* Send Button */}
-              <button className="w-10 h-10 rounded-xl coral-skeuo btn-interactive flex items-center justify-center shrink-0 shadow-sm">
+              <button className="w-10 h-10 rounded-xl btn-primary btn-deckle btn-interactive flex items-center justify-center shrink-0 shadow-sm">
                 <Send className="w-4 h-4 text-white" />
               </button>
             </div>

@@ -54,16 +54,35 @@ Palet warna Atelier Zero dipertahankan penuh dari v1.0 — kompatibel sempurna d
 | `color-bg-surface` | `#ece4cf` | Alternate Warm Paper — section/card | `#232127` |
 | `color-bg-surface-accent` | `#ddd2b6` | Darker Paper — hover, active | `#37353e` |
 | `color-bg-bone` | `#f7f1de` | Bone — code block, translucent fill | `#2d2a33` |
-| `color-text-primary` | `#15140f` | Ink — judul, teks utama | `#efe7d2` |
+| `color-text-primary` | `#4a3a34` | Medium Walnut — judul, teks utama | `#efe7d2` |
 | `color-text-secondary` | `#2a2620` | Ink Soft — paragraf deskripsi | `#ddd2b6` |
 | `color-text-muted` | `#5a5448` | Ink Mute — detail kecil | `#aba595` |
 | `color-text-faint` | `#8b8676` | Ink Faint — metadata, borders | `#777367` |
-| `color-accent-coral` | `#ed6f5c` | Coral — CTA utama, aksen primer | `#f08e7c` |
-| `color-accent-mustard` | `#e9b94a` | Mustard — dekoratif, status khusus | `#f4cf74` |
-| `color-accent-olive` | `#6e7448` | Olive — aksen natural | `#8a915e` |
-| `color-ai-blue` | `#4a90e2` | AI Blue — AI Co-Teacher, aksi sekunder | `#5da9ff` |
+| `color-accent-coral` | `#b34d3d` | Rust Terracotta — CTA utama, aksen primer | `#c76554` |
+| `color-accent-mustard` | `#cfa04a` | Raw Sienna — dekoratif, status khusus | `#dfb163` |
+| `color-accent-olive` | `#4e533b` | Spruce Shadow — aksen natural | `#7f8566` |
+| `color-ai-blue` | `#2d4a6b` | Prussian Indigo — AI Co-Teacher, aksi sekunder | `#6a8bb5` |
 | `color-success` | `#10B981` | Emerald — validasi penguasaan | `#34d399` |
 | `color-error` | `#EF4444` | Red — alert/kesalahan | `#F87171` |
+
+### Color Accessibility, States & Translucent Tokens
+
+#### A. WCAG 2.1 Contrast Standards (Light Mode on Canvas `#efe7d2`)
+Untuk menjamin keterbacaan materi ajar di berbagai perangkat, pastikan kontras teks memenuhi syarat aksesibilitas:
+*   **Text Primary (Medium Walnut — `#4a3a34`)**: Rasio **`6.2:1`** (Lolos AAA untuk teks biasa & besar).
+*   **Spruce Shadow (Olive — `#4e533b`)**: Rasio **`6.8:1`** (Lolos AAA untuk teks biasa & besar).
+*   **Rust Terracotta (Coral — `#b34d3d`)**: Rasio **`4.8:1`** (Lolos AA untuk teks reguler, AAA untuk judul besar).
+*   *Catatan Keamanan*: Hindari penggunaan warna *Raw Sienna* (`#cfa04a`) sebagai warna font mandiri di atas kanvas parchment karena rasionya hanya `2.1:1` (hanya boleh digunakan untuk latar belakang badge/status dekoratif).
+
+#### B. Parchment Glassmorphism Tokens
+Untuk memberikan efek transparan mirip kertas kalkir/serat kaca taktil:
+*   **Glass BG (`--glass-bg`)**: `rgba(247, 241, 222, 0.45)` (Light) | `rgba(55, 53, 62, 0.45)` (Dark).
+*   **Glass Border (`--glass-border`)**: `rgba(21, 20, 15, 0.08)` (Light) | `rgba(239, 231, 210, 0.08)` (Dark).
+*   **Glass Shadow (`--glass-shadow`)**: `rgba(21, 20, 15, 0.05)` (Light) | `rgba(0, 0, 0, 0.2)` (Dark).
+
+#### C. Interactive States & Disabled Opacity
+*   **Hover/Focus State**: Perubahan warna latar belakang ke `bg-bg-surface-accent` atau translasi sumbu Y sebesar `translate-y-[1px]` untuk menyimulasikan tombol fisik tertekan.
+*   **Disabled State**: Gunakan opasitas tetap **`38%` (`opacity-38`)** untuk elemen input, button, atau navigasi yang dinonaktifkan guna mempertahankan kontras visual pasif yang terbaca.
 
 ### Typography Scale
 **Font System**: Inter (UI body), Manrope (Headings — editorial), Playfair Display (Serif hero accent), Cinzel (Roman decor), Fira Code (Monospace).

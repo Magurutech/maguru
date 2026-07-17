@@ -138,9 +138,8 @@ export default function DesignSystemIndex() {
           {PILLARS.map((pillar) => (
             <div
               key={pillar.label}
-              className="rounded-xl p-5 space-y-3"
+              className="bg-bg-bone rounded-xl p-5 space-y-3"
               style={{
-                background: 'var(--color-bg-surface)',
                 border: '1px solid rgba(21, 20, 15, 0.1)',
                 boxShadow: '0 1px 3px rgba(21, 20, 15, 0.08)',
               }}
@@ -166,11 +165,10 @@ export default function DesignSystemIndex() {
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Do's */}
         <div
-          className="rounded-xl p-6 space-y-4"
+          className="bg-bg-bone rounded-xl p-6 space-y-4"
           style={{
-            background: 'var(--color-bg-surface)',
-            borderLeft: '3px solid var(--color-success)',
             border: '1px solid rgba(21, 20, 15, 0.1)',
+            borderLeft: '4px solid var(--color-success)',
             boxShadow: '0 1px 3px rgba(21, 20, 15, 0.08)',
           }}
         >
@@ -210,11 +208,10 @@ export default function DesignSystemIndex() {
 
         {/* Don'ts */}
         <div
-          className="rounded-xl p-6 space-y-4"
+          className="bg-bg-bone rounded-xl p-6 space-y-4"
           style={{
-            background: 'var(--color-bg-surface)',
-            borderLeft: '3px solid var(--color-error)',
             border: '1px solid rgba(21, 20, 15, 0.1)',
+            borderLeft: '4px solid var(--color-error)',
             boxShadow: '0 1px 3px rgba(21, 20, 15, 0.08)',
           }}
         >
@@ -256,9 +253,8 @@ export default function DesignSystemIndex() {
       {/* ── Version badge ───────────────────────────────────────────────── */}
       <section>
         <div
-          className="rounded-xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+          className="bg-bg-bone rounded-xl px-5 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
           style={{
-            background: 'var(--color-bg-bone)',
             border: '1px solid rgba(21, 20, 15, 0.08)',
           }}
         >

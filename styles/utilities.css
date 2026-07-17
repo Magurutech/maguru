@@ -1,4 +1,5 @@
 @layer utilities {
+
   /* ===== GLASS PANEL EFFECTS ===== */
   .glass-panel {
     background-color: var(--glass-bg);
@@ -149,8 +150,34 @@
     }
   }
 
+  /* ===== PAPER TEXTURE DIAGONAL STRIPED UTILITY (From brainstorm.md) ===== */
+  .paper-texture {
+    background-color: var(--color-bg-surface);
+    background-image: linear-gradient(
+      45deg,
+      transparent 33.33%,
+      rgba(74, 58, 52, 0.11) 33.33%,
+      rgba(74, 58, 52, 0.11) 66.66%,
+      transparent 66.66%
+    );
+    background-size: 10px 10px;
+  }
+
+  .dark .paper-texture {
+    background-color: var(--color-bg-surface);
+    background-image: linear-gradient(
+      45deg,
+      transparent 33.33%,
+      rgba(239, 231, 210, 0.08) 33.33%,
+      rgba(239, 231, 210, 0.08) 66.66%,
+      transparent 66.66%
+    );
+    background-size: 10px 10px;
+  }
+
   /* ===== ACCESSIBILITY ===== */
   @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

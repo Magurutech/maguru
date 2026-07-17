@@ -13,14 +13,14 @@
   --color-bg-surface: #ece4cf;       /* Alternate Warm Paper - bg-surface */
   --color-bg-surface-accent: #ddd2b6;/* Darker Paper - bg-surface-accent */
   --color-bg-bone: #f7f1de;          /* Bone / Code / Alternate bg */
-  --color-text-primary: #15140f;      /* Ink - text-primary */
+  --color-text-primary: #4a3a34;      /* Medium Walnut - text-primary */
   --color-text-secondary: #2a2620;    /* Ink Soft */
   --color-text-muted: #5a5448;       /* Ink Mute */
   --color-text-faint: #8b8676;       /* Ink Faint / Borders */
-  --color-accent-coral: #ed6f5c;      /* Coral - accent-coral / Primary Brand Color */
-  --color-accent-mustard: #e9b94a;    /* Mustard - accent-mustard */
-  --color-accent-olive: #6e7448;      /* Olive - accent-olive */
-  --color-ai-blue: #4a90e2;           /* Bright Blue - AI Co-Teacher / Secondary Action */
+  --color-accent-coral: #b34d3d;      /* Rust Terracotta - Primary Brand Color */
+  --color-accent-mustard: #cfa04a;    /* Raw Sienna - accent-mustard */
+  --color-accent-olive: #4e533b;      /* Spruce Shadow - accent-olive */
+  --color-ai-blue: #2d4a6b;           /* Prussian Indigo - AI Co-Teacher / Secondary Action */
   --color-success: #10B981;           /* Emerald / success */
   --color-error: #EF4444;             /* Red / error */
 
@@ -55,10 +55,10 @@
   --color-text-secondary: #ddd2b6;    /* Parchment soft */
   --color-text-muted: #aba595;       /* Ink Mute dark */
   --color-text-faint: #777367;       /* Ink Faint dark */
-  --color-accent-coral: #f08e7c;      /* Muted coral dark / Primary Brand Color */
-  --color-accent-mustard: #f4cf74;    /* Mustard dark */
-  --color-accent-olive: #8a915e;      /* Olive dark */
-  --color-ai-blue: #5da9ff;           /* Bright Blue dark - AI Co-Teacher */
+  --color-accent-coral: #c76554;      /* Muted Rust Terracotta Dark */
+  --color-accent-mustard: #dfb163;    /* Muted Raw Sienna Dark */
+  --color-accent-olive: #7f8566;      /* Muted Spruce Shadow Dark */
+  --color-ai-blue: #6a8bb5;           /* Muted Prussian Indigo Dark */
   --color-success: #34d399;           /* Emerald dark */
   --color-error: #F87171;             /* Red dark */
 
@@ -84,12 +84,11 @@
 }
 
 @theme {
-  /* ===== FONT FAMILIES ===== */
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-serif: var(--font-serif), serif;
   --font-manrope: "Manrope", sans-serif;
-  --font-cinzel: "Cinzel", serif;
-  --font-mono: "Fira Code", monospace;
+  --font-cinzel: var(--font-cinzel), serif;
+  --font-mono: var(--font-mono), monospace;
 
   /* ===== ATELIER ZERO COLOR PALETTE ===== */
   --color-bg-canvas: var(--color-bg-canvas);
