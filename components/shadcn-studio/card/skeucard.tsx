@@ -30,7 +30,7 @@ export function SkeuoCard({
 
   // Map variants to CSS utility classes defined in globals.css
   const variantClasses = {
-    paper: "paper-texture",
+    paper: "bg-bg-surface border border-text-faint/12 shadow-sm",
     coral: "coral-skeuo",
     peach: "peach-skeuo",
     gold: "gold-skeuo",
@@ -39,7 +39,7 @@ export function SkeuoCard({
     success: "success-skeuo",
     debossed: "debossed-skeuo",
     glass: "glass-panel",
-    ancient: "card-ancient paper-texture"
+    ancient: "card-ancient"
   }
 
   const cardBase = cn(

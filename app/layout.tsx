@@ -69,6 +69,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {children}
             <Toaster position="bottom-right" richColors closeButton />
+            
+            {/* Global SVG displacement filter for artisan hand-torn deckle paper edges */}
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" className="sr-only" style={{ display: 'none' }}>
+              <defs>
+                <filter id="maguru-torn-paper" x="-20%" y="-20%" width="140%" height="140%">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise" />
+                  <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+              </defs>
+            </svg>
           </UserRoleProvider>
         </Providers>
       </body>

@@ -1,25 +1,21 @@
 ## Error Type
-Console Error
+Console ReferenceError
 
 ## Error Message
-Event handlers cannot be passed to Client Component props.
-  <div className=... style={{...}} onMouseEnter=... onMouseLeave={function onMouseLeave} children=...>
-                                                                 ^^^^^^^^^^^^^^^^^^^^^^^
-If you need interactivity, consider converting part of this to a Client Component.
+SkeuButton is not defined
 
 
-    at stringify (<anonymous>:1:18)
-    at stringify (<anonymous>:1:18)
+    at UIElementsShowcase (app\design-system\ui-elements\page.tsx:220:14)
     at UserRoleProvider (features/auth/context/UserRoleContext.tsx:353:5)
-    at RootLayout (app\layout.tsx:47:11)
+    at RootLayout (app\layout.tsx:54:11)
 
 ## Code Frame
-  351 |
-  352 |   return (
-> 353 |     <RoleErrorBoundary fallback={ErrorFallback}>
-      |     ^
-  354 |       <UserRoleContext.Provider value={contextValue}>
-  355 |         {children}
-  356 |         {devMode.enabled && devMode.allowRoleSwitching && (
+  218 |           <div className="space-y-3 mt-2 text-left">
+  219 |             <div className="text-caption text-text-muted">Gunakan tombol di bawah untuk merasakan efek magnetis ditekan:</div>
+> 220 |             <SkeuButton variant="peach">
+      |              ^
+  221 |               Tekan Saya (Skeuo Peach)
+  222 |             </SkeuButton>
+  223 |             <div className="text-caption text-text-faint text-center">
 
 Next.js version: 16.1.6 (Turbopack)

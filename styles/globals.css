@@ -4,6 +4,7 @@
 /* Tiptap Simple Editor variables & animations */
 @import '../styles/_variables.scss';
 @import '../styles/_keyframe-animations.scss';
+@import './elements/button.css';
 
 @custom-variant dark (&:is(.dark *));
 
