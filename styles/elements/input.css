@@ -1,0 +1,152 @@
+/* Maguru Input Elements Stylesheet */
+
+.input-container {
+  --input-stitching-color: var(--color-text-faint);
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  border-radius: 8px;
+  background-color: var(--color-bg-bone); /* solid bone paper surface */
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--color-text-faint); /* resting border color: walnut faint */
+}
+
+/* Inner Stitching Dashed Lines */
+.input-container::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 1.5px dashed var(--input-stitching-color);
+  border-radius: 5px;
+  pointer-events: none;
+  transition: border-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  opacity: 0.75;
+}
+
+/* Hover Condition */
+.input-container:hover:not(.input-disabled) {
+  border-color: var(--color-text-primary);
+  --input-stitching-color: var(--color-text-primary);
+}
+
+/* Focus Condition (Dual-line focus ring) */
+.input-container:focus-within:not(.input-disabled),
+.input-container-focus:not(.input-disabled) {
+  border-color: var(--color-text-primary);
+  --input-stitching-color: var(--color-text-primary);
+  box-shadow: 
+    0 0 0 2px var(--color-bg-canvas), /* parchment blank spacer */
+    0 0 0 4px var(--color-text-primary); /* outer Walnut Ink ring */
+}
+
+/* AI Variant */
+.input-container-ai {
+  --input-stitching-color: rgba(45, 74, 107, 0.4);
+  background-color: rgba(45, 74, 107, 0.05); /* Prussian Blue soft tint background */
+  border-color: rgba(45, 74, 107, 0.4);
+}
+.input-container-ai:hover:not(.input-disabled) {
+  border-color: var(--color-ai-blue);
+  --input-stitching-color: var(--color-ai-blue);
+}
+.input-container-ai:focus-within:not(.input-disabled) {
+  border-color: var(--color-ai-blue);
+  --input-stitching-color: var(--color-ai-blue);
+  box-shadow:
+    0 0 0 2px var(--color-bg-canvas),
+    0 0 0 4px var(--color-ai-blue); /* outer Prussian Blue ring */
+}
+
+/* Error State */
+.input-container-error {
+  border-color: var(--color-accent-coral) !important;
+  --input-stitching-color: var(--color-accent-coral) !important;
+}
+.input-container-error:focus-within {
+  box-shadow:
+    0 0 0 2px var(--color-bg-canvas),
+    0 0 0 4px var(--color-accent-coral) !important;
+}
+
+/* Success State */
+.input-container-success {
+  border-color: var(--color-success) !important;
+  --input-stitching-color: var(--color-success) !important;
+}
+.input-container-success:focus-within {
+  box-shadow:
+    0 0 0 2px var(--color-bg-canvas),
+    0 0 0 4px var(--color-success) !important;
+}
+
+/* Disabled State */
+.input-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.input-disabled .input-field {
+  cursor: not-allowed;
+}
+
+/* Input sizes height */
+.input-size-sm {
+  height: 36px;
+}
+.input-size-md {
+  height: 44px;
+}
+.input-size-lg {
+  height: 48px;
+}
+
+/* Inner input field reset */
+.input-field {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 0.875rem; /* text-sm */
+  padding: 0 0.875rem;
+  caret-color: var(--color-text-primary);
+}
+
+.input-field::placeholder {
+  color: var(--color-text-muted);
+  opacity: 0.7;
+}
+
+/* Icons styling inside container */
+.input-icon-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 0.875rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.input-icon-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 0.875rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* Adjust paddings when icons are present */
+.input-container:has(.input-icon-start) .input-field {
+  padding-left: 0.5rem;
+}
+.input-container:has(.input-icon-end) .input-field {
+  padding-right: 0.5rem;
+}

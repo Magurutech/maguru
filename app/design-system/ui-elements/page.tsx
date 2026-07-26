@@ -14,7 +14,12 @@ import {
   Star, 
   Award,
   BookOpen,
-  Info
+  Info,
+  Sparkles,
+  Search,
+  Mail,
+  Lock,
+  Link as LinkIcon
 } from 'lucide-react'
 
 export default function UIElementsShowcase() {
@@ -121,9 +126,17 @@ export default function UIElementsShowcase() {
         >
           <div className="space-y-3 mt-2 text-left">
             <div className="text-caption text-text-muted">Gunakan tombol di bawah untuk merasakan efek magnetis ditekan:</div>
-            <SkeuButton variant="peach">
-              Tekan Saya (Skeuo Peach)
-            </SkeuButton>
+            <div className="flex flex-col gap-4">
+              <SkeuButton variant="peach">
+                Tekan Saya (Skeuo Peach)
+              </SkeuButton>
+              <div className="pt-2 border-t border-text-faint/10">
+                <span className="text-[10px] text-text-muted font-mono block mb-2">PRIMARY BLUEPRINT DRAFTING</span>
+                <SkeuButton variant="primary">
+                  start designing
+                </SkeuButton>
+              </div>
+            </div>
             <div className="text-caption text-text-faint text-center">
               Hover: scale-102 & translateY(-1px) <br />
               Active: scale-98 & translateY(1px)
@@ -138,30 +151,70 @@ export default function UIElementsShowcase() {
         <SkeuoCard 
           variant="paper" 
           size="medium" 
-          titleText="Input Fields (.neu-input)" 
-          descriptionText="Input text bergaya debossed/tenggelam taktil"
+          titleText="Input Fields (Atelier Zero)" 
+          descriptionText="Paper surfaces dengan ink borders & focus ring ganda"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-2">
             <SkeuInput 
               state="default" 
-              label="Input Default" 
+              label="Default (Resting)" 
               placeholder="Masukkan teks di sini..." 
             />
             
             <SkeuInput 
               state="active" 
-              label="Input Active / Focus" 
+              label="Active / Focus" 
               defaultValue="Fokus interaktif" 
-              helperText="• Focus State"
+              helperText="Dual-line focus ring untuk aksesibilitas"
             />
 
-            <div className="sm:col-span-2">
-              <SkeuInput 
-                state="error" 
-                label="Input Error / Gagal" 
-                placeholder="Terjadi kesalahan input" 
-                helperText="Wajib diisi"
-              />
+            <SkeuInput 
+              state="error" 
+              label="Error State" 
+              placeholder="nama@email"
+              defaultValue="salah-format-email"
+              helperText="Format email tidak valid. Gunakan format nama@email.com."
+            />
+
+            <SkeuInput 
+              state="success" 
+              label="Success State" 
+              defaultValue="siswa@maguru.id"
+              helperText="Email terlihat bagus!"
+            />
+
+            <SkeuInput 
+              isAi={true}
+              startIcon={<Sparkles className="w-4 h-4 text-[#2d4a6b]" />}
+              label="AI Prompt (Special)" 
+              placeholder="Tanya AI Guru..." 
+              helperText="Aksen Prussian Blue & Sparkle Icon"
+            />
+
+            <SkeuInput 
+              type="password"
+              startIcon={<Lock className="w-4 h-4" />}
+              label="Password Input (Auto Eye Toggle)" 
+              placeholder="Masukkan sandi..." 
+              helperText="Otomatis menampilkan tombol intip sandi"
+            />
+
+            <div className="sm:col-span-2 space-y-2 pt-2 border-t border-text-faint/10">
+              <span className="text-[10px] text-text-muted font-mono block">Prefix & Suffix Combinations</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <SkeuInput 
+                  startIcon={<Search className="w-4 h-4" />}
+                  placeholder="Cari course..." 
+                  inputSize="sm"
+                  helperText="Ukuran Small (36px) dengan Search Icon"
+                />
+                <SkeuInput 
+                  startIcon={<LinkIcon className="w-4 h-4" />}
+                  defaultValue="https://maguru.id" 
+                  inputSize="lg"
+                  helperText="Ukuran Large (48px) dengan Link Icon"
+                />
+              </div>
             </div>
           </div>
         </SkeuoCard>

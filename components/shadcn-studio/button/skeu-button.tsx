@@ -22,14 +22,37 @@ export interface SkeuButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
 
 export const SkeuButton = React.forwardRef<HTMLButtonElement, SkeuButtonProps>(
   ({ className, variant = 'primary', isDeckle = false, children, ...props }, ref) => {
+    if (variant === 'primary' || variant === 'secondary') {
+      const isSecondary = variant === 'secondary';
+      return (
+        <div className={cn("btn-wrapper", isSecondary ? "btn-wrapper-secondary" : "btn-wrapper-primary", className)}>
+          <div className="line horizontal top"></div>
+          <div className="line vertical right"></div>
+          <div className="line horizontal bottom"></div>
+          <div className="line vertical left"></div>
+
+          <div className="dot top left"></div>
+          <div className="dot top right"></div>
+          <div className="dot bottom right"></div>
+          <div className="dot bottom left"></div>
+
+          <button
+            ref={ref}
+            className={cn("btn", isSecondary ? "btn-secondary" : "btn-primary")}
+            {...props}
+          >
+            <span className="btn-text">{children}</span>
+          </button>
+        </div>
+      );
+    }
+
     return (
       <button
         ref={ref}
         className={cn(
           "px-6 py-3 font-semibold btn-interactive transition-all duration-200 text-center flex items-center justify-center gap-2",
-          variant === 'primary' && "btn-primary",
           variant === 'ai-blue' && "ai-blue-skeuo text-white",
-          variant === 'secondary' && "btn-secondary",
           variant === 'peach' && "peach-skeuo",
           isDeckle && "btn-deckle",
           className
