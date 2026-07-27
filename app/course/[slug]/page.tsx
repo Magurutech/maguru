@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 
 // Components
@@ -61,7 +61,8 @@ export default async function CourseDetailPage({ params }: PageProps) {
   if (!course) notFound()
 
   // Check enrollment status (optional auth)
-  const user = await currentUser()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
   const enrolled = user ? await checkEnrollment(user.id, course.id) : false
 
   const totalLessons = sections.reduce((sum, s) => sum + s.lessons.length, 0)

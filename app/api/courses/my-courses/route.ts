@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { getMyEnrollments } from '@/features/cms/services/enrollment.service'
 
 /**
@@ -14,7 +14,8 @@ import { getMyEnrollments } from '@/features/cms/services/enrollment.service'
  */
 export async function GET() {
   try {
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json(
@@ -29,7 +30,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching my courses:', error)
     return NextResponse.json(
-      { error: 'Gagal mengambil daftar kursus' },
+      { error: 'Gagal mengambil daftar kursus Anda' },
       { status: 500 }
     )
   }

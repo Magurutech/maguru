@@ -1,0 +1,133 @@
+/* ────────────────────────────────────────────────────────────────────────
+   Atelier Zero 3D Embossed & Debossed Color Utilities
+   Prinsip Skeuomorphism: Arah datang cahaya 45 derajat (Kiri-Atas)
+   ──────────────────────────────────────────────────────────────────────── */
+
+.paper-skeuo {
+  background: linear-gradient(135deg, var(--color-bg-bone) 0%, var(--color-bg-surface) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  border-bottom: 2.5px solid rgba(184, 154, 87, 0.35);
+  border-right: 1.5px solid rgba(184, 154, 87, 0.2);
+  box-shadow:
+    0 4px 12px rgba(21, 20, 15, 0.05),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    inset 0 -2px 3px rgba(184, 154, 87, 0.15);
+  color: var(--color-text-primary);
+}
+
+.header-skeuo-debossed {
+  background-color: var(--color-bg-canvas);
+  background-image: linear-gradient(180deg, rgba(21, 20, 15, 0.04) 0%, rgba(21, 20, 15, 0.0) 100%);
+  box-shadow: 
+    inset 0 4px 6px rgba(21, 20, 15, 0.08),
+    inset 3px 0 4px rgba(21, 20, 15, 0.04);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95);
+}
+
+.coral-skeuo {
+  background: linear-gradient(135deg, #f28f80 0%, var(--color-accent-coral) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2.5px solid rgba(139, 40, 26, 0.45);
+  border-right: 1.5px solid rgba(139, 40, 26, 0.3);
+  box-shadow:
+    0 4px 12px rgba(237, 111, 92, 0.2),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.peach-skeuo {
+  background: linear-gradient(135deg, #fcd8bd 0%, #ed6f5c 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+  border-left: 1px solid rgba(255, 255, 255, 0.45);
+  border-bottom: 2.5px solid rgba(139, 40, 26, 0.45);
+  border-right: 1.5px solid rgba(139, 40, 26, 0.3);
+  box-shadow:
+    0 4px 12px rgba(237, 111, 92, 0.18),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.15);
+  color: var(--color-text-primary);
+}
+
+.ai-blue-skeuo {
+  background: linear-gradient(135deg, #7cb4f5 0%, var(--color-ai-blue) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2.5px solid rgba(20, 50, 100, 0.4);
+  border-right: 1.5px solid rgba(20, 50, 100, 0.25);
+  box-shadow:
+    0 4px 12px rgba(74, 144, 226, 0.2),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.gold-skeuo {
+  background: linear-gradient(135deg, #f6dfa9 0%, var(--color-accent-mustard) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-left: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2.5px solid rgba(120, 90, 40, 0.45);
+  border-right: 1.5px solid rgba(120, 90, 40, 0.3);
+  box-shadow:
+    0 4px 12px rgba(233, 185, 74, 0.15),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.8),
+    inset 0 -3px 5px rgba(120, 90, 40, 0.25);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+  color: var(--color-text-primary);
+}
+
+.olive-skeuo {
+  background: linear-gradient(135deg, #8b945c 0%, var(--color-accent-olive) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 2.5px solid rgba(50, 60, 30, 0.4);
+  border-right: 1.5px solid rgba(50, 60, 30, 0.25);
+  box-shadow:
+    0 4px 12px rgba(110, 116, 72, 0.15),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.success-skeuo {
+  background: linear-gradient(135deg, #5ae0b5 0%, var(--color-success) 100%);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.55);
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+  border-bottom: 2.5px solid rgba(10, 80, 50, 0.45);
+  border-right: 1.5px solid rgba(10, 80, 50, 0.3);
+  box-shadow:
+    0 4px 12px rgba(16, 185, 129, 0.2),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.55),
+    inset 0 -2.5px 4px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.debossed-skeuo {
+  background: linear-gradient(180deg, var(--color-bg-canvas) 0%, var(--color-bg-surface) 100%);
+  border-top: 1.5px solid rgba(21, 20, 15, 0.08);
+  border-left: 1px solid rgba(21, 20, 15, 0.05);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-right: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 2px 4px rgba(21, 20, 15, 0.06),
+    inset 1px 1px 2px rgba(21, 20, 15, 0.03),
+    0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all var(--duration-fast) var(--transition-maguru);
+}
+
+[data-theme="dark"] .debossed-skeuo {
+  background: linear-gradient(180deg, #131216 0%, #19181d 100%);
+  border-top: 1.5px solid rgba(0, 0, 0, 0.4);
+  border-left: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.07);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.03);
+}

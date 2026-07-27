@@ -1,0 +1,305 @@
+/* From Uiverse.io by dexter-st */ 
+.btn-wrapper {
+  --dot-size: 6px;
+  --line-weight: 1px;
+  --line-distance: 0.5rem 0.25rem;
+  --animation-speed: 0.35s;
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  height: auto;
+  padding: var(--line-distance);
+  background-color: #0000;
+  transition: background-color 0.3s ease-in-out;
+  user-select: none;
+}
+
+/* Primary Wrapper & Keyframes */
+.btn-wrapper-primary {
+  --dot-color: var(--color-accent-coral);
+  --line-color: var(--color-text-faint);
+}
+.btn-wrapper-primary:has(.btn-primary:hover) {
+  animation: backround-color-change-primary calc(var(--animation-speed) * 4) ease-in-out forwards;
+}
+@keyframes backround-color-change-primary {
+  80% {
+    background-color: #0000;
+  }
+  100% {
+    background-color: rgba(179, 77, 61, 0.12); /* Coral transparan */
+  }
+}
+
+/* Secondary Wrapper & Keyframes */
+.btn-wrapper-secondary {
+  --dot-color: var(--color-accent-coral);
+  --line-color: var(--color-text-primary);
+}
+.btn-wrapper-secondary:has(.btn-secondary:hover) {
+  animation: backround-color-change-secondary calc(var(--animation-speed) * 4) ease-in-out forwards;
+}
+@keyframes backround-color-change-secondary {
+  80% {
+    background-color: #0000;
+  }
+  100% {
+    background-color: rgba(74, 58, 52, 0.08); /* Walnut Ink transparan */
+  }
+}
+
+/* Base Button Style */
+.btn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem 1.25rem;
+  border: none;
+  font-family: var(--font-serif), "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: capitalize;
+  border-radius: 30% / 200%;
+  cursor: pointer;
+  background-image: linear-gradient(#0000, #0001);
+
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out,
+    border-radius 0.3s ease-in-out,
+    border-color 0.2s ease-in-out,
+    filter 0.2s ease-in-out;
+}
+
+/* Inner Stitching Dashed Lines */
+.btn::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1.5px dashed var(--stitching-color);
+  border-radius: inherit;
+  pointer-events: none;
+  transition: border-radius 0.3s ease-in-out;
+}
+
+/* Primary Button Styling */
+.btn-primary {
+  --stitching-color: var(--color-bg-canvas);
+  background-color: var(--color-accent-coral);
+  color: var(--color-bg-canvas);
+  box-shadow:
+    0 0 0px 1px var(--color-text-faint),
+    0px 1px 1px rgba(3, 7, 18, 0.02),
+    0px 3px 3px rgba(3, 7, 18, 0.04),
+    0px 8px 6px rgba(3, 7, 18, 0.06);
+}
+.btn-primary:hover {
+  background-color: var(--color-accent-coral);
+  filter: brightness(1.08);
+  transform: scale(1.05);
+  border-radius: 10% / 200%;
+}
+.btn-primary:active {
+  background-color: var(--color-accent-coral);
+  filter: brightness(0.95);
+  transform: scale(0.98);
+  border-radius: 20% / 200%;
+}
+
+/* Secondary Button Styling */
+.btn-secondary {
+  --stitching-color: var(--color-text-primary);
+  background-color: #ffffff;
+  color: var(--color-text-primary);
+  box-shadow:
+    0 0 0px 1px var(--color-text-primary),
+    0px 1px 1px rgba(3, 7, 18, 0.02),
+    0px 3px 3px rgba(3, 7, 18, 0.04),
+    0px 8px 6px rgba(3, 7, 18, 0.06);
+}
+.btn-secondary:hover {
+  background-color: #ffffff;
+  filter: brightness(0.97);
+  transform: scale(1.05);
+  border-radius: 10% / 200%;
+}
+.btn-secondary:active {
+  background-color: #ffffff;
+  filter: brightness(0.93);
+  transform: scale(0.98);
+  border-radius: 20% / 200%;
+}
+
+/* Dots */
+.dot {
+  position: absolute;
+  width: var(--dot-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: var(--dot-color);
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.btn-wrapper:has(.btn:hover) .dot.top.left {
+  top: 50%;
+  left: 20%;
+  animation: move-top-left var(--animation-speed) ease-in-out forwards;
+}
+@keyframes move-top-left {
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    top: calc(var(--dot-size) * -0.5);
+    left: calc(var(--dot-size) * -0.5);
+    opacity: 1;
+  }
+}
+.btn-wrapper:has(.btn:hover) .dot.top.right {
+  top: 50%;
+  right: 20%;
+  animation: move-top-right var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 0.6);
+}
+@keyframes move-top-right {
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    top: calc(var(--dot-size) * -0.5);
+    right: calc(var(--dot-size) * -0.5);
+    opacity: 1;
+  }
+}
+.btn-wrapper:has(.btn:hover) .dot.bottom.right {
+  bottom: 50%;
+  right: 20%;
+  animation: move-bottom-right var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 1.2);
+}
+@keyframes move-bottom-right {
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    bottom: calc(var(--dot-size) * -0.5);
+    right: calc(var(--dot-size) * -0.5);
+    opacity: 1;
+  }
+}
+.btn-wrapper:has(.btn:hover) .dot.bottom.left {
+  bottom: 50%;
+  left: 20%;
+  animation: move-bottom-left var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 1.8);
+}
+@keyframes move-bottom-left {
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    bottom: calc(var(--dot-size) * -0.5);
+    left: calc(var(--dot-size) * -0.5);
+    opacity: 1;
+  }
+}
+
+/* Lines */
+.line {
+  position: absolute;
+  transition: all 0.3s ease-in-out;
+}
+.line.horizontal {
+  height: var(--line-weight);
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    #0000 0 calc(var(--line-weight) * 2),
+    var(--line-color) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
+  );
+}
+.line.top {
+  top: calc(var(--line-weight) * -0.5);
+}
+.line.bottom {
+  bottom: calc(var(--line-weight) * -0.5);
+}
+.line.vertical {
+  width: var(--line-weight);
+  height: 100%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    #0000 0 calc(var(--line-weight) * 2),
+    var(--line-color) calc(var(--line-weight) * 2) calc(var(--line-weight) * 4)
+  );
+}
+.line.left {
+  left: calc(var(--line-weight) * -0.5);
+}
+.line.right {
+  right: calc(var(--line-weight) * -0.5);
+}
+
+.line.top {
+  transform-origin: top left;
+  transform: rotate(5deg) scaleX(0);
+}
+.btn-wrapper:has(.btn:hover) .line.top {
+  animation: draw-top var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 0.8);
+}
+@keyframes draw-top {
+  100% {
+    transform: rotate(0deg) scaleX(1);
+  }
+}
+.line.bottom {
+  transform-origin: bottom right;
+  transform: rotate(5deg) scaleX(0);
+}
+.btn-wrapper:has(.btn:hover) .line.bottom {
+  animation: draw-bottom var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 2);
+}
+@keyframes draw-bottom {
+  100% {
+    transform: rotate(0deg) scaleX(1);
+  }
+}
+
+.line.left {
+  transform-origin: bottom left;
+  transform: rotate(0deg) scaleY(0);
+}
+.btn-wrapper:has(.btn:hover) .line.left {
+  animation: draw-left var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 2.4);
+}
+@keyframes draw-left {
+  100% {
+    transform: rotate(0deg) scaleY(1);
+  }
+}
+
+.line.right {
+  transform-origin: top right;
+  transform: rotate(5deg) scaleY(0);
+}
+.btn-wrapper:has(.btn:hover) .line.right {
+  animation: draw-right var(--animation-speed) ease-in-out forwards;
+  animation-delay: calc(var(--animation-speed) * 1.4);
+}
+@keyframes draw-right {
+  100% {
+    transform: rotate(0deg) scaleY(1);
+  }
+}

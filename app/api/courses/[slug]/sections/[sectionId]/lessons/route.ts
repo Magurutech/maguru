@@ -7,7 +7,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { lessonService } from '@/features/cms/services/lesson.service'
 import { sectionService } from '@/features/cms/services/section.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
@@ -23,13 +23,12 @@ export async function POST(
   { params }: { params: Promise<{ slug: string; sectionId: string }> }
 ) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized', code: 'UNAUTHORIZED' },
-        { status: 401 }
-      )
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized', code: 'UNAUTHORIZED' }, { status: 401 })
     }
+    const userId = user.id
 
     const { sectionId } = await params
 

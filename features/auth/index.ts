@@ -2,13 +2,14 @@
  * Auth Feature Exports
  *
  * Centralized exports untuk features/auth module
- * Menyediakan clean interface untuk role management system
+ * Menyediakan clean interface untuk role management system dengan Supabase Auth
  */
 
 // Main exports
-export { UserRoleProvider, useUserRoleContext } from './context/UserRoleContext'
+export { UserRoleProvider, useUserRoleContext, DEFAULT_ROLE } from './context/UserRoleContext'
 export { RoleDisplay } from './components/RoleDisplay'
 export {
+  useUserRole,
   useUserRole as default,
   useRoleGuard,
   useRoleNavigation,
@@ -27,27 +28,6 @@ export type {
   UseUserRoleReturn,
   DevModeConfig,
   RoleError,
-  ClerkTokenPayload,
   RoleGuard,
   RoleValidator,
 } from './types'
-
-// Utilities
-export {
-  isValidRole,
-  parseJWT,
-  getRoleFromToken,
-  extractRoleFromPayload,
-  createRoleError,
-  RoleCacheManager,
-  RoleSyncManager,
-  retryOperation,
-  debounce,
-  DEFAULT_ROLE,
-  ROLE_CACHE_TTL,
-  SESSION_STORAGE_KEY,
-  BROADCAST_CHANNEL_NAME,
-} from './lib/roleUtils'
-
-// Re-export main hook as named export
-export { useUserRole } from './hooks/useUserRole'

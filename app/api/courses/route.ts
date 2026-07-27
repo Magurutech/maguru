@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 import { CourseStatus } from '@/prisma/generated/prisma'
 
@@ -70,7 +70,8 @@ export async function GET(request: Request) {
       }),
     ] as const)
 
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     let enrolledCourseIds = new Set<string>()
 
     if (user) {

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth, clerkClient } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 
 /**
  * Authentication middleware untuk memverifikasi user session dan role
@@ -8,9 +8,10 @@ import { auth, clerkClient } from '@clerk/nextjs/server'
  */
 export async function requireAuth() {
   try {
-    const { userId } = await auth()
+    const supabase = await createClient()
+    const { data: { user }, error } = await supabase.auth.getUser()
 
-    if (!userId) {
+    if (error || !user) {
       return {
         error: NextResponse.json(
           { success: false, error: 'Authentication required' },
@@ -19,17 +20,14 @@ export async function requireAuth() {
       }
     }
 
-    // Get user dengan custom claims untuk role
-    const client = await clerkClient()
-    const user = await client.users.getUser(userId)
-    const role = (user.publicMetadata.role as string) || 'user'
+    const role = (user.app_metadata?.role || user.user_metadata?.role || 'user') as string
 
     return {
       user: {
         id: user.id,
-        email: user.emailAddresses[0]?.emailAddress,
+        email: user.email,
         role: role,
-        clerkId: userId,
+        clerkId: user.id,
       },
     }
   } catch (error) {
@@ -44,41 +42,27 @@ export async function requireAuth() {
 }
 
 /**
- * Role validation middleware
+ * Middleware untuk memverifikasi role spesifik (misal: 'creator' atau 'admin')
  *
- * @param allowedRoles - Array role yang diizinkan
- * @param user - User object dari auth
- * @returns Error response atau null jika valid
+ * @param allowedRoles - Array of roles yang diizinkan
  */
-export function requireRole(allowedRoles: string[], user: { role: string }) {
-  if (!allowedRoles.includes(user.role)) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: `Access denied. Required roles: ${allowedRoles.join(', ')}`,
-      },
-      { status: 403 },
-    )
-  }
-  return null
-}
-
-/**
- * Combined auth and role check middleware
- *
- * @param allowedRoles - Array role yang diizinkan
- * @returns Object dengan user info atau error response
- */
-export async function requireAuthAndRole(allowedRoles: string[]) {
+export async function requireRole(allowedRoles: string[]) {
   const authResult = await requireAuth()
+
   if (authResult.error) {
     return authResult
   }
 
-  const roleCheck = requireRole(allowedRoles, authResult.user)
-  if (roleCheck) {
-    return { error: roleCheck }
+  const { user } = authResult
+
+  if (!allowedRoles.includes(user.role)) {
+    return {
+      error: NextResponse.json(
+        { success: false, error: 'Insufficient permissions' },
+        { status: 403 },
+      ),
+    }
   }
 
-  return authResult
+  return { user }
 }

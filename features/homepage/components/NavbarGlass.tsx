@@ -6,9 +6,10 @@ import Image from 'next/image'
 import { Sun, Moon } from 'lucide-react'
 import { gsap } from 'gsap'
 import Link from 'next/link'
-import { useUser, UserButton } from '@clerk/nextjs'
-import { useRoleNavigation } from '@/features/auth'
+import { createClient } from '@/lib/supabase/client'
+import { useUserRole, useRoleNavigation } from '@/features/auth'
 import { usePathname } from 'next/navigation'
+import type { User } from '@supabase/supabase-js'
 
 // ─── Nav items data ────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -27,8 +28,16 @@ export function NavbarGlass() {
   const [mounted, setMounted] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const { isSignedIn } = useUser()
+  const [user, setUser] = useState<User | null>(null)
+  const isSignedIn = !!user
   const { getDashboardUrl } = useRoleNavigation()
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+    })
+  }, [])
 
   // ponytail: Hide NavbarGlass on full-screen workspace and auth pages
   const isWorkspace =
@@ -361,13 +370,12 @@ export function NavbarGlass() {
               Dashboard
             </Link>
             <div className="flex items-center justify-center pl-1">
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: 'w-7 h-7 rounded-full border border-accent-coral/20',
-                  },
-                }}
-              />
+              <Link
+                href={getDashboardUrl()}
+                className="w-8 h-8 rounded-full bg-accent-coral/10 text-accent-coral flex items-center justify-center font-bold text-xs border border-accent-coral/30"
+              >
+                {user?.email?.substring(0, 2).toUpperCase() || 'MG'}
+              </Link>
             </div>
           </>
         )}
@@ -448,13 +456,13 @@ export function NavbarGlass() {
             </Link>
             <div className="flex items-center justify-between px-4 py-3 mt-1 border-t border-glass-border">
               <span className="text-sm font-semibold text-text-secondary">Akun Saya</span>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: 'w-8 h-8 rounded-full border border-accent-coral/20',
-                  },
-                }}
-              />
+              <Link
+                href={getDashboardUrl()}
+                onClick={toggleMobile}
+                className="w-8 h-8 rounded-full bg-accent-coral/10 text-accent-coral flex items-center justify-center font-bold text-xs border border-accent-coral/30"
+              >
+                {user?.email?.substring(0, 2).toUpperCase() || 'MG'}
+              </Link>
             </div>
           </>
         )}

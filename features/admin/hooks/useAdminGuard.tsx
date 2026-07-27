@@ -2,15 +2,15 @@
  * Admin Guard Hook
  *
  * Reusable hook untuk admin authentication dan role checking
- * Extracted dari existing admin page logic untuk reusability
  */
 
-import React from 'react'
-import { useUser } from '@clerk/nextjs'
+import React, { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
+import type { User } from '@supabase/supabase-js'
 
 export interface AdminAuthState {
-  user: ReturnType<typeof useUser>['user']
+  user: User | null
   role: string | null
   isAdmin: boolean
   isLoaded: boolean
@@ -20,10 +20,19 @@ export interface AdminAuthState {
 }
 
 export function useAdminGuard(): AdminAuthState {
-  const { user, isLoaded } = useUser()
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
   const { role, isAdmin } = useUserRole()
   const { canAccessAdmin } = useRoleGuard()
   const { shouldShowLoader } = useRoleLoadingState()
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      setIsLoaded(true)
+    })
+  }, [])
 
   const isAuthorized = isLoaded && !shouldShowLoader && canAccessAdmin()
 
@@ -34,14 +43,10 @@ export function useAdminGuard(): AdminAuthState {
     isLoaded,
     canAccessAdmin,
     shouldShowLoader,
-    isAuthorized
+    isAuthorized,
   }
 }
 
-/**
- * Admin Loading Component
- * Reusable loading state untuk admin pages dengan Ancient Fantasy styling
- */
 export function AdminLoadingScreen() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
@@ -53,40 +58,25 @@ export function AdminLoadingScreen() {
   )
 }
 
-/**
- * Admin Access Denied Component
- * Reusable access denied screen dengan Ancient Fantasy styling
- */
 export function AdminAccessDenied({ role }: { role: string | null }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
-      <div className="text-center p-8 bg-white rounded-lg shadow-neu border border-beige-200 animate-fade-in">
-        <div className="text-merah-500 text-6xl mb-4 animate-float">🚫</div>
-        <h1 className="text-2xl font-bold mb-2 text-beige-900 font-serif">Akses Ditolak</h1>
-        <p className="text-beige-600">Anda tidak memiliki izin administrator.</p>
-        <p className="text-sm text-beige-500 mt-2">Role saat ini: {role || 'Tidak ada'}</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-4">
+      <div className="max-w-md w-full text-center space-y-4">
+        <h1 className="text-2xl font-bold text-red-600">Akses Ditolak</h1>
+        <p className="text-gray-600">
+          Anda tidak memiliki izin admin untuk mengakses halaman ini. Role Anda saat ini: {role || 'Pengunjung'}
+        </p>
       </div>
     </div>
   )
 }
 
-/**
- * Render Guard Function
- * Simplified rendering logic untuk admin pages
- */
-export function renderAdminGuard(
-  authState: AdminAuthState,
-  children: React.ReactNode
-): React.ReactNode {
-  const { isLoaded, shouldShowLoader, isAuthorized, role } = authState
-
-  if (!isLoaded || shouldShowLoader) {
+export function renderAdminGuard(guardState: AdminAuthState): React.ReactNode | null {
+  if (guardState.shouldShowLoader || !guardState.isLoaded) {
     return <AdminLoadingScreen />
   }
-
-  if (!isAuthorized) {
-    return <AdminAccessDenied role={role} />
+  if (!guardState.isAuthorized) {
+    return <AdminAccessDenied role={guardState.role} />
   }
-
-  return children
+  return null
 }

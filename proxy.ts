@@ -1,98 +1,84 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
 /**
- * Enhanced Clerk Proxy dengan Role-Based Authorization
+ * Next.js 16 Network Boundary Proxy dengan Supabase Auth
  *
- * MIGRATION NOTE: Renamed from middleware.ts to proxy.ts for Next.js 16
- * The term "proxy" clarifies the network boundary behavior of this feature.
- *
- * This proxy uses Clerk's recommended approach dengan auth.protect()
- * untuk mengatasi session timing issues dan mengikuti best practices.
- *
- * Role diambil dari custom session claim "role" yang dikonfigurasi di Clerk Dashboard.
- *
- * Referensi:
- * - https://clerk.com/docs/references/nextjs/clerk-middleware
- * - https://clerk.com/docs/guides/basic-rbac
- * - https://clerk.com/docs/backend-requests/jwt-templates
- * - https://nextjs.org/docs/messages/middleware-to-proxy
- *
- * App Structure:
- * - /dashboard = User area (default)
- * - /admin/* = Admin area
- * - /creator/* = Creator area
+ * Menggantikan Clerk Middleware dengan @supabase/ssr session management.
+ * Memproteksi rute /dashboard, /creator, /admin, /student, /course/.../learn.
  */
+export async function proxy(request: NextRequest) {
+  let response = NextResponse.next({
+    request,
+  })
 
-// Define protected routes using Clerk's createRouteMatcher
-const isProtectedRoute = createRouteMatcher([
-  '/dashboard(.*)',
-  '/admin(.*)',
-  '/creator(.*)',
-  '/settings(.*)',
-  '/profile(.*)',
-  '/course/(.*)/learn(.*)',  // Learn pages require authentication
-  '/student(.*)',            // Student area requires authentication
-])
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll().map((c) => ({
+            name: c.name,
+            value: c.value,
+          }))
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options)
+          })
+        },
+      },
+    }
+  )
 
-// Define admin-only routes for role-based protection
-const isAdminRoute = createRouteMatcher(['/admin(.*)'])
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
-// Define creator routes (accessible by creator and admin)
-const isCreatorRoute = createRouteMatcher(['/creator(.*)'])
+  const pathname = request.nextUrl.pathname
 
-export default clerkMiddleware(
-  async (auth, req) => {
-    // Protect routes that require authentication using Clerk's auth.protect()
-    if (isProtectedRoute(req)) {
-      await auth.protect()
+  // Defined protected routes
+  const isProtectedRoute =
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/creator') ||
+    pathname.startsWith('/settings') ||
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/student') ||
+    (pathname.startsWith('/course/') && pathname.includes('/learn'))
+
+  if (!user && isProtectedRoute) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/sign-in'
+    return NextResponse.redirect(url)
+  }
+
+  if (user) {
+    const role = (user.app_metadata?.role || user.user_metadata?.role || 'user') as string
+
+    // Role-based Access Control
+    if (pathname.startsWith('/admin') && role !== 'admin') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/unauthorized'
+      return NextResponse.redirect(url)
     }
 
-    // Additional role-based protection for admin routes
-    if (isAdminRoute(req)) {
-      const { sessionClaims } = await auth()
-
-      // Access role directly from custom session claims
-      // Based on Clerk Dashboard config: "role": "{{user.public_metadata.role || 'user'}}"
-      const userRole = sessionClaims?.role as string
-
-      if (userRole !== 'admin') {
-        // Redirect non-admin users to unauthorized page
-        const url = new URL('/unauthorized', req.url)
-        return Response.redirect(url)
-      }
+    if (pathname.startsWith('/creator') && role !== 'admin' && role !== 'creator') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/unauthorized'
+      return NextResponse.redirect(url)
     }
+  }
 
-    // Additional role-based protection for creator routes
-    if (isCreatorRoute(req)) {
-      const { sessionClaims } = await auth()
+  return response
+}
 
-      // Access role directly from custom session claims
-      const userRole = sessionClaims?.role as string
-
-      // Allow admin and creator roles
-      if (userRole !== 'admin' && userRole !== 'creator') {
-        const url = new URL('/unauthorized', req.url)
-        return Response.redirect(url)
-      }
-    }
-  },
-  {
-    // Debug mode disabled for production
-    debug: false,
-    // Fix clock skew issue - allow 30 seconds difference
-    clockSkewInMs: 30000,
-
-    // Ensure proper sign-in/sign-up URLs are set
-    signInUrl: '/sign-in',
-    signUpUrl: '/sign-up',
-  },
-)
+export default proxy
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     '/(api|trpc)(.*)',
   ],
 }

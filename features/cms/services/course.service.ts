@@ -10,8 +10,7 @@
  * Requirements: 0.1-0.8
  */
 
-import { auth } from '@clerk/nextjs/server'
-import { clerkClient } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 
 /**
@@ -103,18 +102,21 @@ export async function getCourseById(courseId: string): Promise<CourseServiceResu
  */
 export async function checkCourseOwnership(courseId: string, userId?: string): Promise<boolean> {
   try {
-    // Get userId from auth if not provided
-    const actualUserId = userId || (await auth()).userId
+    const supabase = await createClient()
+    let actualUserId = userId
+
+    if (!actualUserId) {
+      const { data: { user } } = await supabase.auth.getUser()
+      actualUserId = user?.id
+    }
 
     if (!actualUserId) {
       return false
     }
 
-    // Check if user is admin using Clerk API
-    const client = await clerkClient()
-    const user = await client.users.getUser(actualUserId)
-
-    if (user?.publicMetadata?.role === 'ADMIN') {
+    // Check if user is admin
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user && (user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin')) {
       return true
     }
 

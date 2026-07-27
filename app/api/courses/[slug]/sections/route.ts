@@ -7,7 +7,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 import { sectionService } from '@/features/cms/services/section.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
@@ -169,7 +169,9 @@ export async function GET(
     }
 
     // Fetch assessment progress for the authenticated user (if any)
-    const { userId } = await auth()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    const userId = user?.id
     let preTestCompleted = false
     let preTestScore: number | null = null
     const passedSectionIds = new Set<string>()

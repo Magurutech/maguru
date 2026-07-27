@@ -7,7 +7,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { progressService } from '@/features/cms/services/progress.service'
 import { unauthorizedError, notFoundError, internalError } from '@/lib/api/errors'
 
@@ -16,11 +16,13 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { userId } = await auth()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    if (!userId) {
+    if (!user) {
       return unauthorizedError()
     }
+    const userId = user.id
 
     const { slug } = await params
     const result = await progressService.getCourseProgress(slug, userId)
