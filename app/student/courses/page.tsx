@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import { BookOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,14 +10,14 @@ import { getMyEnrollments } from '@/features/cms/services/enrollment.service'
  * My Courses Page — /student/courses
  *
  * Server component. Auth-protected.
- * Calls getMyEnrollments directly (no HTTP round-trip) to avoid
- * losing the auth cookie on server-side fetch.
+ * Calls getMyEnrollments directly to avoid extra HTTP round-trip.
  *
  * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
  */
 
 export default async function MyCoursesPage() {
-  const user = await currentUser()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
     redirect('/sign-in')
@@ -26,68 +26,42 @@ export default async function MyCoursesPage() {
   const { enrollments } = await getMyEnrollments(user.id)
 
   return (
-    <div className="min-h-screen bg-linear-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-beige-900 font-serif mb-2">
-            Kursus Saya
-          </h1>
-          <p className="text-beige-600">
-            Lanjutkan perjalanan belajarmu dari sini.
+    <div className="container mx-auto px-4 py-8 max-w-7xl space-y-8">
+      {/* Header */}
+      <div className="border-b border-border/10 pb-6">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground font-serif">
+          Kursus Saya
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Kelola dan lanjutkan pembelajaran Anda di Maguru
+        </p>
+      </div>
+
+      {/* Grid or Empty state */}
+      {enrollments.length === 0 ? (
+        <div className="flex flex-col items-center justify-center min-h-[300px] border border-dashed border-border/20 rounded-2xl p-8 text-center bg-card/30">
+          <BookOpen className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
+          <h2 className="text-xl font-semibold text-foreground">Belum ada kursus yang diikuti</h2>
+          <p className="text-muted-foreground text-sm max-w-sm mt-1 mb-6">
+            Anda belum mendaftar di kursus manapun. Jelajahi katalog kami dan mulai belajar hari ini!
           </p>
+          <Link href="/courses">
+            <Button variant="default">Jelajahi Katalog Kursus</Button>
+          </Link>
         </div>
-
-        {enrollments.length === 0 ? (
-          <EmptyState />
-        ) : (
-          <>
-            <p className="text-sm text-beige-500 mb-6">
-              {enrollments.length} kursus terdaftar
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="enrolled-courses-grid">
-              {enrollments.map((enrollment) => (
-                <CourseCard
-                  key={enrollment.id}
-                  course={{
-                    id: enrollment.course.id,
-                    slug: enrollment.course.slug,
-                    title: enrollment.course.title,
-                    description: enrollment.course.description,
-                    category: enrollment.course.category,
-                    difficulty: enrollment.course.difficulty,
-                    status: enrollment.course.status,
-                  }}
-                  enrolled={true}
-                  progress={enrollment.progress}
-                  enrolledAt={enrollment.enrolledAt}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function EmptyState() {
-  return (
-    <div data-testid="empty-state" className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="flex items-center justify-center w-16 h-16 bg-beige-100 rounded-full mb-4">
-        <BookOpen className="w-8 h-8 text-beige-400" />
-      </div>
-      <h2 className="text-xl font-semibold text-beige-800 mb-2">
-        Belum ada kursus yang diikuti
-      </h2>
-      <p className="text-beige-500 max-w-sm mb-6">
-        Mulai perjalanan belajarmu dengan mendaftar ke kursus pertamamu.
-      </p>
-      <Link href="/course">
-        <Button className="bg-merah-500 hover:bg-merah-600 text-white hover:scale-105 transition-all duration-200">
-          Jelajahi Kursus
-        </Button>
-      </Link>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {enrollments.map(({ id, course, progress, enrolledAt }) => (
+            <CourseCard
+              key={id}
+              course={course}
+              progress={progress}
+              enrolledAt={enrolledAt}
+              enrolled
+            />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

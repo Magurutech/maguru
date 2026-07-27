@@ -9,11 +9,12 @@
  */
 
 import { useState, useEffect } from 'react'
-import { useUser } from '@clerk/nextjs'
+import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
 import { getDashboardData } from '@/features/dashboard/api'
 import type { DashboardData } from '@/features/dashboard/types'
+import type { User } from '@supabase/supabase-js'
 
 // Import modular components dari features/user-dashboard
 import {
@@ -29,11 +30,18 @@ import {
 } from '@/features/user-dashboard'
 
 export default function DashboardPage() {
-  const { user } = useUser()
+  const [user, setUser] = useState<User | null>(null)
   const { role } = useUserRole()
   const { canAccessUser } = useRoleGuard()
   const { shouldShowLoader } = useRoleLoadingState()
   const router = useRouter()
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+    })
+  }, [])
 
   // Dashboard Data State
   const [data, setData] = useState<DashboardData | null>(null)
@@ -118,7 +126,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* 1. Welcome Header Section */}
-      <DashboardHeader userName={user?.firstName || 'Budi'} />
+      <DashboardHeader userName={user?.email?.split('@')[0] || user?.user_metadata?.name || 'Learner'} />
 
       {/* Main Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">

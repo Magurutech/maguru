@@ -9,7 +9,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import {
   getCreatorProfile,
   upsertCreatorProfile,
@@ -21,7 +21,8 @@ import {
  */
 export async function GET() {
   try {
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -44,7 +45,8 @@ export async function GET() {
  */
 export async function PUT(request: Request) {
   try {
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

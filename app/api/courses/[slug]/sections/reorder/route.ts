@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { authorizationService } from '@/features/cms/services/authorization.service'
 import { sectionService } from '@/features/cms/services/section.service'
 import prisma from '@/prisma/lib/client'
@@ -14,10 +14,12 @@ export async function PATCH(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized', code: 'UNAUTHORIZED' }, { status: 401 })
     }
+    const userId = user.id
 
     const { slug } = await params
     const courseId = await sectionService.getCourseIdBySlug(slug)

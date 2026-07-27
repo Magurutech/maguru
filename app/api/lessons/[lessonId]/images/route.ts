@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase-server'
 import { generateLessonImageFileName, validateImageFile } from '@/lib/tiptap/image-upload'
@@ -30,9 +30,10 @@ export async function POST(
   { params }: { params: Promise<{ lessonId: string }> },
 ) {
   try {
-    // 1. Clerk auth check
-    const session = await auth()
-    if (!session?.userId) {
+    // 1. Supabase auth check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json({ message: 'Unauthorized. Please login.' }, { status: 401 })
     }
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 import { CourseStatus } from '@/prisma/generated/prisma'
 
@@ -20,7 +20,8 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json(

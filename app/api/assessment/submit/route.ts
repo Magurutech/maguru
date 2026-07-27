@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 import { SubmitAssessmentSchema } from '@/features/assessment-engine/schemas'
 import { calculateScores } from '@/features/assessment-engine/services/scoring.service'
@@ -7,10 +7,12 @@ import { executeTopicPlacement } from '@/features/assessment-engine/services/pla
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    const userId = user.id
 
     const body = await request.json()
     const parsed = SubmitAssessmentSchema.safeParse(body)

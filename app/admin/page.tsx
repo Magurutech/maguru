@@ -73,7 +73,10 @@ export default function AdminDashboardPage() {
     }
   }, [systemHealth.status])
 
-  return renderAdminGuard(authState, (
+  const guardScreen = renderAdminGuard(authState)
+  if (guardScreen) return guardScreen
+
+  return (
     <div className="min-h-screen bg-gradient-to-br from-beige-50 via-kuning-50 to-hijau-50 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
 
@@ -86,7 +89,7 @@ export default function AdminDashboardPage() {
             <div>
               <h1 className="text-3xl font-bold text-beige-900 font-serif">System Operations</h1>
               <p className="text-beige-600">
-                Dashboard monitoring sistem - {authState.user?.firstName || 'Administrator'}
+                Dashboard monitoring sistem - {authState.user?.email?.split('@')[0] || authState.user?.user_metadata?.name || 'Administrator'}
               </p>
             </div>
             <div className="ml-auto flex items-center gap-2">
@@ -388,5 +391,5 @@ export default function AdminDashboardPage() {
 
       </div>
     </div>
-  ))
+  )
 }

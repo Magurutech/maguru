@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 import { validateOutcomes, sanitizeOutcomes } from '@/features/cms/services/course.service'
 
@@ -11,7 +11,8 @@ import { validateOutcomes, sanitizeOutcomes } from '@/features/cms/services/cour
 export async function PATCH(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -109,7 +110,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 
     // DRAFT courses are only visible to the owner
     if (course.status === 'DRAFT') {
-      const user = await currentUser()
+      const supabase = await createClient()
+      const { data: { user } } = await supabase.auth.getUser()
       if (!user || course.creatorId !== user.id) {
         return NextResponse.json({ error: 'Course not found' }, { status: 404 })
       }
@@ -133,7 +135,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 export async function DELETE(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

@@ -3,7 +3,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
 import { ThemeProvider } from 'next-themes'
-import { ClerkProvider } from '@clerk/nextjs'
 
 import { TooltipProvider } from '@/components/ui/tooltip'
 
@@ -32,13 +31,10 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {' '}
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-        <ClerkProvider>
-          <TooltipProvider delayDuration={0}>
-            {children}
-          </TooltipProvider>
-        </ClerkProvider>
+        <TooltipProvider delayDuration={0}>
+          {children}
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   )

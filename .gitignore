@@ -86,3 +86,7 @@ __pycache__
 
 # Newman environment (contains auth tokens — do not commit)
 docs/api/newman-env.json
+
+# graphify
+graphify-out/
+

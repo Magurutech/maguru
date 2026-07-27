@@ -8,7 +8,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { lessonService } from '@/features/cms/services/lesson.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
 import { UpdateLessonInput } from '@/features/cms/types/lesson.types'
@@ -57,13 +57,15 @@ export async function PUT(
 ) {
   try {
     // Authentication check
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized', code: 'UNAUTHORIZED' },
         { status: 401 }
       )
     }
+    const userId = user.id
 
     const { lessonId } = await params
 
@@ -156,13 +158,15 @@ export async function DELETE(
 ) {
   try {
     // Authentication check
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized', code: 'UNAUTHORIZED' },
         { status: 401 }
       )
     }
+    const userId = user.id
 
     const { lessonId } = await params
 

@@ -8,10 +8,12 @@
  * keterbacaan, dan pemeliharaan kode yang mudah.
  */
 
-import { useUser } from '@clerk/nextjs'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useRoleGuard, useRoleLoadingState } from '@/features/auth'
 import { useCreatorCourses } from '@/features/cms/hooks'
+import type { User } from '@supabase/supabase-js'
 
 // Import modular components dari features/creator-dashboard
 import {
@@ -23,16 +25,25 @@ import {
   LearnerInsightsCard,
   RecentReviewsCard,
   RecentActivitiesCard,
-  GrowthOpportunitiesCard,
+  GrowthOpportunitiesCard
 } from '@/features/creator-dashboard'
 
 export default function CreatorDashboardPage() {
-  const { user, isLoaded } = useUser()
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoaded, setIsLoaded] = useState(false)
   const router = useRouter()
   const { canAccessCreator } = useRoleGuard()
   const { shouldShowLoader: roleLoading } = useRoleLoadingState()
 
   const { courses, stats, isLoading: loadingCourses } = useCreatorCourses()
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      setIsLoaded(true)
+    })
+  }, [])
 
   // Loading State / Skeleton
   if (!isLoaded || roleLoading || loadingCourses) {
@@ -78,7 +89,7 @@ export default function CreatorDashboardPage() {
   return (
     <div className="space-y-8 animate-fade-in">
       {/* 1. Welcome Header */}
-      <CreatorHeader userName={user?.firstName || 'Lutfi'} />
+      <CreatorHeader userName={user?.email?.split('@')[0] || user?.user_metadata?.name || 'Creator'} />
 
       {/* Main Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6">

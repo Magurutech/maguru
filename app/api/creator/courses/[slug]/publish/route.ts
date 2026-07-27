@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { currentUser } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { togglePublishStatus } from '@/features/cms/services/creator-course.service'
 
 /**
@@ -19,36 +19,31 @@ export async function PUT(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const user = await currentUser()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Silakan login terlebih dahulu' },
+        { error: 'Unauthorized' },
         { status: 401 }
       )
     }
 
     const { slug } = await params
+    const updated = await togglePublishStatus(slug, user.id)
 
-    const course = await togglePublishStatus(slug, user.id)
-
-    return NextResponse.json({ course })
+    return NextResponse.json({ course: updated })
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === 'Course not found') {
-        return NextResponse.json({ error: 'Kursus tidak ditemukan' }, { status: 404 })
-      }
-      if (error.message.startsWith('Forbidden')) {
-        return NextResponse.json(
-          { error: 'Anda tidak memiliki akses ke kursus ini' },
-          { status: 403 }
-        )
-      }
+    const message = error instanceof Error ? error.message : 'Failed to publish course'
+
+    if (message === 'Course not found') {
+      return NextResponse.json({ error: message }, { status: 404 })
     }
+    if (message === 'Forbidden') {
+      return NextResponse.json({ error: message }, { status: 403 })
+    }
+
     console.error('Error toggling publish status:', error)
-    return NextResponse.json(
-      { error: 'Gagal mengubah status kursus' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

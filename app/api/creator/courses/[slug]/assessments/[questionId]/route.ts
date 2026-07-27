@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 
 export async function PUT(
@@ -7,10 +7,12 @@ export async function PUT(
   { params }: { params: Promise<{ slug: string; questionId: string }> }
 ) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    const userId = user.id
 
     const { slug, questionId } = await params
     const body = await request.json()
@@ -64,10 +66,12 @@ export async function DELETE(
   { params }: { params: Promise<{ slug: string; questionId: string }> }
 ) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    const userId = user.id
 
     const { slug, questionId } = await params
 

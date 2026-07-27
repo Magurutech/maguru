@@ -12,10 +12,10 @@
  */
 
 import React, { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { BookOpen, User, Award, Settings, Home, Sun, Moon, LogOut } from 'lucide-react'
 import { useTheme } from 'next-themes'
-import { UserButton, useClerk } from '@clerk/nextjs'
+import { createClient } from '@/lib/supabase/client'
 import {
   SidebarProvider,
   Sidebar,
@@ -38,11 +38,18 @@ interface UserLayoutProps {
 // App Sidebar subcomponent inside SidebarProvider
 function AppSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const { theme, setTheme } = useTheme()
-  const { signOut } = useClerk()
   const { state } = useSidebar()
   const [mounted, setMounted] = useState(false)
   const isCollapsed = state === 'collapsed'
+
+  const handleSignOut = async () => {
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    router.push('/sign-in')
+    router.refresh()
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -175,7 +182,7 @@ function AppSidebar() {
 
           {/* Logout button */}
           <button
-            onClick={() => signOut({ redirectUrl: '/' })}
+            onClick={handleSignOut}
             aria-label="Keluar dari akun"
             className="w-9 h-9 flex items-center justify-center rounded-full bg-background border border-border/10 hover:bg-error hover:text-white text-text-muted transition-all duration-180 cursor-pointer"
           >
@@ -187,14 +194,8 @@ function AppSidebar() {
         <div
           className={`flex items-center ${isCollapsed ? 'justify-center p-1' : 'space-x-3 p-2 bg-background/50 border border-border/5 rounded-2xl min-w-0'}`}
         >
-          <div className="shrink-0 flex items-center justify-center">
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: 'w-8 h-8 rounded-full border border-accent-coral/20',
-                },
-              }}
-            />
+          <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-accent-coral/10 text-accent-coral border border-accent-coral/20">
+            <User className="w-4 h-4" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col min-w-0 animate-fade-in">

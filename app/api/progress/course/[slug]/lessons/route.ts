@@ -6,7 +6,7 @@
  */
 
 import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
+import { createClient } from '@/lib/supabase/server'
 import { unauthorizedError, notFoundError, internalError } from '@/lib/api/errors'
 import prisma from '@/prisma/lib/client'
 
@@ -15,8 +15,10 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { userId } = await auth()
-    if (!userId) return unauthorizedError()
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return unauthorizedError()
+    const userId = user.id
 
     const { slug } = await params
 

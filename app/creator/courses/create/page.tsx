@@ -7,19 +7,16 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useUser } from '@clerk/nextjs'
 import { useRoleGuard, useRoleLoadingState } from '@/features/auth'
 import { CourseCreationForm } from '@/features/cms/components/creator/CourseCreationForm'
 import { BookOpen } from 'lucide-react'
 
 export default function CourseCreatePage() {
   const router = useRouter()
-  const { isLoaded } = useUser()
   const { canAccessCreator } = useRoleGuard()
   const { isLoading: roleLoading, isReady: roleReady } = useRoleLoadingState()
 
-  // Wait until Clerk is loaded AND role is definitively resolved (not null, not loading)
-  if (!isLoaded || roleLoading || !roleReady) {
+  if (roleLoading || !roleReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-linear-gradient-to-br from-beige-50 to-kuning-50">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-merah-500 border-t-transparent" />
