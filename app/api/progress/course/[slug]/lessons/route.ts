@@ -16,8 +16,24 @@ export async function GET(
 ) {
   try {
     const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return unauthorizedError()
+    
+    // Auth check with 2000ms timeout guard
+    let user = null
+    try {
+      const authPromise = supabase.auth.getUser()
+      const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((_, reject) =>
+        setTimeout(() => reject(new Error('Auth timeout')), 2000)
+      )
+      const { data } = await Promise.race([authPromise, timeoutPromise])
+      user = data?.user ?? null
+    } catch {
+      user = null
+    }
+
+    if (!user) {
+      // Return safe empty progress if user is guest or auth network is slow
+      return NextResponse.json({ completedLessonIds: [] })
+    }
     const userId = user.id
 
     const { slug } = await params

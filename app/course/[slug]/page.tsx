@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
 
@@ -19,26 +20,51 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
+async function getDynamicBaseUrl(): Promise<string> {
+  const headersList = await headers()
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000'
+  const protocol = headersList.get('x-forwarded-proto') || (process.env.NODE_ENV === 'production' ? 'https' : 'http')
+  return `${protocol}://${host}`
+}
+
 async function fetchCourseDetail(slug: string): Promise<CourseDetail | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/courses/${slug}`, { cache: 'no-store' })
-  if (!res.ok) return null
-  return res.json()
+  try {
+    const baseUrl = await getDynamicBaseUrl()
+    const res = await fetch(`${baseUrl}/api/courses/${slug}`, { cache: 'no-store' })
+    if (!res.ok) return null
+    const contentType = res.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) return null
+    return await res.json()
+  } catch {
+    return null
+  }
 }
 
 async function fetchCourseSections(slug: string): Promise<SectionType[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/courses/${slug}/sections`, { cache: 'no-store' })
-  if (!res.ok) return []
-  const data = await res.json()
-  return data.sections ?? []
+  try {
+    const baseUrl = await getDynamicBaseUrl()
+    const res = await fetch(`${baseUrl}/api/courses/${slug}/sections`, { cache: 'no-store' })
+    if (!res.ok) return []
+    const contentType = res.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) return []
+    const data = await res.json()
+    return data.sections ?? []
+  } catch {
+    return []
+  }
 }
 
 async function fetchCourseCreator(slug: string): Promise<CreatorProfile | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/courses/${slug}/creator`, { cache: 'no-store' })
-  if (!res.ok) return null
-  return res.json()
+  try {
+    const baseUrl = await getDynamicBaseUrl()
+    const res = await fetch(`${baseUrl}/api/courses/${slug}/creator`, { cache: 'no-store' })
+    if (!res.ok) return null
+    const contentType = res.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) return null
+    return await res.json()
+  } catch {
+    return null
+  }
 }
 
 async function checkEnrollment(userId: string, courseId: string): Promise<boolean> {

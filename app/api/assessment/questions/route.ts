@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import prisma from '@/prisma/lib/client'
+import { fetchAIGeneratedQuiz } from '@/lib/ai/quiz-generator'
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
           { slug: courseIdParam },
         ],
       },
-      select: { id: true },
+      select: { id: true, title: true },
     })
 
     if (!course) {
@@ -50,43 +51,82 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Assessment already completed' }, { status: 409 })
     }
 
-    // Retrieve the questions dynamically based on assessment type
-    let questions
+    // Retrieve existing questions dynamically based on assessment type
+    let questions = await prisma.assessment_questions.findMany({
+      where: {
+        courseId,
+        ...(sectionId ? { sectionId } : {}),
+      },
+      select: {
+        id: true,
+        question: true,
+        options: true,
+        topic: true,
+        difficulty: true,
+      },
+    })
+
+    // Automatic AI Quiz Generation if no questions exist in DB
+    if (questions.length === 0) {
+      // Gather lesson content text from Prisma
+      const lessons = await prisma.lessons.findMany({
+        where: {
+          sections: {
+            courseId,
+            ...(sectionId ? { id: sectionId } : {}),
+          },
+        },
+        select: {
+          title: true,
+          content: true,
+        },
+      })
+
+      const combinedContent = lessons
+        .map((l) => `${l.title}\n${l.content || ''}`)
+        .join('\n\n')
+
+      const generatedQuestions = await fetchAIGeneratedQuiz({
+        courseId,
+        sectionId,
+        numQuestions: quizType === 'PRE_TEST' ? 5 : 4,
+        difficulty: 'medium',
+        lessonContent: combinedContent || `Kursus ${course.title}`,
+      })
+
+      if (generatedQuestions.length > 0) {
+        // Insert generated questions into Supabase DB
+        await prisma.assessment_questions.createMany({
+          data: generatedQuestions.map((q) => ({
+            courseId,
+            sectionId,
+            question: q.question,
+            options: q.options,
+            correct: q.correct,
+            topic: q.topic || course.title,
+            difficulty: q.difficulty || 'medium',
+          })),
+        })
+
+        // Fetch back newly created questions
+        questions = await prisma.assessment_questions.findMany({
+          where: {
+            courseId,
+            ...(sectionId ? { sectionId } : {}),
+          },
+          select: {
+            id: true,
+            question: true,
+            options: true,
+            topic: true,
+            difficulty: true,
+          },
+        })
+      }
+    }
+
     if (quizType === 'PRE_TEST') {
-      const allQuestions = await prisma.assessment_questions.findMany({
-        where: {
-          courseId,
-        },
-        select: {
-          id: true,
-          question: true,
-          options: true,
-          topic: true,
-          difficulty: true,
-        },
-      })
-      // Shuffle list and return up to 40 questions
-      questions = allQuestions
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 40)
-    } else {
-      questions = await prisma.assessment_questions.findMany({
-        where: {
-          courseId,
-          sectionId,
-        },
-        select: {
-          id: true,
-          question: true,
-          options: true,
-          topic: true,
-          difficulty: true,
-        },
-        orderBy: [
-          { topic: 'asc' },
-          { difficulty: 'asc' },
-        ],
-      })
+      questions = questions.sort(() => 0.5 - Math.random()).slice(0, 40)
     }
 
     return NextResponse.json({ questions })

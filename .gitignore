@@ -15,6 +15,7 @@
 .clerk
 .serena
 .next
+.agent
 .agents
 .open-design
 .next
@@ -87,6 +88,10 @@ __pycache__
 # Newman environment (contains auth tokens — do not commit)
 docs/api/newman-env.json
 
-# graphify
-graphify-out/
+# Graphify output & cache
+graphify-out/cache/
+graphify-out/.graphify_*
+graphify-out/20*/
+graphify-out/*.py
+graphify-out/*.ps1
 

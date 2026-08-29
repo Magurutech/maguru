@@ -12,6 +12,7 @@ import { AssessmentPage } from '@/features/assessment-engine/components/Assessme
 import { AssessmentResultPage } from '@/features/assessment-engine/components/AssessmentResultPage'
 import { AssessmentErrorBoundary } from '@/features/assessment-engine/components/AssessmentErrorBoundary'
 import { SidebarProvider } from '@/components/ui/sidebar'
+import { ChatbotAssistant } from '@/features/langserve'
 
 interface CompletedResult {
   overallScore: number
@@ -340,9 +341,23 @@ function LearnPageInner() {
           )}
         </main>
       </div>
+
+      {/* AI Co-Teacher Floating Assistant */}
+      <ChatbotAssistant
+        context={{
+          courseId: slug,
+          courseSlug: slug,
+          itemTitle: currentLesson?.title || 'Materi Belajar',
+          currentContent:
+            typeof currentLesson?.content === 'string'
+              ? currentLesson.content
+              : JSON.stringify(currentLesson?.content || ''),
+        }}
+      />
     </div>
   )
 }
+
 
 export default function LearnPage() {
   const params = useParams()

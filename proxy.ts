@@ -32,9 +32,20 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    // 2000ms timeout guard to prevent 10-30s hanging on slow networks
+    const authPromise = supabase.auth.getUser()
+    const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((_, reject) =>
+      setTimeout(() => reject(new Error('Supabase Auth Timeout (2000ms)')), 2000)
+    )
+    const { data, error } = await Promise.race([authPromise, timeoutPromise])
+    if (!error) {
+      user = data?.user ?? null
+    }
+  } catch (err) {
+    console.warn('[Proxy Auth Warning] Supabase auth fetch failed or timed out (fast bypass):', err)
+  }
 
   const pathname = request.nextUrl.pathname
 
@@ -78,7 +89,7 @@ export default proxy
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js)$).*)',
     '/(api|trpc)(.*)',
   ],
 }
