@@ -9,8 +9,8 @@
     { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus PUBLISHED milik creator — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
     { "key": "draftCourseSlug", "value": "", "type": "string", "description": "Slug kursus DRAFT milik creator — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
     { "key": "sectionId", "value": "", "type": "string", "description": "ID section — auto-filled dari response POST" },
-    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — creator (course owner)" },
-    { "key": "otherUserToken", "value": "", "type": "string", "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403" }
+    { "key": "authToken", "value": "", "type": "string", "description": "Supabase Auth Access Token (Bearer JWT) — creator (course owner)" },
+    { "key": "otherUserToken", "value": "", "type": "string", "description": "Supabase Auth Access Token (Bearer JWT) — user lain (non-owner) untuk test 403" }
   ],
   "item": [
     {
@@ -43,7 +43,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -116,7 +116,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }
+              { "key": "Authorization", "value": "Bearer {{otherUserToken}}", "type": "text", "description": "Token user lain — bukan owner" }
             ],
             "body": {
               "mode": "raw",
@@ -154,7 +154,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -270,7 +270,7 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{draftCourseSlug}}/sections",
               "host": ["{{baseUrl}}"],
@@ -310,7 +310,7 @@
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -348,7 +348,7 @@
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -391,7 +391,7 @@
           ],
           "request": {
             "method": "DELETE",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}",
               "host": ["{{baseUrl}}"],

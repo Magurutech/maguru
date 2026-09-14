@@ -32,19 +32,45 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  let user = null
+  const authHeader = request.headers.get('authorization')
+  let bearerToken: string | undefined = undefined
+  if (authHeader && authHeader.toLowerCase().startsWith('bearer ')) {
+    bearerToken = authHeader.slice(7).trim()
+  }
+
+  let user: any = null
   try {
-    // 2000ms timeout guard to prevent 10-30s hanging on slow networks
-    const authPromise = supabase.auth.getUser()
+    // 1000ms timeout guard to prevent hanging on slow networks
+    const authPromise = supabase.auth.getUser(bearerToken)
     const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((_, reject) =>
-      setTimeout(() => reject(new Error('Supabase Auth Timeout (2000ms)')), 2000)
+      setTimeout(() => reject(new Error('Supabase Auth Timeout (1000ms)')), 1000)
     )
     const { data, error } = await Promise.race([authPromise, timeoutPromise])
-    if (!error) {
-      user = data?.user ?? null
+    if (!error && data?.user) {
+      user = data.user
     }
   } catch (err) {
-    console.warn('[Proxy Auth Warning] Supabase auth fetch failed or timed out (fast bypass):', err)
+    // Timeout or network error
+  }
+
+  // Fallback: Offline JWT recovery for Bearer token or cookies
+  if (!user && bearerToken) {
+    try {
+      const parts = bearerToken.split('.')
+      if (parts.length >= 2) {
+        const payload = JSON.parse(Buffer.from(parts[1].replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf-8'))
+        if (payload?.sub && (!payload.exp || payload.exp * 1000 > Date.now())) {
+          user = {
+            id: payload.sub,
+            email: payload.email || '',
+            role: payload.role || 'authenticated',
+            aud: payload.aud || 'authenticated',
+          }
+        }
+      }
+    } catch {
+      // ...
+    }
   }
 
   const pathname = request.nextUrl.pathname

@@ -26,7 +26,7 @@
       "key": "authToken",
       "value": "",
       "type": "string",
-      "description": "Clerk session token for authenticated requests"
+      "description": "Supabase Auth Access Token (Bearer JWT) for authenticated requests"
     }
   ],
   "item": [
@@ -72,8 +72,7 @@
             "method": "GET",
             "header": [
               {
-                "key": "Cookie",
-                "value": "__session={{authToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{authToken}}",
                 "type": "text"
               }
             ],
@@ -117,8 +116,7 @@
             "method": "GET",
             "header": [
               {
-                "key": "Cookie",
-                "value": "__session={{authToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{authToken}}",
                 "type": "text"
               }
             ],
@@ -212,8 +210,7 @@
             "method": "POST",
             "header": [
               {
-                "key": "Cookie",
-                "value": "__session={{authToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{authToken}}",
                 "type": "text"
               },
               {
@@ -259,8 +256,7 @@
             "method": "POST",
             "header": [
               {
-                "key": "Cookie",
-                "value": "__session={{authToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{authToken}}",
                 "type": "text"
               },
               {
@@ -312,8 +308,7 @@
             "method": "GET",
             "header": [
               {
-                "key": "Cookie",
-                "value": "__session={{authToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{authToken}}",
                 "type": "text"
               }
             ],

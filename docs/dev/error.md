@@ -1,27 +1,80 @@
-INFO:     127.0.0.1:58813 - "OPTIONS /chatbot/stream HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58813 - "POST /chatbot/stream HTTP/1.1" 200 OK
-INFO:app.chains.qa_chatbot:[BACKEND_QA][INPUT_RECEIVED] ThreadID: 'session-1787970166225-k4qqe' | Co
-                                                                                 ourse: 'test-course-double-postman-dari-postman' | Session: 'Pengenalan Python' | Question: 'haloo ai...'
-WARNING:app.db.vector_store:DATABASE_URL is not set. PGVector store will be unavailable.
-INFO:app.chains.qa_chatbot:[BACKEND_QA][RAG_LOOKUP] Retrieved 0 chars of context for course 'test-course-double-postman-dari-postman'
-INFO:app.chains.qa_chatbot:[BACKEND_QA][PIPELINE_READY] Preprocessing completed in 3.0ms. Dispatching to LLM Stream...
+LANGSERVE: See all available routes at /docs/
+INFO:     Application startup complete.
+INFO:app.chains.quiz_generator:[QUIZ_GEN][DISPATCH] Generating 5 'medium' questions with style 'balanced' for course '7ab9ce59-7acf-4eff-887c-4184cfb30d58' (content len: 167)
 INFO:httpx:HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:     127.0.0.1:55618 - "POST /chatbot/stream HTTP/1.1" 200 OK
-INFO:app.chains.qa_chatbot:[BACKEND_QA][INPUT_RECEIVED] ThreadID: 'session-1787970166225-k4qqe' | Course: 'test-course-double-postman-dari-postman' | Session: 'Pengenalan Python' | Question: 'biskaha kamu jelaskan terkait apa yang sedanag kita pelajari...'
-WARNING:app.db.vector_store:DATABASE_URL is not set. PGVector store will be unavailable.
-INFO:app.chains.qa_chatbot:[BACKEND_QA][RAG_LOOKUP] Retrieved 0 chars of context for course 'test-course-double-postman-dari-postman'
-INFO:app.chains.qa_chatbot:[BACKEND_QA][PIPELINE_READY] Preprocessing completed in 5.9ms. Dispatching to LLM Stream...
+INFO:app.chains.quiz_generator:[QUIZ_GEN][RESPONSE] Received raw LLM response (3257 chars)
+INFO:app.chains.quiz_generator:[QUIZ_GEN][EXTRACT] Raw text length: 3257 chars
+WARNING:app.chains.quiz_generator:[QUIZ_GEN][JSON_PARSE_WARN] Direct array loads failed: Unterminated string starting at: line 59 column 12 (char 3150). Attempting individual object extraction.
+INFO:app.chains.quiz_generator:[QUIZ_GEN][RECOVERED] Successfully extracted 2 question objects via balanced scanner
+INFO:app.chains.quiz_generator:[QUIZ_GEN][SUCCESS] Validated 2 questions with full options and explanations
+INFO:     127.0.0.1:55005 - "POST /api/v1/generate-quiz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60451 - "OPTIONS /api/v1/generate-quiz HTTP/1.1" 200 OK
+INFO:app.chains.quiz_generator:[QUIZ_GEN][DISPATCH] Generating 5 'medium' questions with style 'balanced' for course '7ab9ce59-7acf-4eff-887c-4184cfb30d58' (content len: 75)
 INFO:httpx:HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
-INFO:     127.0.0.1:62414 - "POST /chatbot/stream HTTP/1.1" 200 OK
-INFO:app.chains.qa_chatbot:[BACKEND_QA][INPUT_RECEIVED] ThreadID: 'session-1787970166225-k4qqe' | Course: 'test-course-double-postman-dari-postman' | Session: 'Pengenalan Python' | Question: 'sepertinya saya kesusuahan untuk emmahaminya , bisakha kamu ...'
-WARNING:app.db.vector_store:DATABASE_URL is not set. PGVector store will be unavailable.
-INFO:app.chains.qa_chatbot:[BACKEND_QA][RAG_LOOKUP] Retrieved 0 chars of context for course 'test-course-double-postman-dari-postman'
-INFO:app.chains.qa_chatbot:[BACKEND_QA][PIPELINE_READY] Preprocessing completed in 3.3ms. Dispatching to LLM Stream...
-INFO:httpx:HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+INFO:app.chains.quiz_generator:[QUIZ_GEN][RESPONSE] Received raw LLM response (0 chars)
+ERROR:app.chains.quiz_generator:[QUIZ_GEN][ERROR] Error generating quiz questions: Raw LLM output is completely empty
+Traceback (most recent call last):
+  File "D:\.maguru\maguru-model\app\chains\quiz_generator.py", line 413, in generate_quiz_questions
+    questions = _extract_json_array(raw_output, default_diff=safe_difficulty)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\.maguru\maguru-model\app\chains\quiz_generator.py", line 307, in _extract_json_array 
+    raise ValueError("Raw LLM output is completely empty")
+ValueError: Raw LLM output is completely empty
+INFO:     127.0.0.1:60451 - "POST /api/v1/generate-quiz HTTP/1.1" 200 OK
 
 
 
-2026-08-29T03:23:22.641Z [INFO] [useChatbot][sendMessage] ✅ [FRONTEND_CHAT] Stream Completed (872 chunks, 4089 chars in 25026ms){  "totalChunks": 872,  "totalChars": 4089,  "durationMs": 25026,  "performance": {    "timestamp": 1787973802641,    "memory": null  }}
-forward-logs-shared.ts:95 [Fast Refresh] rebuilding
-forward-logs-shared.ts:95 [Fast Refresh] done in 846ms
-forward-logs-shared.ts:95 [Fast Refresh] rebuilding
+[AI Quiz Generator] 🚀 Dispatching request: 
+Object
+forward-logs-shared.ts:95 [AI Quiz Generator] ✅ Received 1 questions (74610ms)
+forward-logs-shared.ts:95 📌 Full Payload: 
+Array(1)
+forward-logs-shared.ts:95 
+Array(1)
+0
+: 
+#
+: 
+1
+Ada Pembahasan?
+: 
+"Ya"
+Hints
+: 
+"-"
+Kunci
+: 
+"A"
+Micro-Skill
+: 
+"general"
+Opsi A
+: 
+"Pemrograman memerlukan pe"
+Opsi B
+: 
+"Semua variabel tidak meme"
+Opsi C
+: 
+"Bahasa pemrograman tidak "
+Opsi D
+: 
+"Tipe data string hanya bo"
+Pertanyaan
+: 
+"Manakah dari pernyataan berikut yang paling tepat mengenai m..."
+Tingkat
+: 
+"medium"
+Topik
+: 
+"Konsep Pemrograman"
+[[Prototype]]
+: 
+Object
+length
+: 
+1
+[[Prototype]]
+: 
+Array(0)
