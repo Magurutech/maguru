@@ -55,8 +55,8 @@
     "semantic_hash": "fdaa1395b531cab1e60565f693cd7a4a"
   },
   "app/api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]/route.ts": {
-    "mtime": 1789358986.0769737,
-    "ast_hash": "fcabf9cbb5e5f3b4d1a2f5913378eec3",
+    "mtime": 1789395326.4493399,
+    "ast_hash": "bc99d868e2a35df6a73b64d0cd0eeb83",
     "semantic_hash": ""
   },
   "app/api/courses/[slug]/sections/[sectionId]/lessons/reorder/route.ts": {
@@ -65,8 +65,8 @@
     "semantic_hash": "4d1c098da7ee1652befa62a8d2115a17"
   },
   "app/api/courses/[slug]/sections/[sectionId]/lessons/route.ts": {
-    "mtime": 1789358962.31025,
-    "ast_hash": "d620ccf5d8b89e2ed163e206bff8bcb0",
+    "mtime": 1789395333.3743873,
+    "ast_hash": "337910868ca98549b1c4717569fc8be5",
     "semantic_hash": ""
   },
   "app/api/courses/[slug]/sections/[sectionId]/route.ts": {
@@ -555,9 +555,9 @@
     "semantic_hash": "0af593289802b14b22553ef2878a083f"
   },
   "features/cms/components/creator/manage/panels/LessonEditorPanel.tsx": {
-    "mtime": 1782994599.7333186,
-    "ast_hash": "9d50b8b4bc5b78e216182423fa7bc26a",
-    "semantic_hash": "9d50b8b4bc5b78e216182423fa7bc26a"
+    "mtime": 1789395467.0380576,
+    "ast_hash": "4ed424dd9ea47acda4183ee464ac6828",
+    "semantic_hash": ""
   },
   "features/cms/components/creator/manage/panels/LessonViewerPanel.tsx": {
     "mtime": 1782994599.7333186,
@@ -755,9 +755,9 @@
     "semantic_hash": "e1e076becdc40f6089e6c6f8bb1ca1ca"
   },
   "features/cms/hooks/manage/useLocalStorageDraft.ts": {
-    "mtime": 1780549752.8907943,
-    "ast_hash": "4f4b4f740bda6b0734fb74a4ff1caaf7",
-    "semantic_hash": "4f4b4f740bda6b0734fb74a4ff1caaf7"
+    "mtime": 1789395507.5465152,
+    "ast_hash": "0b9df9e03bb8424ae6735f47dc035d3c",
+    "semantic_hash": ""
   },
   "features/cms/hooks/manage/useManageView.ts": {
     "mtime": 1783920815.0022333,
@@ -835,9 +835,9 @@
     "semantic_hash": "d017d8591f1c754a00a13b71835e129a"
   },
   "features/cms/services/authorization.service.ts": {
-    "mtime": 1785129876.8902476,
-    "ast_hash": "6a867b9a51f3f13cd0e351d29ca16a0d",
-    "semantic_hash": "6a867b9a51f3f13cd0e351d29ca16a0d"
+    "mtime": 1789395293.2033393,
+    "ast_hash": "3fc6c6c7c1529fd7a16c41c5607869f3",
+    "semantic_hash": ""
   },
   "features/cms/services/course.service.ts": {
     "mtime": 1785129876.9095986,
@@ -1621,7 +1621,7 @@
   },
   "components/tiptap-templates/simple/data/content.json": {
     "mtime": 1777185260.7058551,
-    "ast_hash": "",
+    "ast_hash": "d0b5f9a4ed030b1580f0f346893b7722",
     "semantic_hash": ""
   },
   "components/tiptap-templates/simple/simple-editor.tsx": {
@@ -2535,53 +2535,53 @@
     "semantic_hash": ""
   },
   "prisma/generated/prisma/client.d.ts": {
-    "mtime": 1783611548.9017098,
+    "mtime": 1789392120.5826118,
     "ast_hash": "6cfa5c5e0b5de6abfc20f2532414712c",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/client.js": {
-    "mtime": 1783611548.8983755,
+    "mtime": 1789392120.5826118,
     "ast_hash": "71012b991c297f14db46de6593c7c4c5",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/default.d.ts": {
-    "mtime": 1783611548.8973587,
+    "mtime": 1789392120.5826118,
     "ast_hash": "6cfa5c5e0b5de6abfc20f2532414712c",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/default.js": {
-    "mtime": 1783611548.8983755,
+    "mtime": 1789392120.5806005,
     "ast_hash": "6f1901c5c19c7c76db1470cefa5357bb",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/edge.d.ts": {
-    "mtime": 1783611548.9017098,
+    "mtime": 1789392120.5826118,
     "ast_hash": "b1a34f9b323447f227db5aa901d5f3a9",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/edge.js": {
-    "mtime": 1783920815.008502,
-    "ast_hash": "4aa4e45aa8f60e4ee2cd54cd4546a001",
+    "mtime": 1789392120.5826118,
+    "ast_hash": "17dfc7bb549f7fac22c01b07623fa93b",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/index-browser.js": {
-    "mtime": 1783920815.0100472,
-    "ast_hash": "bafa489423e045cc65733b5aef3fdd50",
+    "mtime": 1789392120.5826118,
+    "ast_hash": "47a017a2511aecab858fff058db14d95",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/index.d.ts": {
-    "mtime": 1783920815.0175896,
-    "ast_hash": "269f3897416975084932c110c6eaa77a",
+    "mtime": 1789392120.5836167,
+    "ast_hash": "f3d3585fed094a0273740d37b9219de6",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/index.js": {
-    "mtime": 1783920815.0198584,
-    "ast_hash": "baddfb2ed3b63b8575331b04a37a1530",
+    "mtime": 1789392120.5806005,
+    "ast_hash": "e926b284726ad228478417221caf8276",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/package.json": {
-    "mtime": 1783920815.020371,
-    "ast_hash": "5067af1ba4ceefcb208c2751999f9c11",
+    "mtime": 1789392120.5826118,
+    "ast_hash": "30bd0a77cd16d3319c2e8aa73b9b4f21",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/query_compiler_fast_bg.js": {
@@ -2600,7 +2600,7 @@
     "semantic_hash": ""
   },
   "prisma/generated/prisma/runtime/client.js": {
-    "mtime": 1783611548.9234018,
+    "mtime": 1789392121.1823976,
     "ast_hash": "c281c0d8f70faa84bf1bf89a15fd3730",
     "semantic_hash": ""
   },
@@ -2610,22 +2610,22 @@
     "semantic_hash": ""
   },
   "prisma/generated/prisma/runtime/index-browser.js": {
-    "mtime": 1783611548.9212093,
+    "mtime": 1789392120.6152217,
     "ast_hash": "2e50c393745a8f2f82e425a0d07d5972",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/runtime/wasm-compiler-edge.js": {
-    "mtime": 1783611548.922388,
+    "mtime": 1789392121.310038,
     "ast_hash": "5d8535dc88195c75a9815220c6e30e16",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/wasm-edge-light-loader.mjs": {
-    "mtime": 1783611548.9017098,
+    "mtime": 1789392120.5826118,
     "ast_hash": "e1ffa9e3e86a79525c28d495840af9b6",
     "semantic_hash": ""
   },
   "prisma/generated/prisma/wasm-worker-loader.mjs": {
-    "mtime": 1783611548.8983755,
+    "mtime": 1789392120.5826118,
     "ast_hash": "567365abdd6a02725b3e9adb6e4f8a69",
     "semantic_hash": ""
   },
@@ -2650,8 +2650,8 @@
     "semantic_hash": ""
   },
   "proxy.ts": {
-    "mtime": 1788055637.1234424,
-    "ast_hash": "16c222db6a9a243ffc3b0696a06f8c9b",
+    "mtime": 1789437093.6821363,
+    "ast_hash": "0837828d7bdd229271de5d867d0f3e5d",
     "semantic_hash": ""
   },
   "scss.d.ts": {
@@ -2890,8 +2890,8 @@
     "semantic_hash": ""
   },
   "docs/dev/error.md": {
-    "mtime": 1788658424.7807934,
-    "ast_hash": "983d6bb3c65d91464c46fd6bac0dd219",
+    "mtime": 1789394443.593701,
+    "ast_hash": "52359701605eb74cc993f49bb0db0d0e",
     "semantic_hash": ""
   },
   "docs/dev/plan.md": {
@@ -3206,52 +3206,52 @@
   },
   ".cspell.json": {
     "mtime": 1750819492.6611989,
-    "ast_hash": "",
+    "ast_hash": "7a43e183ad7940b940aee52eb01b5b97",
     "semantic_hash": ""
   },
   ".vscode/settings.json": {
     "mtime": 1777185260.4365888,
-    "ast_hash": "",
+    "ast_hash": "7511248d9a9ba50c840135b657203ba1",
     "semantic_hash": ""
   },
   "docs/api/api_test.json": {
     "mtime": 1783770993.054176,
-    "ast_hash": "",
+    "ast_hash": "f72aacbdb097e08b64dcd983b774bff7",
     "semantic_hash": ""
   },
   "docs/api/assessment/assessment.postman_collection.json": {
     "mtime": 1788051813.9306128,
-    "ast_hash": "",
+    "ast_hash": "b56adfcc6b0bb75bc07f5a35b49d5ab2",
     "semantic_hash": ""
   },
   "docs/api/content-management/lessons.postman.json": {
     "mtime": 1788051813.9173295,
-    "ast_hash": "",
+    "ast_hash": "709bc105dabb3986e08aec3c006fbd38",
     "semantic_hash": ""
   },
   "docs/api/content-management/progress.postman.json": {
     "mtime": 1788051813.926067,
-    "ast_hash": "",
+    "ast_hash": "854309a35f5971e25e98479c37a9ad68",
     "semantic_hash": ""
   },
   "docs/api/content-management/sections.postman.json": {
     "mtime": 1788051813.922393,
-    "ast_hash": "",
+    "ast_hash": "d5d56c135d5085d936089cd138062187",
     "semantic_hash": ""
   },
   "docs/api/creator-course/creator-course.postman_collection.json": {
     "mtime": 1788605503.0886335,
-    "ast_hash": "",
+    "ast_hash": "46e042dceeaf3b4db5bdaaefbf9de456",
     "semantic_hash": ""
   },
   "docs/api/langserve/langserve.json": {
     "mtime": 1783770993.0686562,
-    "ast_hash": "",
+    "ast_hash": "a7243a631ac4b41f63f7fa875605b0fb",
     "semantic_hash": ""
   },
   "docs/api/student-course/student-course.postman_collection.json": {
     "mtime": 1788051813.913315,
-    "ast_hash": "",
+    "ast_hash": "797c1463cd7c6a61f721d47ef71ff701",
     "semantic_hash": ""
   },
   "features/langserve/chatbot/components/ChatMessage.tsx": {
@@ -3286,42 +3286,42 @@
   },
   "prisma/migrations/20250710130222_add_enrollment_model/migration.sql": {
     "mtime": 1752323919.0689354,
-    "ast_hash": "",
+    "ast_hash": "7fd6cda139c9e0c28cb0c26220842d53",
     "semantic_hash": ""
   },
   "prisma/migrations/20260308023835_add_content_management_models/migration.sql": {
     "mtime": 1777185262.4865603,
-    "ast_hash": "",
+    "ast_hash": "37a74074d9c1b7a00d916a6f0af7b585",
     "semantic_hash": ""
   },
   "prisma/migrations/20260315172957_add_course_discovery_fields/migration.sql": {
     "mtime": 1777185262.4885602,
-    "ast_hash": "",
+    "ast_hash": "8df3c9a469ec207e7625d2e3fc765086",
     "semantic_hash": ""
   },
   "prisma/migrations/20260322020559_add_course_slug_field/migration.sql": {
     "mtime": 1777185262.491563,
-    "ast_hash": "",
+    "ast_hash": "5b412f8c2bc800c9567de829cbf01541",
     "semantic_hash": ""
   },
   "prisma/migrations/20260629061631_add_outcomes_and_creator_profiles/migration.sql": {
     "mtime": 1782994599.7873745,
-    "ast_hash": "",
+    "ast_hash": "cc4cb98c46f5cb17e4618fcf1cb9bd00",
     "semantic_hash": ""
   },
   "prisma/migrations/20260629111014_refactor_creator_profiles_use_userid_as_pk/migration.sql": {
     "mtime": 1782994599.78838,
-    "ast_hash": "",
+    "ast_hash": "60d65bc1557348bef5849793c50a5965",
     "semantic_hash": ""
   },
   "prisma/migrations/20260709152808_add_assessment_models/migration.sql": {
     "mtime": 1783920815.0233846,
-    "ast_hash": "",
+    "ast_hash": "ffe07c4f859a14d78bf1fe7f0270c520",
     "semantic_hash": ""
   },
   "skills-lock.json": {
     "mtime": 1788055420.841519,
-    "ast_hash": "",
+    "ast_hash": "c5895b8ad9e7fa1f1af23dd63b1bc3ed",
     "semantic_hash": ""
   },
   "docs/model-architecture.md": {
@@ -3331,7 +3331,7 @@
   },
   "docs/api/langserve/Maguru_AI_Quiz_Generator.postman_collection.json": {
     "mtime": 1788614867.3049428,
-    "ast_hash": "",
+    "ast_hash": "50006516384d83cc96d8809711c47af0",
     "semantic_hash": ""
   },
   "docs/api/langserve/manual-test.md": {
@@ -3350,13 +3350,13 @@
     "semantic_hash": ""
   },
   "lib/ai/ingest-client.ts": {
-    "mtime": 1789362182.1675165,
-    "ast_hash": "84b023b64dd06a5d705014328cbf684f",
+    "mtime": 1789394145.607729,
+    "ast_hash": "64c549a200f63be51e34f2d70dcd9fb2",
     "semantic_hash": ""
   },
   "docs/dev/test.md": {
-    "mtime": 1789364921.3380203,
-    "ast_hash": "8f81eaf67a92cd87e6891bfb03778b4e",
+    "mtime": 1789437072.3492632,
+    "ast_hash": "446472fa61363255b3b1f5d87a4adf2a",
     "semantic_hash": ""
   }
 }

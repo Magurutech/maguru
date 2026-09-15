@@ -40,7 +40,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ## 🚀 SKENARIO MUST-HAVE
 
-### 1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`)
+### 1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`) [x]
 
 * **Tujuan**: Memastikan materi baru yang dibuat kreator di Tiptap Editor langsung diekstrak secara semantik dan disinkronkan ke AI Vector Store tanpa memperlambat antarmuka CMS.
 * **Langkah Pengujian**:
@@ -72,7 +72,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ---
 
-### 2. TC-M3-02: Auto-Update & Deduplikasi saat Edit Materi (`PUT Lesson`)
+### 2. TC-M3-02: Auto-Update & Deduplikasi saat Edit Materi (`PUT Lesson`)  [x]
 
 * **Tujuan**: Memastikan saat materi diedit berulang kali, chunk lama dibersihkan dan digantikan dengan chunk baru tanpa menimbulkan data duplikat (*stale chunks*).
 * **Langkah Pengujian**:
@@ -93,7 +93,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ---
 
-### 3. TC-M3-03: Cascade Deletion saat Hapus Materi (`DELETE Lesson`)
+### 3. TC-M3-03: Cascade Deletion saat Hapus Materi (`DELETE Lesson`) [x]
 
 * **Tujuan**: Memastikan saat kreator menghapus materi di CMS, vektor pembelajaran terkait ikut dibersihkan sehingga AI tidak akan mengutip materi yang sudah tidak ada.
 * **Langkah Pengujian**:
@@ -110,7 +110,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ---
 
-### 4. TC-M3-04: Non-Blocking & Fault Tolerance Resiliency (AI Backend Mati)
+### 4. TC-M3-04: Non-Blocking & Fault Tolerance Resiliency (AI Backend Mati) [x]
 
 * **Tujuan**: Memastikan jika server AI (`:8000`) sedang *down*, mati, atau bermasalah jaringan, aktivitas kreator di CMS **tidak boleh terganggu atau mengalami error 500**.
 * **Langkah Pengujian**:
@@ -126,7 +126,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ---
 
-### 5. TC-M3-07: Scoped PGVector Retrieval & Source Lesson Attribution di AI Quiz Generator (Must-Have)
+### 5. TC-M3-07: Scoped PGVector Retrieval & Source Lesson Attribution di AI Quiz Generator (Must-Have) [x]
 
 * **Tujuan**: Memastikan AI Quiz Generator memanfaatkan data vektor dari Supabase PGVector secara terfokus pada cakupan materi spesifik (`lesson_id` / `section_id`), serta menyertakan rujukan materi asal pada kolom pembahasan (`explanation`).
 * **Langkah Pengujian**:
@@ -147,7 +147,7 @@ Pastikan kedua layanan aktif di terminal sebelum pengujian dimulai:
 
 ---
 
-### 6. TC-M3-08: Exact Question Count Guarantee & Dynamic Smart Padding (Must-Have)
+### 6. TC-M3-08: Exact Question Count Guarantee & Dynamic Smart Padding (Must-Have) [x]
 
 * **Tujuan**: Memastikan sistem menjamin jumlah soal yang diminta (misal 5 butir soal) selalu terpenuhi 100%, sehingga masalah lama di mana sistem hanya menghasilkan 1 soal akibat JSON terpotong kini teratasi sepenuhnya.
 * **Langkah Pengujian**:
