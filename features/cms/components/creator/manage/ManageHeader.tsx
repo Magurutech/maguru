@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Globe, EyeOff, Sparkles } from 'lucide-react'
+import { ArrowLeft, Globe, EyeOff, Sparkles, Brain, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useManageContext } from '../../../Context/creator/ManageContext'
@@ -11,7 +11,15 @@ interface ManageHeaderProps {
 
 export function ManageHeader({ onToggleInspector, isInspectorOpen }: ManageHeaderProps) {
   const router = useRouter()
-  const { course, publishing, handleTogglePublish } = useManageContext()
+  const {
+    course,
+    publishing,
+    handleTogglePublish,
+    syncingKnowledge,
+    knowledgeStatus,
+    handleSyncKnowledge,
+  } = useManageContext()
+
   if (!course) return null
 
   const isPublished = course.status === 'PUBLISHED'
@@ -47,8 +55,38 @@ export function ManageHeader({ onToggleInspector, isInspectorOpen }: ManageHeade
           >
             {course.status}
           </Badge>
+
+          {/* AI Knowledge Base Sync Indicator Badge */}
+          {knowledgeStatus && (
+            <Badge
+              variant="outline"
+              className={
+                knowledgeStatus.is_synced
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5'
+                  : 'bg-zinc-500/10 text-zinc-500 border-zinc-500/20 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5'
+              }
+              title={`AI Vector Store Knowledge: ${knowledgeStatus.total_chunks} chunk tersimpan`}
+            >
+              <Brain className="w-3 h-3" />
+              <span>{knowledgeStatus.is_synced ? `${knowledgeStatus.total_chunks} Chunks AI` : 'AI Inactive'}</span>
+            </Badge>
+          )}
         </div>
       </div>
+
+      {/* One-Click Bulk Sync AI Knowledge Base */}
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={syncingKnowledge}
+        onClick={handleSyncKnowledge}
+        data-testid="sync-ai-knowledge-btn"
+        className="border-border/20 text-text-secondary hover:text-text-primary hover:bg-bg-surface-accent rounded-full px-3.5 text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+        title="Sinkronkan seluruh materi pelajaran ke AI Vector Store"
+      >
+        <RefreshCw className={`w-3.5 h-3.5 ${syncingKnowledge ? 'animate-spin text-amber-500' : ''}`} />
+        <span>{syncingKnowledge ? 'Menyinkronkan...' : 'Sync AI'}</span>
+      </Button>
 
       {onToggleInspector && (
         <Button

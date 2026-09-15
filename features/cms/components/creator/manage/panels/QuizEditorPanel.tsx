@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import {
   Plus,
-  Eye,
   Copy,
   Edit,
   Trash2,
@@ -14,8 +13,6 @@ import {
   Check,
   AlertCircle,
   Sparkles,
-  Wand2,
-  Loader2,
   CheckCircle2,
   Database,
   RefreshCw,
@@ -25,7 +22,6 @@ import {
   LayoutList,
   ListFilter,
   BookOpen,
-  Code2,
   Target,
 } from 'lucide-react'
 import { useManageContext } from '@/features/cms/Context/creator/ManageContext'
@@ -40,7 +36,6 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart'
 
-const circ = 100.5
 
 /**
  * RichQuestionContent: Renders question text with beautiful monospace syntax-like code blocks
@@ -114,7 +109,17 @@ interface QuizEditorPanelProps {
 }
 
 export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
-  const { course, sections, questions, setQuestions, fetchQuestions, lessonsMap } = useManageContext()
+  const {
+    course,
+    sections,
+    questions,
+    setQuestions,
+    fetchQuestions,
+    lessonsMap,
+    knowledgeStatus,
+    syncingKnowledge,
+    handleSyncKnowledge,
+  } = useManageContext()
 
   // Find section title if it's a section quiz
   const activeSection = useMemo(() => {
@@ -175,12 +180,12 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
   const autoDbContent = useMemo(() => {
     const scopeTitle = activeSection?.title || course?.title || 'Dasar Pemrograman'
     if (targetLessonsForAI.length === 0) {
-      return `=== Modul / Bab: ${scopeTitle} ===\nFokus materi mencakup konsep inti, pemahaman kode, dan pemecahan masalah.`
+      return `Topik Pembahasan: ${scopeTitle}\nFokus materi mencakup konsep inti, pemahaman kode, dan pemecahan masalah.`
     }
     const lessonsDetail = targetLessonsForAI
-      .map((l, i) => `=== Materi ${i + 1}: ${l.title} ===\n${l.contentPreview || l.title}`)
+      .map((l) => `Topik: ${l.title}\nRangkuman Materi:\n${l.contentPreview || l.title}`)
       .join('\n\n')
-    return `=== Modul / Bab: ${scopeTitle} ===\n\n${lessonsDetail}`
+    return `Topik Pembahasan: ${scopeTitle}\n\n${lessonsDetail}`
   }, [targetLessonsForAI, activeSection?.title, course?.title])
 
   // List view mode: 'detail' (Full question, all options, answers, explanation) vs 'compact' (one-line overview)
@@ -198,14 +203,16 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
   const handleRegenerateSingle = async (index: number) => {
     setRegeneratingIndex(index)
     try {
+      const fallbackContent = knowledgeStatus && knowledgeStatus.total_chunks > 0 ? undefined : autoDbContent
       const res = await fetchAIGeneratedQuiz({
         courseId: course?.id || course?.slug || 'umum',
         courseTitle: activeSection?.title || course?.title || 'Dasar Pemrograman',
         sectionId: quizType === 'SECTION_QUIZ' ? sectionId : null,
+        lessonId: aiSelectedLessonId !== 'all' ? aiSelectedLessonId : null,
         numQuestions: 1,
         difficulty: 'medium',
         questionStyle: aiQuestionStyle,
-        lessonContent: aiLessonContent.trim() || autoDbContent || undefined,
+        lessonContent: aiLessonContent.trim() || fallbackContent || undefined,
       })
       if (res && res.length > 0) {
         setAiQuestions((prev) => {
@@ -629,7 +636,7 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
               <Trophy className="h-8 w-8 text-[#b89a57]/30 mx-auto mb-3" />
               <h4 className="text-sm font-bold text-text-primary font-serif">Belum Ada Soal Terdaftar</h4>
               <p className="text-xs text-text-muted max-w-sm mx-auto mt-1.5 leading-relaxed">
-                Kuis ini masih kosong. Klik tombol "Tambah Soal" untuk mulai menyusun daftar pertanyaan.
+                Kuis ini masih kosong. Klik tombol &ldquo;Tambah Soal&rdquo; untuk mulai menyusun daftar pertanyaan.
               </p>
             </div>
           ) : (
@@ -1403,38 +1410,90 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
               {/* STEP 1: CONFIGURATION (if no preview questions yet) */}
               {aiQuestions.length === 0 && !aiGenerating && (
                 <div className="space-y-4 text-xs">
-                  {/* Database Auto-Context Badge */}
-                  <div className="flex items-start gap-2.5 p-3.5 bg-emerald-500/10 border border-emerald-500/25 rounded-2xl text-emerald-800 dark:text-emerald-300 text-xs">
-                    <Database className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div className="flex-1 space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold">Konteks Otomatis Database Aktif</span>
-                        <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/20 font-mono font-bold">
-                          {aiSelectedLessonId === 'all'
-                            ? `${currentSectionLessons.length} Materi Terhubung`
-                            : '1 Materi Terpilih'}
-                        </span>
+                  {/* Database & RAG Knowledge Status Badge (Milestone 3 Extension) */}
+                  <div
+                    className={`flex items-start gap-2.5 p-3.5 rounded-2xl text-xs border transition-all ${
+                      knowledgeStatus && knowledgeStatus.total_chunks > 0
+                        ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-800 dark:text-emerald-300'
+                        : 'bg-amber-500/10 border-amber-500/25 text-amber-800 dark:text-amber-300'
+                    }`}
+                  >
+                    <Database
+                      className={`w-4 h-4 shrink-0 mt-0.5 ${
+                        knowledgeStatus && knowledgeStatus.total_chunks > 0
+                          ? 'text-emerald-500'
+                          : 'text-amber-500'
+                      }`}
+                    />
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold">
+                            {knowledgeStatus && knowledgeStatus.total_chunks > 0
+                              ? '🧠 RAG Vector Knowledge Base Aktif'
+                              : '⚡ Vektor Materi Belum Di-Sync'}
+                          </span>
+                          <span
+                            className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold ${
+                              knowledgeStatus && knowledgeStatus.total_chunks > 0
+                                ? 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                                : 'bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                            }`}
+                          >
+                            {knowledgeStatus && knowledgeStatus.total_chunks > 0
+                              ? `${knowledgeStatus.total_chunks} Chunks di Supabase`
+                              : '0 Chunks'}
+                          </span>
+                        </div>
+
+                        {/* In-Modal Quick Sync Action (Should-Have Side Feature) */}
+                        <button
+                          type="button"
+                          disabled={syncingKnowledge}
+                          onClick={handleSyncKnowledge}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/70 dark:bg-neutral-800/80 border border-border/15 hover:bg-white text-[10.5px] font-bold text-text-primary shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                          title="Sinkronkan materi kurikulum ke AI Vector Store sekarang"
+                        >
+                          <RefreshCw
+                            className={`w-3 h-3 ${syncingKnowledge ? 'animate-spin text-accent-coral' : 'text-text-muted'}`}
+                          />
+                          <span>{syncingKnowledge ? 'Sinkronisasi...' : 'Sync Materi'}</span>
+                        </button>
                       </div>
+
                       <p className="text-[11px] opacity-90 leading-relaxed">
-                        AI akan merancang soal berdasarkan{' '}
-                        {aiSelectedLessonId === 'all' ? (
+                        {knowledgeStatus && knowledgeStatus.total_chunks > 0 ? (
                           <>
-                            seluruh isi materi pembelajaran pada{' '}
-                            <strong>
-                              {quizType === 'PRE_TEST'
-                                ? 'seluruh kurikulum kursus ini'
-                                : `Bab '${activeSection?.title || 'Aktif'}'`}
-                            </strong>
+                            AI akan merancang butir soal mendalam berdasarkan vektor semantik lengkap{' '}
+                            {aiSelectedLessonId === 'all' ? (
+                              <>
+                                seluruh materi pembelajaran pada{' '}
+                                <strong>
+                                  {quizType === 'PRE_TEST'
+                                    ? 'seluruh kurikulum kursus'
+                                    : `Bab '${activeSection?.title || 'Aktif'}'`}
+                                </strong>
+                              </>
+                            ) : (
+                              <>
+                                materi spesifik{' '}
+                                <strong>
+                                  &lsquo;
+                                  {currentSectionLessons.find((l) => l.id === aiSelectedLessonId)?.title ||
+                                    'Terpilih'}
+                                  &rsquo;
+                                </strong>
+                              </>
+                            )}{' '}
+                            dari Supabase PGVector.
                           </>
                         ) : (
                           <>
-                            materi spesifik{' '}
-                            <strong>
-                              '{currentSectionLessons.find((l) => l.id === aiSelectedLessonId)?.title || 'Terpilih'}'
-                            </strong>
+                            Materi kurikulum belum di-indeks ke AI Vector Store. Klik tombol{' '}
+                            <strong>&lsquo;Sync Materi&rsquo;</strong> di atas untuk memproses embedding semantik
+                            agar pembuatan soal kuis memiliki akurasi maksimal.
                           </>
-                        )}{' '}
-                        langsung dari database.
+                        )}
                       </p>
                     </div>
                   </div>
@@ -1698,14 +1757,16 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                   onClick={async () => {
                     setAiGenerating(true)
                     try {
+                      const fallbackContent = knowledgeStatus && knowledgeStatus.total_chunks > 0 ? undefined : autoDbContent
                       const questionsResult = await fetchAIGeneratedQuiz({
                         courseId: course?.id || course?.slug || 'umum',
                         courseTitle: activeSection?.title || course?.title || 'Dasar Pemrograman',
                         sectionId: quizType === 'SECTION_QUIZ' ? sectionId : null,
+                        lessonId: aiSelectedLessonId !== 'all' ? aiSelectedLessonId : null,
                         numQuestions: aiNumQuestions,
                         difficulty: 'medium',
                         questionStyle: aiQuestionStyle,
-                        lessonContent: aiLessonContent.trim() || autoDbContent || undefined,
+                        lessonContent: aiLessonContent.trim() || fallbackContent || undefined,
                       })
 
                       if (questionsResult && questionsResult.length > 0) {

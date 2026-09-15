@@ -23,6 +23,7 @@ export async function fetchAIGeneratedQuiz(params: {
   courseId: string;
   courseTitle?: string;
   sectionId?: string | null;
+  lessonId?: string | null;
   numQuestions?: number;
   difficulty?: string;
   questionStyle?: string;
@@ -35,6 +36,8 @@ export async function fetchAIGeneratedQuiz(params: {
     endpoint,
     courseId: params.courseId,
     courseTitle: params.courseTitle,
+    sectionId: params.sectionId || null,
+    lessonId: params.lessonId || null,
     numQuestions: params.numQuestions || 5,
     difficulty: params.difficulty || 'medium',
     questionStyle: params.questionStyle || 'balanced',
@@ -52,6 +55,7 @@ export async function fetchAIGeneratedQuiz(params: {
         course_id: params.courseId,
         course_title: params.courseTitle || null,
         section_id: params.sectionId || null,
+        lesson_id: params.lessonId || null,
         num_questions: params.numQuestions || 5,
         difficulty: params.difficulty || 'medium',
         question_style: params.questionStyle || 'balanced',

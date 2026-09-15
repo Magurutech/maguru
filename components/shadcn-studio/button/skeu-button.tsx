@@ -341,7 +341,7 @@ export const ButtonSpecDrawer = () => {
               {/* Column 4: Rules */}
               <div className="space-y-3 bg-bg-surface p-5 rounded-xl border border-text-faint/10">
                 <h3 className="font-cinzel text-xs font-bold tracking-wider text-accent-coral pb-2 border-b border-text-faint/5">
-                  04. PANDUAN IMPLEMENTASI (DO'S & DON'TS)
+                  {"04. PANDUAN IMPLEMENTASI (DO'S & DON'TS)"}
                 </h3>
                 
                 <div className="space-y-3 text-[11px] leading-relaxed">

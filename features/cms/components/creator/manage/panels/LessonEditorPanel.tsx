@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { ArrowLeft, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ChevronDown, Clock, Check, Sparkles, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useEditor, EditorContent, JSONContent, Extension, EditorContext } from '@tiptap/react'
@@ -68,7 +69,13 @@ interface LessonEditorPanelProps {
 }
 
 export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProps) {
-  const { setActiveView, submitLessonFromPanel, lessonsMap } = useManageContext()
+  const {
+    setActiveView,
+    submitLessonFromPanel,
+    lessonsMap,
+    syncingKnowledge,
+    handleSyncKnowledge,
+  } = useManageContext()
   const isEditMode = !!lessonId
 
   // Initialize with cached values to prevent false dirty state
@@ -223,12 +230,31 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
 
 
   // Auto-save draft to localStorage
-  const { clearDraft, getDraft } = useLocalStorageDraft({
+  const { clearDraft, getDraft, lastSavedAt } = useLocalStorageDraft({
     lessonId,
     title,
     editor,
     isDirty,
   })
+
+  // Word count & Estimated reading time calculation (reactive to editor changes)
+  const [wordCount, setWordCount] = useState(0)
+
+  useEffect(() => {
+    if (!editor) return
+    const updateStats = () => {
+      const text = editor.getText() || ''
+      const trimmed = text.trim()
+      setWordCount(trimmed ? trimmed.split(/\s+/).length : 0)
+    }
+    updateStats()
+    editor.on('update', updateStats)
+    return () => {
+      editor.off('update', updateStats)
+    }
+  }, [editor])
+
+  const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 180))
 
   // Load lesson data in edit mode
   useEffect(() => {
@@ -243,28 +269,46 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
 
         // Check for draft in localStorage
         const draft = getDraft()
-        const hasDraftNewer =
-          draft && lessonLastEdit && new Date(draft.savedAt) > new Date(lessonLastEdit)
+        // Only consider draft valid if it actually has meaningful title or content blocks
+        const isDraftValid =
+          draft &&
+          (Boolean(draft.title?.trim()) ||
+            (draft.content?.content && Array.isArray(draft.content.content) && draft.content.content.length > 0))
 
-        // Auto-restore draft if newer (no dialog, direct update)
+        const hasDraftNewer =
+          Boolean(isDraftValid && draft && lessonLastEdit && new Date(draft.savedAt) > new Date(lessonLastEdit))
+
+        // Auto-restore draft if newer and valid
         if (hasDraftNewer && draft) {
-          setTitle(draft.title)
-          setInitialTitle(draft.title)
-          setInitialContent(draft.content)
+          const titleToUse = draft.title?.trim() || loadedTitle
+          setTitle(titleToUse)
+          setInitialTitle(titleToUse)
+          setInitialContent(draft.content || loadedContent)
 
           if (draft.content) {
             editor.commands.setContent(draft.content as JSONContent)
-
             const editorContent = editor.getJSON()
             updateSavedContent(editorContent)
-
+            setTimeout(() => {
+              setLoadingLesson(false)
+            }, 0)
+          } else if (loadedContent) {
+            editor.commands.setContent(loadedContent as JSONContent)
+            const editorContent = editor.getJSON()
+            updateSavedContent(editorContent)
             setTimeout(() => {
               setLoadingLesson(false)
             }, 0)
           } else {
             setLoadingLesson(false)
           }
+          toast.info('Draft tersimpan di browser dipulihkan')
         } else {
+          // If draft exists but was empty/invalid, purge it from localStorage
+          if (draft && !isDraftValid) {
+            clearDraft()
+          }
+
           // Load server content (no draft or draft is older)
           setTitle(loadedTitle)
           setInitialTitle(loadedTitle)
@@ -379,6 +423,40 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
           <EditorToolbar lessonId={lessonId} />
         </div>
 
+        {/* Word Count & Reading Time Counter (Side-feature) */}
+        <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 text-[11px] text-text-secondary/75 font-mono shrink-0 border-l border-border/10 select-none">
+          <Clock className="h-3 w-3 text-accent-coral/80 shrink-0" />
+          <span>{wordCount} kata</span>
+          <span className="text-border/40">•</span>
+          <span>~{readingTimeMinutes} mnt baca</span>
+        </div>
+
+        {/* Inline Save & Sync Status Badge (WCAG 2.2 aria-live polite, replaces toast spam) */}
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          className="hidden md:flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium shrink-0 border-l border-border/10 select-none"
+        >
+          {saving ? (
+            <span className="text-accent-coral flex items-center gap-1.5 animate-pulse">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent-coral animate-ping" />
+              Menyimpan...
+            </span>
+          ) : isDirty ? (
+            <span className="text-accent-mustard flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent-mustard" />
+              {lastSavedAt
+                ? `Draf lokal (${new Date(lastSavedAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })})`
+                : 'Belum disimpan'}
+            </span>
+          ) : (
+            <span className="text-accent-forest flex items-center gap-1.5">
+              <Check className="h-3 w-3 text-accent-forest" />
+              Tersimpan
+            </span>
+          )}
+        </div>
+
         {/* Save — right */}
         <div className="flex items-center px-3 shrink-0 border-l border-border/10 h-full py-1.5">
           <Button
@@ -410,8 +488,29 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
                 <ChevronDown className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32 paper-texture">
-              <DropdownMenuItem onClick={handleCancel} className="text-text-secondary">
+            <DropdownMenuContent align="end" className="w-48 paper-texture">
+              {lessonId && (
+                <DropdownMenuItem
+                  disabled={syncingKnowledge}
+                  onClick={handleSyncKnowledge}
+                  className="text-text-primary text-xs cursor-pointer flex items-center gap-2"
+                >
+                  <Sparkles className="h-3.5 w-3.5 text-accent-coral" />
+                  {syncingKnowledge ? 'Menyinkronkan AI...' : 'Sinkronkan Vektor AI'}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem
+                onClick={() => {
+                  clearDraft()
+                  toast.success('Draf lokal berhasil dibersihkan')
+                }}
+                className="text-text-secondary text-xs cursor-pointer flex items-center gap-2"
+              >
+                <Trash2 className="h-3.5 w-3.5 text-text-muted" />
+                Hapus Draf Lokal
+              </DropdownMenuItem>
+              <DropdownMenuSeparator className="bg-border/10" />
+              <DropdownMenuItem onClick={handleCancel} className="text-text-secondary text-xs cursor-pointer">
                 Batal
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -421,14 +520,16 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
 
       {/* ── Editable content area: padded, max-width centered ───────────────── */}
       <div className="max-w-4xl mx-auto px-8 md:px-12 py-8">
-        {/* Title input */}
+        {/* Title input with WCAG 2.2 accessibility labels and clear focus ring */}
         <input
           type="text"
+          id="lesson-title-input"
+          aria-label="Judul Pelajaran"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && editor?.commands.focus()}
           placeholder="Judul pelajaran..."
-          className="w-full text-2xl font-medium font-sans text-text-primary bg-transparent border-none outline-none placeholder:text-text-faint/60 mb-3 focus:outline-none"
+          className="w-full text-2xl font-medium font-sans text-text-primary bg-transparent border-none outline-none placeholder:text-text-faint/60 mb-3 focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-coral/30 rounded-md transition-shadow"
           maxLength={200}
           autoFocus={!isEditMode}
           data-testid="lesson-title-input"

@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/server'
 import { lessonService } from '@/features/cms/services/lesson.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
 import { UpdateLessonInput } from '@/features/cms/types/lesson.types'
+import { syncLessonToAI, deleteLessonFromAI } from '@/lib/ai/ingest-client'
 
 /**
  * GET /api/courses/[slug]/sections/[sectionId]/lessons/[lessonId]
@@ -66,6 +67,7 @@ export async function PUT(
       )
     }
     const userId = user.id
+    const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin'
 
     const { lessonId } = await params
 
@@ -81,7 +83,8 @@ export async function PUT(
     // Authorization check - verify user owns the course or is admin
     const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(
       userId,
-      existingLesson.section.courseId
+      existingLesson.section.courseId,
+      isAdmin
     )
     if (!hasOwnership) {
       return NextResponse.json(
@@ -107,6 +110,19 @@ export async function PUT(
     // Extract contentPreview for immediate UI update (avoid re-fetch)
     const lessonContent = updatedLesson.content as unknown as import('@/features/cms/types/lesson.types').LessonContent | null
     const contentPreview = lessonContent ? lessonService.extractContentPreview(lessonContent) : ''
+
+    // Trigger non-blocking AI Knowledge Ingestion update (fire-and-forget)
+    const fullText = lessonContent ? lessonService.extractFullTextContent(lessonContent) : ''
+    if (fullText) {
+      syncLessonToAI({
+        courseId: existingLesson.section.courseId,
+        courseSlug: (await params).slug,
+        sectionId: existingLesson.section.id,
+        lessonId: updatedLesson.id,
+        title: updatedLesson.title,
+        content: fullText,
+      }).catch((err) => console.warn('[AI Ingest] Background sync error:', err))
+    }
 
     return NextResponse.json({ ...updatedLesson, contentPreview })
   } catch (error) {
@@ -167,6 +183,7 @@ export async function DELETE(
       )
     }
     const userId = user.id
+    const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin'
 
     const { lessonId } = await params
 
@@ -182,7 +199,8 @@ export async function DELETE(
     // Authorization check - verify user owns the course or is admin
     const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(
       userId,
-      existingLesson.section.courseId
+      existingLesson.section.courseId,
+      isAdmin
     )
     if (!hasOwnership) {
       return NextResponse.json(
@@ -196,6 +214,10 @@ export async function DELETE(
 
     // Delete lesson
     const result = await lessonService.deleteLesson(lessonId)
+
+    // Cascade cleanup in AI Vector Store (fire-and-forget)
+    deleteLessonFromAI(existingLesson.section.courseId, lessonId)
+      .catch((err) => console.warn('[AI Ingest] Background delete error:', err))
 
     return NextResponse.json(result)
   } catch (error) {

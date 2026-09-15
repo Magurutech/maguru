@@ -12,6 +12,7 @@ import { lessonService } from '@/features/cms/services/lesson.service'
 import { sectionService } from '@/features/cms/services/section.service'
 import { authorizationService } from '@/features/cms/services/authorization.service'
 import { CreateLessonInput } from '@/features/cms/types/lesson.types'
+import { syncLessonToAI } from '@/lib/ai/ingest-client'
 
 /**
  * POST /api/courses/[slug]/sections/[sectionId]/lessons
@@ -29,6 +30,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized', code: 'UNAUTHORIZED' }, { status: 401 })
     }
     const userId = user.id
+    const isAdmin = user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin'
 
     const { sectionId } = await params
 
@@ -41,7 +43,7 @@ export async function POST(
       )
     }
 
-    const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(userId, section.courseId)
+    const hasOwnership = await authorizationService.checkCourseOwnershipByUserId(userId, section.courseId, isAdmin)
     if (!hasOwnership) {
       return NextResponse.json(
         { error: 'Forbidden: You do not have permission to modify this course', code: 'FORBIDDEN' },
@@ -62,6 +64,19 @@ export async function POST(
     // Extract contentPreview for immediate UI update (avoid re-fetch)
     const lessonContent = lesson.content as unknown as import('@/features/cms/types/lesson.types').LessonContent | null
     const contentPreview = lessonContent ? lessonService.extractContentPreview(lessonContent) : ''
+
+    // Trigger non-blocking AI Knowledge Ingestion (fire-and-forget)
+    const fullText = lessonContent ? lessonService.extractFullTextContent(lessonContent) : ''
+    if (fullText) {
+      syncLessonToAI({
+        courseId: section.courseId,
+        courseSlug: (await params).slug,
+        sectionId,
+        lessonId: lesson.id,
+        title: lesson.title,
+        content: fullText,
+      }).catch((err) => console.warn('[AI Ingest] Background sync error:', err))
+    }
 
     return NextResponse.json({ ...lesson, contentPreview }, { status: 201 })
   } catch (error) {
