@@ -370,8 +370,8 @@
     "semantic_hash": "8dd79573e04f71c3277d4756229c3ebe"
   },
   "features/cms/Context/creator/ManageContext.tsx": {
-    "mtime": 1789362190.3069985,
-    "ast_hash": "58a94bd9da2bd4286f129fe74d68cd94",
+    "mtime": 1789503119.950182,
+    "ast_hash": "33fa229675decaa62360ac5de6515c1c",
     "semantic_hash": ""
   },
   "features/cms/Context/student/LearnContext.tsx": {
@@ -485,9 +485,9 @@
     "semantic_hash": ""
   },
   "features/cms/components/creator/manage/ManageSidebar.tsx": {
-    "mtime": 1783920814.993813,
-    "ast_hash": "24dfe64169a269bf9443120339ab1701",
-    "semantic_hash": "24dfe64169a269bf9443120339ab1701"
+    "mtime": 1789503422.3764718,
+    "ast_hash": "c492a2ec746e9ec0ea1d3fe5427d95ec",
+    "semantic_hash": ""
   },
   "features/cms/components/creator/manage/editor/components/BrowseModal.tsx": {
     "mtime": 1782994599.7239857,
@@ -500,9 +500,9 @@
     "semantic_hash": "72d7dd9bb0f92781d5d950077c74c307"
   },
   "features/cms/components/creator/manage/editor/components/suggestion.ts": {
-    "mtime": 1782994599.7249877,
-    "ast_hash": "0c088407258b3118d23dbbb7ac2b6c39",
-    "semantic_hash": "0c088407258b3118d23dbbb7ac2b6c39"
+    "mtime": 1789503206.530037,
+    "ast_hash": "e2f7ae3d2a840706cffb4f7b237bf2c6",
+    "semantic_hash": ""
   },
   "features/cms/components/creator/manage/editor/extensions/Columns.ts": {
     "mtime": 1782994599.7259865,
@@ -555,14 +555,14 @@
     "semantic_hash": "0af593289802b14b22553ef2878a083f"
   },
   "features/cms/components/creator/manage/panels/LessonEditorPanel.tsx": {
-    "mtime": 1789395467.0380576,
-    "ast_hash": "4ed424dd9ea47acda4183ee464ac6828",
+    "mtime": 1789503360.9968896,
+    "ast_hash": "463ffcd142a811d66df15a7094afdc19",
     "semantic_hash": ""
   },
   "features/cms/components/creator/manage/panels/LessonViewerPanel.tsx": {
-    "mtime": 1782994599.7333186,
-    "ast_hash": "38e74a9aac4b6b1eb8b65165aa7241b6",
-    "semantic_hash": "38e74a9aac4b6b1eb8b65165aa7241b6"
+    "mtime": 1789503382.6127865,
+    "ast_hash": "3ae9dc5c5d752b63f279bbf47c61960f",
+    "semantic_hash": ""
   },
   "features/cms/components/creator/manage/panels/ManageInspector.tsx": {
     "mtime": 1782994599.734327,
@@ -575,9 +575,9 @@
     "semantic_hash": ""
   },
   "features/cms/components/creator/manage/panels/SlashCommand.test.tsx": {
-    "mtime": 1782994599.7353263,
-    "ast_hash": "d89f551c46023fef2bc44b09b6466f1d",
-    "semantic_hash": "d89f551c46023fef2bc44b09b6466f1d"
+    "mtime": 1789541287.4562972,
+    "ast_hash": "df31499ab5d7cee0549c6d8f053713ae",
+    "semantic_hash": ""
   },
   "features/cms/components/creator/manage/test/unsaved-changes.integration.test.tsx": {
     "mtime": 1780549752.8878207,
@@ -615,9 +615,9 @@
     "semantic_hash": "2785f3f244095864b034ca1f2e0bc7b0"
   },
   "features/cms/components/student/__tests__/CourseNavigation.test.tsx": {
-    "mtime": 1777185261.133493,
-    "ast_hash": "2194aa0a6cbab802a870d89c76ca22a1",
-    "semantic_hash": "2194aa0a6cbab802a870d89c76ca22a1"
+    "mtime": 1789541233.9519947,
+    "ast_hash": "d99cb42e0776eca472b5c7d592a43d01",
+    "semantic_hash": ""
   },
   "features/cms/components/student/__tests__/LessonNavigation.test.tsx": {
     "mtime": 1777185261.1355162,
@@ -1621,7 +1621,7 @@
   },
   "components/tiptap-templates/simple/data/content.json": {
     "mtime": 1777185260.7058551,
-    "ast_hash": "d0b5f9a4ed030b1580f0f346893b7722",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "components/tiptap-templates/simple/simple-editor.tsx": {
@@ -2425,8 +2425,8 @@
     "semantic_hash": ""
   },
   "jest.setup.js": {
-    "mtime": 1782994599.7762787,
-    "ast_hash": "e6b4a63388d0445b2a4481f57072f51f",
+    "mtime": 1789540741.0052485,
+    "ast_hash": "9030142f3da9db7e61a14dc6af6c04ed",
     "semantic_hash": ""
   },
   "lib/ai/quiz-generator.ts": {
@@ -2485,8 +2485,8 @@
     "semantic_hash": ""
   },
   "lib/supabase/client.ts": {
-    "mtime": 1785129877.2286162,
-    "ast_hash": "1b496a8adc19bd452201dd130c344e76",
+    "mtime": 1789504309.249686,
+    "ast_hash": "d62f94904b7f853cdc0234648d4ca8ec",
     "semantic_hash": ""
   },
   "lib/supabase/server.ts": {
@@ -2690,18 +2690,18 @@
     "semantic_hash": ""
   },
   ".github/workflows/build.yml": {
-    "mtime": 1752076940.9094162,
-    "ast_hash": "1fe985593fd311c4730155b2df8864d8",
+    "mtime": 1789540850.7199345,
+    "ast_hash": "0af980c8b51a4f3bf689ac8bbcce1072",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1777185260.4118056,
-    "ast_hash": "713c51d64f5df15620e38da8b4f8b1c0",
+    "mtime": 1789540885.7650034,
+    "ast_hash": "4fe400373fab57e1e569c7ca58dbdbdd",
     "semantic_hash": ""
   },
   ".github/workflows/claude-code-review.yml": {
-    "mtime": 1757928644.3911803,
-    "ast_hash": "edd5910e4a066ea7cb49dd390cd3b7e8",
+    "mtime": 1789540864.6550877,
+    "ast_hash": "0db0510d77f440ba16c18fd588ce566c",
     "semantic_hash": ""
   },
   ".github/workflows/claude.yml": {
@@ -3206,52 +3206,52 @@
   },
   ".cspell.json": {
     "mtime": 1750819492.6611989,
-    "ast_hash": "7a43e183ad7940b940aee52eb01b5b97",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   ".vscode/settings.json": {
     "mtime": 1777185260.4365888,
-    "ast_hash": "7511248d9a9ba50c840135b657203ba1",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/api_test.json": {
     "mtime": 1783770993.054176,
-    "ast_hash": "f72aacbdb097e08b64dcd983b774bff7",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/assessment/assessment.postman_collection.json": {
     "mtime": 1788051813.9306128,
-    "ast_hash": "b56adfcc6b0bb75bc07f5a35b49d5ab2",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/content-management/lessons.postman.json": {
     "mtime": 1788051813.9173295,
-    "ast_hash": "709bc105dabb3986e08aec3c006fbd38",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/content-management/progress.postman.json": {
     "mtime": 1788051813.926067,
-    "ast_hash": "854309a35f5971e25e98479c37a9ad68",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/content-management/sections.postman.json": {
     "mtime": 1788051813.922393,
-    "ast_hash": "d5d56c135d5085d936089cd138062187",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/creator-course/creator-course.postman_collection.json": {
     "mtime": 1788605503.0886335,
-    "ast_hash": "46e042dceeaf3b4db5bdaaefbf9de456",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/langserve/langserve.json": {
     "mtime": 1783770993.0686562,
-    "ast_hash": "a7243a631ac4b41f63f7fa875605b0fb",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/student-course/student-course.postman_collection.json": {
     "mtime": 1788051813.913315,
-    "ast_hash": "797c1463cd7c6a61f721d47ef71ff701",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "features/langserve/chatbot/components/ChatMessage.tsx": {
@@ -3286,42 +3286,42 @@
   },
   "prisma/migrations/20250710130222_add_enrollment_model/migration.sql": {
     "mtime": 1752323919.0689354,
-    "ast_hash": "7fd6cda139c9e0c28cb0c26220842d53",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260308023835_add_content_management_models/migration.sql": {
     "mtime": 1777185262.4865603,
-    "ast_hash": "37a74074d9c1b7a00d916a6f0af7b585",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260315172957_add_course_discovery_fields/migration.sql": {
     "mtime": 1777185262.4885602,
-    "ast_hash": "8df3c9a469ec207e7625d2e3fc765086",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260322020559_add_course_slug_field/migration.sql": {
     "mtime": 1777185262.491563,
-    "ast_hash": "5b412f8c2bc800c9567de829cbf01541",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260629061631_add_outcomes_and_creator_profiles/migration.sql": {
     "mtime": 1782994599.7873745,
-    "ast_hash": "cc4cb98c46f5cb17e4618fcf1cb9bd00",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260629111014_refactor_creator_profiles_use_userid_as_pk/migration.sql": {
     "mtime": 1782994599.78838,
-    "ast_hash": "60d65bc1557348bef5849793c50a5965",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "prisma/migrations/20260709152808_add_assessment_models/migration.sql": {
     "mtime": 1783920815.0233846,
-    "ast_hash": "ffe07c4f859a14d78bf1fe7f0270c520",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "skills-lock.json": {
     "mtime": 1788055420.841519,
-    "ast_hash": "c5895b8ad9e7fa1f1af23dd63b1bc3ed",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/model-architecture.md": {
@@ -3331,7 +3331,7 @@
   },
   "docs/api/langserve/Maguru_AI_Quiz_Generator.postman_collection.json": {
     "mtime": 1788614867.3049428,
-    "ast_hash": "50006516384d83cc96d8809711c47af0",
+    "ast_hash": "",
     "semantic_hash": ""
   },
   "docs/api/langserve/manual-test.md": {
@@ -3355,8 +3355,53 @@
     "semantic_hash": ""
   },
   "docs/dev/test.md": {
-    "mtime": 1789500779.782636,
-    "ast_hash": "5d985f2cf39f3a0ced0de58d67a6c27d",
+    "mtime": 1789503592.101842,
+    "ast_hash": "94e6a66b7bf7c39c3b6de3fcbde77443",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/components/AIWritingAssistantModal.tsx": {
+    "mtime": 1789504289.8310397,
+    "ast_hash": "dd752744ab29760020b6d39c28ee1a43",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/components/CodeBlockComponent.tsx": {
+    "mtime": 1789503410.9858518,
+    "ast_hash": "2b1eb5e1b1b50e551e5e2ddbe77097c7",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/components/EditorBubbleMenu.tsx": {
+    "mtime": 1789504275.2774353,
+    "ast_hash": "edcf4e1cf1569f6b6d75c1d24cb4c768",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/components/StudentPreviewModal.tsx": {
+    "mtime": 1789504281.774413,
+    "ast_hash": "ee9637f449f945e5a1cff1aa3bee3a67",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/extensions/Callout.ts": {
+    "mtime": 1789503180.6402502,
+    "ast_hash": "9ab40363111b258ce715977953f4c815",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/extensions/CustomCodeBlock.ts": {
+    "mtime": 1789503224.4963577,
+    "ast_hash": "9081f70c3bb1e1c2eebec07cd864c5bd",
+    "semantic_hash": ""
+  },
+  "features/cms/components/creator/manage/editor/lib/markdown-helpers.ts": {
+    "mtime": 1789503282.02855,
+    "ast_hash": "63f1a23831cbb6303607c939e2d52ab8",
+    "semantic_hash": ""
+  },
+  "docs/dev/PR_FRONTEND.md": {
+    "mtime": 1789539583.271716,
+    "ast_hash": "c6bd403642d401c422a86251a4a4dc59",
+    "semantic_hash": ""
+  },
+  "docs/dev/PR_MODEL.md": {
+    "mtime": 1789539598.7107909,
+    "ast_hash": "cee83a41ea16f3dd02074737411c1c68",
     "semantic_hash": ""
   }
 }

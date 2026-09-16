@@ -40,10 +40,6 @@ jobs:
           echo "=== Installing dependencies ==="
           yarn install --frozen-lockfile
 
-          # Install ALL required types explicitly
-          echo "=== Installing type definitions ==="
-          yarn add --dev @types/jest@^30.0.0 @types/node@^24.0.7 @testing-library/jest-dom@^6.6.3 @testing-library/react@^16.3.0
-
           echo "✅ Dependencies installed successfully"
 
       - name: Verify dependencies

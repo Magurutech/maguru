@@ -8,8 +8,20 @@ import { CourseNavigation } from '../CourseNavigation'
  * Tests the sidebar navigation with sections and lessons.
  *
  * Requirements: 5.1, 5.2, 6.4
- * Task: 9.1, 9.4
  */
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useParams: () => ({ slug: 'test-course' }),
+  useRouter: () => ({ push: jest.fn() }),
+  usePathname: () => '/learn/test-course',
+}))
+
+// Mock next/image
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: ({ src, alt, ...props }: any) => <img src={src} alt={alt} {...props} />,
+}))
 
 // Mock all lucide-react icons used by the component
 jest.mock('lucide-react', () => ({
@@ -37,6 +49,15 @@ jest.mock('lucide-react', () => ({
   PanelLeftOpen: ({ className }: { className?: string }) => (
     <span data-testid="panel-left-open-icon" className={className} />
   ),
+  Lock: ({ className }: { className?: string }) => (
+    <span data-testid="lock-icon" className={className} />
+  ),
+  Star: ({ className }: { className?: string }) => (
+    <span data-testid="star-icon" className={className} />
+  ),
+  Trophy: ({ className }: { className?: string }) => (
+    <span data-testid="trophy-icon" className={className} />
+  ),
 }))
 
 // Mock collapsible — render children directly so lessons are always visible
@@ -50,6 +71,24 @@ jest.mock('@/components/ui/collapsible', () => ({
   CollapsibleTrigger: ({ children, asChild, className }: { children: React.ReactNode; asChild?: boolean; className?: string }) => (
     asChild ? <>{children}</> : <button className={className}>{children}</button>
   ),
+}))
+
+// Mock sidebar
+jest.mock('@/components/ui/sidebar', () => ({
+  useSidebar: () => ({
+    open: true,
+    state: 'expanded',
+    setOpen: jest.fn(),
+    isMobile: false,
+    openMobile: false,
+    setOpenMobile: jest.fn(),
+    toggleSidebar: jest.fn(),
+  }),
+  SidebarProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  Sidebar: ({ children, className }: { children: React.ReactNode; className?: string }) => <aside data-testid="sidebar" className={className}>{children}</aside>,
+  SidebarHeader: ({ children, className }: { children: React.ReactNode; className?: string }) => <div data-testid="sidebar-header" className={className}>{children}</div>,
+  SidebarContent: ({ children, className }: { children: React.ReactNode; className?: string }) => <div data-testid="sidebar-content" className={className}>{children}</div>,
+  SidebarFooter: ({ children, className }: { children: React.ReactNode; className?: string }) => <div data-testid="sidebar-footer" className={className}>{children}</div>,
 }))
 
 describe('CourseNavigation', () => {
