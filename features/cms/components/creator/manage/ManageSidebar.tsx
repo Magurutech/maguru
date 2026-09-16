@@ -438,7 +438,12 @@ export function ManageSidebar() {
     reorderSections,
     reorderLessons,
     questions,
+    isSidebarCollapsed,
+    toggleSidebarCollapse,
   } = useManageContext()
+
+  const sidebarOpen = !isSidebarCollapsed
+  const setSidebarOpen = () => toggleSidebarCollapse()
 
   const inlineInputRef = useRef<HTMLInputElement>(null)
   const editInputRef = useRef<HTMLInputElement>(null)
@@ -446,7 +451,6 @@ export function ManageSidebar() {
   const [openLessonMenuId, setOpenLessonMenuId] = useState<string | null>(null)
   const [editingSectionId, setEditingSectionId] = useState<string | null>(null)
   const [editingSectionTitle, setEditingSectionTitle] = useState('')
-  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
 
@@ -534,7 +538,7 @@ export function ManageSidebar() {
     >
       {/* Toggle button */}
       <button
-        onClick={() => setSidebarOpen((v) => !v)}
+        onClick={setSidebarOpen}
         className="absolute -right-3.5 top-4 z-50 flex h-7 w-7 items-center justify-center rounded-full border border-border/10 bg-card shadow-sm hover:bg-bg-surface-accent text-text-secondary cursor-pointer select-none transition-all"
         aria-label={sidebarOpen ? 'Tutup panel navigasi' : 'Buka panel navigasi'}
         title={sidebarOpen ? 'Tutup sidebar' : 'Buka sidebar'}

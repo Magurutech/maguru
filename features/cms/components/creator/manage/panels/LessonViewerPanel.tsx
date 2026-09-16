@@ -21,12 +21,15 @@ import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table
 import { Details, DetailsSummary, DetailsContent } from '@tiptap/extension-details'
 import { Small } from '../editor/extensions/Small'
 import { Columns, Column } from '../editor/extensions/Columns'
+import { Callout } from '../editor/extensions/Callout'
+import { CustomCodeBlock } from '../editor/extensions/CustomCodeBlock'
 
 // Simple Editor node styles
 import '@/components/tiptap-node/heading-node/heading-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/code-block-node/code-block-node.scss'
+import '@/components/tiptap-node/callout-node/callout-node.scss'
 import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
 import '@/components/tiptap-node/horizontal-rule-node/horizontal-rule-node.scss'
 import '@/components/tiptap-node/image-node/image-node.scss'
@@ -57,7 +60,9 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
       },
     },
     extensions: [
-      StarterKit.configure({ link: { openOnClick: false } }),
+      StarterKit.configure({ codeBlock: false, link: { openOnClick: false } }),
+      CustomCodeBlock,
+      Callout,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Highlight.configure({ multicolor: true }),
       Typography,

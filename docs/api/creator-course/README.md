@@ -17,6 +17,10 @@ Panduan testing untuk Creator Course API — endpoint yang digunakan creator unt
 | GET | `/api/creator/courses` | Required | List semua kursus milik creator + stats |
 | POST | `/api/creator/courses` | Required | Buat kursus baru (Quick Start) |
 | PUT | `/api/creator/courses/[slug]/publish` | Required (owner) | Toggle DRAFT ↔ PUBLISHED |
+| GET | `/api/creator/courses/[slug]/assessments` | Required (owner) | List semua soal kuis (lengkap dengan kunci jawaban) |
+| POST | `/api/creator/courses/[slug]/assessments` | Required (owner) | Tambah soal kuis baru (manual atau dari AI) |
+| PUT | `/api/creator/courses/[slug]/assessments/[questionId]` | Required (owner) | Update soal kuis |
+| DELETE | `/api/creator/courses/[slug]/assessments/[questionId]` | Required (owner) | Hapus soal kuis |
 
 ---
 
@@ -344,6 +348,71 @@ Authorization: Bearer {{authToken}}
     }
 }
 ```
+
+---
+
+### Scenario 4: Creator Assessments / Quiz Management
+
+Endpoint yang digunakan oleh halaman CMS Creator (`QuizEditorPanel.tsx`) untuk mengelola kuis (Pre-Test maupun Section Quiz).
+
+#### 4.1 Get Creator Assessments — Unauthenticated
+```
+GET /api/creator/courses/{{courseSlug}}/assessments
+(tanpa Authorization header)
+```
+- [x] Status code `401`
+- [x] Response error message
+
+#### 4.2 Get Creator Assessments — Success (200)
+```
+GET /api/creator/courses/{{courseSlug}}/assessments
+Header: Authorization: Bearer {{authToken}}
+```
+- [x] Status code `200`
+- [x] Response memiliki field `questions` berjenis array
+- [x] Memiliki field `correct` (kunci jawaban tidak disensor untuk creator)
+- [x] Otomatis menyimpan `questionId` untuk request berikutnya
+
+#### 4.3 Create Assessment Question — Success (200)
+```
+POST /api/creator/courses/{{courseSlug}}/assessments
+Header: Authorization: Bearer {{authToken}}
+Body:
+{
+  "question": "Apa fungsi utama dari ribosom dalam sel?",
+  "options": {
+    "a": "Menghasilkan energi ATP",
+    "b": "Sintesis protein",
+    "c": "Menyimpan materi genetik",
+    "d": "Pencernaan intraseluler",
+    "explanation": "Ribosom adalah organel sel yang berfungsi sebagai tempat sintesis protein."
+  },
+  "correct": "b",
+  "topic": "Biologi Sel",
+  "difficulty": "medium",
+  "sectionId": null
+}
+```
+- [x] Status code `200`
+- [x] Response berisi data soal baru beserta `id`
+- [x] Otomatis meng-update variable `questionId`
+
+#### 4.4 Update Assessment Question — Success (200)
+```
+PUT /api/creator/courses/{{courseSlug}}/assessments/{{questionId}}
+Header: Authorization: Bearer {{authToken}}
+Body: { "difficulty": "hard", "topic": "Biologi Sel Modern", ... }
+```
+- [x] Status code `200`
+- [x] Data ter-update di database
+
+#### 4.5 Delete Assessment Question — Success (200)
+```
+DELETE /api/creator/courses/{{courseSlug}}/assessments/{{questionId}}
+Header: Authorization: Bearer {{authToken}}
+```
+- [x] Status code `200`
+- [x] Response `{ success: true }`
 
 ---
 

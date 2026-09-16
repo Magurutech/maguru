@@ -58,6 +58,39 @@ jest.mock('next/image', () => ({
   },
 }))
 
+// Mock next/headers
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => Promise.resolve({
+    get: jest.fn(),
+    getAll: jest.fn(() => []),
+    set: jest.fn(),
+    delete: jest.fn(),
+    has: jest.fn(() => false),
+  })),
+  headers: jest.fn(() => Promise.resolve(new Headers())),
+}))
+
+// Mock Supabase server client
+global.__mockGetUser = jest.fn(() => Promise.resolve({
+  data: {
+    user: {
+      id: 'test-user-id',
+      app_metadata: { role: 'user' },
+      user_metadata: {},
+    },
+  },
+  error: null,
+}))
+
+jest.mock('@/lib/supabase/server', () => ({
+  createClient: jest.fn(() => Promise.resolve({
+    auth: {
+      getUser: (...args) => global.__mockGetUser(...args),
+      getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+  })),
+}))
+
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter() {
@@ -166,7 +199,7 @@ jest.mock('@/features/auth', () => ({
   UserRoleProvider: ({ children }) => children,
 }))
 
-// Mock Clerk
+// Mock Clerk (Virtual mock to allow CI execution without @clerk/nextjs installed)
 jest.mock('@clerk/nextjs', () => ({
   useUser: jest.fn(() => ({
     user: {
@@ -189,7 +222,7 @@ jest.mock('@clerk/nextjs', () => ({
   UserButton: () => <div data-testid="user-button">User Button</div>,
   SignIn: () => <div data-testid="sign-in">Sign In</div>,
   SignUp: () => <div data-testid="sign-up">Sign Up</div>,
-}))
+}), { virtual: true })
 
 // Mock Clerk Server (untuk course.service.ts)
 jest.mock('@clerk/nextjs/server', () => ({
@@ -202,7 +235,7 @@ jest.mock('@clerk/nextjs/server', () => ({
       })),
     },
   })),
-}))
+}), { virtual: true })
 
 // Mock Lucide React icons
 // Mock Lucide React icons dynamically using Proxy to prevent undefined import errors

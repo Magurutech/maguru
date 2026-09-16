@@ -38,19 +38,25 @@ export class AuthorizationService {
    */
   async checkCourseOwnershipByUserId(
     userId: string,
-    courseId: string
+    courseId: string,
+    isAdmin?: boolean
   ): Promise<boolean> {
     if (!userId) return false
 
-    // Check admin role via Supabase
-    try {
-      const supabase = await createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user && (user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin')) {
-        return true
+    // Fast-path: if caller already verified user is admin, skip extra network calls
+    if (isAdmin) return true
+
+    // Check admin role via Supabase only if isAdmin was not supplied
+    if (isAdmin === undefined) {
+      try {
+        const supabase = await createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user && (user.app_metadata?.role === 'admin' || user.user_metadata?.role === 'admin')) {
+          return true
+        }
+      } catch {
+        // If Supabase call fails, fall through to ownership check
       }
-    } catch {
-      // If Supabase call fails, fall through to ownership check
     }
 
     // Check if user owns the course

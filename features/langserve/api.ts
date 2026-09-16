@@ -322,8 +322,27 @@ async function* streamText(
 // ============================================================================
 
 /**
- * Stream Chatbot chain responses
- * Personal AI Tutor for course-related questions
+ * Async generator for streaming Chatbot tokens directly
+ */
+export async function* streamChatbotGenerator(
+  request: ChatbotRequest,
+  options: StreamOptions = {}
+): AsyncGenerator<string, void, unknown> {
+  const baseUrl = getBaseUrl()
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.chatbotStream}`
+
+  logger.info('LangServeAPI', 'streamChatbotGenerator', 'Starting chatbot generator stream', {
+    url,
+    question: request.question,
+  })
+
+  for await (const chunk of streamText(url, request, options)) {
+    yield chunk
+  }
+}
+
+/**
+ * Stream Chatbot chain responses with callbacks and Promise resolution
  */
 export async function streamChatbot(
   request: ChatbotRequest,
@@ -378,6 +397,7 @@ export async function streamChatbot(
     throw apiError
   }
 }
+
 
 /**
  * Stream Explain Code chain responses
@@ -563,3 +583,31 @@ export async function invokeChatbot(request: ChatbotRequest): Promise<ChatbotRes
     throw error
   }
 }
+
+/**
+ * Generate Multi-Question Quiz from lesson content or course RAG
+ */
+export async function generateQuiz(request: import('./types').GenerateQuizRequest): Promise<import('./types').GenerateQuizResponse> {
+  const baseUrl = getBaseUrl()
+  const url = `${baseUrl}${LANGSERVE_ENDPOINTS.generateQuiz}`
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(request),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+    }
+
+    return await response.json()
+  } catch (error) {
+    logger.error('LangServeAPI', 'generateQuiz', 'Failed to generate quiz', { error })
+    throw error
+  }
+}
+

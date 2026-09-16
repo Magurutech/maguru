@@ -4,9 +4,10 @@
  */
 
 export interface ChatMessage {
-  role: 'student' | 'ai'
+  role: 'student' | 'ai' | 'system'
   content: string
-  timestamp: string
+  timestamp?: string
+  isError?: boolean
 }
 
 export interface ChatbotContext {
@@ -29,10 +30,11 @@ export interface ChatbotState {
 
 export interface ChatbotActions {
   toggleOpen: () => void
-  sendMessage: () => Promise<void>
+  sendMessage: (customText?: string) => Promise<void>
   setInput: (input: string) => void
   clearMessages: () => void
   retryLastMessage: () => Promise<void>
+  stopStreaming: () => void
 }
 
 export interface ChatbotProps {

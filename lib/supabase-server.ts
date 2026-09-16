@@ -40,17 +40,12 @@ import { createClient } from '@supabase/supabase-js'
  * ```
  */
 
-if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error(
-    'SUPABASE_SERVICE_ROLE_KEY is not defined. ' +
-      'Make sure to add it to your .env file. ' +
-      'Get it from Supabase Dashboard → Settings → API → service_role key.',
-  )
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'dummy-service-role-key-for-build'
 
 export const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  supabaseUrl,
+  supabaseServiceRoleKey,
   {
     auth: {
       autoRefreshToken: false,

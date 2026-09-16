@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import {
   useCourseManage,
   useLessonHandlers,
@@ -66,6 +67,14 @@ interface ManageContextValue {
   // Reorder
   reorderSections: (newSections: ManagedSection[], previousSections: ManagedSection[]) => Promise<void>
   reorderLessons: (sectionId: string, newLessons: ManagedLesson[], previousLessons: ManagedLesson[]) => Promise<void>
+  // AI Knowledge Sync
+  syncingKnowledge: boolean
+  knowledgeStatus: { is_synced: boolean; total_chunks: number; message?: string } | null
+  handleSyncKnowledge: () => Promise<void>
+  fetchKnowledgeStatus: () => Promise<void>
+  // Zen Mode / Sidebar Collapse
+  isSidebarCollapsed: boolean
+  toggleSidebarCollapse: () => void
 }
 
 
@@ -249,6 +258,70 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
     setActiveView({ type: 'lesson-editor', sectionId, lessonId: lesson.id })
   }
 
+  // ── AI Knowledge Sync ────────────────────────────────────────────────────
+  const [syncingKnowledge, setSyncingKnowledge] = useState(false)
+  const [knowledgeStatus, setKnowledgeStatus] = useState<{ is_synced: boolean; total_chunks: number; message?: string } | null>(null)
+
+  const fetchKnowledgeStatus = useCallback(async () => {
+    if (!courseSlug) return
+    try {
+      const res = await fetch(`/api/creator/courses/${courseSlug}/sync-knowledge`)
+      if (res.ok) {
+        const data = await res.json()
+        setKnowledgeStatus({
+          is_synced: Boolean(data.is_synced),
+          total_chunks: Number(data.total_chunks || 0),
+          message: data.message,
+        })
+      }
+    } catch {
+      // Quiet fail if service offline
+    }
+  }, [courseSlug])
+
+  useEffect(() => {
+    if (courseSlug) {
+      fetchKnowledgeStatus()
+    }
+  }, [courseSlug, fetchKnowledgeStatus])
+
+  const handleSyncKnowledge = async () => {
+    if (!courseSlug || syncingKnowledge) return
+    setSyncingKnowledge(true)
+    try {
+      const res = await fetch(`/api/creator/courses/${courseSlug}/sync-knowledge`, { method: 'POST' })
+      const data = await res.json()
+      if (res.ok && data.status === 'success') {
+        toast.success(data.message || 'Materi berhasil disinkronkan ke AI Knowledge Base!')
+        setKnowledgeStatus({ is_synced: (data.total_chunks || 0) > 0, total_chunks: data.total_chunks || 0 })
+      } else {
+        toast.error(data.error || 'Gagal menyinkronkan materi ke AI')
+      }
+    } catch {
+      toast.error('Gagal terhubung ke AI Knowledge Service')
+    } finally {
+      setSyncingKnowledge(false)
+    }
+  }
+
+  // ── Zen Mode: Sidebar collapse state ──────────────────────────────────────
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('maguru_creator_sidebar_collapsed') === 'true'
+    }
+    return false
+  })
+
+  const toggleSidebarCollapse = useCallback(() => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('maguru_creator_sidebar_collapsed', String(next))
+      }
+      return next
+    })
+  }, [])
+
   return (
     <ManageContext.Provider value={{
       course, setCourse, sections, loading, error, publishing, handleTogglePublish,
@@ -263,6 +336,8 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
       openAddLesson, openEditLesson, submitLessonFromPanel,
       reorderSections, reorderLessons,
       questions, setQuestions, questionsLoading, fetchQuestions,
+      syncingKnowledge, knowledgeStatus, handleSyncKnowledge, fetchKnowledgeStatus,
+      isSidebarCollapsed, toggleSidebarCollapse,
     }}>
       {children}
     </ManageContext.Provider>

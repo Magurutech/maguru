@@ -8,7 +8,7 @@
     { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
     { "key": "courseSlug", "value": "", "type": "string", "description": "Slug kursus yang student sudah enrolled — human-readable (e.g. belajar-typescript-dari-nol), bukan UUID" },
     { "key": "lessonId", "value": "", "type": "string", "description": "ID lesson yang valid dalam kursus tersebut" },
-    { "key": "authToken", "value": "", "type": "string", "description": "Clerk __session cookie value — student yang sudah enrolled" }
+    { "key": "authToken", "value": "", "type": "string", "description": "Supabase Auth Access Token (Bearer JWT) — student yang sudah enrolled" }
   ],
   "item": [
     {
@@ -38,7 +38,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}/complete",
               "host": ["{{baseUrl}}"],
@@ -111,7 +111,7 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/progress/course/{{courseSlug}}",
               "host": ["{{baseUrl}}"],
@@ -211,7 +211,7 @@
           ],
           "request": {
             "method": "GET",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/progress/lesson/{{lessonId}}",
               "host": ["{{baseUrl}}"],

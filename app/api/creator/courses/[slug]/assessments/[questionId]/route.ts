@@ -18,9 +18,14 @@ export async function PUT(
     const body = await request.json()
     const { question, options, correct, topic, difficulty, sectionId } = body
 
-    // Resolve course and verify ownership
+    // Resolve course and verify ownership (supports slug or ID)
     const course = await prisma.courses.findFirst({
-      where: { slug },
+      where: {
+        OR: [
+          { slug },
+          { id: slug },
+        ],
+      },
       select: { id: true, creatorId: true },
     })
 
@@ -75,9 +80,14 @@ export async function DELETE(
 
     const { slug, questionId } = await params
 
-    // Resolve course and verify ownership
+    // Resolve course and verify ownership (supports slug or ID)
     const course = await prisma.courses.findFirst({
-      where: { slug },
+      where: {
+        OR: [
+          { slug },
+          { id: slug },
+        ],
+      },
       select: { id: true, creatorId: true },
     })
 

@@ -1,0 +1,110 @@
+.tiptap.ProseMirror {
+  .callout-block {
+    position: relative;
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    transition: all 0.2s ease;
+
+    p {
+      margin: 0;
+    }
+
+    &.callout-info {
+      background-color: rgba(59, 130, 246, 0.08);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      color: #1e3a8a;
+
+      &::before {
+        content: "ℹ️ Informasi";
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #2563eb;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    &.callout-tip {
+      background-color: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #065f46;
+
+      &::before {
+        content: "💡 Tips Praktis";
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #059669;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    &.callout-warning {
+      background-color: rgba(245, 158, 11, 0.09);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #92400e;
+
+      &::before {
+        content: "⚠️ Perhatian Penting";
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #d97706;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    &.callout-success {
+      background-color: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      color: #3730a3;
+
+      &::before {
+        content: "✅ Catatan Kunci";
+        font-weight: 700;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #4f46e5;
+        margin-bottom: 0.25rem;
+      }
+    }
+  }
+
+  .dark & {
+    .callout-block {
+      &.callout-info {
+        background-color: rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #bfdbfe;
+      }
+
+      &.callout-tip {
+        background-color: rgba(16, 185, 129, 0.15);
+        border-color: rgba(16, 185, 129, 0.35);
+        color: #a7f3d0;
+      }
+
+      &.callout-warning {
+        background-color: rgba(245, 158, 11, 0.15);
+        border-color: rgba(245, 158, 11, 0.35);
+        color: #fde68a;
+      }
+
+      &.callout-success {
+        background-color: rgba(99, 102, 241, 0.15);
+        border-color: rgba(99, 102, 241, 0.35);
+        color: #c7d2fe;
+      }
+    }
+  }
+}

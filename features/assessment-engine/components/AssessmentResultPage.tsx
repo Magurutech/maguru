@@ -56,14 +56,17 @@ export function AssessmentResultPage({
 
   // Set formatted current date on mount (client-side only to prevent hydration mismatch)
   useEffect(() => {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }
-    setCurrentDate(new Date().toLocaleDateString('id-ID', options))
+    const timer = setTimeout(() => {
+      const options: Intl.DateTimeFormatOptions = {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }
+      setCurrentDate(new Date().toLocaleDateString('id-ID', options))
+    }, 0)
+    return () => clearTimeout(timer)
   }, [])
 
   // Map skippedLessonIds to their readable titles and outline structure

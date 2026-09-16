@@ -16,9 +16,14 @@ export async function GET(
 
     const { slug } = await params
 
-    // Resolve course and verify ownership
+    // Resolve course and verify ownership (supports slug or ID)
     const course = await prisma.courses.findFirst({
-      where: { slug },
+      where: {
+        OR: [
+          { slug },
+          { id: slug },
+        ],
+      },
       select: { id: true, creatorId: true },
     })
 
@@ -67,9 +72,14 @@ export async function POST(
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Resolve course and verify ownership
+    // Resolve course and verify ownership (supports slug or ID)
     const course = await prisma.courses.findFirst({
-      where: { slug },
+      where: {
+        OR: [
+          { slug },
+          { id: slug },
+        ],
+      },
       select: { id: true, creatorId: true },
     })
 

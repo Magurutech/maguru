@@ -23,15 +23,16 @@ describe('SlashCommand Extension', () => {
     expect(slashCommand?.options.suggestion.char).toBe('/')
   })
 
-  it('returns 8 regular block items in suggestion query (More... is a separate action)', () => {
+  it('returns 12 regular block items in suggestion query (More... is a separate action)', () => {
     const { suggestionOptions } = require('../editor/components/suggestion')
     const items = suggestionOptions.items({ query: '' })
     // More... is no longer in the filtered array — it's passed as a separate moreAction prop
-    expect(items.length).toBe(8)
+    expect(items.length).toBe(12)
     expect(items.map((i: any) => i.title)).toEqual([
       'Heading 1', 'Heading 2', 'Heading 3', 
       'Bulleted List', 'Numbered List', 'Task List', 
-      'Divider', 'Blockquote',
+      'Divider', 'Blockquote', 'Code Block',
+      'Callout Info', 'Callout Tip', 'Callout Warning',
     ])
   })
 })

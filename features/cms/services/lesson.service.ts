@@ -480,6 +480,77 @@ export class LessonService {
     // Return first 200 characters
     return trimmed.length > 200 ? trimmed.substring(0, 200) + '...' : trimmed
   }
+
+  /**
+   * Extract full, rich semantic text from Tiptap JSON content for AI RAG embedding.
+   * Preserves headings, code blocks, lists, and paragraphs without character truncation.
+   */
+  extractFullTextContent(content: any): string {
+    if (!content) return ''
+
+    // If string, attempt JSON parse or return string directly
+    let docObj = content
+    if (typeof content === 'string') {
+      try {
+        docObj = JSON.parse(content)
+      } catch {
+        return content.trim()
+      }
+    }
+
+    // Traverse to root nodes array (handles { content: { type: 'doc', content: [...] } } or { content: [...] })
+    const nodes: any[] = docObj?.content?.content || docObj?.content || (Array.isArray(docObj) ? docObj : [])
+    if (!Array.isArray(nodes)) {
+      return typeof docObj === 'object' ? JSON.stringify(docObj) : String(docObj)
+    }
+
+    const extractNodeText = (node: any): string => {
+      if (!node) return ''
+
+      // Plain text node
+      if (node.type === 'text') {
+        return node.text || ''
+      }
+
+      // Inline child contents
+      const inlineChildren = Array.isArray(node.content)
+        ? node.content.map(extractNodeText).join('')
+        : ''
+
+      switch (node.type) {
+        case 'heading': {
+          const level = node.attrs?.level || 2
+          const prefix = '#'.repeat(level)
+          return `\n\n${prefix} ${inlineChildren.trim()}\n`
+        }
+        case 'paragraph': {
+          return `${inlineChildren}\n\n`
+        }
+        case 'codeBlock': {
+          const lang = node.attrs?.language || ''
+          return `\n\`\`\`${lang}\n${inlineChildren.trim()}\n\`\`\`\n\n`
+        }
+        case 'bulletList': {
+          return `\n${inlineChildren}\n`
+        }
+        case 'orderedList': {
+          return `\n${inlineChildren}\n`
+        }
+        case 'listItem': {
+          return `- ${inlineChildren.trim()}\n`
+        }
+        case 'blockquote': {
+          return `> ${inlineChildren.trim()}\n\n`
+        }
+        default: {
+          return inlineChildren ? `${inlineChildren} ` : ''
+        }
+      }
+    }
+
+    const fullText = nodes.map(extractNodeText).join('').trim()
+    return fullText
+  }
 }
 
 // Export singleton instance

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { Editor, JSONContent } from '@tiptap/react'
 import { toast } from 'sonner'
 
@@ -19,6 +19,7 @@ interface UseLocalStorageDraftReturn {
   clearDraft: () => void
   hasDraft: () => boolean
   getDraft: () => LessonDraft | null
+  lastSavedAt: string | null
 }
 
 const DRAFT_KEY = (id: string) => `lesson-draft-${id}`
@@ -32,6 +33,7 @@ export function useLocalStorageDraft({
 }: UseLocalStorageDraftProps): UseLocalStorageDraftReturn {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lastSavedContentRef = useRef<string>('')
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null)
 
   // Get draft from localStorage
   const getDraft = useCallback((): LessonDraft | null => {
@@ -60,13 +62,18 @@ export function useLocalStorageDraft({
 
     localStorage.removeItem(DRAFT_KEY(lessonId))
     lastSavedContentRef.current = ''
+    setLastSavedAt(null)
   }, [lessonId])
 
   // Save draft to localStorage
   const saveDraft = useCallback(() => {
     if (!lessonId || !editor) return
 
+    // Don't save empty/uninitialized drafts to localStorage
     const currentContent = editor.getJSON()
+    const hasMeaningfulText = Boolean(title.trim()) || Boolean(currentContent.content && currentContent.content.length > 0)
+    if (!hasMeaningfulText) return
+
     const currentContentStr = JSON.stringify({ title, content: currentContent })
 
     // Don't save if content hasn't changed since last save (requirement 4.12)
@@ -83,17 +90,15 @@ export function useLocalStorageDraft({
     try {
       localStorage.setItem(DRAFT_KEY(lessonId), JSON.stringify(draft))
       lastSavedContentRef.current = currentContentStr
-
-      // Show toast notification (kanan bawah)
-      const timestamp = new Date().toLocaleTimeString('id-ID', {
+      setLastSavedAt(draft.savedAt)
+      const timeStr = new Date(draft.savedAt).toLocaleTimeString('id-ID', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
       })
-      toast.success(`💾 Draft tersimpan pada ${timestamp}`)
+      toast.success(`💾 Draft tersimpan pada ${timeStr}`)
     } catch (error) {
       console.error('[useLocalStorageDraft] Failed to save draft:', error)
-      toast.error('Gagal menyimpan draft')
     }
   }, [lessonId, title, editor])
 
@@ -137,5 +142,6 @@ export function useLocalStorageDraft({
     clearDraft,
     hasDraft,
     getDraft,
+    lastSavedAt,
   }
 }

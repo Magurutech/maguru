@@ -14,6 +14,8 @@ import type { CourseCardCourse, Pagination } from '@/features/cms/types'
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.8, 1.9, 1.10
  */
 
+import { headers } from 'next/headers'
+
 // String-keyed searchParams from Next.js page props
 interface SearchParams {
   page?: string
@@ -27,6 +29,13 @@ interface CoursesResponse {
   pagination: Pagination
 }
 
+async function getDynamicBaseUrl(): Promise<string> {
+  const headersList = await headers()
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000'
+  const protocol = headersList.get('x-forwarded-proto') || (process.env.NODE_ENV === 'production' ? 'https' : 'http')
+  return `${protocol}://${host}`
+}
+
 async function fetchCourses(params: SearchParams): Promise<CoursesResponse> {
   const query = new URLSearchParams()
   if (params.page) query.set('page', params.page)
@@ -34,17 +43,25 @@ async function fetchCourses(params: SearchParams): Promise<CoursesResponse> {
   if (params.difficulty) query.set('difficulty', params.difficulty)
   if (params.search) query.set('search', params.search)
 
-  // Absolute URL required for server-side fetch in Next.js
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
-  const res = await fetch(`${baseUrl}/api/courses?${query.toString()}`, {
-    cache: 'no-store',
-  })
+  try {
+    const baseUrl = await getDynamicBaseUrl()
+    const res = await fetch(`${baseUrl}/api/courses?${query.toString()}`, {
+      cache: 'no-store',
+    })
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return { courses: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } }
+    }
+
+    const contentType = res.headers.get('content-type')
+    if (!contentType || !contentType.includes('application/json')) {
+      return { courses: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } }
+    }
+
+    return await res.json()
+  } catch {
     return { courses: [], pagination: { page: 1, limit: 12, total: 0, totalPages: 0 } }
   }
-
-  return res.json()
 }
 
 export default async function CourseCatalogPage({

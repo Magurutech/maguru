@@ -29,13 +29,13 @@
       "key": "authToken",
       "value": "",
       "type": "string",
-      "description": "Clerk __session cookie value — creator (course owner)"
+      "description": "Supabase Auth Access Token (Bearer JWT) — creator (course owner)"
     },
     {
       "key": "otherUserToken",
       "value": "",
       "type": "string",
-      "description": "Clerk __session cookie value — user lain (non-owner) untuk test 403"
+      "description": "Supabase Auth Access Token (Bearer JWT) — user lain (non-owner) untuk test 403"
     }
   ],
   "item": [
@@ -90,7 +90,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -128,7 +128,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -166,7 +166,7 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -240,8 +240,7 @@
             "header": [
               { "key": "Content-Type", "value": "application/json" },
               {
-                "key": "Cookie",
-                "value": "__session={{otherUserToken}}",
+                "key": "Authorization",`r`n                "value": "Bearer {{otherUserToken}}",
                 "type": "text",
                 "description": "Token user lain — bukan owner"
               }
@@ -544,7 +543,7 @@
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -598,7 +597,7 @@
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -659,7 +658,7 @@
             "method": "PUT",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }
+              { "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }
             ],
             "body": {
               "mode": "raw",
@@ -725,7 +724,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -742,7 +741,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "lessons", "{{lessonId}}", "images"]
             },
-            "description": "Upload gambar untuk lesson. Requires auth (Clerk session). File validation: JPG/PNG/GIF/WebP, max 5MB."
+            "description": "Upload gambar untuk lesson. Requires auth (Supabase session). File validation: JPG/PNG/GIF/WebP, max 5MB."
           },
           "response": []
         },
@@ -775,7 +774,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -825,7 +824,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -913,7 +912,7 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "body": {
               "mode": "formdata",
               "formdata": []
@@ -955,7 +954,7 @@
           ],
           "request": {
             "method": "DELETE",
-            "header": [{ "key": "Cookie", "value": "__session={{authToken}}", "type": "text" }],
+            "header": [{ "key": "Authorization", "value": "Bearer {{authToken}}", "type": "text" }],
             "url": {
               "raw": "{{baseUrl}}/api/courses/{{courseSlug}}/sections/{{sectionId}}/lessons/{{lessonId}}",
               "host": ["{{baseUrl}}"],

@@ -118,7 +118,7 @@ export function ManageDialogs() {
                 Hapus Kelas Permanen
               </DialogTitle>
               <DialogDescription className="text-xs text-text-secondary leading-relaxed pt-1.5 font-sans">
-                Apakah Anda yakin ingin menghapus kelas <strong>"{course?.title}"</strong>? Tindakan ini 
+                Apakah Anda yakin ingin menghapus kelas <strong>&ldquo;{course?.title}&rdquo;</strong>? Tindakan ini 
                 bersifat permanen dan akan menghapus seluruh modul, pelajaran, serta data kemajuan 
                 siswa di dalamnya secara permanen.
               </DialogDescription>

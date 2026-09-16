@@ -1,0 +1,130 @@
+{
+  "info": {
+    "_postman_id": "maguru-quiz-api-v1",
+    "name": "Maguru AI Quiz Generator API",
+    "description": "Postman Collection untuk menguji endpoint Automated AI Quiz Generator (LangServe / FastAPI)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Generate Standard Quiz (5 Soal Medium)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"course_id\": \"test-course-python\",\n  \"section_id\": \"section-01\",\n  \"num_questions\": 5,\n  \"difficulty\": \"medium\",\n  \"lesson_content\": \"Bab: Pengenalan Python. Python adalah bahasa tingkat tinggi yang dibuat oleh Guido van Rossum. Variabel dapat didefinisikan secara langsung tanpa deklarasi tipe data.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/generate-quiz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "generate-quiz"]
+        },
+        "description": "Menguji pembuatan 5 soal kuis tingkat kesulitan sedang dari rangkuman materi."
+      }
+    },
+    {
+      "name": "2. Generate Quick Quiz (3 Soal Easy)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"course_id\": \"test-course-python\",\n  \"num_questions\": 3,\n  \"difficulty\": \"easy\",\n  \"lesson_content\": \"Fokuskan pertanyaan pada fungsi print() dan input() dasar dalam Python.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/generate-quiz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "generate-quiz"]
+        },
+        "description": "Menguji pembuatan 3 butir kuis singkat tingkat mudah."
+      }
+    },
+    {
+      "name": "3. Generate Advanced Case Study with Code Snippets (5 Soal Hard)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"course_id\": \"test-course-python\",\n  \"num_questions\": 5,\n  \"difficulty\": \"hard\",\n  \"lesson_content\": \"Bab: Pengenalan Python. Sertakan cuplikan kode singkat di dalam pertanyaan dan tanyakan apa output yang dihasilkan kode tersebut.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/generate-quiz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "generate-quiz"]
+        },
+        "description": "Menguji pembuatan 5 butir soal analisis studi kasus yang menyertakan potongan kode Python di dalam teks pertanyaan."
+      }
+    },
+    {
+      "name": "4. Generate Bug Hunting Quiz with Line Numbers (Code Analysis)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"course_id\": \"test-course-python\",\n  \"num_questions\": 3,\n  \"difficulty\": \"medium\",\n  \"question_style\": \"code_analysis\",\n  \"lesson_content\": \"Bab: Pengenalan Python List dan Indexing. List diakses dengan index mulai dari 0. Contoh: a = [1, 2, 3]; print(a[5]) memicu IndexError.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/generate-quiz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "generate-quiz"]
+        },
+        "description": "Menguji pembuatan soal debugging berbasis nomor baris (1:, 2:, 3:) yang dilengkapi Progressive Hints dan Micro-Skill tag."
+      }
+    },
+    {
+      "name": "5. Generate Industrial Case Study Quiz (Case Study)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"course_id\": \"test-course-architecture\",\n  \"num_questions\": 2,\n  \"difficulty\": \"medium\",\n  \"question_style\": \"case_study\",\n  \"lesson_content\": \"Bab: Skalabilitas Database. Menghadapi bottleneck koneksi database saat traffic puncak e-commerce.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/v1/generate-quiz",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "v1", "generate-quiz"]
+        },
+        "description": "Menguji pembuatan soal skenario kasus dunia nyata/industri dengan arketipe case_study."
+      }
+    }
+  ]
+}
