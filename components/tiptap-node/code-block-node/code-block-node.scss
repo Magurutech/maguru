@@ -1,18 +1,18 @@
 .tiptap.ProseMirror {
-  --tt-inline-code-bg-color: var(--tt-gray-light-a-100);
-  --tt-inline-code-text-color: var(--tt-gray-light-a-700);
-  --tt-inline-code-border-color: var(--tt-gray-light-a-200);
-  --tt-codeblock-bg: var(--tt-gray-light-a-50);
-  --tt-codeblock-text: var(--tt-gray-light-a-800);
-  --tt-codeblock-border: var(--tt-gray-light-a-200);
+  --tt-inline-code-bg-color: var(--color-bg-bone, #f7f1de);
+  --tt-inline-code-text-color: var(--color-accent-coral, #b34d3d);
+  --tt-inline-code-border-color: var(--color-bg-surface-accent, #ddd2b6);
+  --tt-codeblock-bg: var(--color-bg-bone, #f7f1de);
+  --tt-codeblock-text: var(--color-text-secondary, #2a2620);
+  --tt-codeblock-border: var(--color-bg-surface-accent, #ddd2b6);
 
   .dark & {
-    --tt-inline-code-bg-color: var(--tt-gray-dark-a-100);
-    --tt-inline-code-text-color: var(--tt-gray-dark-a-700);
-    --tt-inline-code-border-color: var(--tt-gray-dark-a-200);
-    --tt-codeblock-bg: var(--tt-gray-dark-a-50);
-    --tt-codeblock-text: var(--tt-gray-dark-a-800);
-    --tt-codeblock-border: var(--tt-gray-dark-a-200);
+    --tt-inline-code-bg-color: var(--color-bg-bone, #2d2a33);
+    --tt-inline-code-text-color: var(--color-accent-coral, #c76554);
+    --tt-inline-code-border-color: var(--color-bg-surface-accent, #37353e);
+    --tt-codeblock-bg: var(--color-bg-bone, #2d2a33);
+    --tt-codeblock-text: var(--color-text-primary, #efe7d2);
+    --tt-codeblock-border: var(--color-bg-surface-accent, #37353e);
   }
 }
 
