@@ -91,6 +91,12 @@ export function useLocalStorageDraft({
       localStorage.setItem(DRAFT_KEY(lessonId), JSON.stringify(draft))
       lastSavedContentRef.current = currentContentStr
       setLastSavedAt(draft.savedAt)
+      const timeStr = new Date(draft.savedAt).toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+      toast.success(`💾 Draft tersimpan pada ${timeStr}`)
     } catch (error) {
       console.error('[useLocalStorageDraft] Failed to save draft:', error)
     }
