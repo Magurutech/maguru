@@ -10,12 +10,23 @@ import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
 import { useState } from 'react'
 
+import { CustomCodeBlock } from '../creator/manage/editor/extensions/CustomCodeBlock'
+import { Callout } from '../creator/manage/editor/extensions/Callout'
+import { Small } from '../creator/manage/editor/extensions/Small'
+import { Columns, Column } from '../creator/manage/editor/extensions/Columns'
+import { Table, TableRow, TableHeader, TableCell } from '@tiptap/extension-table'
+import { Details, DetailsSummary, DetailsContent } from '@tiptap/extension-details'
+
 // Import Tiptap node styles for proper rendering (same as creator)
 import '@/components/tiptap-node/heading-node/heading-node.scss'
 import '@/components/tiptap-node/paragraph-node/paragraph-node.scss'
 import '@/components/tiptap-node/list-node/list-node.scss'
 import '@/components/tiptap-node/code-block-node/code-block-node.scss'
+import '@/components/tiptap-node/callout-node/callout-node.scss'
 import '@/components/tiptap-node/blockquote-node/blockquote-node.scss'
+import '@/components/tiptap-node/table-node/table-node.scss'
+import '@/components/tiptap-node/columns-node/columns-node.scss'
+import '@/components/tiptap-node/details-node/details-node.scss'
 import '@/components/tiptap-templates/simple/simple-editor.scss'
 
 /**
@@ -52,14 +63,27 @@ export function LessonViewer({ lesson }: LessonViewerProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        codeBlock: false,
         link: { openOnClick: false },
       }),
+      CustomCodeBlock,
+      Callout,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       Highlight.configure({ multicolor: true }),
       Typography,
       Superscript,
       Subscript,
       Selection,
+      Small,
+      Columns,
+      Column,
+      Table.configure({ resizable: false }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      Details.configure({ HTMLAttributes: { class: 'details-block' } }),
+      DetailsSummary,
+      DetailsContent,
     ],
     content: lesson.content.content,
     editable: false,

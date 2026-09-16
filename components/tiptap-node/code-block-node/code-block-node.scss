@@ -51,4 +51,15 @@
       color: inherit;
     }
   }
+
+  // Reset inner styles when pre is inside custom NodeView wrapper (CodeBlockComponent)
+  [data-node-view-wrapper] pre {
+    background-color: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    padding: 1rem 1.25rem !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
 }

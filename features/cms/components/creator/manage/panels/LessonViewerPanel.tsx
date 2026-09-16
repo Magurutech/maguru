@@ -96,78 +96,93 @@ export function LessonViewerPanel({ sectionId, lessonId }: LessonViewerPanelProp
   useEffect(() => {
     if (!editor) return
 
+    let isMounted = true
+
     fetch(`/api/courses/_/sections/${sectionId}/lessons/${lessonId}`)
       .then((r) => r.json())
       .then((data) => {
+        if (!isMounted) return
         setTitle(data.title || '')
         setLessonData({
           version: data.content?.version || 1,
           order: data.order || 1,
         })
         if (data.content?.content) {
-          editor.commands.setContent(data.content.content as JSONContent)
+          // Defer setContent outside of immediate lifecycle callback to avoid flushSync collision in React 19
+          setTimeout(() => {
+            if (isMounted && editor && !editor.isDestroyed) {
+              editor.commands.setContent(data.content.content as JSONContent)
+            }
+          }, 0)
         }
       })
       .catch((e) => {
         console.error('[LessonViewerPanel] failed to load lesson', e)
         toast.error('Gagal memuat konten pelajaran')
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        if (isMounted) {
+          setLoading(false)
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
   }, [lessonId, sectionId, editor])
 
   const lesson = lessonsMap[sectionId]?.find((l) => l.id === lessonId)
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-coral" />
-      </div>
-    )
-  }
-
   return (
-    <div className="w-full max-w-none select-none">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="space-y-1">
-          <span className="text-[10px] font-bold text-accent-coral uppercase tracking-widest block leading-none">
-            MATERI PELAJARAN
-          </span>
-          <h1 className="font-sans text-2xl font-medium text-text-primary leading-tight tracking-tight">
-            {title}
-          </h1>
+    <div className="w-full max-w-none">
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-coral" />
         </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 select-none">
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold text-accent-coral uppercase tracking-widest block leading-none">
+              MATERI PELAJARAN
+            </span>
+            <h1 className="font-sans text-2xl font-medium text-text-primary leading-tight tracking-tight">
+              {title}
+            </h1>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-3 shrink-0">
-          {lessonData && (
-            <div className="flex items-center gap-3 text-[10px] text-text-secondary border border-border/10 rounded-xl px-3 py-1.5 bg-bg-bone/80 font-mono font-bold uppercase">
-              <div className="flex items-center gap-1">
-                <span>Urutan:</span>
-                <span className="text-text-primary">{lessonData.order}</span>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            {lessonData && (
+              <div className="flex items-center gap-3 text-[10px] text-text-secondary border border-border/10 rounded-xl px-3 py-1.5 bg-bg-bone/80 font-mono font-bold uppercase">
+                <div className="flex items-center gap-1">
+                  <span>Urutan:</span>
+                  <span className="text-text-primary">{lessonData.order}</span>
+                </div>
+                <div className="h-3 w-px bg-border/15" />
+                <div className="flex items-center gap-1">
+                  <span>Versi:</span>
+                  <span className="text-text-primary">{lessonData.version}</span>
+                </div>
               </div>
-              <div className="h-3 w-px bg-border/15" />
-              <div className="flex items-center gap-1">
-                <span>Versi:</span>
-                <span className="text-text-primary">{lessonData.version}</span>
-              </div>
-            </div>
-          )}
-          {lesson && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-border/10 rounded-full hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary cursor-pointer px-4 font-bold text-xs"
-              onClick={() => openEditLesson(lesson, sectionId)}
-            >
-              <Edit className="h-3.5 w-3.5 mr-1.5 text-accent-coral" />
-              Edit Pelajaran
-            </Button>
-          )}
+            )}
+            {lesson && (
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-border/10 rounded-full hover:bg-bg-surface-accent text-text-secondary hover:text-text-primary cursor-pointer px-4 font-bold text-xs"
+                onClick={() => openEditLesson(lesson, sectionId)}
+              >
+                <Edit className="h-3.5 w-3.5 mr-1.5 text-accent-coral" />
+                Edit Pelajaran
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
-      <hr className="border-border/10 mb-6" />
+      {!loading && <hr className="border-border/10 mb-6" />}
 
-      <div className="lesson-editor-body">
+      {/* EditorContent kept mounted in DOM to prevent React 19 flushSync warning on unmount/remount */}
+      <div className={`lesson-editor-body ${loading ? 'opacity-0 h-0 overflow-hidden' : 'opacity-100'}`}>
         <EditorContent
           editor={editor}
           role="presentation"

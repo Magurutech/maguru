@@ -142,8 +142,11 @@ export function CodeBlockComponent({ node, updateAttributes }: NodeViewProps) {
         </div>
       </div>
 
-      {/* Code Content Area: light mode bone background with high-contrast walnut ink text */}
-      <pre className="p-4 overflow-x-auto text-[13.5px] leading-relaxed font-mono !text-[#2a2620] dark:!text-[#efe7d2] !bg-[#f7f1de] dark:!bg-[#1e1c24] m-0 border-0">
+      {/* Code Content Area: flat, seamless code editing filling the outer card with zero inner borders */}
+      <pre
+        className="p-4 overflow-x-auto text-[13.5px] leading-relaxed font-mono !text-[#2a2620] dark:!text-[#efe7d2] !bg-transparent !border-0 !border-none !rounded-none !m-0 !shadow-none outline-none"
+        style={{ border: 'none', margin: 0, borderRadius: 0, background: 'transparent' }}
+      >
         <NodeViewContent<'code'> as="code" className="font-mono !text-[#2a2620] dark:!text-[#efe7d2] !bg-transparent block select-text" />
       </pre>
 
