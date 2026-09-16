@@ -58,6 +58,39 @@ jest.mock('next/image', () => ({
   },
 }))
 
+// Mock next/headers
+jest.mock('next/headers', () => ({
+  cookies: jest.fn(() => Promise.resolve({
+    get: jest.fn(),
+    getAll: jest.fn(() => []),
+    set: jest.fn(),
+    delete: jest.fn(),
+    has: jest.fn(() => false),
+  })),
+  headers: jest.fn(() => Promise.resolve(new Headers())),
+}))
+
+// Mock Supabase server client
+global.__mockGetUser = jest.fn(() => Promise.resolve({
+  data: {
+    user: {
+      id: 'test-user-id',
+      app_metadata: { role: 'user' },
+      user_metadata: {},
+    },
+  },
+  error: null,
+}))
+
+jest.mock('@/lib/supabase/server', () => ({
+  createClient: jest.fn(() => Promise.resolve({
+    auth: {
+      getUser: (...args) => global.__mockGetUser(...args),
+      getSession: jest.fn(() => Promise.resolve({ data: { session: null }, error: null })),
+    },
+  })),
+}))
+
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useRouter() {

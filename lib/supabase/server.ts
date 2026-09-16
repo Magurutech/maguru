@@ -25,7 +25,12 @@ function decodeJwtUser(token: string) {
 }
 
 export async function createClient() {
-  const cookieStore = await cookies()
+  let cookieStore: any = null
+  try {
+    cookieStore = await cookies()
+  } catch {
+    // cookies() might not be available in non-request contexts (e.g. tests or build)
+  }
   let authHeader: string | null = null
   let bearerToken: string | undefined = undefined
   try {
@@ -38,21 +43,24 @@ export async function createClient() {
     // headers() might not be available in certain contexts
   }
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://mock.supabase.co'
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'mock-anon-key'
+
   const client = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       global: {
         headers: authHeader ? { Authorization: authHeader } : {},
       },
       cookies: {
         getAll() {
-          return cookieStore.getAll()
+          return cookieStore?.getAll?.() || []
         },
         setAll(cookiesToSet) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+              cookieStore?.set?.(name, value, options)
             )
           } catch {
             // The `setAll` method was called from a Server Component.
@@ -87,14 +95,14 @@ export async function createClient() {
     }
 
     // Check cookies if no bearer token
-    const allCookies = cookieStore.getAll()
+    const allCookies: Array<{ name: string; value: string }> = cookieStore ? cookieStore.getAll() : []
     const tokenCookies = allCookies
-      .filter((c) => c.name.includes('-auth-token'))
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter((c: { name: string; value: string }) => c.name.includes('-auth-token'))
+      .sort((a: { name: string; value: string }, b: { name: string; value: string }) => a.name.localeCompare(b.name))
 
     if (tokenCookies.length > 0) {
       const combinedVal = tokenCookies
-        .map((c) => c.value.replace(/^base64-/, ''))
+        .map((c: { name: string; value: string }) => c.value.replace(/^base64-/, ''))
         .join('')
       try {
         const decoded = Buffer.from(decodeURIComponent(combinedVal), 'base64').toString('utf-8')

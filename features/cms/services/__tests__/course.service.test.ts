@@ -17,8 +17,8 @@ import {
 import { prismaMock } from '@/prisma/lib/singleton'
 import type { Course, Section } from '@/prisma/generated/prisma/client'
 
-// Mock Clerk server functions (already mocked in jest.setup.js)
-// Tests will use the global mocks
+// Supabase server client mock from jest.setup.js
+const mockGetUser = (global as any).__mockGetUser
 
 describe('CourseService', () => {
   const mockCourseId = 'test-course-id'
@@ -27,6 +27,16 @@ describe('CourseService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockGetUser.mockResolvedValue({
+      data: {
+        user: {
+          id: mockUserId,
+          app_metadata: { role: 'user' },
+          user_metadata: {},
+        },
+      },
+      error: null,
+    })
   })
 
   describe('getCourseById', () => {
@@ -113,15 +123,15 @@ describe('CourseService', () => {
 
     it('should return true for admin user', async () => {
       // Requirement: 0.4, 0.7
-      // Mock Clerk clerkClient to return ADMIN role
-      const { clerkClient } = require('@clerk/nextjs/server')
-      clerkClient.mockResolvedValue({
-        users: {
-          getUser: jest.fn().mockResolvedValue({
+      mockGetUser.mockResolvedValue({
+        data: {
+          user: {
             id: mockAdminId,
-            publicMetadata: { role: 'ADMIN' },
-          }),
+            app_metadata: { role: 'admin' },
+            user_metadata: {},
+          },
         },
+        error: null,
       })
 
       const result = await checkCourseOwnership(mockCourseId, mockAdminId)
@@ -307,15 +317,15 @@ describe('CourseService', () => {
         sections: [],
       }
 
-      // Mock Clerk for admin
-      const { clerkClient } = require('@clerk/nextjs/server')
-      clerkClient.mockResolvedValue({
-        users: {
-          getUser: jest.fn().mockResolvedValue({
+      mockGetUser.mockResolvedValue({
+        data: {
+          user: {
             id: mockAdminId,
-            publicMetadata: { role: 'ADMIN' },
-          }),
+            app_metadata: { role: 'admin' },
+            user_metadata: {},
+          },
         },
+        error: null,
       })
 
       prismaMock.courses.findUnique.mockResolvedValue(mockCourse as Course)
