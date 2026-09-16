@@ -92,6 +92,38 @@ export const suggestionOptions = {
           editor.chain().focus().deleteRange(range).toggleBlockquote().run()
         },
       },
+      {
+        title: 'Code Block',
+        description: 'Insert syntax-highlighted code block',
+        shortcut: '```',
+        command: ({ editor, range }: any) => {
+          editor.chain().focus().deleteRange(range).toggleCodeBlock({ language: 'python' }).run()
+        },
+      },
+      {
+        title: 'Callout Info',
+        description: 'Kotak informasi (Notion-style)',
+        shortcut: '/info',
+        command: ({ editor, range }: any) => {
+          editor.chain().focus().deleteRange(range).insertCallout({ type: 'info' }).run()
+        },
+      },
+      {
+        title: 'Callout Tip',
+        description: 'Kotak tips praktis & trik koding',
+        shortcut: '/tip',
+        command: ({ editor, range }: any) => {
+          editor.chain().focus().deleteRange(range).insertCallout({ type: 'tip' }).run()
+        },
+      },
+      {
+        title: 'Callout Warning',
+        description: 'Kotak peringatan penting',
+        shortcut: '/warn',
+        command: ({ editor, range }: any) => {
+          editor.chain().focus().deleteRange(range).insertCallout({ type: 'warning' }).run()
+        },
+      },
     ]
 
     // Filter by query — More... is NOT part of this array, it lives separately

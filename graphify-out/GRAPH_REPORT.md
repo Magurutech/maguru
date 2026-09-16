@@ -1,16 +1,16 @@
-# Graph Report - maguru  (2026-09-15)
+# Graph Report - maguru  (2026-09-16)
 
 ## Corpus Check
-- 644 files · ~882,940 words
+- 644 files · ~883,650 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7209 nodes · 11069 edges · 429 communities (297 shown, 132 thin omitted)
+- 7210 nodes · 11067 edges · 433 communities (302 shown, 131 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 194 edges (avg confidence: 0.67)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e3df6ce9`
+- Built from commit: `08e1e88a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -404,10 +404,14 @@
 - clsx
 - ./query_compiler_fast_bg.wasm?module
 - y
+- CourseList.tsx
+- use-link-popover.ts
+- UserRoleContext.test.tsx
 - Cara 2: Otomatis via Request Login di Postman (Permanen & Recommended)
 - course.service.ts
 - suggestion.ts
 - lu
+- theme-toggle.tsx
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 147 edges
@@ -422,21 +426,21 @@
 10. `L()` - 26 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `HeadingShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
-  components/tiptap-ui/heading-button/heading-button.tsx → lib/tiptap-utils.ts
 - `ColorHighlightShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
   components/tiptap-ui/color-highlight-button/color-highlight-button.tsx → lib/tiptap-utils.ts
 - `ImageShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
   components/tiptap-ui/image-upload-button/image-upload-button.tsx → lib/tiptap-utils.ts
-- `TextAlignShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
-  components/tiptap-ui/text-align-button/text-align-button.tsx → lib/tiptap-utils.ts
 - `HistoryShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
   components/tiptap-ui/undo-redo-button/undo-redo-button.tsx → lib/tiptap-utils.ts
+- `MarkShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
+  components/tiptap-ui/mark-button/mark-button.tsx → lib/tiptap-utils.ts
+- `ChatMessage()` --calls--> `cn()`  [EXTRACTED]
+  features/langserve/chatbot/ChatMessage.tsx → lib/utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (429 total, 132 thin omitted)
+## Communities (433 total, 131 thin omitted)
 
 ### Community 0 - "creator-dashboard/index.ts"
 Cohesion: 0.07
@@ -444,75 +448,75 @@ Nodes (31): APICourse, CreatorStats, CreatorDashboardPage(), ActionRequiredCard(
 
 ### Community 1 - "dashboard/components/index.ts"
 Cohesion: 0.06
-Nodes (44): Progress(), Skeleton(), TODO: Uncomment fetch block setelah backend API siap, NOTE: Backend API belum diimplementasikan. Menggunakan mock data untuk…, DashboardError(), DashboardErrorProps, DashboardHeader(), DashboardHeaderProps (+36 more)
+Nodes (43): Skeleton(), TODO: Uncomment fetch block setelah backend API siap, NOTE: Backend API belum diimplementasikan. Menggunakan mock data untuk…, DashboardError(), DashboardErrorProps, DashboardHeader(), DashboardHeaderProps, roleIcons (+35 more)
 
 ### Community 2 - "cn"
 Cohesion: 0.08
-Nodes (46): CreatorLayoutProps, CreatorSidebar(), AppSidebar(), UserLayoutProps, Separator(), Sheet(), SheetContent(), SheetDescription() (+38 more)
+Nodes (38): CreatorLayoutProps, CreatorSidebar(), AppSidebar(), UserLayoutProps, Collapsible(), CollapsibleContent(), CollapsibleTrigger(), Sidebar() (+30 more)
 
 ### Community 3 - "learn/page.tsx"
-Cohesion: 0.07
-Nodes (24): CompletedResult, LearnPageInner(), Collapsible(), CollapsibleContent(), CollapsibleTrigger(), AssessmentErrorBoundary, Props, State (+16 more)
+Cohesion: 0.13
+Nodes (10): CompletedResult, LearnPageInner(), AssessmentErrorBoundary, Props, State, AssessmentResultPage(), AssessmentResultPageProps, LearnHeader() (+2 more)
 
 ### Community 4 - "[slug]/page.tsx"
 Cohesion: 0.07
 Nodes (36): checkEnrollment(), CourseDetailPage(), fetchCourseCreator(), fetchCourseDetail(), fetchCourseSections(), getDynamicBaseUrl(), PageProps, CourseCurriculumProps (+28 more)
 
 ### Community 5 - "lib/utils.ts"
-Cohesion: 0.09
-Nodes (26): MasteryBadge(), MasteryBadgeProps, SkeuBadge(), SkeuBadgeProps, ButtonSpecDrawer(), SkeuButton, SkeuButtonProps, CourseCard3D() (+18 more)
+Cohesion: 0.07
+Nodes (26): ColorsShowcase(), ColorToken, colorTokensGroup, skeuoUtilities, MasteryBadge(), MasteryBadgeProps, SkeuBadge(), SkeuBadgeProps (+18 more)
 
 ### Community 6 - "er"
 Cohesion: 0.11
 Nodes (20): dispatchEngineSpans(), er(), getActiveContext(), getTraceParent(), getTracingHelper(), handleRequestError(), isEnabled(), ja() (+12 more)
 
 ### Community 7 - "lesson.types.ts"
-Cohesion: 0.09
-Nodes (21): BoldMark, BulletListNode, CodeBlockNode, CodeMark, CreateLessonInput, DeleteLessonResult, HeadingNode, ItalicMark (+13 more)
+Cohesion: 0.06
+Nodes (28): SectionWithCount, BoldMark, BulletListNode, CodeBlockNode, CodeMark, CreateLessonInput, DeleteLessonResult, HeadingNode (+20 more)
 
 ### Community 8 - "style-text-dropdown-menu.tsx"
-Cohesion: 0.09
-Nodes (29): BoldIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps, StrikeIcon, SvgProps (+21 more)
+Cohesion: 0.08
+Nodes (42): BoldIcon, SvgProps, ChevronDownIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps (+34 more)
 
 ### Community 9 - "dashboard/index.ts"
-Cohesion: 0.07
-Nodes (32): Button(), buttonVariants, CreatorCoursesResponse, ActionButton(), ActionButtonProps, variantStyles, CourseList(), CourseListProps (+24 more)
+Cohesion: 0.11
+Nodes (20): AdminLayoutProps, Button(), buttonVariants, ActionButton(), ActionButtonProps, variantStyles, DashboardHeader(), DashboardHeaderProps (+12 more)
 
 ### Community 10 - "use-heading.ts"
-Cohesion: 0.09
-Nodes (30): HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps, HeadingIcon, SvgProps, HeadingOneIcon, SvgProps (+22 more)
+Cohesion: 0.08
+Nodes (47): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps (+39 more)
 
 ### Community 11 - "simple-editor.tsx"
-Cohesion: 0.07
-Nodes (28): ArrowLeftIcon, SvgProps, LinkIcon, SvgProps, MoonStarIcon, SvgProps, SunIcon, SvgProps (+20 more)
+Cohesion: 0.06
+Nodes (41): ArrowLeftIcon, SvgProps, HorizontalRule, SimpleEditor(), AlignDropdownMenu, BlockquoteButton, BlockquoteButtonProps, BLOCKQUOTE_SHORTCUT_KEY (+33 more)
 
 ### Community 12 - "tiptap-utils.ts"
-Cohesion: 0.08
-Nodes (42): Commands, getToggleColor(), NodeBackground, NodeBackgroundOptions, @tiptap/core, BlockquoteIcon, SvgProps, CodeBlockIcon (+34 more)
+Cohesion: 0.06
+Nodes (34): Commands, getToggleColor(), NodeBackground, NodeBackgroundOptions, @tiptap/core, BlockquoteShortcutBadge(), CodeBlockButtonProps, CodeBlockShortcutBadge() (+26 more)
 
 ### Community 13 - "use-text-align.ts"
-Cohesion: 0.10
-Nodes (27): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+19 more)
+Cohesion: 0.11
+Nodes (24): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+16 more)
 
 ### Community 14 - "schemas.ts"
 Cohesion: 0.17
 Nodes (14): fetchQuestions(), PastResult, submitAssessment(), AssessmentPage(), AssessmentPageProps, useAssessment(), AssessmentQuestion, AssessmentResult (+6 more)
 
 ### Community 15 - "use-list.ts"
-Cohesion: 0.11
-Nodes (30): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, ListButton, ListButtonProps (+22 more)
+Cohesion: 0.13
+Nodes (19): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, isListActive(), listIcons (+11 more)
 
 ### Community 16 - "index.d.ts"
 Cohesion: 0.00
 Nodes (935): AggregateAssessment_questions, AggregateCourse_completions, AggregateCourses, AggregateCreator_profiles, AggregateEnrollments, AggregateLesson_progress, AggregateLessons, AggregateSections (+927 more)
 
 ### Community 17 - "LessonEditorPanel.tsx"
-Cohesion: 0.16
-Nodes (13): Column, Columns, Commands, @tiptap/core, looksLikeMarkdown(), PasteMarkdown, Commands, Small (+5 more)
+Cohesion: 0.18
+Nodes (12): Column, Columns, Commands, @tiptap/core, looksLikeMarkdown(), PasteMarkdown, Commands, Small (+4 more)
 
 ### Community 18 - "CourseCreationForm.tsx"
-Cohesion: 0.09
-Nodes (23): Label(), Select(), SelectContent(), SelectItem(), SelectLabel(), SelectScrollDownButton(), SelectScrollUpButton(), SelectSeparator() (+15 more)
+Cohesion: 0.13
+Nodes (16): SkeuInputProps, Input, InputProps, Label(), Select(), SelectValue(), Textarea(), CourseCreationForm() (+8 more)
 
 ### Community 19 - "ManageContext.tsx"
 Cohesion: 0.19
@@ -528,7 +532,7 @@ Nodes (19): chartConfig, chartData, description, Card(), CardAction(), CardConte
 
 ### Community 22 - "link-popover.tsx"
 Cohesion: 0.05
-Nodes (51): BanIcon, SvgProps, CheckIcon, SvgProps, CornerDownLeftIcon, SvgProps, ExternalLinkIcon, SvgProps (+43 more)
+Nodes (46): BanIcon, SvgProps, CheckIcon, SvgProps, CornerDownLeftIcon, SvgProps, ExternalLinkIcon, SvgProps (+38 more)
 
 ### Community 23 - "LandingPageNew.tsx"
 Cohesion: 0.10
@@ -539,12 +543,12 @@ Cohesion: 0.10
 Nodes (14): CloseIcon, SvgProps, Commands, ImageUploadNode, ImageUploadNodeOptions, @tiptap/react, UploadFunction, FileItem (+6 more)
 
 ### Community 25 - "useManageContext"
-Cohesion: 0.20
-Nodes (13): ManagePageInner(), EditorToolbarStrip, ManageContent(), ManageDialogs(), ManageHeader(), ManageHeaderProps, ManageSidebar(), ManageInspector() (+5 more)
+Cohesion: 0.11
+Nodes (21): ManagePageInner(), EditorToolbarStrip, ManageContent(), ManageDialogs(), ManageHeader(), ManageHeaderProps, ManageSidebar(), HeadingShortcuts (+13 more)
 
 ### Community 26 - "auth/index.ts"
-Cohesion: 0.10
-Nodes (30): AdminLayoutProps, MockOverrides, DEFAULT_ROLE, initialState, RoleAction, roleReducer(), { getRoleFromToken }, mockCacheManager (+22 more)
+Cohesion: 0.12
+Nodes (30): CourseCreatePage(), CreatorCoursesPage(), DashboardPage(), UnauthorizedContent(), RoleDisplay(), MockOverrides, DEFAULT_ROLE, initialState (+22 more)
 
 ### Community 27 - "runtime/client.d.ts"
 Cohesion: 0.01
@@ -555,16 +559,16 @@ Cohesion: 0.02
 Nodes (66): ap(), bm(), Bp(), br(), Bs(), ca(), ci(), clone() (+58 more)
 
 ### Community 29 - "ingest-client.ts"
-Cohesion: 0.09
-Nodes (16): DELETE(), PUT(), POST(), GET(), POST(), AuthorizationService, LessonService, bulkSyncCourseLessonsToAI() (+8 more)
+Cohesion: 0.11
+Nodes (15): DELETE(), PUT(), POST(), GET(), POST(), LessonService, bulkSyncCourseLessonsToAI(), BulkSyncLessonItem (+7 more)
 
 ### Community 30 - "progress.service.ts"
-Cohesion: 0.12
-Nodes (23): GET(), GET(), POST(), GET(), ProgressService, CourseProgressData, CourseProgressResponse, LessonProgressData (+15 more)
+Cohesion: 0.18
+Nodes (10): ProgressService, CourseProgressData, CourseProgressResponse, LessonProgressData, LessonProgressResponse, MarkLessonCompleteResult, calculateCourseCompletion(), CourseCompletionResult (+2 more)
 
 ### Community 31 - "course.api.ts"
-Cohesion: 0.07
-Nodes (34): CourseCatalogPage(), CoursesResponse, fetchCourses(), getDynamicBaseUrl(), SearchParams, Badge(), badgeVariants, CourseCatalogResponse (+26 more)
+Cohesion: 0.09
+Nodes (20): CourseCard, CourseCardProps, truncate(), CoursePagination(), CoursePaginationProps, EnrollableCourseCard(), EnrollableCourseCardProps, mockCourse (+12 more)
 
 ### Community 32 - "ui/button.tsx"
 Cohesion: 0.33
@@ -580,23 +584,23 @@ Nodes (19): GET(), GET(), PUT(), GET(), calculateCreatorStats(), CreatorProfile,
 
 ### Community 35 - "createClient"
 Cohesion: 0.12
-Nodes (16): GET(), GET(), POST(), PATCH(), GET(), PATCH(), DELETE(), PUT() (+8 more)
+Nodes (21): GET(), GET(), GET(), POST(), DELETE(), PATCH(), GET(), PATCH() (+13 more)
 
 ### Community 36 - "creator-course.service.ts"
-Cohesion: 0.11
-Nodes (17): GET(), GET(), POST(), PUT(), MyCoursesPage(), createCourse(), CreateCourseInput, CreateCourseResult (+9 more)
+Cohesion: 0.18
+Nodes (13): GET(), POST(), PUT(), createCourse(), CreateCourseInput, CreateCourseResult, ensureUniqueSlug(), generateSlug() (+5 more)
 
 ### Community 37 - "createClient"
-Cohesion: 0.10
-Nodes (16): cinzel, firaCode, fraunces, metadata, poppins, SignInPage(), SignUpPage(), useRoleNavigation() (+8 more)
+Cohesion: 0.13
+Nodes (12): cinzel, firaCode, fraunces, metadata, poppins, useRoleNavigation(), EditorialSideRails(), NAV_ITEMS (+4 more)
 
 ### Community 38 - "runtime/client.js"
 Cohesion: 0.02
 Nodes (61): Aa(), Ad(), Al(), as(), ba(), bd(), clone(), _cloneInto() (+53 more)
 
 ### Community 39 - "image-upload-button.tsx"
-Cohesion: 0.12
-Nodes (19): ImagePlusIcon, SvgProps, IconComponent, IconProps, ImageShortcutBadge(), ImageUploadButton, ImageUploadButtonProps, canInsertImage() (+11 more)
+Cohesion: 0.15
+Nodes (17): ImagePlusIcon, SvgProps, IconComponent, IconProps, ImageShortcutBadge(), ImageUploadButton, ImageUploadButtonProps, canInsertImage() (+9 more)
 
 ### Community 40 - "waitForPageLoad"
 Cohesion: 0.06
@@ -615,20 +619,20 @@ Cohesion: 0.12
 Nodes (49): ac(), addErrorMessage(), addField(), addSuggestion(), asObject(), bt(), _c(), cc() (+41 more)
 
 ### Community 44 - "use-undo-redo.ts"
-Cohesion: 0.11
-Nodes (27): Redo2Icon, SvgProps, SvgProps, Undo2Icon, canSetLink(), isLinkActive(), LinkHandlerProps, shouldShowLinkButton() (+19 more)
+Cohesion: 0.16
+Nodes (15): Redo2Icon, SvgProps, SvgProps, Undo2Icon, HistoryShortcutBadge(), UndoRedoButtonProps, canExecuteUndoRedoAction(), executeUndoRedoAction() (+7 more)
 
 ### Community 45 - "cms/types/index.ts"
-Cohesion: 0.17
-Nodes (8): SectionService, CreateSectionInput, DeleteSectionResult, Section, SectionLesson, SectionWithLessonCount, SectionWithLessons, UpdateSectionInput
+Cohesion: 0.11
+Nodes (10): AuthorizationService, SectionService, CreateSectionInput, DeleteSectionResult, Section, SectionLesson, SectionWithLessonCount, SectionWithLessons (+2 more)
 
 ### Community 46 - "🧪 Panduan Pengujian Manual (Manual Testing Guide)"
 Cohesion: 0.09
-Nodes (21): 10. TC-M3-10: Real-time RAG Knowledge Status & In-Modal Quick Sync (Should-Have), 11. TC-M3-11: Proportional Multi-Chapter Sampling untuk Placement Pre-Test (Should-Have), 12. TC-M3-12: Lesson Editor UX, Live Status Badge, Word Counter, & Manual Re-sync Action (Should-Have), 1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`), 2. TC-M3-02: Auto-Update & Deduplikasi saat Edit Materi (`PUT Lesson`), 3. TC-M3-03: Cascade Deletion saat Hapus Materi (`DELETE Lesson`), 4. TC-M3-04: Non-Blocking & Fault Tolerance Resiliency (AI Backend Mati), 5. TC-M3-07: Scoped PGVector Retrieval & Source Lesson Attribution di AI Quiz Generator (Must-Have) (+13 more)
+Nodes (21): 10. TC-M3-10: Real-time RAG Knowledge Status & In-Modal Quick Sync (Should-Have), 11. TC-M3-11: Proportional Multi-Chapter Sampling untuk Placement Pre-Test (Should-Have), 12. TC-M3-12: Lesson Editor UX, Live Status Badge, Word Counter, & Manual Re-sync Action (Should-Have), 1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`) [x], 2. TC-M3-02: Auto-Update & Deduplikasi saat Edit Materi (`PUT Lesson`)  [x], 3. TC-M3-03: Cascade Deletion saat Hapus Materi (`DELETE Lesson`) [x], 4. TC-M3-04: Non-Blocking & Fault Tolerance Resiliency (AI Backend Mati) [x], 5. TC-M3-07: Scoped PGVector Retrieval & Source Lesson Attribution di AI Quiz Generator (Must-Have) [x] (+13 more)
 
 ### Community 47 - "admin/components/index.ts"
-Cohesion: 0.19
-Nodes (14): AdminDashboardPage(), TODO: Create these components, AdminAccessDenied(), AdminAuthState, AdminLoadingScreen(), renderAdminGuard(), AdminCardProps, AnalyticsData (+6 more)
+Cohesion: 0.16
+Nodes (17): AdminDashboardPage(), Badge(), badgeVariants, TODO: Create these components, AdminAccessDenied(), AdminAuthState, AdminLoadingScreen(), renderAdminGuard() (+9 more)
 
 ### Community 48 - "PrismaPromise"
 Cohesion: 0.04
@@ -647,8 +651,8 @@ Cohesion: 0.04
 Nodes (47): 1. Interactive Learning Flow, 2.1 Code Explanation, 2.2 Hint Generation System (3-Level Progressive Hints), 2.3 Quiz Feedback System, 2.4 Adaptive Learning Flow, 2.5 Q&A Chatbot, 2. AI Capabilities, 3. Assessment System (+39 more)
 
 ### Community 52 - "@eslint/eslintrc"
-Cohesion: 0.11
-Nodes (20): ChevronDownIcon, SvgProps, HeadingDropdownMenu, HeadingDropdownMenuProps, ListDropdownMenuProps, TableDropdownMenu, TableDropdownMenuProps, TableGridPicker() (+12 more)
+Cohesion: 0.09
+Nodes (25): DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSubContent, DropdownMenuSubTrigger, Progress(), SelectContent(), SelectItem() (+17 more)
 
 ### Community 53 - "Maguru: Product Requirements Document (PRD) - MVP V1"
 Cohesion: 0.04
@@ -656,7 +660,7 @@ Nodes (45): 10. Risks & Open Questions, 11. Release Criteria, 12. Future Conside
 
 ### Community 54 - "compilerOptions"
 Cohesion: 0.04
-Nodes (47): build, components/reactbits, coverage, dist, dom, dom.iterable, esnext, **/*.int.test.ts (+39 more)
+Nodes (44): build, components/reactbits, coverage, dist, dom, dom.iterable, esnext, **/*.int.test.ts (+36 more)
 
 ### Community 55 - "HTML Best Practices dan Common Pitfalls"
 Cohesion: 0.05
@@ -679,20 +683,20 @@ Cohesion: 0.06
 Nodes (47): alloc(), allocUnsafe(), allocUnsafeSlow(), Am(), ao(), byteLength(), cd(), construct() (+39 more)
 
 ### Community 60 - "gsap"
-Cohesion: 0.16
-Nodes (17): HighlighterIcon, SvgProps, ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge(), canColorHighlight(), COLOR_HIGHLIGHT_SHORTCUT_KEY, getHighlightColorValue() (+9 more)
+Cohesion: 0.17
+Nodes (16): HighlighterIcon, SvgProps, ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge(), canColorHighlight(), COLOR_HIGHLIGHT_SHORTCUT_KEY, getHighlightColorValue() (+8 more)
 
 ### Community 61 - "**Instruksi Rules UI/UX Theme & Consistency Maguru**"
 Cohesion: 0.05
 Nodes (39): **A. Prinsip Umum**, **Active States**, **Animation Performance**, **B. Palet Warna (Ancient Fantasy Asia)**, **Breakpoints**, **C. Font Family**, **Color Hierarchy**, **Contrast Ratios** (+31 more)
 
 ### Community 62 - "useLocalStorageDraft.ts"
-Cohesion: 0.23
-Nodes (8): HeadingShortcuts, LessonEditorPanel(), LessonEditorPanelProps, DRAFT_KEY(), LessonDraft, useLocalStorageDraft(), UseLocalStorageDraftProps, UseLocalStorageDraftReturn
+Cohesion: 0.32
+Nodes (5): DRAFT_KEY(), LessonDraft, useLocalStorageDraft(), UseLocalStorageDraftProps, UseLocalStorageDraftReturn
 
 ### Community 63 - "useUserRole"
-Cohesion: 0.23
-Nodes (11): CourseCreatePage(), CreatorCoursesPage(), DashboardPage(), UnauthorizedContent(), useAdminGuard(), RoleDisplay(), useRoleConditional(), useRoleGuard() (+3 more)
+Cohesion: 0.16
+Nodes (12): enrollCourse(), getCreatorCourses(), CourseFilters(), mockPush, searchParamsStore, CatalogFilters, useCourseCatalogFilters(), UseCourseCatalogFiltersReturn (+4 more)
 
 ### Community 65 - "🖥️ 5. Panduan Manual Testing Melalui UI Creator CMS"
 Cohesion: 0.12
@@ -703,8 +707,8 @@ Cohesion: 0.05
 Nodes (36): 10. Final Recommendation, 1. Executive Summary, 2. Product Analysis, 3. User Analysis, 4. Brand Analysis, 5. Design Style Comparison, 6. Recommended Design Direction, 7. Design System Foundation (+28 more)
 
 ### Community 67 - "use-element-rect.ts"
-Cohesion: 0.14
-Nodes (17): SimpleEditor(), CursorVisibilityOptions, useCursorVisibility(), ElementRectOptions, initialRect, isClientSide(), RectState, useBodyRect() (+9 more)
+Cohesion: 0.18
+Nodes (15): CursorVisibilityOptions, useCursorVisibility(), ElementRectOptions, initialRect, isClientSide(), RectState, useBodyRect(), useElementRect() (+7 more)
 
 ### Community 68 - "errors.ts"
 Cohesion: 0.10
@@ -744,7 +748,7 @@ Nodes (32): 10. Final Verdict, 1. Problem Validation, 2. Target Market Validatio
 
 ### Community 79 - "user-dashboard/index.ts"
 Cohesion: 0.14
-Nodes (18): AchievementsCard(), AchievementsCardProps, AICoTeacherCard(), ContinueLearningCard(), ContinueLearningCardProps, DashboardHeader(), DashboardHeaderProps, LearningProgressCard() (+10 more)
+Nodes (19): getDashboardData(), AchievementsCard(), AchievementsCardProps, AICoTeacherCard(), ContinueLearningCard(), ContinueLearningCardProps, DashboardHeader(), DashboardHeaderProps (+11 more)
 
 ### Community 80 - "Pengenalan CSS: Dasar-dasar Styling dan Selektor"
 Cohesion: 0.06
@@ -905,8 +909,8 @@ Cohesion: 0.11
 Nodes (19): eslint-config-next, @eslint/eslintrc, eslint-plugin-prettier, jest-mock-extended, devDependencies, eslint-config-next, @eslint/eslintrc, eslint-plugin-prettier (+11 more)
 
 ### Community 118 - "button/button.tsx"
-Cohesion: 0.16
-Nodes (13): Button, ButtonSize, ButtonVariant, Tooltip(), TooltipContent, TooltipContentProps, TooltipContext, TooltipContextValue (+5 more)
+Cohesion: 0.17
+Nodes (12): ButtonSize, ButtonVariant, Tooltip(), TooltipContent, TooltipContentProps, TooltipContext, TooltipContextValue, TooltipProviderProps (+4 more)
 
 ### Community 119 - "✅ Sprint 2: Content First (Current Implementation)"
 Cohesion: 0.11
@@ -1017,8 +1021,8 @@ Cohesion: 0.12
 Nodes (15): 1. Test Data Setup, 2. Page Object Models, 3. E2E Testing (BDD), 3. Test Helper Functions, 4. Test Implementation Structure, API Endpoints, Batasan dan Penyederhanaan, Daftar Isi (+7 more)
 
 ### Community 156 - "CourseOverview.tsx"
-Cohesion: 0.40
-Nodes (4): CourseOverview(), DIFFICULTY_LABEL, mockSetCourseDeleteDialogOpen, DescriptionEditor()
+Cohesion: 0.24
+Nodes (7): CourseOverview(), DIFFICULTY_LABEL, mockSetCourseDeleteDialogOpen, DescriptionEditor(), LearningOutcomesEditor(), LearningOutcomesEditorProps, mockFetch
 
 ### Community 157 - "model-architecture.md"
 Cohesion: 0.20
@@ -1041,8 +1045,8 @@ Cohesion: 0.13
 Nodes (15): Alur Normal (Happy Path):, Batasan dan Penyederhanaan, Checklist Implementasi, Daftar Isi, Definition of Done, Documentation & Handover, Flow Pengambilan Role, Implementation Steps (+7 more)
 
 ### Community 162 - "submit/route.ts"
-Cohesion: 0.32
-Nodes (8): POST(), executeTopicPlacement(), findMany(), TransactionClient, upsert(), calculateScores(), PLACEMENT_THRESHOLD, Question
+Cohesion: 0.27
+Nodes (9): GET(), POST(), executeTopicPlacement(), findMany(), TransactionClient, upsert(), calculateScores(), PLACEMENT_THRESHOLD (+1 more)
 
 ### Community 163 - "Image extension"
 Cohesion: 0.14
@@ -1197,8 +1201,8 @@ Cohesion: 0.22
 Nodes (8): API Routes: /api/creator, Arsitektur, GET /api/creator/courses, Known Issues & TODO, Perbedaan /api/courses vs /api/creator/courses, POST /api/creator/courses, PUT /api/creator/courses/[slug]/publish, Route Map
 
 ### Community 203 - "dashboard/utils.ts"
-Cohesion: 0.36
-Nodes (5): GET(), QuizEditorPanel(), QuizEditorPanelProps, AIQuizQuestion, fetchAIGeneratedQuiz()
+Cohesion: 0.29
+Nodes (13): GET(), GET(), POST(), GET(), apiError(), ApiErrorBody, ApiErrorCode, conflictError() (+5 more)
 
 ### Community 204 - "📘 Description – A Closer Look at Description (Modul 4D Framework)"
 Cohesion: 0.22
@@ -1251,6 +1255,10 @@ Nodes (7): 🔍 Apa itu Generative AI?, 🧠 Bagaimana Cara Kerjanya?, 📌 Cek 
 ### Community 217 - "Web Development Basics"
 Cohesion: 0.25
 Nodes (7): Apa yang akan Anda pelajari?, Course Structure, Prerequisites, Section 1: HTML & CSS Fundamentals (3 jam), Section 2: JavaScript Basics (3 jam), Target Audience, Web Development Basics
+
+### Community 218 - "dashboard/types.ts"
+Cohesion: 0.13
+Nodes (13): CourseCatalogPage(), CoursesResponse, fetchCourses(), getDynamicBaseUrl(), SearchParams, CourseCatalogResponse, MyCoursesResponse, CourseCatalogParams (+5 more)
 
 ### Community 219 - "Ruang Lingkup"
 Cohesion: 0.29
@@ -1490,8 +1498,8 @@ Cohesion: 0.70
 Nodes (4): config, decodeJwtUser(), extractUserFromCookies(), proxy()
 
 ### Community 284 - "colors/page.tsx"
-Cohesion: 0.40
-Nodes (4): ColorsShowcase(), ColorToken, colorTokensGroup, skeuoUtilities
+Cohesion: 0.21
+Nodes (10): SignInPage(), SignUpPage(), ButtonSpecDrawer(), SkeuButton, SkeuButtonProps, createClient(), jest, node (+2 more)
 
 ### Community 391 - "🧪 3. Panduan Manual Testing AI Quiz Generator"
 Cohesion: 0.29
@@ -1501,13 +1509,25 @@ Nodes (6): 📌 1. Ringkasan Singkat Apa yang Telah Dikerjakan, 📋 2. Status T
 Cohesion: 0.18
 Nodes (10): 1. 🎯 Overview & Goal, 2. 📐 Keselarasan Arsitektur 3-Tier (`docs/rules/architecture.md`), 3. 📂 Standarisasi Struktur Folder (`features/langserve/`), 4. 🧩 Detail Peran Setiap Layer & Komponen, 5. 📋 Step-by-Step Task Checklist, 6. 🧪 Kriteria Keberhasilan (Definition of Done), A. Presentation Layer (`features/langserve/components/`), B. Logic Layer (`features/langserve/hooks/` & `api.ts`) (+2 more)
 
+### Community 425 - "CourseList.tsx"
+Cohesion: 0.20
+Nodes (10): CreatorCoursesResponse, CourseList(), CourseListProps, CourseListItem, CourseListItemProps, defaultProps, baseCourse, baseProps (+2 more)
+
+### Community 426 - "use-link-popover.ts"
+Cohesion: 0.24
+Nodes (12): LinkIcon, SvgProps, LinkContent(), canSetLink(), isLinkActive(), LinkHandlerProps, shouldShowLinkButton(), useLinkHandler() (+4 more)
+
+### Community 427 - "UserRoleContext.test.tsx"
+Cohesion: 0.17
+Nodes (8): roleReducer(), { getRoleFromToken }, mockCacheManager, mockSyncManager, mockUseAuth, mockUseSession, TestConsumer(), UserRoleProvider()
+
 ### Community 428 - "Cara 2: Otomatis via Request Login di Postman (Permanen & Recommended)"
 Cohesion: 0.18
 Nodes (10): 1. Buat Request Baru di Postman, 2. Konfigurasi Headers, 3. Konfigurasi Body (raw JSON), 4. Tambahkan Script Simpan Otomatis, Alternatif Manual via Tab Application:, Cara 1: Ambil dari Browser Console (Paling Cepat - 10 Detik), Cara 2: Otomatis via Request Login di Postman (Permanen & Recommended), 🚀 Cara Pasang Token di Postman Collection (+2 more)
 
 ### Community 429 - "course.service.ts"
-Cohesion: 0.10
-Nodes (21): DELETE(), GET(), PATCH(), checkCourseOwnership(), CourseData, CourseServiceResult, CourseWithSections, getCourseById() (+13 more)
+Cohesion: 0.24
+Nodes (12): GET(), PATCH(), checkCourseOwnership(), CourseData, CourseServiceResult, CourseWithSections, getCourseById(), getCourseWithSections() (+4 more)
 
 ### Community 430 - "suggestion.ts"
 Cohesion: 0.31
@@ -1517,25 +1537,29 @@ Nodes (6): SlashItem, SlashList, SlashListProps, MORE_ACTION, suggestionOptions,
 Cohesion: 0.07
 Nodes (35): a(), C(), m(), N(), P(), R(), ue(), Bu() (+27 more)
 
+### Community 432 - "theme-toggle.tsx"
+Cohesion: 0.32
+Nodes (5): MoonStarIcon, SvgProps, SunIcon, SvgProps, ThemeToggle()
+
 ## Knowledge Gaps
-- **3491 isolated node(s):** `SkeuButtonProps`, `Lingkup Fitur: Must-Have & Should-Have (MoSCoW)`, `📋 Prasyarat Pengujian (Pre-requisites)`, `🎯 DAFTAR SKENARIO PENGUJIAN`, `1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`)` (+3486 more)
+- **3491 isolated node(s):** `Lingkup Fitur: Must-Have & Should-Have (MoSCoW)`, `📋 Prasyarat Pengujian (Pre-requisites)`, `🎯 DAFTAR SKENARIO PENGUJIAN`, `1. TC-M3-01: Auto-Ingestion saat Tambah Materi Baru (`POST Lesson`) [x]`, `2. TC-M3-02: Auto-Update & Deduplikasi saat Edit Materi (`PUT Lesson`)  [x]` (+3486 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **132 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **131 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `createClient()` connect `createClient` to `creatorProfileService.ts`, `submit/route.ts`, `creator-course.service.ts`, `[slug]/page.tsx`, `dashboard/utils.ts`, `image-upload.ts`, `course.service.ts`, `progress.service.ts`?**
+- **Why does `createClient()` connect `createClient` to `creatorProfileService.ts`, `submit/route.ts`, `creator-course.service.ts`, `[slug]/page.tsx`, `image-upload.ts`, `dashboard/utils.ts`, `cms/types/index.ts`, `course.service.ts`?**
   _High betweenness centrality (0.085) - this node is a cross-community bridge._
-- **Why does `Button()` connect `dashboard/index.ts` to `ui/button.tsx`, `cn`, `learn/page.tsx`, `creator-course.service.ts`, `lib/utils.ts`, `course.api.ts`, `admin/components/index.ts`, `LessonEditorPanel.tsx`, `CourseCreationForm.tsx`, `langserve/api.ts`, `CourseList.tsx`, `useManageContext`, `auth/index.ts`, `CourseOverview.tsx`, `useUserRole`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `ui/button.tsx`, `dashboard/components/index.ts`, `lib/utils.ts`, `style-text-dropdown-menu.tsx`, `dashboard/index.ts`, `simple-editor.tsx`, `use-text-align.ts`, `chatbot/ChatMessage.tsx`, `use-list.ts`, `user-dashboard/index.ts`, `langserve/api.ts`, `CourseCreationForm.tsx`, `@eslint/eslintrc`, `chart-pie-donut-text.tsx`, `BrowseModal.tsx`, `TabNav.tsx`, `colors/page.tsx`, `course.api.ts`?**
-  _High betweenness centrality (0.045) - this node is a cross-community bridge._
+- **Why does `Button()` connect `dashboard/index.ts` to `ui/button.tsx`, `cn`, `createClient`, `lib/utils.ts`, `CourseList.tsx`, `admin/components/index.ts`, `LessonEditorPanel.tsx`, `CourseCreationForm.tsx`, `langserve/api.ts`, `@eslint/eslintrc`, `CourseList.tsx`, `useManageContext`, `auth/index.ts`, `CourseOverview.tsx`, `course.api.ts`?**
+  _High betweenness centrality (0.061) - this node is a cross-community bridge._
+- **Why does `cn()` connect `@eslint/eslintrc` to `ui/button.tsx`, `dashboard/components/index.ts`, `cn`, `lib/utils.ts`, `style-text-dropdown-menu.tsx`, `dashboard/index.ts`, `simple-editor.tsx`, `chatbot/ChatMessage.tsx`, `admin/components/index.ts`, `user-dashboard/index.ts`, `langserve/api.ts`, `CourseCreationForm.tsx`, `BrowseModal.tsx`, `chart-pie-donut-text.tsx`, `TabNav.tsx`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
 - **Are the 46 inferred relationships involving `r()` (e.g. with `k()` and `l()`) actually correct?**
   _`r()` has 46 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `SkeuButtonProps`, `Lingkup Fitur: Must-Have & Should-Have (MoSCoW)`, `📋 Prasyarat Pengujian (Pre-requisites)` to the rest of the system?**
+- **What connects `Lingkup Fitur: Must-Have & Should-Have (MoSCoW)`, `📋 Prasyarat Pengujian (Pre-requisites)`, `🎯 DAFTAR SKENARIO PENGUJIAN` to the rest of the system?**
   _3491 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `creator-dashboard/index.ts` be split into smaller, more focused modules?**
   _Cohesion score 0.06802721088435375 - nodes in this community are weakly interconnected._
 - **Should `dashboard/components/index.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06187202538339503 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06440677966101695 - nodes in this community are weakly interconnected._

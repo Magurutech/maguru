@@ -72,6 +72,9 @@ interface ManageContextValue {
   knowledgeStatus: { is_synced: boolean; total_chunks: number; message?: string } | null
   handleSyncKnowledge: () => Promise<void>
   fetchKnowledgeStatus: () => Promise<void>
+  // Zen Mode / Sidebar Collapse
+  isSidebarCollapsed: boolean
+  toggleSidebarCollapse: () => void
 }
 
 
@@ -301,6 +304,24 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
     }
   }
 
+  // ── Zen Mode: Sidebar collapse state ──────────────────────────────────────
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('maguru_creator_sidebar_collapsed') === 'true'
+    }
+    return false
+  })
+
+  const toggleSidebarCollapse = useCallback(() => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('maguru_creator_sidebar_collapsed', String(next))
+      }
+      return next
+    })
+  }, [])
+
   return (
     <ManageContext.Provider value={{
       course, setCourse, sections, loading, error, publishing, handleTogglePublish,
@@ -316,6 +337,7 @@ export function ManageProvider({ courseSlug, children }: { courseSlug: string; c
       reorderSections, reorderLessons,
       questions, setQuestions, questionsLoading, fetchQuestions,
       syncingKnowledge, knowledgeStatus, handleSyncKnowledge, fetchKnowledgeStatus,
+      isSidebarCollapsed, toggleSidebarCollapse,
     }}>
       {children}
     </ManageContext.Provider>
