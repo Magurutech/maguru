@@ -135,13 +135,21 @@ export async function createCourse(
  * Requirements: 6.1, 6.2, 6.5, 8.5, 8.6
  */
 export async function togglePublishStatus(
-  courseId: string,
+  courseIdOrSlug: string,
   userId: string
 ): Promise<TogglePublishResult> {
-  const course = await prisma.courses.findUnique({
-    where: { id: courseId },
+  // Support lookup by either unique ID or unique slug
+  let course = await prisma.courses.findUnique({
+    where: { id: courseIdOrSlug },
     select: { id: true, title: true, status: true, creatorId: true },
   })
+
+  if (!course) {
+    course = await prisma.courses.findUnique({
+      where: { slug: courseIdOrSlug },
+      select: { id: true, title: true, status: true, creatorId: true },
+    })
+  }
 
   if (!course) {
     throw new Error('Course not found')
@@ -155,7 +163,7 @@ export async function togglePublishStatus(
     course.status === CourseStatus.DRAFT ? CourseStatus.PUBLISHED : CourseStatus.DRAFT
 
   const updated = await prisma.courses.update({
-    where: { id: courseId },
+    where: { id: course.id },
     data: { status: newStatus, updatedAt: new Date() },
     select: { id: true, title: true, status: true },
   })

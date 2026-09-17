@@ -231,6 +231,45 @@ describe('togglePublishStatus', () => {
     )
   })
 
+  it('should toggle status when passed a course slug', async () => {
+    const draftCourse = {
+      id: 'course-uuid-123',
+      slug: 'modul-awal-python',
+      title: 'Modul Awal Python',
+      status: CourseStatus.DRAFT,
+      creatorId: mockCreatorId,
+    }
+    const publishedCourse = {
+      id: 'course-uuid-123',
+      title: 'Modul Awal Python',
+      status: CourseStatus.PUBLISHED,
+    }
+
+    // First call by ID returns null, second call by slug returns the course
+    prismaMock.courses.findUnique
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(draftCourse as never)
+    prismaMock.courses.update.mockResolvedValue(publishedCourse as never)
+
+    const result = await togglePublishStatus('modul-awal-python', mockCreatorId)
+
+    expect(prismaMock.courses.findUnique).toHaveBeenNthCalledWith(1, {
+      where: { id: 'modul-awal-python' },
+      select: { id: true, title: true, status: true, creatorId: true },
+    })
+    expect(prismaMock.courses.findUnique).toHaveBeenNthCalledWith(2, {
+      where: { slug: 'modul-awal-python' },
+      select: { id: true, title: true, status: true, creatorId: true },
+    })
+    expect(prismaMock.courses.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'course-uuid-123' },
+        data: expect.objectContaining({ status: CourseStatus.PUBLISHED }),
+      })
+    )
+    expect(result.status).toBe(CourseStatus.PUBLISHED)
+  })
+
   it('should throw when user does not own the course', async () => {
     const course = {
       id: 'course-1',
