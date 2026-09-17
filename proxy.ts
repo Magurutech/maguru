@@ -191,6 +191,27 @@ export async function proxy(request: NextRequest) {
     if (pathname.startsWith('/creator') && role !== 'admin' && role !== 'creator') {
       return createRedirectResponse('/unauthorized')
     }
+
+    // Forward verified user identity to downstream Route Handlers & Server Components
+    const requestHeaders = new Headers(request.headers)
+    requestHeaders.set('x-user-id', user.id)
+    if (user.email) requestHeaders.set('x-user-email', user.email)
+    requestHeaders.set('x-user-role', role)
+
+    const nextResponse = NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    })
+    response.cookies.getAll().forEach((c) => {
+      nextResponse.cookies.set(c.name, c.value)
+    })
+
+    if (pathname.startsWith('/api/')) {
+      console.log(`[Proxy Auth] Forwarded verified user ${user.id} to ${request.method} ${pathname}`)
+    }
+
+    return nextResponse
   }
 
   return response

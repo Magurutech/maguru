@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react'
 import { toast } from 'sonner'
+import { createClient } from '@/lib/supabase/client'
 
 export interface ManagedCourse {
   id: string
@@ -70,17 +71,38 @@ export function useCourseManage(courseSlug: string) {
     if (!course) return
     setPublishing(true)
     try {
-      const res = await fetch(`/api/creator/courses/${courseSlug}/publish`, { method: 'PUT' })
-      if (!res.ok) throw new Error('Failed to toggle status')
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      const headers: Record<string, string> = {}
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`
+      }
+
+      console.log('[useCourseManage] Toggling publish status:', {
+        slug: courseSlug,
+        hasSessionToken: !!session?.access_token,
+      })
+
+      const res = await fetch(`/api/creator/courses/${courseSlug}/publish`, {
+        method: 'PUT',
+        headers,
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        throw new Error(errorData.error || `Failed with status ${res.status}`)
+      }
+
       const data = await res.json()
-      setCourse((prev) => prev ? { ...prev, status: data.course.status } : prev)
+      setCourse((prev) => (prev ? { ...prev, status: data.course.status } : prev))
       toast.success(
         data.course.status === 'PUBLISHED'
           ? 'Kursus berhasil dipublish'
           : 'Kursus berhasil di-unpublish'
       )
-    } catch {
-      toast.error('Gagal mengubah status kursus')
+    } catch (err: any) {
+      console.error('[useCourseManage] Publish error:', err)
+      toast.error(err?.message || 'Gagal mengubah status kursus')
     } finally {
       setPublishing(false)
     }
