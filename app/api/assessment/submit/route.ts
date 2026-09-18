@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const { overallScore, topicScores } = calculateScores(questions, answers)
+    const { overallScore, topicScores, totalQuestions, correctCount, wrongCount, topicDetails } = calculateScores(questions, answers)
 
     let skippedLessonIds: string[] = []
     let unlockedNextSection = false
@@ -117,6 +117,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       overallScore,
       topicScores,
+      totalQuestions,
+      correctCount,
+      wrongCount,
+      topicDetails,
       skippedLessonIds,
       unlockedNextSection,
     })

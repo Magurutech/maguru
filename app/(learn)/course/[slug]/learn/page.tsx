@@ -19,6 +19,10 @@ interface CompletedResult {
   topicScores: Record<string, number>
   skippedLessonIds: string[]
   unlockedNextSection?: boolean
+  totalQuestions?: number
+  correctCount?: number
+  wrongCount?: number
+  topicDetails?: Record<string, { correct: number; total: number; percentage: number }>
 }
 
 /**
@@ -132,8 +136,18 @@ function LearnPageInner() {
     await fetchData()
   }
 
-  const handleRetryQuiz = () => {
+  const handleRetryQuiz = async () => {
+    try {
+      await fetch(`/api/assessment/reset?courseId=${slug}${activeQuizSectionId ? `&sectionId=${activeQuizSectionId}` : ''}`, {
+        method: 'POST',
+      })
+    } catch (e) {
+      console.warn('Failed to reset assessment on retry:', e)
+    }
     setActiveResult(null)
+    setIsPreTestReviewActive(false)
+    setPreTestResult(null)
+    await fetchData()
   }
 
   const handlePreTestClick = async () => {
@@ -152,6 +166,10 @@ function LearnPageInner() {
             setPreTestResult({
               overallScore: preTest.overallScore,
               topicScores: preTest.topicScores,
+              totalQuestions: preTest.totalQuestions,
+              correctCount: preTest.correctCount,
+              wrongCount: preTest.wrongCount,
+              topicDetails: preTest.topicDetails,
               skippedLessonIds: preTest.skippedLessonIds,
               unlockedNextSection: preTest.unlockedNextSection,
             })
@@ -232,6 +250,10 @@ function LearnPageInner() {
               <AssessmentResultPage
                 score={activeResult.overallScore}
                 topicScores={activeResult.topicScores}
+                totalQuestions={activeResult.totalQuestions}
+                correctCount={activeResult.correctCount}
+                wrongCount={activeResult.wrongCount}
+                topicDetails={activeResult.topicDetails}
                 skippedLessonIds={activeResult.skippedLessonIds}
                 unlockedNextSection={activeResult.unlockedNextSection}
                 isPreTest={!preTestCompleted}
@@ -246,11 +268,16 @@ function LearnPageInner() {
               <AssessmentResultPage
                 score={preTestResult.overallScore}
                 topicScores={preTestResult.topicScores}
+                totalQuestions={preTestResult.totalQuestions}
+                correctCount={preTestResult.correctCount}
+                wrongCount={preTestResult.wrongCount}
+                topicDetails={preTestResult.topicDetails}
                 skippedLessonIds={preTestResult.skippedLessonIds}
                 unlockedNextSection={preTestResult.unlockedNextSection}
                 isPreTest={true}
                 sectionsOutline={sectionsOutlineForLookup}
                 onContinueAction={() => setIsPreTestReviewActive(false)}
+                onRetryAction={handleRetryQuiz}
                 onExitAction={() => setIsPreTestReviewActive(false)}
               />
             </div>

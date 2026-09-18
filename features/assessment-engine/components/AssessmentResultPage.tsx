@@ -27,6 +27,10 @@ interface AssessmentResultPageProps {
   skippedLessonIds: string[]
   unlockedNextSection?: boolean
   isPreTest?: boolean
+  totalQuestions?: number
+  correctCount?: number
+  wrongCount?: number
+  topicDetails?: Record<string, { correct: number; total: number; percentage: number }>
   sectionsOutline?: Array<{
     id: string
     title: string
@@ -46,6 +50,10 @@ export function AssessmentResultPage({
   skippedLessonIds,
   unlockedNextSection = false,
   isPreTest = true,
+  totalQuestions,
+  correctCount,
+  wrongCount,
+  topicDetails,
   sectionsOutline = [],
   onContinueAction,
   onRetryAction,
@@ -85,10 +93,14 @@ export function AssessmentResultPage({
   const circumference = 2 * Math.PI * radius
   const strokeDashoffset = circumference - (score / 100) * circumference
 
-  // Calculate simulated question summary stats
-  const totalQuestions = Object.keys(topicScores).length * 5 || 20
-  const correctCount = Math.round((score / 100) * totalQuestions)
-  const wrongCount = totalQuestions - correctCount
+  // Real question summary stats (no more dummy * 5 multiplier)
+  const computedTotal =
+    totalQuestions ??
+    (topicDetails
+      ? Object.values(topicDetails).reduce((acc, curr) => acc + curr.total, 0)
+      : (Object.keys(topicScores).length > 0 ? Object.keys(topicScores).length : 16))
+  const computedCorrect = correctCount ?? Math.round((score / 100) * computedTotal)
+  const computedWrong = wrongCount ?? Math.max(0, computedTotal - computedCorrect)
 
   // Helper to map topic names to suitable icons
   const getTopicIcon = (topic: string) => {
@@ -261,8 +273,9 @@ export function AssessmentResultPage({
                         ? 'bg-accent-mustard'
                         : 'bg-accent-olive'
 
-                  const topicQuestions = 5
-                  const topicCorrect = Math.round((pct / 100) * topicQuestions)
+                  const stat = topicDetails?.[topic]
+                  const topicTotal = stat?.total ?? 1
+                  const topicCorrect = stat?.correct ?? Math.round((pct / 100) * topicTotal)
 
                   return (
                     <div key={topic} className="flex items-center gap-4">
@@ -279,7 +292,7 @@ export function AssessmentResultPage({
                               {topic}
                             </span>
                             <span className="text-[9px] font-bold text-text-muted leading-none block">
-                              {topicCorrect} dari {topicQuestions} soal benar
+                              {topicCorrect} dari {topicTotal} soal benar
                             </span>
                           </div>
                           <span className="font-serif font-black text-text-primary shrink-0 ml-2">
@@ -467,7 +480,7 @@ export function AssessmentResultPage({
                     Jumlah Soal
                   </span>
                   <span className="text-[11px] font-bold text-text-primary">
-                    {totalQuestions} soal
+                    {computedTotal} soal
                   </span>
                 </div>
               </div>
@@ -480,7 +493,7 @@ export function AssessmentResultPage({
                   <span className="text-[9px] font-manrope font-extrabold uppercase tracking-wider text-text-faint block">
                     Benar
                   </span>
-                  <span className="text-[11px] font-bold text-success">{correctCount} soal</span>
+                  <span className="text-[11px] font-bold text-success">{computedCorrect} soal</span>
                 </div>
               </div>
 
@@ -492,7 +505,7 @@ export function AssessmentResultPage({
                   <span className="text-[9px] font-manrope font-extrabold uppercase tracking-wider text-text-faint block">
                     Salah
                   </span>
-                  <span className="text-[11px] font-bold text-error">{wrongCount} soal</span>
+                  <span className="text-[11px] font-bold text-error">{computedWrong} soal</span>
                 </div>
               </div>
             </div>

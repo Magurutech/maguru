@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAssessment } from '../hooks/useAssessment'
-import { Check, ChevronLeft, ChevronRight, Bookmark, Lock } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Bookmark, Lock, Lightbulb, Target } from 'lucide-react'
 import { toast } from 'sonner'
+import { RichQuestionContent } from './RichQuestionContent'
 
 interface AssessmentPageProps {
   courseId: string
@@ -15,6 +16,10 @@ interface AssessmentPageProps {
     topicScores: Record<string, number>
     skippedLessonIds: string[]
     unlockedNextSection?: boolean
+    totalQuestions?: number
+    correctCount?: number
+    wrongCount?: number
+    topicDetails?: Record<string, { correct: number; total: number; percentage: number }>
   }) => void
   onExitAction?: () => void
 }
@@ -34,10 +39,49 @@ export function AssessmentPage({
 
   const [currentIdx, setCurrentIdx] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [revealedHints, setRevealedHints] = useState<Record<string, number>>({})
   const [showExitConfirm, setShowExitConfirm] = useState(false)
 
   // Track start time to calculate durationSeconds on submit
   const [startTime] = useState(() => Date.now())
+
+  const currentQuestion = questions[currentIdx]
+
+  // Diagnostics & Debug Logger for Verification (Placed before early returns to strictly follow React Rules of Hooks)
+  useEffect(() => {
+    if (!currentQuestion) return
+
+    const rawOpts = (typeof currentQuestion.options === 'string'
+      ? JSON.parse(currentQuestion.options)
+      : (currentQuestion.options || {})) as Record<string, any>
+
+    const validOptionKeys = ['a', 'b', 'c', 'd'] as const
+    const opts: Record<string, string> = {}
+    for (const key of validOptionKeys) {
+      if (rawOpts[key] && typeof rawOpts[key] === 'string') {
+        opts[key] = rawOpts[key]
+      }
+    }
+    const microSkill = rawOpts.microSkill || rawOpts.micro_skill || (currentQuestion as any).micro_skill || ''
+    const hints: string[] = Array.isArray(rawOpts.hints)
+      ? rawOpts.hints
+      : typeof rawOpts.hints === 'string' && rawOpts.hints
+      ? [rawOpts.hints]
+      : Array.isArray((currentQuestion as any).hints)
+      ? (currentQuestion as any).hints
+      : []
+    const explanationText = rawOpts.explanation || rawOpts._explanation || (currentQuestion as any).explanation || ''
+
+    console.group(`[Assessment Engine Debug] 📝 Question #${currentIdx + 1} (ID: ${currentQuestion.id})`)
+    console.log('📌 Topic:', currentQuestion.topic)
+    console.log('🎯 Micro-Skill:', microSkill || '(None)')
+    console.log('⚡ Difficulty:', currentQuestion.difficulty)
+    console.log('🔑 Raw Options Keys in DB:', Object.keys(rawOpts))
+    console.log('✅ Filtered Choices (A-D only):', opts)
+    console.log('💡 Hints Available:', hints.length, hints)
+    console.log('🛡️ Explanation Available (Hidden during Quiz):', explanationText ? 'Yes' : 'No')
+    console.groupEnd()
+  }, [currentIdx, currentQuestion])
 
   if (loading) {
     return (
@@ -83,8 +127,39 @@ export function AssessmentPage({
     )
   }
 
-  const currentQuestion = questions[currentIdx]
-  const options = currentQuestion.options as Record<string, string>
+  const rawOpts = (typeof currentQuestion?.options === 'string'
+    ? JSON.parse(currentQuestion.options)
+    : (currentQuestion?.options || {})) as Record<string, any>
+
+  // Filter ONLY valid multiple choice keys (a, b, c, d) so hints, microSkill, explanation are not options
+  const validOptionKeys = ['a', 'b', 'c', 'd'] as const
+  const options: Record<string, string> = {}
+  for (const key of validOptionKeys) {
+    if (rawOpts[key] && typeof rawOpts[key] === 'string') {
+      options[key] = rawOpts[key]
+    }
+  }
+  // Fallback for uppercase keys if present
+  if (Object.keys(options).length === 0) {
+    for (const key of ['A', 'B', 'C', 'D']) {
+      if (rawOpts[key] && typeof rawOpts[key] === 'string') {
+        options[key.toLowerCase()] = rawOpts[key]
+      }
+    }
+  }
+
+  // Extract question metadata cleanly
+  const microSkill = rawOpts.microSkill || rawOpts.micro_skill || (currentQuestion as any).micro_skill || ''
+  const hints: string[] = Array.isArray(rawOpts.hints)
+    ? rawOpts.hints
+    : typeof rawOpts.hints === 'string' && rawOpts.hints
+    ? [rawOpts.hints]
+    : Array.isArray((currentQuestion as any).hints)
+    ? (currentQuestion as any).hints
+    : []
+  const explanationText = rawOpts.explanation || rawOpts._explanation || (currentQuestion as any).explanation || ''
+
+  const currentHintCount = revealedHints[currentQuestion?.id] || 0
   const totalQuestions = questions.length
   const progressPercent = (Object.keys(answers).length / totalQuestions) * 100
 
@@ -146,14 +221,42 @@ export function AssessmentPage({
 
           {/* Card Content Section */}
           <div className="flex-1 flex flex-col p-6 md:p-8">
-            <span className="text-[10px] font-manrope font-extrabold uppercase tracking-widest text-accent-coral">
-              PERTANYAAN
-            </span>
-            <h2 className="text-base md:text-lg font-serif font-bold text-text-primary leading-relaxed mt-2">
-              {currentQuestion.question}
-            </h2>
+            {/* Metadata Tags Bar: Topic, Micro-skill, Difficulty */}
+            <div className="flex items-center gap-2 flex-wrap mb-2">
+              <span className="text-[10px] font-manrope font-extrabold uppercase tracking-widest text-accent-coral">
+                PERTANYAAN
+              </span>
+              {currentQuestion.topic && (
+                <span className="inline-block px-2.5 py-0.5 rounded-full text-[9px] font-bold font-sans tracking-wide uppercase bg-emerald-500/10 text-emerald-800 dark:text-emerald-200 border border-emerald-500/25">
+                  Topik: {currentQuestion.topic}
+                </span>
+              )}
+              {microSkill && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[9px] font-bold font-sans tracking-wide uppercase bg-cyan-500/10 text-cyan-800 dark:text-cyan-200 border border-cyan-500/25">
+                  <Target className="w-2.5 h-2.5" />
+                  {microSkill}
+                </span>
+              )}
+              <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-bold font-sans tracking-wide uppercase border ${
+                currentQuestion.difficulty === 'hard'
+                  ? 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/20'
+                  : currentQuestion.difficulty === 'easy'
+                  ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/20'
+                  : 'bg-accent-mustard/15 text-accent-mustard border-accent-mustard/20'
+              }`}>
+                {currentQuestion.difficulty || 'medium'}
+              </span>
+            </div>
 
-            {/* Answer Options list */}
+            {/* Rich Question Text with Code Blocks Support */}
+            <div className="mt-1">
+              <RichQuestionContent
+                text={currentQuestion.question}
+                className="text-sm md:text-base font-serif font-bold text-text-primary leading-relaxed"
+              />
+            </div>
+
+            {/* Answer Options list - Filtered to ONLY render valid choice buttons */}
             <div className="mt-8 space-y-3.5">
               {Object.entries(options).map(([key, text]) => {
                 const isSelected = answers[currentQuestion.id] === key
@@ -199,6 +302,61 @@ export function AssessmentPage({
                 )
               })}
             </div>
+
+            {/* Progressive Hints Callout (Petunjuk Belajar Bertingkat) */}
+            {hints.length > 0 && (
+              <div className="mt-6 pt-4 border-t border-border/8">
+                {currentHintCount === 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => setRevealedHints((prev) => ({ ...prev, [currentQuestion.id]: 1 }))}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-amber-800 dark:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 transition-all shadow-2xs cursor-pointer btn-interactive"
+                  >
+                    <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                    <span>Butuh Bantuan? Buka Petunjuk Belajar ({hints.length} Hint Tersedia)</span>
+                  </button>
+                ) : (
+                  <div className="p-4 rounded-2xl bg-amber-500/8 border border-amber-500/20 space-y-3 animate-fade-in">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">
+                        <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                        <span>Petunjuk Belajar Bertingkat ({currentHintCount} dari {hints.length})</span>
+                      </div>
+                      {currentHintCount < hints.length && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setRevealedHints((prev) => ({
+                              ...prev,
+                              [currentQuestion.id]: (prev[currentQuestion.id] || 0) + 1,
+                            }))
+                          }
+                          className="text-[11px] font-bold text-amber-700 dark:text-amber-300 hover:underline cursor-pointer"
+                        >
+                          + Buka Hint Selanjutnya ({currentHintCount + 1})
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      {hints.slice(0, currentHintCount).map((hint, hIdx) => (
+                        <div
+                          key={hIdx}
+                          className="p-3 rounded-xl bg-white/60 dark:bg-black/20 border border-amber-500/15 flex items-start gap-2.5 shadow-2xs"
+                        >
+                          <span className="font-mono text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-800 dark:text-amber-300 shrink-0">
+                            Hint {hIdx + 1}
+                          </span>
+                          <p className="text-xs leading-relaxed text-text-primary/90 font-medium">
+                            {hint}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Navigation Action Buttons */}
             <div className="mt-12 flex justify-between items-center pt-6 border-t border-border/10">
@@ -342,8 +500,9 @@ export function AssessmentPage({
                 Tips Belajar
               </h4>
               <p className="text-[11px] font-medium text-text-secondary leading-normal mt-1">
-                Jangan terburu-buru. Bacalah soal dan setiap pilihan jawaban dengan teliti. Kamu
-                pasti bisa!
+                {hints.length > 0
+                  ? `Soal ini memiliki ${hints.length} petunjuk belajar bertingkat. Klik tombol petunjuk di bawah opsi jika butuh panduan langkah berpikir!`
+                  : 'Jangan terburu-buru. Bacalah soal dan setiap pilihan jawaban dengan teliti. Kamu pasti bisa!'}
               </p>
             </div>
           </div>

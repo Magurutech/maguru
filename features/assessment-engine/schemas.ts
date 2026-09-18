@@ -26,9 +26,12 @@ export type SubmitAssessmentInput = z.infer<typeof SubmitAssessmentSchema>
 export interface AssessmentQuestion {
   id: string
   question: string
-  options: QuizOptions
+  options: QuizOptions | Record<string, any>
   topic: string
   difficulty: 'easy' | 'medium' | 'hard'
+  hints?: string[]
+  explanation?: string
+  micro_skill?: string
 }
 
 export interface AssessmentResult {
@@ -36,4 +39,8 @@ export interface AssessmentResult {
   topicScores: Record<string, number>
   skippedLessonIds: string[]
   unlockedNextSection?: boolean
+  totalQuestions?: number
+  correctCount?: number
+  wrongCount?: number
+  topicDetails?: Record<string, { correct: number; total: number; percentage: number }>
 }

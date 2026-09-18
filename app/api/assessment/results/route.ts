@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
         : questions.filter((q) => q.sectionId === r.sectionId)
       
       // Calculate scores
-      const { topicScores } = calculateScores(rQuestions, answers)
+      const { overallScore, topicScores, totalQuestions, correctCount, wrongCount, topicDetails } = calculateScores(rQuestions, answers)
 
       // Calculate skipped lessons if PRE_TEST
       const skippedLessonIds: string[] = []
@@ -107,11 +107,15 @@ export async function GET(request: NextRequest) {
         id: r.id,
         courseId: r.courseId,
         sectionId: r.sectionId,
-        overallScore: r.score,
+        overallScore: overallScore,
         type: r.type,
         durationSeconds: r.durationSeconds,
         completedAt: r.completedAt,
         topicScores,
+        totalQuestions,
+        correctCount,
+        wrongCount,
+        topicDetails,
         skippedLessonIds,
       }
     })

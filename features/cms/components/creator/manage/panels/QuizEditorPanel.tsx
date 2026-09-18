@@ -35,73 +35,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart'
-
-
-/**
- * RichQuestionContent: Renders question text with beautiful monospace syntax-like code blocks
- * if markdown code fences (```lang ... ```) are detected.
- */
-function RichQuestionContent({ text, className = '' }: { text: string; className?: string }) {
-  if (!text) return null
-
-  // If no markdown code block is found, render text preserving line breaks
-  if (!text.includes('```')) {
-    return <div className={`whitespace-pre-wrap leading-relaxed ${className}`}>{text}</div>
-  }
-
-  // Parse markdown code blocks
-  const parts: Array<{ type: 'text' | 'code'; content: string; lang?: string }> = []
-  const codeBlockRegex = /```([a-zA-Z0-9_-]*)\s*\n?([\s\S]*?)```/g
-  let lastIndex = 0
-  let match: RegExpExecArray | null
-
-  while ((match = codeBlockRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push({ type: 'text', content: text.slice(lastIndex, match.index) })
-    }
-    parts.push({
-      type: 'code',
-      lang: match[1].trim() || 'code',
-      content: match[2].trim(),
-    })
-    lastIndex = match.index + match[0].length
-  }
-
-  if (lastIndex < text.length) {
-    parts.push({ type: 'text', content: text.slice(lastIndex) })
-  }
-
-  return (
-    <div className={`space-y-2.5 leading-relaxed ${className}`}>
-      {parts.map((p, i) => {
-        if (p.type === 'code') {
-          return (
-            <div
-              key={i}
-              className="my-2.5 rounded-xl overflow-hidden border border-zinc-800/90 bg-[#121214] text-zinc-100 shadow-md font-mono text-[11px] sm:text-xs"
-            >
-              <div className="flex items-center justify-between px-3.5 py-1.5 bg-[#1c1c20] border-b border-zinc-800/80 text-[10px] text-zinc-400 font-sans tracking-wider uppercase font-bold">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block shadow-xs" />
-                  {p.lang || 'SNIPPET'}
-                </span>
-                <span className="text-[9px] text-zinc-500 font-mono">Code Snippet</span>
-              </div>
-              <pre className="p-3.5 overflow-x-auto leading-relaxed whitespace-pre font-mono text-emerald-300 selection:bg-emerald-500/30">
-                <code>{p.content}</code>
-              </pre>
-            </div>
-          )
-        }
-        return (
-          <div key={i} className="whitespace-pre-wrap">
-            {p.content}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
+import { RichQuestionContent } from '@/features/assessment-engine/components/RichQuestionContent'
 
 interface QuizEditorPanelProps {
   quizType: 'PRE_TEST' | 'SECTION_QUIZ'
@@ -168,6 +102,17 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
   const [aiLessonContent, setAiLessonContent] = useState('')
   const [aiQuestions, setAiQuestions] = useState<AIQuizQuestion[]>([])
   const [regeneratingIndex, setRegeneratingIndex] = useState<number | null>(null)
+  // Track which question indices are in 'edit' mode (others show rendered preview)
+  const [editingQuestionIndices, setEditingQuestionIndices] = useState<Set<number>>(new Set())
+
+  const toggleQuestionEditMode = (idx: number) => {
+    setEditingQuestionIndices((prev) => {
+      const next = new Set(prev)
+      if (next.has(idx)) next.delete(idx)
+      else next.add(idx)
+      return next
+    })
+  }
 
   // Context content specifically filtered by creator's chosen lesson scope
   const targetLessonsForAI = useMemo(() => {
@@ -182,10 +127,11 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
     if (targetLessonsForAI.length === 0) {
       return `Topik Pembahasan: ${scopeTitle}\nFokus materi mencakup konsep inti, pemahaman kode, dan pemecahan masalah.`
     }
+    const validLessonTitles = targetLessonsForAI.map((l) => `"${l.title}"`).join(', ')
     const lessonsDetail = targetLessonsForAI
-      .map((l) => `Topik: ${l.title}\nRangkuman Materi:\n${l.contentPreview || l.title}`)
+      .map((l) => `[Sub-Materi: ${l.title}]\nRangkuman Konten:\n${l.contentPreview || l.title}`)
       .join('\n\n')
-    return `Topik Pembahasan: ${scopeTitle}\n\n${lessonsDetail}`
+    return `Bab: ${scopeTitle}\n\nDAFTAR MATERI SILABUS RESMI: [${validLessonTitles}]\n(PENTING: Field 'topic' untuk setiap butir soal kuis WAJIB bernilai persis salah satu dari DAFTAR MATERI SILABUS RESMI di atas! Jangan mengarang nama topik baru! Keterampilan teknis spesifik wajib dimasukkan ke field 'micro_skill').\n\n${lessonsDetail}`
   }, [targetLessonsForAI, activeSection?.title, course?.title])
 
   // List view mode: 'detail' (Full question, all options, answers, explanation) vs 'compact' (one-line overview)
@@ -215,9 +161,28 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
         lessonContent: aiLessonContent.trim() || fallbackContent || undefined,
       })
       if (res && res.length > 0) {
+        const selectedLesson = currentSectionLessons.find((l) => l.id === aiSelectedLessonId)
+        let finalTopic = res[0].topic
+        if (selectedLesson) {
+          finalTopic = selectedLesson.title
+        } else {
+          const matched = currentSectionLessons.find(
+            (l) =>
+              l.title.toLowerCase() === (res[0].topic || '').toLowerCase() ||
+              (res[0].topic || '').toLowerCase().includes(l.title.toLowerCase()) ||
+              l.title.toLowerCase().includes((res[0].topic || '').toLowerCase()) ||
+              (res[0].question || '').toLowerCase().includes(l.title.toLowerCase())
+          )
+          if (matched) {
+            finalTopic = matched.title
+          } else if (currentSectionLessons.length > 0) {
+            finalTopic = currentSectionLessons[0].title
+          }
+        }
+        const updatedQ = { ...res[0], topic: finalTopic }
         setAiQuestions((prev) => {
           const next = [...prev]
-          next[index] = res[0]
+          next[index] = updatedQ
           return next
         })
         toast.success(`Soal #${index + 1} berhasil dirancang ulang oleh AI!`)
@@ -250,6 +215,9 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
   const [optionD, setOptionD] = useState('')
   const [correctAnswer, setCorrectAnswer] = useState('a')
   const [topicTag, setTopicTag] = useState('')
+  const [selectedLessonId, setSelectedLessonId] = useState<string>('')
+  const [microSkill, setMicroSkill] = useState('')
+  const [hintsList, setHintsList] = useState<string[]>(['', ''])
   const [difficulty, setDifficulty] = useState('medium')
   const [questionType, setQuestionType] = useState<'MC' | 'TF' | 'SA'>('MC') // Multiple Choice, True/False, Short Answer
   const [explanation, setExplanation] = useState('')
@@ -322,10 +290,19 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
     setOptionC('')
     setOptionD('')
     setCorrectAnswer('a')
-    setTopicTag('')
+    const firstLesson = currentSectionLessons[0]
+    if (firstLesson) {
+      setSelectedLessonId(firstLesson.id)
+      setTopicTag(firstLesson.title)
+    } else {
+      setSelectedLessonId('custom')
+      setTopicTag(activeSection?.title || course?.title || 'Dasar Pemrograman')
+    }
     setDifficulty('medium')
     setQuestionType('MC')
     setExplanation('')
+    setMicroSkill('')
+    setHintsList(['', ''])
     setModalOpen(true)
   }
 
@@ -360,9 +337,22 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
     }
 
     setCorrectAnswer(q.correct?.toLowerCase() || 'a')
-    setTopicTag(q.topic)
+    setTopicTag(q.topic || '')
+
+    // Match lesson by title or id
+    const matched = currentSectionLessons.find(
+      (l) => l.title.toLowerCase() === (q.topic || '').toLowerCase()
+    )
+    if (matched) {
+      setSelectedLessonId(matched.id)
+    } else {
+      setSelectedLessonId('custom')
+    }
+
     setDifficulty(q.difficulty || 'medium')
     setExplanation(opts?.explanation || q.explanation || '')
+    setMicroSkill(opts?.microSkill || opts?.micro_skill || '')
+    setHintsList(Array.isArray(opts?.hints) && opts.hints.length > 0 ? opts.hints : ['', ''])
     setModalOpen(true)
   }
 
@@ -373,8 +363,16 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
       toast.error('Pertanyaan wajib diisi')
       return
     }
-    if (!topicTag.trim()) {
-      toast.error('Topik kompetensi wajib diisi')
+
+    // Determine final topic based on selected lesson or custom input
+    let finalTopic = topicTag.trim()
+    if (selectedLessonId && selectedLessonId !== 'custom') {
+      const pickedLesson = currentSectionLessons.find((l) => l.id === selectedLessonId)
+      if (pickedLesson) finalTopic = pickedLesson.title
+    }
+
+    if (!finalTopic) {
+      toast.error('Topik atau sub-materi pembelajaran wajib dipilih')
       return
     }
 
@@ -396,11 +394,13 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
       optionsJson.explanation = explanation.trim()
     }
 
-    // Preserve hints & microSkill if updating
-    if (editingQuestion) {
-      const existingOpts = typeof editingQuestion.options === 'string' ? JSON.parse(editingQuestion.options) : (editingQuestion.options || {})
-      if (existingOpts.hints) optionsJson.hints = existingOpts.hints
-      if (existingOpts.microSkill) optionsJson.microSkill = existingOpts.microSkill
+    const validHints = hintsList.map((h) => h.trim()).filter((h) => h.length > 0)
+    if (validHints.length > 0) {
+      optionsJson.hints = validHints
+    }
+
+    if (microSkill.trim()) {
+      optionsJson.microSkill = microSkill.trim()
     }
 
     try {
@@ -409,7 +409,7 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
         question: questionText,
         options: optionsJson,
         correct: correctAnswer.toUpperCase(),
-        topic: topicTag.trim().toLowerCase(),
+        topic: finalTopic,
         difficulty,
         sectionId: quizType === 'SECTION_QUIZ' ? sectionId : null,
       }
@@ -1325,31 +1325,125 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                 </div>
               )}
 
-              {/* Tag and Difficulty fields */}
-              <div className="grid grid-cols-2 gap-4 border-t border-border/5 pt-3">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-text-muted uppercase">Topik Kompetensi</label>
-                  <input
-                    type="text"
-                    value={topicTag}
-                    onChange={(e) => setTopicTag(e.target.value)}
-                    placeholder="contoh: variabel"
-                    className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 font-mono text-xs uppercase transition-all"
-                    required
-                  />
+              {/* Sub-Materi / Lesson Selector and Difficulty fields */}
+              <div className="space-y-3 border-t border-border/5 pt-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1">
+                      <BookOpen className="w-3 h-3 text-accent-coral" />
+                      <span>Hubungkan ke Sub-Materi</span>
+                    </label>
+                    <select
+                      value={selectedLessonId}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        setSelectedLessonId(val)
+                        if (val !== 'custom') {
+                          const picked = currentSectionLessons.find((l) => l.id === val)
+                          if (picked) setTopicTag(picked.title)
+                        }
+                      }}
+                      className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary font-bold header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                    >
+                      {currentSectionLessons.map((l, idx) => (
+                        <option key={l.id} value={l.id}>
+                          Materi #{idx + 1}: {l.title}
+                        </option>
+                      ))}
+                      <option value="custom">✏️ Topik Kustom / Bebas</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-text-muted uppercase">Tingkat Kesulitan</label>
+                    <select
+                      value={difficulty}
+                      onChange={(e) => setDifficulty(e.target.value)}
+                      className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary font-bold header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                    >
+                      <option value="easy">Mudah (2 Poin)</option>
+                      <option value="medium">Sedang (3 Poin)</option>
+                      <option value="hard">Sulit (5 Poin)</option>
+                    </select>
+                  </div>
                 </div>
 
+                {/* Custom Topic Tag if selected */}
+                {selectedLessonId === 'custom' && (
+                  <div className="space-y-1">
+                    <label className="text-[10px] font-bold text-text-muted uppercase">Nama Topik Kustom</label>
+                    <input
+                      type="text"
+                      value={topicTag}
+                      onChange={(e) => setTopicTag(e.target.value)}
+                      placeholder="Masukkan nama topik kustom..."
+                      className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                      required
+                    />
+                  </div>
+                )}
+
+                {/* Micro-Skill Tag */}
                 <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-text-muted uppercase">Tingkat Kesulitan</label>
-                  <select
-                    value={difficulty}
-                    onChange={(e) => setDifficulty(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary font-bold header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                  <label className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1">
+                    <Target className="w-3 h-3 text-blue-500" />
+                    <span>Micro-Skill / Kompetensi Spesifik (Opsional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={microSkill}
+                    onChange={(e) => setMicroSkill(e.target.value)}
+                    placeholder="contoh: Deklarasi Variabel & Penugasan Nilai"
+                    className="w-full p-2.5 rounded-xl border-none outline-none text-text-primary header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Hints List (Petunjuk Bertingkat) */}
+              <div className="space-y-2 border-t border-border/5 pt-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] font-bold text-text-muted uppercase flex items-center gap-1.5">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Petunjuk Bertingkat (Hints Siswa)</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setHintsList((prev) => [...prev, ''])}
+                    className="text-[10px] font-bold text-accent-coral hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    <option value="easy">Mudah (2 Poin)</option>
-                    <option value="medium">Sedang (3 Poin)</option>
-                    <option value="hard">Sulit (5 Poin)</option>
-                  </select>
+                    <Plus className="w-3 h-3" />
+                    <span>Tambah Hint</span>
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {hintsList.map((hint, hIdx) => (
+                    <div key={hIdx} className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-500/20 px-2 py-1 rounded shrink-0">
+                        Hint {hIdx + 1}
+                      </span>
+                      <input
+                        type="text"
+                        value={hint}
+                        onChange={(e) => {
+                          const next = [...hintsList]
+                          next[hIdx] = e.target.value
+                          setHintsList(next)
+                        }}
+                        placeholder={`Petunjuk tingkat ${hIdx + 1} untuk membantu siswa...`}
+                        className="flex-1 p-2 rounded-xl border-none outline-none text-text-primary header-skeuo-debossed focus:ring-1 focus:ring-accent-coral/20 text-xs transition-all"
+                      />
+                      {hintsList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => setHintsList((prev) => prev.filter((_, i) => i !== hIdx))}
+                          className="p-1.5 text-text-muted hover:text-red-500 rounded-lg transition-colors cursor-pointer"
+                          title="Hapus hint ini"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -1616,99 +1710,204 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                       key={idx}
                       className="p-4 debossed-skeuo rounded-2xl space-y-2.5 border border-border/10 text-xs transition-all"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-start gap-2 flex-1 min-w-0">
-                          <span className="font-bold text-accent-coral shrink-0 mt-0.5">#{idx + 1}</span>
-                          <textarea
-                            rows={item.question.includes('\n') ? 4 : 2}
-                            value={item.question}
-                            onChange={(e) => handleUpdateSingleQuestion(idx, 'question', e.target.value)}
-                            className="flex-1 font-semibold text-text-primary bg-transparent border-b border-transparent hover:border-border/30 focus:border-accent-coral/50 outline-none text-xs leading-relaxed resize-y font-sans"
-                            title="Klik untuk mengedit teks pertanyaan"
-                          />
-                        </div>
+                      {/* Top Toolbar: Number, Badges, and Action Buttons */}
+                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-border/10">
+                        <div className="flex items-center gap-2 flex-wrap min-w-0">
+                          <span className="font-bold text-accent-coral text-xs shrink-0">#{idx + 1}</span>
 
-                        <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                          {/* Sub-Materi Silabus Dropdown Badge */}
+                          <div className="flex items-center gap-1.5 bg-amber-500/15 border border-amber-500/25 px-2 py-0.5 rounded-lg shadow-2xs" title="Materi Silabus Kursus">
+                            <BookOpen className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                            <span className="text-[10px] font-semibold text-text-muted shrink-0">Materi:</span>
+                            <select
+                              value={item.topic}
+                              onChange={(e) => handleUpdateSingleQuestion(idx, 'topic', e.target.value)}
+                              className="bg-transparent text-[10.5px] font-bold text-amber-900 dark:text-amber-100 outline-none cursor-pointer max-w-[180px] sm:max-w-[240px] truncate"
+                              title="Pilih materi silabus untuk soal ini"
+                            >
+                              {currentSectionLessons.map((l) => (
+                                <option key={l.id} value={l.title} className="bg-background text-text-primary">
+                                  {l.title}
+                                </option>
+                              ))}
+                              {!currentSectionLessons.some(l => l.title === item.topic) && (
+                                <option value={item.topic} className="bg-background text-text-primary">
+                                  {item.topic}
+                                </option>
+                              )}
+                            </select>
+                          </div>
+
                           {item.micro_skill && (
-                            <span className="inline-flex items-center gap-1 text-[9.5px] px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-semibold border border-cyan-500/20">
-                              <Target className="w-2.5 h-2.5" />
-                              {item.micro_skill}
+                            <span className="inline-flex items-center gap-1 text-[9.5px] px-2 py-0.5 rounded-md bg-cyan-500/15 text-cyan-800 dark:text-cyan-200 font-semibold border border-cyan-500/25" title="Micro-Skill Teknis">
+                              <Target className="w-2.5 h-2.5 text-cyan-600" />
+                              <span>{item.micro_skill}</span>
                             </span>
                           )}
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono">
+
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-stone-500/10 text-text-muted font-mono font-bold">
                             {item.difficulty}
                           </span>
+                        </div>
 
-                          {/* Single Regenerate Action */}
+                        {/* Top Right Action Buttons */}
+                        <div className="flex items-center gap-1 shrink-0">
                           <button
                             type="button"
                             onClick={() => handleRegenerateSingle(idx)}
                             disabled={regeneratingIndex === idx}
                             title="Rancang ulang soal ini dengan AI"
-                            className="p-1 rounded-md text-text-muted hover:text-accent-coral hover:bg-bg-bone/80 transition-all cursor-pointer"
+                            className="p-1.5 rounded-lg text-text-muted hover:text-accent-coral hover:bg-bg-bone/80 transition-all cursor-pointer"
                           >
                             <RefreshCw className={`w-3.5 h-3.5 ${regeneratingIndex === idx ? 'animate-spin text-accent-coral' : ''}`} />
                           </button>
 
-                          {/* Single Delete Action */}
                           <button
                             type="button"
                             onClick={() => handleDeleteSingle(idx)}
                             title="Hapus soal ini"
-                            className="p-1 rounded-md text-text-muted hover:text-destructive hover:bg-bg-bone/80 transition-all cursor-pointer"
+                            className="p-1.5 rounded-lg text-text-muted hover:text-destructive hover:bg-bg-bone/80 transition-all cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </div>
 
-                      {/* Options Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                        {(['a', 'b', 'c', 'd'] as const).map((optKey) => {
-                          const isCorrect = item.correct.toLowerCase() === optKey
-                          return (
-                            <div
-                              key={optKey}
-                              onClick={() => handleUpdateSingleQuestion(idx, 'correct', optKey)}
-                              className={`px-3 py-2 rounded-xl text-[11px] flex items-center gap-2 cursor-pointer transition-all ${
-                                isCorrect
-                                  ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-800 dark:text-emerald-200 font-bold shadow-2xs'
-                                  : 'bg-white/40 dark:bg-black/10 text-text-secondary border border-border/5 hover:bg-white/70'
+                      {/* Full-Width Question Area with Edit/Preview Toggle */}
+                      <div className="w-full pt-1 space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider block">
+                            Teks Pertanyaan Kuis:
+                          </label>
+                          {/* Edit / Preview Mode Toggle */}
+                          <div className="flex items-center bg-bg-bone/70 p-0.5 rounded-lg border border-border/10 text-[10px]">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (editingQuestionIndices.has(idx)) toggleQuestionEditMode(idx)
+                              }}
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
+                                !editingQuestionIndices.has(idx)
+                                  ? 'bg-white dark:bg-neutral-800 text-text-primary shadow-xs'
+                                  : 'text-text-muted hover:text-text-primary'
                               }`}
-                              title="Klik untuk memilih kunci jawaban benar"
                             >
-                              <span className="uppercase font-mono text-[10px] opacity-75 shrink-0">{optKey}.</span>
-                              <input
-                                type="text"
-                                value={item.options[optKey]}
-                                onChange={(e) => {
-                                  e.stopPropagation()
-                                  const updatedOptions = { ...item.options, [optKey]: e.target.value }
-                                  handleUpdateSingleQuestion(idx, 'options', updatedOptions)
-                                }}
-                                className="flex-1 bg-transparent border-none outline-none text-[11px]"
-                              />
-                              {isCorrect && <Check className="w-3.5 h-3.5 ml-auto text-emerald-500 shrink-0" />}
-                            </div>
-                          )
-                        })}
-                      </div>
-
-                      {/* Explanation Block */}
-                      {item.explanation && (
-                        <div className="flex items-start gap-2 p-2.5 rounded-xl bg-amber-500/8 border border-amber-500/20 text-[11px] text-text-secondary">
-                          <Lightbulb className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                          <div className="flex-1">
-                            <span className="font-semibold text-amber-700 dark:text-amber-400 mr-1">Pembahasan:</span>
-                            <span>{item.explanation}</span>
+                              👁 Preview
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (!editingQuestionIndices.has(idx)) toggleQuestionEditMode(idx)
+                              }}
+                              className={`flex items-center gap-1 px-2 py-0.5 rounded-md font-bold transition-all cursor-pointer ${
+                                editingQuestionIndices.has(idx)
+                                  ? 'bg-white dark:bg-neutral-800 text-text-primary shadow-xs'
+                                  : 'text-text-muted hover:text-text-primary'
+                              }`}
+                            >
+                              ✏️ Edit
+                            </button>
                           </div>
                         </div>
-                      )}
+
+                        {/* Preview Mode: Render markdown + code blocks */}
+                        {!editingQuestionIndices.has(idx) ? (
+                          <div
+                            className="w-full min-h-[56px] bg-white/60 dark:bg-black/30 p-3 rounded-xl border border-border/10 cursor-pointer hover:border-accent-coral/30 transition-all shadow-2xs"
+                            onClick={() => toggleQuestionEditMode(idx)}
+                            title="Klik untuk mengedit teks pertanyaan"
+                          >
+                            <RichQuestionContent
+                              text={item.question || 'Klik untuk mulai menulis pertanyaan...'}
+                              className="text-xs font-medium text-text-primary"
+                            />
+                          </div>
+                        ) : (
+                          /* Edit Mode: Raw textarea for authoring */
+                          <textarea
+                            rows={Math.min(12, Math.max(4, item.question.split('\n').length + 2))}
+                            value={item.question}
+                            onChange={(e) => handleUpdateSingleQuestion(idx, 'question', e.target.value)}
+                            placeholder="Tuliskan pertanyaan kuis di sini...\n\nContoh code block:\n```python\n1: def hitung(a, b):\n2:     return a + b\n```"
+                            className="w-full font-mono text-text-primary bg-white/80 dark:bg-black/50 p-3 rounded-xl border border-accent-coral/30 outline-none text-xs leading-relaxed resize-y font-sans shadow-2xs"
+                            autoFocus
+                            title="Mode Edit: Ketik atau paste teks + code block Markdown"
+                          />
+                        )}
+
+                        {/* Helper tip when in edit mode */}
+                        {editingQuestionIndices.has(idx) && (
+                          <p className="text-[10px] text-text-muted leading-relaxed">
+                            💡 Tip: Tulis code block dengan <code className="font-mono bg-bg-bone/80 px-1 rounded">```python ... ```</code>. Klik tombol <strong>Preview</strong> untuk melihat hasil render.
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Options Grid */}
+                      <div className="space-y-1.5 pt-1">
+                        <label className="text-[10px] font-bold text-text-muted uppercase tracking-wider block">
+                          Pilihan Ganda & Kunci Jawaban:
+                        </label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {(['a', 'b', 'c', 'd'] as const).map((optKey) => {
+                            const isCorrect = item.correct.toLowerCase() === optKey
+                            return (
+                              <div
+                                key={optKey}
+                                onClick={() => handleUpdateSingleQuestion(idx, 'correct', optKey)}
+                                className={`px-3 py-2.5 rounded-xl text-xs flex items-center gap-2 cursor-pointer transition-all ${
+                                  isCorrect
+                                    ? 'bg-emerald-500/15 border border-emerald-500/35 text-emerald-900 dark:text-emerald-100 font-bold shadow-2xs ring-1 ring-emerald-500/20'
+                                    : 'bg-white/50 dark:bg-black/20 text-text-secondary border border-border/10 hover:bg-white/80 dark:hover:bg-black/40'
+                                }`}
+                                title="Klik untuk memilih kunci jawaban benar"
+                              >
+                                <span className={`uppercase font-mono text-xs font-extrabold px-1.5 py-0.5 rounded ${
+                                  isCorrect ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-200' : 'bg-bg-bone/80 text-text-muted'
+                                }`}>
+                                  {optKey}
+                                </span>
+                                <input
+                                  type="text"
+                                  value={item.options[optKey]}
+                                  onChange={(e) => {
+                                    e.stopPropagation()
+                                    const updatedOptions = { ...item.options, [optKey]: e.target.value }
+                                    handleUpdateSingleQuestion(idx, 'options', updatedOptions)
+                                  }}
+                                  className="flex-1 bg-transparent border-none outline-none text-xs text-text-primary"
+                                />
+                                {isCorrect && <Check className="w-4 h-4 ml-auto text-emerald-600 dark:text-emerald-400 shrink-0" />}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Detailed Educational Explanation */}
+                      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 space-y-2 text-xs">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 font-bold text-amber-800 dark:text-amber-300 text-[11px] uppercase tracking-wider">
+                            <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                            <span>Pembahasan Lengkap & Analisis Jawaban:</span>
+                          </div>
+                          <span className="text-[10px] text-amber-700/80 dark:text-amber-400/80 font-medium">
+                            (Dapat diedit langsung)
+                          </span>
+                        </div>
+                        <textarea
+                          rows={Math.min(10, Math.max(3, (item.explanation || '').split('\n').length + 1))}
+                          value={item.explanation || ''}
+                          onChange={(e) => handleUpdateSingleQuestion(idx, 'explanation', e.target.value)}
+                          placeholder="Tuliskan pembahasan lengkap mengapa kunci benar dan analisis pengecohnya..."
+                          className="w-full bg-white/60 dark:bg-black/30 p-2.5 rounded-xl border border-amber-500/20 focus:border-amber-500/50 text-text-primary text-xs leading-relaxed outline-none resize-y font-sans shadow-2xs"
+                        />
+                      </div>
 
                       {/* Progressive Hints (Must-Have Feature) */}
                       {item.hints && item.hints.length > 0 && (
-                        <div className="p-2.5 rounded-xl bg-amber-500/8 border border-amber-500/20 text-[11px] space-y-1.5">
-                          <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-bold">
+                        <div className="p-3 rounded-2xl bg-amber-500/8 border border-amber-500/20 text-xs space-y-2">
+                          <div className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 font-bold text-[11px] uppercase tracking-wider">
                             <Lightbulb className="w-3.5 h-3.5" />
                             <span>Petunjuk Belajar Bertingkat (Progressive Hints):</span>
                           </div>
@@ -1727,7 +1926,7 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                                     handleUpdateSingleQuestion(idx, 'hints', updatedHints)
                                   }}
                                   placeholder={`Petunjuk tingkat ${hIdx + 1}...`}
-                                  className="flex-1 bg-white/50 dark:bg-black/20 border border-border/10 rounded-lg px-2 py-1 text-[11px] text-text-secondary focus:text-text-primary outline-none focus:border-amber-500/40"
+                                  className="flex-1 bg-white/40 dark:bg-black/10 px-2 py-1 rounded-lg border border-amber-500/15 text-[11px] text-text-primary outline-none focus:border-amber-500/40"
                                 />
                               </div>
                             ))}
@@ -1770,8 +1969,34 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                       })
 
                       if (questionsResult && questionsResult.length > 0) {
-                        setAiQuestions(questionsResult)
-                        toast.success(`${questionsResult.length} Soal kuis berhasil dirancang oleh AI!`)
+                        const selectedLesson = currentSectionLessons.find((l) => l.id === aiSelectedLessonId)
+                        const normalizedQuestions = questionsResult.map((q, qIdx) => {
+                          let finalTopic = q.topic
+                          if (selectedLesson) {
+                            finalTopic = selectedLesson.title
+                          } else {
+                            const matchedLesson = currentSectionLessons.find(
+                              (l) =>
+                                l.title.toLowerCase() === (q.topic || '').toLowerCase() ||
+                                (q.topic || '').toLowerCase().includes(l.title.toLowerCase()) ||
+                                l.title.toLowerCase().includes((q.topic || '').toLowerCase()) ||
+                                (q.question || '').toLowerCase().includes(l.title.toLowerCase())
+                            )
+                            if (matchedLesson) {
+                              finalTopic = matchedLesson.title
+                            } else if (currentSectionLessons.length > 0) {
+                              finalTopic = currentSectionLessons[qIdx % currentSectionLessons.length].title
+                            } else {
+                              finalTopic = activeSection?.title || 'Umum'
+                            }
+                          }
+                          return {
+                            ...q,
+                            topic: finalTopic,
+                          }
+                        })
+                        setAiQuestions(normalizedQuestions)
+                        toast.success(`${normalizedQuestions.length} Soal kuis berhasil dirancang oleh AI!`)
                       } else {
                         toast.error('AI tidak dapat menghasilkan soal. Pastikan server AI aktif.')
                       }
@@ -1806,7 +2031,7 @@ export function QuizEditorPanel({ quizType, sectionId }: QuizEditorPanelProps) {
                               microSkill: q.micro_skill || '',
                             },
                             correct: q.correct.toUpperCase(),
-                            topic: q.topic || activeSection?.title || 'Umum',
+                            topic: q.topic,
                             difficulty: q.difficulty || 'medium',
                             sectionId: quizType === 'SECTION_QUIZ' ? sectionId : null,
                           }),

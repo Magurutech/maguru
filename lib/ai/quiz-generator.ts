@@ -53,20 +53,21 @@ export async function fetchAIGeneratedQuiz(params: {
       },
       body: JSON.stringify({
         course_id: params.courseId,
-        course_title: params.courseTitle || null,
-        section_id: params.sectionId || null,
+        course_title: params.courseTitle || '',
+        section_id: params.sectionId || '',
         lesson_id: params.lessonId || null,
         num_questions: params.numQuestions || 5,
         difficulty: params.difficulty || 'medium',
         question_style: params.questionStyle || 'balanced',
-        lesson_content: params.lessonContent || null,
+        lesson_content: params.lessonContent || '',
       }),
     });
 
     const elapsedMs = Date.now() - startTime;
 
     if (!response.ok) {
-      console.warn(`[AI Quiz Generator] ⚠️ API returned status ${response.status} (${elapsedMs}ms)`);
+      const errorDetails = await response.text();
+      console.warn(`[AI Quiz Generator] ⚠️ API returned status ${response.status} (${elapsedMs}ms):`, errorDetails);
       return [];
     }
 
