@@ -1,16 +1,16 @@
-# Graph Report - maguru  (2026-09-18)
+# Graph Report - maguru  (2026-09-19)
 
 ## Corpus Check
-- 655 files · ~888,524 words
+- 656 files · ~890,839 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 7239 nodes · 11314 edges · 422 communities (292 shown, 130 thin omitted)
+- 7229 nodes · 11218 edges · 437 communities (304 shown, 133 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 194 edges (avg confidence: 0.67)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1f8a6132`
+- Built from commit: `c2caac9c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -400,133 +400,126 @@
 - scss.d.ts
 - tailwind.config.ts
 - 🧪 3. Panduan Manual Testing AI Quiz Generator
-- error.md
 - plan.md
 - CourseList.tsx
 - theme-toggle.tsx
-- use-link-popover.ts
+- next
+- sonner
 - services/index.ts
 - It
-- course.api.ts
-- lu
-- CreatorProfileEditor.tsx
 - AssessmentErrorBoundary
-- EnrollButton.test.tsx
-- handleRequestError
-- CourseFilters.test.tsx
-- colors/page.tsx
 - LibraryCourseCard.tsx
-- gsap
 - auth/index.ts
 - Cara 2: Otomatis via Request Login di Postman (Permanen & Recommended)
 - context.ts
 - suggestion.ts
 - e
+- y
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 149 edges
-2. `createClient()` - 72 edges
+2. `createClient()` - 66 edges
 3. `r()` - 62 edges
 4. `useTiptapEditor()` - 58 edges
-5. `./query_compiler_fast_bg.wasm?module` - 42 edges
-6. `cn()` - 36 edges
-7. `Button()` - 34 edges
-8. `t()` - 28 edges
-9. `waitForPageLoad()` - 27 edges
-10. `interpretNode()` - 27 edges
+5. `cn()` - 36 edges
+6. `Button()` - 34 edges
+7. `t()` - 28 edges
+8. `waitForPageLoad()` - 27 edges
+9. `interpretNode()` - 27 edges
+10. `L()` - 26 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `GET()` --calls--> `createClient()`  [EXTRACTED]
-  app/api/creator/courses/route.ts → lib/supabase/server.ts
-- `ColorsShowcase()` --calls--> `cn()`  [EXTRACTED]
-  app/design-system/colors/page.tsx → lib/utils.ts
-- `ColorHighlightShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
-  components/tiptap-ui/color-highlight-button/color-highlight-button.tsx → lib/tiptap-utils.ts
-- `ImageShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
-  components/tiptap-ui/image-upload-button/image-upload-button.tsx → lib/tiptap-utils.ts
-- `MarkShortcutBadge()` --calls--> `parseShortcutKeys()`  [EXTRACTED]
-  components/tiptap-ui/mark-button/mark-button.tsx → lib/tiptap-utils.ts
+- `ChatMessage()` --calls--> `cn()`  [EXTRACTED]
+  features/langserve/chatbot/ChatMessage.tsx → lib/utils.ts
+- `SelectLabel()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils.ts
+- `SelectScrollDownButton()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils.ts
+- `SelectScrollUpButton()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils.ts
+- `SelectSeparator()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (422 total, 130 thin omitted)
+## Communities (437 total, 133 thin omitted)
 
 ### Community 0 - "creator-dashboard/index.ts"
-Cohesion: 0.08
-Nodes (24): CreatorDashboardPage(), ActionRequiredCard(), Task, AICreatorAssistantCard(), ContinueCreatingCard(), ContinueCreatingCardProps, CourseOverviewCard(), CreatorHeader() (+16 more)
+Cohesion: 0.07
+Nodes (26): CreatorDashboardPage(), ActionRequiredCard(), Task, AICreatorAssistantCard(), ContinueCreatingCard(), ContinueCreatingCardProps, CourseOverviewCard(), CourseOverviewCardProps (+18 more)
 
 ### Community 1 - "dashboard/components/index.ts"
-Cohesion: 0.06
-Nodes (44): Skeleton(), getDashboardData(), TODO: Uncomment fetch block setelah backend API siap, NOTE: Backend API belum diimplementasikan. Menggunakan mock data untuk…, DashboardError(), DashboardErrorProps, DashboardHeader(), DashboardHeaderProps (+36 more)
+Cohesion: 0.20
+Nodes (10): Skeleton(), DashboardError(), DashboardErrorProps, DashboardHeaderSkeleton(), DashboardLayout(), DashboardLayoutProps, QuickActionsSkeleton(), RecentCoursesSkeleton() (+2 more)
 
 ### Community 2 - "cn"
-Cohesion: 0.11
-Nodes (20): DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSubContent, DropdownMenuSubTrigger, Progress(), Sheet(), SheetContent() (+12 more)
+Cohesion: 0.07
+Nodes (40): DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSubContent, DropdownMenuSubTrigger, Separator(), Sheet(), SheetContent() (+32 more)
 
 ### Community 3 - "schemas.ts"
-Cohesion: 0.13
-Nodes (16): fetchQuestions(), PastResult, submitAssessment(), AssessmentPage(), AssessmentPageProps, RichQuestionContent(), RichQuestionContentProps, useAssessment() (+8 more)
+Cohesion: 0.10
+Nodes (22): GET(), POST(), fetchQuestions(), PastResult, submitAssessment(), useAssessment(), AssessmentQuestion, AssessmentResult (+14 more)
 
 ### Community 4 - "[slug]/page.tsx"
 Cohesion: 0.07
 Nodes (36): checkEnrollment(), CourseDetailPage(), fetchCourseCreator(), fetchCourseDetail(), fetchCourseSections(), getDynamicBaseUrl(), PageProps, CourseCurriculumProps (+28 more)
 
 ### Community 5 - "lib/utils.ts"
-Cohesion: 0.10
-Nodes (21): MasteryBadge(), MasteryBadgeProps, SkeuBadge(), SkeuBadgeProps, ButtonSpecDrawer(), CourseCard3D(), CourseCard3DProps, SkeuoCard() (+13 more)
+Cohesion: 0.07
+Nodes (30): ColorsShowcase(), ColorToken, colorTokensGroup, skeuoUtilities, SignInPage(), SignUpPage(), MasteryBadge(), MasteryBadgeProps (+22 more)
 
 ### Community 6 - "Uu"
-Cohesion: 0.10
-Nodes (22): dispatchEngineSpans(), Do(), er(), getActiveContext(), getLocation(), getTraceParent(), getTracingHelper(), handleAndLogRequestError() (+14 more)
+Cohesion: 0.09
+Nodes (26): dispatchEngineSpans(), Do(), er(), getActiveContext(), getLocation(), getTraceParent(), getTracingHelper(), handleAndLogRequestError() (+18 more)
 
 ### Community 7 - "lesson.types.ts"
 Cohesion: 0.06
-Nodes (37): checkCourseOwnership(), CourseData, CourseServiceResult, CourseWithSections, getCourseById(), getCourseWithSections(), ValidationResult, LessonService (+29 more)
+Nodes (38): checkCourseOwnership(), CourseData, CourseServiceResult, CourseWithSections, getCourseById(), getCourseWithSections(), ValidationResult, LessonService (+30 more)
 
 ### Community 8 - "style-text-dropdown-menu.tsx"
-Cohesion: 0.07
-Nodes (41): BoldIcon, SvgProps, ChevronDownIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps (+33 more)
+Cohesion: 0.08
+Nodes (39): BoldIcon, SvgProps, ChevronDownIcon, SvgProps, Code2Icon, SvgProps, ItalicIcon, SvgProps (+31 more)
 
 ### Community 9 - "ui/button.tsx"
-Cohesion: 0.12
-Nodes (19): Button(), buttonVariants, ActionButton(), ActionButtonProps, variantStyles, DashboardHeader(), DashboardHeaderProps, CreatorStats (+11 more)
+Cohesion: 0.14
+Nodes (14): ActionButton(), ActionButtonProps, variantStyles, DashboardHeader(), DashboardHeaderProps, CreatorStats, DashboardStats(), DashboardStatsProps (+6 more)
 
 ### Community 10 - "use-heading.ts"
-Cohesion: 0.08
-Nodes (47): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps (+39 more)
+Cohesion: 0.07
+Nodes (46): BlockquoteIcon, SvgProps, CodeBlockIcon, SvgProps, HeadingFiveIcon, SvgProps, HeadingFourIcon, SvgProps (+38 more)
 
 ### Community 11 - "simple-editor.tsx"
-Cohesion: 0.08
-Nodes (35): ArrowLeftIcon, SvgProps, HorizontalRule, AlignDropdownMenu, BlockquoteButton, CodeBlockButton, ColorHighlightPopover(), ColorHighlightPopoverContent() (+27 more)
+Cohesion: 0.05
+Nodes (45): ArrowLeftIcon, SvgProps, HighlighterIcon, SvgProps, LinkIcon, SvgProps, HorizontalRule, AlignDropdownMenu (+37 more)
 
 ### Community 12 - "LessonEditorPanel.tsx"
 Cohesion: 0.10
 Nodes (19): EditorToolbar, AIWritingAssistantModal(), EditorBubbleMenu(), EditorBubbleMenuProps, StudentPreviewModal(), looksLikeMarkdown(), PasteMarkdown, downloadMarkdownFile() (+11 more)
 
 ### Community 13 - "use-text-align.ts"
-Cohesion: 0.15
-Nodes (17): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+9 more)
+Cohesion: 0.11
+Nodes (24): AlignCenterIcon, SvgProps, AlignJustifyIcon, SvgProps, AlignLeftIcon, SvgProps, AlignRightIcon, SvgProps (+16 more)
 
 ### Community 14 - "fs"
-Cohesion: 0.09
-Nodes (41): concat(), cs(), Ds(), Et(), findField(), fs(), gc(), getAllComputedFields() (+33 more)
+Cohesion: 0.12
+Nodes (35): a(), ms(), concat(), cs(), findField(), fs(), gc(), getArgumentName() (+27 more)
 
 ### Community 15 - "use-list-dropdown-menu.ts"
-Cohesion: 0.13
-Nodes (19): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, isListActive(), listIcons (+11 more)
+Cohesion: 0.11
+Nodes (29): ListIcon, SvgProps, ListOrderedIcon, SvgProps, ListTodoIcon, SvgProps, ListButton, ListButtonProps (+21 more)
 
 ### Community 16 - "index.d.ts"
 Cohesion: 0.00
 Nodes (935): AggregateAssessment_questions, AggregateCourse_completions, AggregateCourses, AggregateCreator_profiles, AggregateEnrollments, AggregateLesson_progress, AggregateLessons, AggregateSections (+927 more)
 
 ### Community 17 - "sidebar.tsx"
-Cohesion: 0.08
-Nodes (38): CreatorLayoutProps, CreatorSidebar(), AppSidebar(), UserLayoutProps, Collapsible(), CollapsibleContent(), CollapsibleTrigger(), Separator() (+30 more)
+Cohesion: 0.12
+Nodes (24): CreatorLayoutProps, CreatorSidebar(), AppSidebar(), UserLayoutProps, Collapsible(), CollapsibleContent(), CollapsibleTrigger(), Sidebar() (+16 more)
 
 ### Community 18 - "CourseCreationForm.tsx"
-Cohesion: 0.12
-Nodes (20): Label(), Select(), SelectContent(), SelectItem(), SelectLabel(), SelectScrollDownButton(), SelectScrollUpButton(), SelectSeparator() (+12 more)
+Cohesion: 0.09
+Nodes (23): Label(), Select(), SelectContent(), SelectItem(), SelectLabel(), SelectScrollDownButton(), SelectScrollUpButton(), SelectSeparator() (+15 more)
 
 ### Community 19 - "ManageContext.tsx"
 Cohesion: 0.24
@@ -541,8 +534,8 @@ Cohesion: 0.13
 Nodes (19): chartConfig, chartData, description, Card(), CardAction(), CardContent(), CardDescription(), CardFooter() (+11 more)
 
 ### Community 22 - "link-popover.tsx"
-Cohesion: 0.05
-Nodes (46): BanIcon, SvgProps, CheckIcon, SvgProps, CornerDownLeftIcon, SvgProps, ExternalLinkIcon, SvgProps (+38 more)
+Cohesion: 0.04
+Nodes (55): BanIcon, SvgProps, CheckIcon, SvgProps, CornerDownLeftIcon, SvgProps, ExternalLinkIcon, SvgProps (+47 more)
 
 ### Community 23 - "LandingPageNew.tsx"
 Cohesion: 0.10
@@ -553,12 +546,12 @@ Cohesion: 0.10
 Nodes (14): CloseIcon, SvgProps, Commands, ImageUploadNode, ImageUploadNodeOptions, @tiptap/react, UploadFunction, FileItem (+6 more)
 
 ### Community 25 - "useManageContext"
-Cohesion: 0.14
-Nodes (18): GET(), ManagePageInner(), EditorToolbarStrip, ManageContent(), ManageDialogs(), ManageHeader(), ManageSidebar(), SortableLessonItem (+10 more)
+Cohesion: 0.19
+Nodes (13): ManagePageInner(), EditorToolbarStrip, ManageContent(), ManageDialogs(), ManageHeader(), ManageHeaderProps, ManageSidebar(), SortableLessonItem (+5 more)
 
 ### Community 26 - "cms/hooks/index.ts"
-Cohesion: 0.27
-Nodes (9): enrollCourse(), getCreatorCourses(), CatalogFilters, useCourseCatalogFilters(), UseCourseCatalogFiltersReturn, CREATOR_COURSES_KEY, useCreatorCourses(), useEnrollment() (+1 more)
+Cohesion: 0.12
+Nodes (12): IMPORTANT: Test ini menggunakan authentication state dari global.setup.ts, IMPORTANT: Sign-out tests require authenticated state, expandAllSections(), getAllLessonIds(), gotoLearnPage(), authenticatedTest, clerkTestConfig, generateTestEmail() (+4 more)
 
 ### Community 27 - "runtime/client.d.ts"
 Cohesion: 0.01
@@ -566,74 +559,74 @@ Nodes (308): AccelerateExtensionFetch, AccelerateExtensionFetchDecorator, Action
 
 ### Community 28 - "wasm-compiler-edge.js"
 Cohesion: 0.02
-Nodes (67): ap(), bm(), Bn(), Bp(), br(), ca(), ci(), clone() (+59 more)
+Nodes (67): ap(), bm(), Bp(), br(), Bs(), ca(), ci(), clone() (+59 more)
 
 ### Community 29 - "lessons/[lessonId]/route.ts"
 Cohesion: 0.18
 Nodes (14): DELETE(), PUT(), POST(), GET(), POST(), bulkSyncCourseLessonsToAI(), BulkSyncLessonItem, BulkSyncResult (+6 more)
 
 ### Community 30 - "progress.service.ts"
-Cohesion: 0.18
-Nodes (10): ProgressService, CourseProgressData, CourseProgressResponse, LessonProgressData, LessonProgressResponse, MarkLessonCompleteResult, calculateCourseCompletion(), CourseCompletionResult (+2 more)
+Cohesion: 0.12
+Nodes (23): GET(), GET(), POST(), GET(), ProgressService, CourseProgressData, CourseProgressResponse, LessonProgressData (+15 more)
 
 ### Community 31 - "LessonViewerPanel.tsx"
 Cohesion: 0.13
 Nodes (19): Callout, CalloutType, Commands, @tiptap/core, Column, Columns, Commands, @tiptap/core (+11 more)
 
 ### Community 32 - "request"
-Cohesion: 0.14
-Nodes (20): cl(), disconnect(), dispatchBatches(), execute(), #f(), getPlaceholderValues(), #h(), La() (+12 more)
+Cohesion: 0.13
+Nodes (20): cl(), dispatchBatches(), execute(), #f(), getPlaceholderValues(), #h(), La(), parameterizeFieldSelection() (+12 more)
 
 ### Community 33 - "Standard Operating Procedure (SOP) UI/UX & Design System Maguru"
 Cohesion: 0.09
 Nodes (21): 1. Matriks Skala Tipografi Materi, 1. Matriks Warna Inti (Core Palette), 1. The 80/20 Tactile Rule (Fokus Membaca Tanpa Distraksi), 1. Tombol Aksi Utama (Primary CTA Button — Merah Aksi), 2. Mobile Thumb-Zone First (Ergonomi Belajar Satu Tangan), 2. Standar Opacity Baku Garis Tepi (Border Rules), 2. Tombol Pemicu AI Agent (Floating AI Mentor Button), 3. Pilihan Kuis / Opsi Ganda (Quiz Option Card) (+13 more)
 
 ### Community 34 - "creatorProfileService.ts"
-Cohesion: 0.20
-Nodes (14): GET(), GET(), PUT(), GET(), calculateCreatorStats(), CreatorProfile, CreatorStats, getCreatorByCourseSlug() (+6 more)
+Cohesion: 0.11
+Nodes (19): GET(), GET(), PUT(), GET(), calculateCreatorStats(), CreatorProfile, CreatorStats, getCreatorByCourseSlug() (+11 more)
 
 ### Community 35 - "createClient"
-Cohesion: 0.09
-Nodes (22): POST(), GET(), POST(), DELETE(), GET(), PATCH(), PATCH(), GET() (+14 more)
+Cohesion: 0.10
+Nodes (21): GET(), POST(), DELETE(), GET(), PATCH(), PATCH(), GET(), PATCH() (+13 more)
 
 ### Community 36 - "creator-course.service.ts"
 Cohesion: 0.11
-Nodes (18): GET(), POST(), PUT(), createCourse(), CreateCourseInput, CreateCourseResult, ensureUniqueSlug(), generateSlug() (+10 more)
+Nodes (17): GET(), GET(), POST(), PUT(), MyCoursesPage(), createCourse(), CreateCourseInput, CreateCourseResult (+9 more)
 
 ### Community 37 - "createClient"
 Cohesion: 0.13
-Nodes (12): cinzel, firaCode, fraunces, metadata, poppins, EditorialSideRails(), NAV_ITEMS, NavbarGlass() (+4 more)
+Nodes (12): cinzel, firaCode, fraunces, metadata, poppins, useRoleNavigation(), EditorialSideRails(), NAV_ITEMS (+4 more)
 
 ### Community 38 - "runtime/client.js"
 Cohesion: 0.02
-Nodes (72): Aa(), Ad(), Al(), as(), ba(), bc(), bd(), bo() (+64 more)
+Nodes (76): Ad(), Al(), as(), ba(), bc(), bd(), bo(), clone() (+68 more)
 
 ### Community 39 - "auth/types/index.ts"
 Cohesion: 0.09
 Nodes (23): AdminLayoutProps, DEFAULT_ROLE, initialState, RoleAction, roleReducer(), mockGetUser, mockOnAuthStateChange, mockUnsubscribe (+15 more)
 
 ### Community 40 - "waitForPageLoad"
-Cohesion: 0.06
-Nodes (60): IMPORTANT: Test ini menggunakan authentication state dari global.setup.ts, IMPORTANT: Sign-out tests require authenticated state, expandAllSections(), getAllLessonIds(), gotoLearnPage(), AuthenticatedFixtures, authenticatedTest, CourseFixtures (+52 more)
+Cohesion: 0.13
+Nodes (25): AuthenticatedFixtures, CourseFixtures, courseTest, LessonFixtures, lessonTest, SectionFixtures, sectionTest, apiRequest() (+17 more)
 
 ### Community 41 - "sc"
-Cohesion: 0.11
-Nodes (55): ac(), addErrorMessage(), addField(), addSuggestion(), ao(), asObject(), cc(), dc() (+47 more)
+Cohesion: 0.09
+Nodes (68): ac(), addErrorMessage(), addField(), addSuggestion(), ao(), asObject(), B(), cc() (+60 more)
 
 ### Community 42 - "interpretNode"
 Cohesion: 0.06
-Nodes (66): ml(), #a(), ai(), apiKey(), At(), cancelAllTransactions(), commitTransaction(), connect() (+58 more)
+Nodes (69): ml(), #a(), ai(), apiKey(), At(), cancelAllTransactions(), commitTransaction(), connect() (+61 more)
 
 ### Community 43 - "kc"
-Cohesion: 0.12
-Nodes (51): ac(), addErrorMessage(), addField(), addSuggestion(), asObject(), bt(), _c(), cc() (+43 more)
+Cohesion: 0.10
+Nodes (54): jm(), kl(), ac(), addErrorMessage(), addSuggestion(), asObject(), bt(), _c() (+46 more)
 
 ### Community 44 - "slice"
-Cohesion: 0.09
-Nodes (24): Cn(), Cu(), enabled(), Gs(), indentedCurrentLine(), ja(), ms(), Ne() (+16 more)
+Cohesion: 0.13
+Nodes (12): GET(), CompletedResult, AssessmentPage(), AssessmentPageProps, AssessmentResultPage(), AssessmentResultPageProps, RichQuestionContent(), RichQuestionContentProps (+4 more)
 
 ### Community 45 - "cms/types/index.ts"
-Cohesion: 0.20
+Cohesion: 0.16
 Nodes (8): SectionService, CreateSectionInput, DeleteSectionResult, Section, SectionLesson, SectionWithLessonCount, SectionWithLessons, UpdateSectionInput
 
 ### Community 46 - "📋 Checklist Manual Testing: Fitur Publish & Draft"
@@ -642,7 +635,7 @@ Nodes (8): Analisis Hasil:, 📋 Checklist Manual Testing: Fitur Publish & Draft
 
 ### Community 47 - "admin/components/index.ts"
 Cohesion: 0.19
-Nodes (15): AdminDashboardPage(), TODO: Create these components, AdminAccessDenied(), AdminAuthState, AdminLoadingScreen(), renderAdminGuard(), useAdminGuard(), AdminCardProps (+7 more)
+Nodes (13): AdminDashboardPage(), TODO: Create these components, AdminAccessDenied(), AdminLoadingScreen(), renderAdminGuard(), AdminCardProps, AnalyticsData, MetricData (+5 more)
 
 ### Community 48 - "PrismaPromise"
 Cohesion: 0.04
@@ -653,16 +646,16 @@ Cohesion: 0.06
 Nodes (45): checkHealth(), generateQuiz(), getBaseUrl(), hasProperty(), invokeChatbot(), SSEEvent, streamChatbot(), streamChatbotGenerator() (+37 more)
 
 ### Community 50 - "a"
-Cohesion: 0.10
-Nodes (35): a(), #a(), am(), commitTransaction(), Da(), el(), em(), enumValues() (+27 more)
+Cohesion: 0.07
+Nodes (47): #a(), am(), commitTransaction(), Da(), disconnect(), Dn(), e(), el() (+39 more)
 
 ### Community 51 - "Maguru - AI Coding Learning Platform"
 Cohesion: 0.04
 Nodes (47): 1. Interactive Learning Flow, 2.1 Code Explanation, 2.2 Hint Generation System (3-Level Progressive Hints), 2.3 Quiz Feedback System, 2.4 Adaptive Learning Flow, 2.5 Q&A Chatbot, 2. AI Capabilities, 3. Assessment System (+39 more)
 
 ### Community 52 - "tiptap-utils.ts"
-Cohesion: 0.05
-Nodes (44): Commands, getToggleColor(), NodeBackground, NodeBackgroundOptions, @tiptap/core, BlockquoteButtonProps, BlockquoteShortcutBadge(), BLOCKQUOTE_SHORTCUT_KEY (+36 more)
+Cohesion: 0.07
+Nodes (42): Commands, getToggleColor(), NodeBackground, NodeBackgroundOptions, @tiptap/core, ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge() (+34 more)
 
 ### Community 53 - "Maguru: Product Requirements Document (PRD) - MVP V1"
 Cohesion: 0.04
@@ -685,28 +678,28 @@ Cohesion: 0.33
 Nodes (4): TabItem, TabNav(), tabs, metadata
 
 ### Community 58 - "Ae"
-Cohesion: 0.19
-Nodes (14): ri(), Ae(), dp(), ep(), fp(), getAllClientExtensions(), getAllModelExtensions(), ie() (+6 more)
+Cohesion: 0.10
+Nodes (25): ri(), addField(), Ae(), Bn(), dp(), Ds(), ep(), Et() (+17 more)
 
 ### Community 59 - "slice"
-Cohesion: 0.08
-Nodes (36): alloc(), allocUnsafe(), allocUnsafeSlow(), Am(), ao(), byteLength(), cd(), construct() (+28 more)
+Cohesion: 0.05
+Nodes (54): ue(), Bu(), addItem(), alloc(), allocUnsafe(), allocUnsafeSlow(), Am(), ao() (+46 more)
 
 ### Community 60 - "image-upload-button.tsx"
-Cohesion: 0.16
-Nodes (16): ImagePlusIcon, SvgProps, IconComponent, IconProps, ImageShortcutBadge(), ImageUploadButtonProps, canInsertImage(), IMAGE_UPLOAD_SHORTCUT_KEY (+8 more)
+Cohesion: 0.17
+Nodes (15): ImagePlusIcon, SvgProps, IconComponent, IconProps, ImageUploadButton, ImageUploadButtonProps, canInsertImage(), IMAGE_UPLOAD_SHORTCUT_KEY (+7 more)
 
 ### Community 61 - "dialog.tsx"
-Cohesion: 0.33
-Nodes (8): DialogContent, DialogDescription, DialogFooter(), DialogHeader(), DialogOverlay, DialogTitle, AIWritingAssistantModalProps, StudentPreviewModalProps
+Cohesion: 0.14
+Nodes (16): Badge(), badgeVariants, Button(), buttonVariants, DialogContent, DialogDescription, DialogFooter(), DialogHeader() (+8 more)
 
 ### Community 62 - "use-undo-redo.ts"
-Cohesion: 0.17
-Nodes (15): Redo2Icon, SvgProps, SvgProps, Undo2Icon, HistoryShortcutBadge(), UndoRedoButtonProps, canExecuteUndoRedoAction(), executeUndoRedoAction() (+7 more)
+Cohesion: 0.18
+Nodes (14): Redo2Icon, SvgProps, SvgProps, Undo2Icon, UndoRedoButtonProps, canExecuteUndoRedoAction(), executeUndoRedoAction(), historyActionLabels (+6 more)
 
 ### Community 63 - "errors.ts"
-Cohesion: 0.29
-Nodes (13): GET(), GET(), POST(), GET(), apiError(), ApiErrorBody, ApiErrorCode, conflictError() (+5 more)
+Cohesion: 0.25
+Nodes (18): getRoleTestUser(), hasAccess(), validateRoleTestEnvironment(), loginWithRole(), logoutFromRoleSession(), testAllowedRoutesForRole(), testDirectUrlAccess(), testRestrictedRoutesForRole() (+10 more)
 
 ### Community 65 - "🖥️ 5. Panduan Manual Testing Melalui UI Creator CMS"
 Cohesion: 0.12
@@ -717,12 +710,12 @@ Cohesion: 0.05
 Nodes (36): 10. Final Recommendation, 1. Executive Summary, 2. Product Analysis, 3. User Analysis, 4. Brand Analysis, 5. Design Style Comparison, 6. Recommended Design Direction, 7. Design System Foundation (+28 more)
 
 ### Community 67 - "use-element-rect.ts"
-Cohesion: 0.14
-Nodes (17): SimpleEditor(), CursorVisibilityOptions, useCursorVisibility(), ElementRectOptions, initialRect, isClientSide(), RectState, useBodyRect() (+9 more)
+Cohesion: 0.15
+Nodes (16): SimpleEditor(), CursorVisibilityOptions, useCursorVisibility(), ElementRectOptions, initialRect, isClientSide(), RectState, useBodyRect() (+8 more)
 
 ### Community 68 - "e"
-Cohesion: 0.13
-Nodes (22): Ar(), destroy(), digest(), digestInto(), Dn(), e(), es(), finish() (+14 more)
+Cohesion: 0.14
+Nodes (19): Ar(), Cn(), destroy(), digest(), digestInto(), finish(), Gs(), keccak() (+11 more)
 
 ### Community 69 - "[](#the-node-schema)The node schema"
 Cohesion: 0.06
@@ -741,8 +734,8 @@ Cohesion: 0.06
 Nodes (34): 1. **Komunikasi & Dokumentasi**, **1. Unused Import `getRoleTestUser`**, 2. **Code Quality**, **2. Unused Variable `isValid`**, **3. `adminUser` Variable Usage**, 3. **Testing Architecture**, 4. **Future Improvements**, **4. Readonly Array Compatibility** (+26 more)
 
 ### Community 74 - "r"
-Cohesion: 0.09
-Nodes (34): Pt(), addItem(), as(), bc(), Bo(), bu(), digest(), fr() (+26 more)
+Cohesion: 0.06
+Nodes (46): P(), Pt(), as(), au(), bc(), Bd(), Bo(), bu() (+38 more)
 
 ### Community 75 - "image-upload.ts"
 Cohesion: 0.24
@@ -757,8 +750,8 @@ Cohesion: 0.06
 Nodes (32): 10. Final Verdict, 1. Problem Validation, 2. Target Market Validation, 3. Competitor Analysis, 4. Unique Value Proposition (UVP), 5. Problem-Solution Fit, 6. Business Model Analysis, 7. Risk Analysis (+24 more)
 
 ### Community 79 - "user-dashboard/index.ts"
-Cohesion: 0.12
-Nodes (20): CourseOverviewCardProps, LearnerInsightsCardProps, AchievementsCard(), AchievementsCardProps, AICoTeacherCard(), ContinueLearningCard(), ContinueLearningCardProps, DashboardHeader() (+12 more)
+Cohesion: 0.14
+Nodes (18): AchievementsCard(), AchievementsCardProps, AICoTeacherCard(), ContinueLearningCard(), ContinueLearningCardProps, DashboardHeader(), DashboardHeaderProps, LearningProgressCard() (+10 more)
 
 ### Community 80 - "Pengenalan CSS: Dasar-dasar Styling dan Selektor"
 Cohesion: 0.06
@@ -821,8 +814,8 @@ Cohesion: 0.07
 Nodes (26): 1️⃣ **Delegation** (Delegasi), 2️⃣ **Description** (Deskripsi), 3️⃣ **Discernment** (Diskresi), 4️⃣ **Diligence** (Ketelitian), AI Fluency, 🚀 Cara Mengakses, 📋 Daftar Modul:, 🛡️ **Etika Terjaga** (+18 more)
 
 ### Community 95 - "t"
-Cohesion: 0.13
-Nodes (16): addItem(), eo(), Gc(), Gp(), hc(), hr(), Jc(), ln() (+8 more)
+Cohesion: 0.18
+Nodes (16): getDashboardData(), TODO: Uncomment fetch block setelah backend API siap, NOTE: Backend API belum diimplementasikan. Menggunakan mock data untuk…, DashboardHeader(), DashboardHeaderProps, roleIcons, roleLabels, DashboardData (+8 more)
 
 ### Community 96 - "Integration Test Plan - TSK-15 Role-Based Access Control"
 Cohesion: 0.08
@@ -869,16 +862,16 @@ Cohesion: 0.09
 Nodes (22): 10. Pembagian Tugas Developer, 1. **Presentation Layer**, 1. Prinsip Utama, 1. **UI/UX Designer**, 2. **Frontend Developer (FE)**, 2. High Level Architecture, 2. **Logic Layer**, 3. **Backend Developer (BE)** (+14 more)
 
 ### Community 109 - "./query_compiler_fast_bg.wasm?module"
-Cohesion: 0.06
-Nodes (19): ./query_compiler_fast_bg.wasm?module, C(), F, g, ge(), I(), J(), k() (+11 more)
+Cohesion: 0.11
+Nodes (18): g, I(), J(), k(), m(), R(), u(), V() (+10 more)
 
 ### Community 110 - "langserve/types/index.ts"
 Cohesion: 0.12
 Nodes (15): ChatbotRequest, ChatbotResponse, ChatMessage, ExplainCodeRequest, ExplainCodeResponse, GreetingRequest, GreetingResponse, HintRequest (+7 more)
 
 ### Community 111 - "H"
-Cohesion: 0.12
-Nodes (27): P(), Bl(), cm(), compare(), copy(), disconnect(), #f(), H() (+19 more)
+Cohesion: 0.14
+Nodes (23): Bl(), cm(), compare(), copy(), disconnect(), #f(), H(), jl() (+15 more)
 
 ### Community 112 - "Pengenalan HTML dan Dasar-dasar Web Development"
 Cohesion: 0.10
@@ -902,7 +895,7 @@ Nodes (19): 1. Unit Testing, 2. Integration Testing, 3. E2E Testing, Acceptance 
 
 ### Community 117 - "devDependencies"
 Cohesion: 0.11
-Nodes (19): autoprefixer, eslint-config-next, eslint-plugin-prettier, jest-mock-extended, devDependencies, autoprefixer, eslint-config-next, eslint-plugin-prettier (+11 more)
+Nodes (19): eslint-config-next, @eslint/eslintrc, eslint-plugin-prettier, jest-mock-extended, devDependencies, eslint-config-next, @eslint/eslintrc, eslint-plugin-prettier (+11 more)
 
 ### Community 118 - "button/button.tsx"
 Cohesion: 0.17
@@ -930,7 +923,7 @@ Nodes (19): scripts, app, app:prod, build, lint, lint:fix, test, test:api (+11 m
 
 ### Community 125 - "write"
 Cohesion: 0.22
-Nodes (18): addMarginSymbol(), afterNextNewline(), getCurrentLineLength(), getPrintWidth(), indent(), newLine(), setColor(), underline() (+10 more)
+Nodes (18): addMarginSymbol(), afterNextNewline(), getCurrentLineLength(), getPrintWidth(), indent(), indentedCurrentLine(), newLine(), setColor() (+10 more)
 
 ### Community 126 - "Maguru: Laporan Customer Persona & Strategi Produk"
 Cohesion: 0.11
@@ -958,7 +951,7 @@ Nodes (8): SkeuButtonProps, Drawer(), DrawerContent, DrawerDescription, DrawerFo
 
 ### Community 141 - "dependencies"
 Cohesion: 0.12
-Nodes (17): class-variance-authority, cross-env, dependencies, class-variance-authority, cross-env, @radix-ui/react-popover, @radix-ui/react-toggle, @radix-ui/react-toggle-group (+9 more)
+Nodes (17): cross-env, gsap, dependencies, cross-env, gsap, @radix-ui/react-popover, @radix-ui/react-toggle, @radix-ui/react-toggle-group (+9 more)
 
 ### Community 142 - "chatbot.md"
 Cohesion: 0.12
@@ -1021,8 +1014,8 @@ Cohesion: 0.20
 Nodes (9): 1. 📌 Executive Architecture Overview, 2. 🧱 Clean Layered Architecture (N-Tier for AI Microservices), 3. 📂 Standard Directory Structure, 4. 🔄 System Data & Execution Flows, 5. 🛠️ Technology Stack & Package Versions, 6. 🛡️ High-Availability Failover Strategy, 7. 🧪 Quality Assurance & Test Verification, Flow A: Stateful AI Co-Teacher Q&A Streaming (LangGraph + Memory) (+1 more)
 
 ### Community 158 - "l"
-Cohesion: 0.10
-Nodes (23): {
+Cohesion: 0.07
+Nodes (36): {
   Decimal,
   DbNull,
   JsonNull,
@@ -1032,7 +1025,7 @@ Nodes (23): {
   Public,
   getRuntime,
   skip
-}, Prisma, PrismaClient, l(), $c(), cp(), Dd(), ea() (+15 more)
+}, Prisma, PrismaClient, C(), l(), N(), $c(), cp() (+28 more)
 
 ### Community 159 - "API Routes: /api/courses"
 Cohesion: 0.13
@@ -1047,8 +1040,8 @@ Cohesion: 0.13
 Nodes (15): Alur Normal (Happy Path):, Batasan dan Penyederhanaan, Checklist Implementasi, Daftar Isi, Definition of Done, Documentation & Handover, Flow Pengambilan Role, Implementation Steps (+7 more)
 
 ### Community 162 - "submit/route.ts"
-Cohesion: 0.23
-Nodes (11): GET(), POST(), executeTopicPlacement(), findMany(), TransactionClient, upsert(), calculateScores(), PLACEMENT_THRESHOLD (+3 more)
+Cohesion: 0.21
+Nodes (10): QuickActions(), QuickActionsProps, difficultyColors, Recommendations(), RecommendationsProps, AdminDashboardStats, CreatorDashboardStats, QuickAction (+2 more)
 
 ### Community 163 - "Image extension"
 Cohesion: 0.14
@@ -1063,16 +1056,16 @@ Cohesion: 0.14
 Nodes (14): 1. E2E Testing (BDD), 1. Playwright Setup dan Konfigurasi, 2. Clerk Testing Integration, API Endpoints, Batasan dan Penyederhanaan, Daftar Isi, Implementasi Teknis, Pendahuluan (+6 more)
 
 ### Community 166 - "Dt"
-Cohesion: 0.24
-Nodes (12): ue(), Bu(), Dt(), G(), Hd(), ki(), Me(), On() (+4 more)
+Cohesion: 0.27
+Nodes (8): DEFAULT_ROLE, isValidRole(), UserRole, accessControlMatrix, authorizationTestScenarios, RoleTestUser, roleTestUsers, TestUser
 
 ### Community 167 - "get"
 Cohesion: 0.14
 Nodes (14): Bp(), get(), gn(), il(), kc(), nt(), oa(), Oo() (+6 more)
 
 ### Community 168 - "co"
-Cohesion: 0.11
-Nodes (32): At(), B(), bl(), co(), De(), dm(), Fe(), fn() (+24 more)
+Cohesion: 0.08
+Nodes (29): addItem(), At(), bl(), De(), dm(), em(), Fe(), getAllQueryCallbacks() (+21 more)
 
 ### Community 169 - "interpretNode"
 Cohesion: 0.12
@@ -1091,8 +1084,8 @@ Cohesion: 0.15
 Nodes (13): 1. Clerk Session Events, 1. Role Context Provider, 2. Custom Hook untuk Role Management, 2. Route Level Integration, 3. Utility Functions, 4. types auth & othorisation, API Integration, Arsitektur Komponen (+5 more)
 
 ### Community 173 - "UserRole"
-Cohesion: 0.08
-Nodes (14): DEFAULT_ROLE, isValidRole(), UserRole, appStateScenarios, errorScenarios, permissionScenarios, roleTransitionScenarios, routeScenarios (+6 more)
+Cohesion: 0.17
+Nodes (5): courseTestData, invalidCourseData, performanceTestData, searchTestData, UserTestData
 
 ### Community 174 - "chatbot/ChatMessage.tsx"
 Cohesion: 0.24
@@ -1116,7 +1109,7 @@ Nodes (9): envSchema, getCurrentEnvironment(), isDevelopment(), isProduction(), 
 
 ### Community 179 - "constructor"
 Cohesion: 0.10
-Nodes (21): ce(), constructor(), deserialize(), Fa(), fi(), Fl(), getGlobalOmit(), gi() (+13 more)
+Nodes (21): Aa(), ce(), constructor(), deserialize(), Fa(), fi(), Fl(), forSql() (+13 more)
 
 ### Community 181 - "course-data.ts"
 Cohesion: 0.32
@@ -1144,11 +1137,11 @@ Nodes (11): default, exports, ./client, ./index-browser, ./package.json, ./sql, 
 
 ### Community 188 - "use-color-highlight.ts"
 Cohesion: 0.18
-Nodes (16): HighlighterIcon, SvgProps, ColorHighlightButton, ColorHighlightButtonProps, ColorHighlightShortcutBadge(), canColorHighlight(), COLOR_HIGHLIGHT_SHORTCUT_KEY, getHighlightColorValue() (+8 more)
+Nodes (6): appStateScenarios, errorScenarios, permissionScenarios, roleTransitionScenarios, routeScenarios, testUsers
 
 ### Community 189 - "CourseCard.tsx"
-Cohesion: 0.18
-Nodes (15): CourseCatalogPage(), CoursesResponse, fetchCourses(), getDynamicBaseUrl(), SearchParams, CourseCatalogResponse, CourseCard, CourseCardProps (+7 more)
+Cohesion: 0.10
+Nodes (26): CourseCatalogPage(), CoursesResponse, fetchCourses(), getDynamicBaseUrl(), SearchParams, Progress(), CourseCatalogResponse, enrollCourse() (+18 more)
 
 ### Community 190 - "AI Fluency Course - Format Standardization"
 Cohesion: 0.20
@@ -1243,8 +1236,8 @@ Cohesion: 0.22
 Nodes (8): Components, Creator Components - Tiptap Editor, Dependencies, EditorToolbar, Implementation Status, LessonEditor, LessonPreview, Requirements Mapping
 
 ### Community 214 - "CourseOverview.tsx"
-Cohesion: 0.17
-Nodes (10): Badge(), badgeVariants, AuthSessionChip(), ManageHeaderProps, DIFFICULTY_LABEL, mockSetCourseDeleteDialogOpen, DescriptionEditor(), LearningOutcomesEditor() (+2 more)
+Cohesion: 0.24
+Nodes (7): CourseOverview(), DIFFICULTY_LABEL, mockSetCourseDeleteDialogOpen, DescriptionEditor(), LearningOutcomesEditor(), LearningOutcomesEditorProps, mockFetch
 
 ### Community 215 - "Development"
 Cohesion: 0.22
@@ -1259,8 +1252,8 @@ Cohesion: 0.25
 Nodes (7): Apa yang akan Anda pelajari?, Course Structure, Prerequisites, Section 1: HTML & CSS Fundamentals (3 jam), Section 2: JavaScript Basics (3 jam), Target Audience, Web Development Basics
 
 ### Community 218 - "learn/page.tsx"
-Cohesion: 0.15
-Nodes (11): CompletedResult, LearnPageInner(), AssessmentResultPage(), AssessmentResultPageProps, LearnHeader(), LearnHeaderProps, LessonNavigation, LessonNavigationProps (+3 more)
+Cohesion: 0.13
+Nodes (11): CoursePagination(), CoursePaginationProps, EnrollableCourseCard(), mockCourse, mockPush, mockToastError, mockToastSuccess, LessonNavigation (+3 more)
 
 ### Community 219 - "Ruang Lingkup"
 Cohesion: 0.29
@@ -1351,7 +1344,7 @@ Cohesion: 0.29
 Nodes (7): 1. Sign Up Flow:, 2. Sign In Flow:, 3. Sign Out Flow:, 4. Role-Based Authorization Flow:, Flow Pengguna, Spesifikasi Teknis, Struktur Data Testing
 
 ### Community 242 - "edge.js"
-Cohesion: 0.29
+Cohesion: 0.33
 Nodes (5): config, Prisma, PrismaClient, {
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
@@ -1396,7 +1389,7 @@ Cohesion: 0.33
 Nodes (6): 1. Sign Up Flow:, 2. Sign In Flow:, 3. Sign Out Flow:, Flow Pengguna, Spesifikasi Teknis, Struktur Test Data
 
 ### Community 247 - "runner.ts"
-Cohesion: 0.38
+Cohesion: 0.35
 Nodes (8): CodeBlockComponent(), executeCode(), ExecutionResult, getPyodideInstance(), isExecutableLanguage(), runJavaScript(), runPython(), Window
 
 ### Community 250 - "detailedJsonReporter.js"
@@ -1504,20 +1497,16 @@ Cohesion: 0.20
 Nodes (9): 1. Ingestion Engine Endpoints (`app/api/v1/endpoints/ingest.py`), 2. Quiz Generator Chain (`app/chains/quiz_generator.py`), 📋 Checklist Penggabungan (Merge Checklist), 📁 Daftar Berkas yang Dimodifikasi & Ditambahkan, Hasil Uji Otomatis:, 🚀 Pull Request Documentation: Maguru Model (AI Backend), 🧪 Rencana & Hasil Pengujian (Verification), 🛠️ Rincian Fitur & Arsitektur (+1 more)
 
 ### Community 293 - "LearnContext.tsx"
-Cohesion: 0.27
+Cohesion: 0.25
 Nodes (13): LearnContext, LearnContextValue, LearnProvider(), LearnProviderProps, CourseProgress, LearnSection, useCourseLearn(), FullLesson (+5 more)
 
 ### Community 294 - "[[...sign-in]]/page.tsx"
-Cohesion: 0.20
-Nodes (10): SignInPage(), SignUpPage(), SkeuButton, SkeuInputProps, Input, InputProps, jest, node (+2 more)
+Cohesion: 0.28
+Nodes (7): colorMap, StatsCard(), StatsCardProps, StatsGrid(), StatsGridProps, StatCard, getStaggerDelay()
 
 ### Community 391 - "🧪 3. Panduan Manual Testing AI Quiz Generator"
 Cohesion: 0.29
 Nodes (6): 📌 1. Ringkasan Singkat Apa yang Telah Dikerjakan, 📋 2. Status Task yang Belum Dikerjakan, 🧪 3. Panduan Manual Testing AI Quiz Generator, Cara A: Melalui Antarmuka Browser CMS (UI Testing Langsung), Cara B: Melalui Postman, Cara C: Melalui Terminal (cURL / PowerShell)
-
-### Community 392 - "error.md"
-Cohesion: 0.50
-Nodes (3): Code Frame, Error Message, Error Type
 
 ### Community 393 - "plan.md"
 Cohesion: 0.18
@@ -1531,57 +1520,21 @@ Nodes (10): CreatorCoursesResponse, CourseList(), CourseListProps, CourseListIte
 Cohesion: 0.32
 Nodes (5): MoonStarIcon, SvgProps, SunIcon, SvgProps, ThemeToggle()
 
-### Community 404 - "use-link-popover.ts"
-Cohesion: 0.24
-Nodes (12): LinkIcon, SvgProps, LinkContent(), canSetLink(), isLinkActive(), LinkHandlerProps, shouldShowLinkButton(), useLinkHandler() (+4 more)
-
-### Community 405 - "services/index.ts"
-Cohesion: 0.26
-Nodes (5): GET(), MyCoursesPage(), EnrolledCourse, getMyEnrollments(), MyCoursesResult
-
-### Community 406 - "It"
-Cohesion: 0.20
-Nodes (12): au(), Bd(), go(), It(), Ln(), lr(), qd(), reverse() (+4 more)
-
-### Community 407 - "course.api.ts"
-Cohesion: 0.29
-Nodes (4): MyCoursesResponse, CourseCatalogParams, CourseFormData, EnrolledCourse
-
-### Community 408 - "lu"
-Cohesion: 0.31
-Nodes (9): Di(), Gd(), getPlaceholderValues(), jd(), lu(), mu(), parameterizeFieldSelection(), root() (+1 more)
-
-### Community 409 - "CreatorProfileEditor.tsx"
-Cohesion: 0.32
-Nodes (4): CreatorProfile, CreatorProfileEditor(), CreatorStats, mockFetch
+### Community 401 - "next"
+Cohesion: 0.60
+Nodes (4): RecentCourses(), RecentCoursesProps, RecentCourse, formatDate()
 
 ### Community 410 - "AssessmentErrorBoundary"
 Cohesion: 0.25
 Nodes (3): AssessmentErrorBoundary, Props, State
-
-### Community 411 - "EnrollButton.test.tsx"
-Cohesion: 0.29
-Nodes (4): mockCourse, mockPush, mockToastError, mockToastSuccess
-
-### Community 412 - "handleRequestError"
-Cohesion: 0.29
-Nodes (7): jm(), kl(), El(), handleAndLogRequestError(), handleRequestError(), Lm(), Vm()
-
-### Community 413 - "CourseFilters.test.tsx"
-Cohesion: 0.33
-Nodes (3): CourseFilters(), mockPush, searchParamsStore
-
-### Community 414 - "colors/page.tsx"
-Cohesion: 0.40
-Nodes (4): ColorsShowcase(), ColorToken, colorTokensGroup, skeuoUtilities
 
 ### Community 415 - "LibraryCourseCard.tsx"
 Cohesion: 0.50
 Nodes (3): CourseData, LibraryCourseCard(), LibraryCourseCardProps
 
 ### Community 427 - "auth/index.ts"
-Cohesion: 0.17
-Nodes (17): CourseCreatePage(), APICourse, CreatorCoursesPage(), CreatorStats, DashboardPage(), UnauthorizedContent(), RoleDisplay(), MockOverrides (+9 more)
+Cohesion: 0.16
+Nodes (18): CourseCreatePage(), APICourse, CreatorCoursesPage(), CreatorStats, DashboardPage(), UnauthorizedContent(), AdminAuthState, useAdminGuard() (+10 more)
 
 ### Community 428 - "Cara 2: Otomatis via Request Login di Postman (Permanen & Recommended)"
 Cohesion: 0.18
@@ -1592,28 +1545,28 @@ Cohesion: 0.31
 Nodes (6): SlashItem, SlashList, SlashListProps, MORE_ACTION, suggestionOptions, SlashCommand
 
 ### Community 431 - "e"
-Cohesion: 0.12
-Nodes (21): ad(), Ba(), Bs(), co(), destroy(), digestInto(), e(), finish() (+13 more)
+Cohesion: 0.16
+Nodes (18): ad(), Ba(), co(), destroy(), digest(), digestInto(), e(), finish() (+10 more)
 
 ## Knowledge Gaps
-- **3481 isolated node(s):** `server`, `MockCourse`, `testUsers`, `routeScenarios`, `permissionScenarios` (+3476 more)
+- **3478 isolated node(s):** `CompletedResult`, `Analisis Hasil:`, `Skenario 1: Verifikasi Responsivitas UI Manage Page`, `Skenario 2: Siklus Toggle Balik (*Unpublish* ke *Draft*)`, `Skenario 3: Verifikasi di Halaman Daftar Kursus Creator` (+3473 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **130 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **133 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `createClient()` connect `createClient` to `submit/route.ts`, `creatorProfileService.ts`, `creator-course.service.ts`, `[slug]/page.tsx`, `lesson.types.ts`, `image-upload.ts`, `services/index.ts`, `useManageContext`, `lessons/[lessonId]/route.ts`, `errors.ts`?**
-  _High betweenness centrality (0.082) - this node is a cross-community bridge._
-- **Why does `cn()` connect `cn` to `dashboard/components/index.ts`, `skeu-button.tsx`, `lib/utils.ts`, `[[...sign-in]]/page.tsx`, `style-text-dropdown-menu.tsx`, `ui/button.tsx`, `simple-editor.tsx`, `chatbot/ChatMessage.tsx`, `user-dashboard/index.ts`, `sidebar.tsx`, `CourseCreationForm.tsx`, `langserve/api.ts`, `BrowseModal.tsx`, `chart-pie-donut-text.tsx`, `CourseOverview.tsx`, `TabNav.tsx`, `dialog.tsx`, `colors/page.tsx`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Why does `Button()` connect `ui/button.tsx` to `cn`, `skeu-button.tsx`, `lib/utils.ts`, `CourseList.tsx`, `LessonEditorPanel.tsx`, `sidebar.tsx`, `CourseCreationForm.tsx`, `services/index.ts`, `CreatorProfileEditor.tsx`, `useManageContext`, `LessonViewerPanel.tsx`, `auth/types/index.ts`, `auth/index.ts`, `admin/components/index.ts`, `langserve/api.ts`, `CourseCard.tsx`, `dialog.tsx`, `CourseOverview.tsx`, `learn/page.tsx`?**
-  _High betweenness centrality (0.049) - this node is a cross-community bridge._
+- **Why does `createClient()` connect `createClient` to `creatorProfileService.ts`, `creator-course.service.ts`, `[slug]/page.tsx`, `lesson.types.ts`, `image-upload.ts`, `slice`, `lessons/[lessonId]/route.ts`, `progress.service.ts`?**
+  _High betweenness centrality (0.083) - this node is a cross-community bridge._
+- **Why does `Button()` connect `dialog.tsx` to `cn`, `skeu-button.tsx`, `creator-course.service.ts`, `lib/utils.ts`, `auth/types/index.ts`, `ui/button.tsx`, `auth/index.ts`, `CourseList.tsx`, `LessonEditorPanel.tsx`, `admin/components/index.ts`, `langserve/api.ts`, `CourseCreationForm.tsx`, `CourseOverview.tsx`, `useManageContext`, `learn/page.tsx`, `CourseCard.tsx`, `LessonViewerPanel.tsx`?**
+  _High betweenness centrality (0.054) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `dashboard/components/index.ts`, `skeu-button.tsx`, `lib/utils.ts`, `style-text-dropdown-menu.tsx`, `simple-editor.tsx`, `chatbot/ChatMessage.tsx`, `user-dashboard/index.ts`, `sidebar.tsx`, `CourseCreationForm.tsx`, `langserve/api.ts`, `BrowseModal.tsx`, `chart-pie-donut-text.tsx`, `CourseCard.tsx`, `TabNav.tsx`, `dialog.tsx`?**
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Are the 46 inferred relationships involving `r()` (e.g. with `k()` and `l()`) actually correct?**
   _`r()` has 46 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `server`, `MockCourse`, `testUsers` to the rest of the system?**
-  _3481 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `CompletedResult`, `Analisis Hasil:`, `Skenario 1: Verifikasi Responsivitas UI Manage Page` to the rest of the system?**
+  _3478 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `creator-dashboard/index.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.08097165991902834 - nodes in this community are weakly interconnected._
-- **Should `dashboard/components/index.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.0633879781420765 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0743321718931475 - nodes in this community are weakly interconnected._
+- **Should `cn` be split into smaller, more focused modules?**
+  _Cohesion score 0.07372549019607844 - nodes in this community are weakly interconnected._
