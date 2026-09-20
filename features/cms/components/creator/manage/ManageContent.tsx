@@ -14,7 +14,13 @@ export function ManageContent() {
 
   // Lesson editor: full-width (toolbar breaks out), then padded content
   if (activeView.type === 'lesson-editor') {
-    return <LessonEditorPanel sectionId={activeView.sectionId} lessonId={activeView.lessonId} />
+    return (
+      <LessonEditorPanel
+        key={`${activeView.sectionId}-${activeView.lessonId || 'new'}`}
+        sectionId={activeView.sectionId}
+        lessonId={activeView.lessonId}
+      />
+    )
   }
 
   // Quiz editor: custom dashboard panel

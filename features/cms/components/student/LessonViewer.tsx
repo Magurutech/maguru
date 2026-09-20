@@ -108,6 +108,13 @@ export function LessonViewer({ lesson }: LessonViewerProps) {
     },
   })
 
+  /**
+   * NOTE: Lesson content sync is handled via key={lesson.id} on the parent
+   * (<LessonViewer key={currentLesson.id} />) which forces a full remount
+   * whenever the active lesson changes. This is simpler and more reliable
+   * than calling editor.commands.setContent() manually.
+   */
+
   if (error) {
     return (
       <div className="lesson-viewer-error" role="alert">

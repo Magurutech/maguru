@@ -8,9 +8,9 @@
  * keterbacaan, dan pemeliharaan kode yang mudah.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useUserRole, useRoleGuard, useRoleLoadingState } from '@/features/auth'
 import { getDashboardData } from '@/features/dashboard/api'
 import type { DashboardData } from '@/features/dashboard/types'
@@ -29,12 +29,16 @@ import {
   RecommendedLearning
 } from '@/features/user-dashboard'
 
-export default function DashboardPage() {
+function DashboardContent() {
   const [user, setUser] = useState<User | null>(null)
   const { role } = useUserRole()
   const { canAccessUser } = useRoleGuard()
   const { shouldShowLoader } = useRoleLoadingState()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const rawReturnTo = searchParams.get('returnTo') || searchParams.get('redirect')
+  const returnTo = rawReturnTo && rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//') && rawReturnTo !== '/dashboard' ? rawReturnTo : null
 
   useEffect(() => {
     const supabase = createClient()
@@ -53,8 +57,13 @@ export default function DashboardPage() {
     { id: 3, text: 'Tulis ulang kode contoh useReducer di Sandbox', completed: false },
   ])
 
-  // Fetch dashboard data
+  // Fetch dashboard data / redirect
   useEffect(() => {
+    if (returnTo) {
+      router.push(returnTo)
+      return
+    }
+
     if (role) {
       // Jika role adalah creator atau admin, alihkan ke dashboard masing-masing
       if (role === 'creator') {
@@ -72,7 +81,7 @@ export default function DashboardPage() {
           console.error('Failed to fetch dashboard data:', err)
         })
     }
-  }, [role, router])
+  }, [role, returnTo, router])
 
   // Toggle Goal status
   const toggleGoal = (id: number) => {
@@ -84,7 +93,7 @@ export default function DashboardPage() {
   const goalProgressPercent = Math.round((completedGoalsCount / goals.length) * 100)
 
   // Loading State / Skeleton
-  if (shouldShowLoader || !data || !role) {
+  if (shouldShowLoader || !data || !role || returnTo) {
     return (
       <div className="space-y-8 animate-pulse">
         {/* Header Skeleton */}
@@ -165,5 +174,19 @@ export default function DashboardPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-8 animate-pulse">
+          <div className="h-28 bg-bg-bone rounded-2xl border border-border/10 p-6" />
+        </div>
+      }
+    >
+      <DashboardContent />
+    </Suspense>
   )
 }

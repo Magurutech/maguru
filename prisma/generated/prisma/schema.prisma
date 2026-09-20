@@ -38,16 +38,35 @@ model courses {
   difficulty           String?                @db.VarChar(50)
   creatorId            String                 @db.VarChar(255)
   outcomes             String[]               @default([])
+  publishedVersion     Int?
   createdAt            DateTime               @default(now())
   updatedAt            DateTime
   enrollments          enrollments[]
   sections             sections[]
   assessment_questions assessment_questions[]
   user_assessments     user_assessments[]
+  releases             course_releases[]
 
   @@index([status])
   @@index([category])
   @@index([difficulty])
+}
+
+model course_releases {
+  id           String   @id @default(cuid())
+  courseId     String   @db.VarChar(255)
+  version      Int
+  title        String   @db.VarChar(100)
+  description  String
+  totalLessons Int      @default(0)
+  snapshot     Json
+  publishedAt  DateTime @default(now())
+  creatorId    String   @db.VarChar(255)
+  courses      courses  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, version])
+  @@index([courseId])
+  @@index([courseId, version])
 }
 
 model enrollments {

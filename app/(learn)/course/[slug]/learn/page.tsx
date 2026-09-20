@@ -37,6 +37,7 @@ interface CompletedResult {
 function LearnPageInner() {
   const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
   const slug = params.slug as string
 
   const {
@@ -58,11 +59,23 @@ function LearnPageInner() {
     getAllLessons,
   } = useLearnContext()
 
+  // Keep URL ?lesson= param in sync with the active lesson at all times.
+  // This covers: auto-selected first lesson on fresh load, sidebar clicks,
+  // prev/next navigation, and direct selectLesson() calls from context.
+  useEffect(() => {
+    if (!currentLesson) return
+    const currentParam = searchParams.get('lesson')
+    if (currentParam !== currentLesson.id) {
+      router.replace(`/course/${slug}/learn?lesson=${currentLesson.id}`, { scroll: false })
+    }
+  }, [currentLesson?.id])   // eslint-disable-line react-hooks/exhaustive-deps
+
   // Track active quiz and quiz submission outcome in local state
   const [activeQuizSectionId, setActiveQuizSectionId] = useState<string | null>(null)
   const [activeResult, setActiveResult] = useState<CompletedResult | null>(null)
   const [isPreTestReviewActive, setIsPreTestReviewActive] = useState(false)
   const [preTestResult, setPreTestResult] = useState<CompletedResult | null>(null)
+
 
   if (loading) {
     return (
@@ -118,9 +131,12 @@ function LearnPageInner() {
     for (const [sectionId, lessons] of Object.entries(lessonsMap)) {
       if (lessons.some((l) => l.id === lessonId)) {
         selectLesson(lessonId, sectionId)
+        // Sync URL so browser back/forward & deep link work correctly
+        router.replace(`/course/${slug}/learn?lesson=${lessonId}`, { scroll: false })
         return
       }
     }
+    // Section not yet loaded — expand all sections then retry
     for (const section of sections) {
       if (!lessonsMap[section.id]) toggleSection(section.id)
     }
@@ -341,7 +357,7 @@ function LearnPageInner() {
                   </div>
                 ) : currentLesson ? (
                   <div className="w-full max-w-4xl mx-auto">
-                    <LessonViewer lesson={currentLesson} />
+                    <LessonViewer key={currentLesson.id} lesson={currentLesson} />
                     <div className="mt-8">
                       <LessonNavigation
                         previousLesson={prevLesson}

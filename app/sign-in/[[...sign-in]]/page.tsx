@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
@@ -9,8 +9,12 @@ import { SkeuButton } from '@/components/shadcn-studio/button/skeu-button'
 import { SkeuoCard } from '@/components/shadcn-studio/card/skeucard'
 import { Mail, Lock, ArrowRight, AlertCircle } from 'lucide-react'
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const rawReturnTo = searchParams.get('returnTo') || searchParams.get('next') || searchParams.get('redirect') || ''
+  const returnTo = rawReturnTo.startsWith('/') && !rawReturnTo.startsWith('//') ? rawReturnTo : ''
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -35,7 +39,7 @@ export default function SignInPage() {
         return
       }
 
-      router.push('/dashboard')
+      router.push(returnTo || '/dashboard')
       router.refresh()
     } catch (err: unknown) {
       setError('Terjadi kesalahan saat masuk. Silakan coba lagi.')
@@ -49,10 +53,14 @@ export default function SignInPage() {
 
     try {
       const supabase = createClient()
+      const callbackUrl = returnTo
+        ? `${window.location.origin}/auth/callback?next=${encodeURIComponent(returnTo)}`
+        : `${window.location.origin}/auth/callback`
+
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: callbackUrl,
         },
       })
 
@@ -163,7 +171,7 @@ export default function SignInPage() {
               <p className="text-xs text-text-muted">
                 Belum memiliki akun?{' '}
                 <Link
-                  href="/sign-up"
+                  href={returnTo ? `/sign-up?returnTo=${encodeURIComponent(returnTo)}` : '/sign-up'}
                   className="font-semibold text-accent-coral hover:underline"
                 >
                   Daftar Sekarang
@@ -174,5 +182,13 @@ export default function SignInPage() {
         </SkeuoCard>
       </div>
     </main>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen flex items-center justify-center p-4 bg-canvas" />}>
+      <SignInContent />
+    </Suspense>
   )
 }

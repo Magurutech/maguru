@@ -151,8 +151,21 @@ exports.Prisma.CoursesScalarFieldEnum = {
   difficulty: 'difficulty',
   creatorId: 'creatorId',
   outcomes: 'outcomes',
+  publishedVersion: 'publishedVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Course_releasesScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  version: 'version',
+  title: 'title',
+  description: 'description',
+  totalLessons: 'totalLessons',
+  snapshot: 'snapshot',
+  publishedAt: 'publishedAt',
+  creatorId: 'creatorId'
 };
 
 exports.Prisma.EnrollmentsScalarFieldEnum = {
@@ -267,6 +280,7 @@ exports.CourseStatus = exports.$Enums.CourseStatus = {
 exports.Prisma.ModelName = {
   course_completions: 'course_completions',
   courses: 'courses',
+  course_releases: 'course_releases',
   enrollments: 'enrollments',
   lesson_progress: 'lesson_progress',
   lessons: 'lessons',

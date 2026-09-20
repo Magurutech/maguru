@@ -131,23 +131,28 @@ export async function createCourse(
 
 /**
  * Toggle course status between DRAFT and PUBLISHED.
+ * If transitioning from DRAFT to PUBLISHED or forcePublishNewVersion is true:
+ * Creates a new frozen release snapshot in course_releases and updates publishedVersion.
+ * If transitioning from PUBLISHED to DRAFT:
+ * Marks the course as DRAFT (unpublish).
  * Verifies the caller owns the course.
  * Requirements: 6.1, 6.2, 6.5, 8.5, 8.6
  */
 export async function togglePublishStatus(
   courseIdOrSlug: string,
-  userId: string
+  userId: string,
+  forcePublishNewVersion = false
 ): Promise<TogglePublishResult> {
   // Support lookup by either unique ID or unique slug
   let course = await prisma.courses.findUnique({
     where: { id: courseIdOrSlug },
-    select: { id: true, title: true, status: true, creatorId: true },
+    select: { id: true, title: true, status: true, creatorId: true, publishedVersion: true, description: true },
   })
 
   if (!course) {
     course = await prisma.courses.findUnique({
       where: { slug: courseIdOrSlug },
-      select: { id: true, title: true, status: true, creatorId: true },
+      select: { id: true, title: true, status: true, creatorId: true, publishedVersion: true, description: true },
     })
   }
 
@@ -159,14 +164,105 @@ export async function togglePublishStatus(
     throw new Error('Forbidden: You do not own this course')
   }
 
-  const newStatus =
-    course.status === CourseStatus.DRAFT ? CourseStatus.PUBLISHED : CourseStatus.DRAFT
+  const isPublishing = course.status === CourseStatus.DRAFT || forcePublishNewVersion
 
-  const updated = await prisma.courses.update({
-    where: { id: course.id },
-    data: { status: newStatus, updatedAt: new Date() },
-    select: { id: true, title: true, status: true },
-  })
+  if (isPublishing) {
+    // 1. Fetch entire course hierarchy: sections (ordered) + lessons (ordered with content)
+    const fullCourse = await prisma.courses.findUnique({
+      where: { id: course.id },
+      include: {
+        sections: {
+          orderBy: { order: 'asc' },
+          include: {
+            lessons: {
+              orderBy: { order: 'asc' },
+            },
+          },
+        },
+      },
+    })
 
-  return updated
+    if (!fullCourse) {
+      throw new Error('Course not found')
+    }
+
+    const newVersion = (course.publishedVersion ?? 0) + 1
+    const totalLessons = fullCourse.sections.reduce((acc, s) => acc + s.lessons.length, 0)
+
+    // Build the frozen snapshot JSON
+    const snapshot = {
+      version: newVersion,
+      courseId: fullCourse.id,
+      title: fullCourse.title,
+      description: fullCourse.description,
+      totalLessons,
+      publishedAt: new Date().toISOString(),
+      sections: fullCourse.sections.map((s) => ({
+        id: s.id,
+        courseId: s.courseId,
+        title: s.title,
+        description: s.description,
+        order: s.order,
+        lessonCount: s.lessons.length,
+        lessons: s.lessons.map((l) => ({
+          id: l.id,
+          sectionId: l.sectionId,
+          title: l.title,
+          order: l.order,
+          content: l.content,
+        })),
+      })),
+    }
+
+    // 2. Insert new release snapshot
+    await prisma.course_releases.create({
+      data: {
+        id: crypto.randomUUID(),
+        courseId: fullCourse.id,
+        version: newVersion,
+        title: fullCourse.title,
+        description: fullCourse.description,
+        totalLessons,
+        snapshot: snapshot as any,
+        creatorId: userId,
+        publishedAt: new Date(),
+      },
+    })
+
+    // 3. Update course with PUBLISHED status and pointer to new version
+    const updated = await prisma.courses.update({
+      where: { id: course.id },
+      data: {
+        status: CourseStatus.PUBLISHED,
+        publishedVersion: newVersion,
+        lessons: totalLessons,
+        updatedAt: new Date(),
+      },
+      select: { id: true, title: true, status: true, publishedVersion: true },
+    })
+
+    return updated
+  } else {
+    // Unpublish course -> set status to DRAFT
+    const updated = await prisma.courses.update({
+      where: { id: course.id },
+      data: {
+        status: CourseStatus.DRAFT,
+        updatedAt: new Date(),
+      },
+      select: { id: true, title: true, status: true, publishedVersion: true },
+    })
+
+    return updated
+  }
+}
+
+/**
+ * Publish a new release version of an already published or draft course.
+ */
+export async function publishCourseVersion(
+  courseIdOrSlug: string,
+  userId: string
+): Promise<TogglePublishResult> {
+  return togglePublishStatus(courseIdOrSlug, userId, true)
 }

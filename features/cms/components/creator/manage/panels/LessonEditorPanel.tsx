@@ -272,9 +272,12 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
   useEffect(() => {
     if (!editor) return
     const updateStats = () => {
-      const text = editor.getText() || ''
-      const trimmed = text.trim()
-      setWordCount(trimmed ? trimmed.split(/\s+/).length : 0)
+      queueMicrotask(() => {
+        if (!editor || editor.isDestroyed) return
+        const text = editor.getText() || ''
+        const trimmed = text.trim()
+        setWordCount(trimmed ? trimmed.split(/\s+/).length : 0)
+      })
     }
     updateStats()
     editor.on('update', updateStats)
@@ -292,76 +295,69 @@ export function LessonEditorPanel({ sectionId, lessonId }: LessonEditorPanelProp
     fetch(`/api/courses/_/sections/${sectionId}/lessons/${lessonId}`)
       .then((r) => r.json())
       .then((data) => {
-        const loadedTitle = data.title || ''
-        const loadedContent = data.content?.content || null
-        const lessonLastEdit = data.content?.lastEdit || ''
+        queueMicrotask(() => {
+          if (!editor || editor.isDestroyed) return
 
-        // Check for draft in localStorage
-        const draft = getDraft()
-        // Only consider draft valid if it actually has meaningful title or content blocks
-        const isDraftValid =
-          draft &&
-          (Boolean(draft.title?.trim()) ||
-            (draft.content?.content && Array.isArray(draft.content.content) && draft.content.content.length > 0))
+          const loadedTitle = data.title || ''
+          const loadedContent = data.content?.content || null
+          const lessonLastEdit = data.content?.lastEdit || ''
 
-        const hasDraftNewer =
-          Boolean(isDraftValid && draft && lessonLastEdit && new Date(draft.savedAt) > new Date(lessonLastEdit))
+          // Check for draft in localStorage
+          const draft = getDraft()
+          // Only consider draft valid if it actually has meaningful title or content blocks
+          const isDraftValid =
+            draft &&
+            (Boolean(draft.title?.trim()) ||
+              (draft.content?.content && Array.isArray(draft.content.content) && draft.content.content.length > 0))
 
-        // Auto-restore draft if newer and valid
-        if (hasDraftNewer && draft) {
-          const titleToUse = draft.title?.trim() || loadedTitle
-          setTitle(titleToUse)
-          setInitialTitle(titleToUse)
-          setInitialContent(draft.content || loadedContent)
+          const hasDraftNewer =
+            Boolean(isDraftValid && draft && lessonLastEdit && new Date(draft.savedAt) > new Date(lessonLastEdit))
 
-          if (draft.content) {
-            editor.commands.setContent(draft.content as JSONContent)
-            const editorContent = editor.getJSON()
-            updateSavedContent(editorContent)
-            setTimeout(() => {
+          // Auto-restore draft if newer and valid
+          if (hasDraftNewer && draft) {
+            const titleToUse = draft.title?.trim() || loadedTitle
+            setTitle(titleToUse)
+            setInitialTitle(titleToUse)
+            setInitialContent(draft.content || loadedContent)
+
+            if (draft.content) {
+              editor.commands.setContent(draft.content as JSONContent)
+              const editorContent = editor.getJSON()
+              updateSavedContent(editorContent)
               setLoadingLesson(false)
-            }, 0)
-          } else if (loadedContent) {
-            editor.commands.setContent(loadedContent as JSONContent)
-            const editorContent = editor.getJSON()
-            updateSavedContent(editorContent)
-            setTimeout(() => {
+            } else if (loadedContent) {
+              editor.commands.setContent(loadedContent as JSONContent)
+              const editorContent = editor.getJSON()
+              updateSavedContent(editorContent)
               setLoadingLesson(false)
-            }, 0)
+            } else {
+              setLoadingLesson(false)
+            }
+            toast.info('Draft tersimpan di browser dipulihkan')
           } else {
-            setLoadingLesson(false)
-          }
-          toast.info('Draft tersimpan di browser dipulihkan')
-        } else {
-          // If draft exists but was empty/invalid, purge it from localStorage
-          if (draft && !isDraftValid) {
-            clearDraft()
-          }
+            // If draft exists but was empty/invalid, purge it from localStorage
+            if (draft && !isDraftValid) {
+              clearDraft()
+            }
 
-          // Load server content (no draft or draft is older)
-          setTitle(loadedTitle)
-          setInitialTitle(loadedTitle)
-          setInitialContent(loadedContent)
+            // Load server content (no draft or draft is older)
+            setTitle(loadedTitle)
+            setInitialTitle(loadedTitle)
+            setInitialContent(loadedContent)
 
-          if (loadedContent) {
-            editor.commands.setContent(loadedContent as JSONContent)
+            if (loadedContent) {
+              editor.commands.setContent(loadedContent as JSONContent)
 
-            // CRITICAL FIX: Use editor.getJSON() as single source of truth
-            // This prevents false dirty state from JSON stringify differences between
-            // raw initialContent and editor's normalized JSON output
-            const editorContent = editor.getJSON()
-            updateSavedContent(editorContent)
-
-            // CRITICAL: Enable dirty check in next tick to ensure all refs are synced
-            // This prevents race condition where checkDirty runs before savedContentRef is stable
-            setTimeout(() => {
+              // Use editor.getJSON() as single source of truth
+              const editorContent = editor.getJSON()
+              updateSavedContent(editorContent)
               setLoadingLesson(false)
-            }, 0)
-          } else {
-            console.warn('[LessonEditorPanel] no content.content found', data.content)
-            setLoadingLesson(false)
+            } else {
+              console.warn('[LessonEditorPanel] no content.content found', data.content)
+              setLoadingLesson(false)
+            }
           }
-        }
+        })
       })
       .catch(() => {
         toast.error('Gagal memuat pelajaran')

@@ -65,9 +65,10 @@ export function useUnsavedChanges({
     if (!editor) return
 
     const handleUpdate = () => {
-      const dirty = checkDirty()
-
-      setIsDirty(dirty)
+      queueMicrotask(() => {
+        const dirty = checkDirty()
+        setIsDirty(dirty)
+      })
     }
 
     editor.on('update', handleUpdate)

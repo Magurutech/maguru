@@ -96,6 +96,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
         difficulty: true,
         creatorId: true,
         status: true,
+        publishedVersion: true,
         createdAt: true,
         updatedAt: true,
         students: true,

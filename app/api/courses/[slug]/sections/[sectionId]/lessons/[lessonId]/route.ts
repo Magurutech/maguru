@@ -24,10 +24,11 @@ export async function GET(
   { params }: { params: Promise<{ slug: string; sectionId: string; lessonId: string }> }
 ) {
   try {
-    const { lessonId } = await params
+    const { slug, lessonId } = await params
+    const forStudent = slug !== '_' && request.nextUrl.searchParams.get('role') === 'student'
 
     // Get lesson with full content
-    const lesson = await lessonService.getLessonById(lessonId)
+    const lesson = await lessonService.getLessonById(lessonId, { forStudent })
 
     if (!lesson) {
       return NextResponse.json(

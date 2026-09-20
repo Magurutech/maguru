@@ -21,7 +21,7 @@ interface ManageContextValue {
   loading: boolean
   error: string | null
   publishing: boolean
-  handleTogglePublish: () => void
+  handleTogglePublish: (forceNewVersion?: boolean) => void
   activeView: ActiveView
   setActiveView: (view: ActiveView) => void
   questions: any[]

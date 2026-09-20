@@ -32,8 +32,16 @@ export async function PUT(
     }
 
     const { slug } = await params
-    console.log(`[Publish Route] Executing togglePublishStatus for slug: "${slug}" by user: "${user.id}"`)
-    const updated = await togglePublishStatus(slug, user.id)
+    let forceNewVersion = false
+    try {
+      const body = await _request.json()
+      if (body?.forceNewVersion) forceNewVersion = true
+    } catch {
+      // Body is optional (empty request toggles status)
+    }
+
+    console.log(`[Publish Route] Executing togglePublishStatus for slug: "${slug}" by user: "${user.id}" (forceNewVersion: ${forceNewVersion})`)
+    const updated = await togglePublishStatus(slug, user.id, forceNewVersion)
 
     console.log(`[Publish Route] Successfully updated status to: "${updated.status}"`)
     return NextResponse.json({ course: updated })

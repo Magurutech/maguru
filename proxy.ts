@@ -166,9 +166,10 @@ export async function proxy(request: NextRequest) {
     (pathname.startsWith('/course/') && pathname.includes('/learn'))
 
   // Helper untuk membuat redirect dengan mempertahankan cookie session
-  const createRedirectResponse = (targetPath: string) => {
+  const createRedirectResponse = (targetPath: string, searchParams?: string) => {
     const url = request.nextUrl.clone()
     url.pathname = targetPath
+    url.search = searchParams !== undefined ? searchParams : ''
     const redirectResponse = NextResponse.redirect(url)
     response.cookies.getAll().forEach((c) => {
       redirectResponse.cookies.set(c.name, c.value)
@@ -177,7 +178,8 @@ export async function proxy(request: NextRequest) {
   }
 
   if (!user && isProtectedRoute) {
-    return createRedirectResponse('/sign-in')
+    const returnTo = request.nextUrl.pathname + request.nextUrl.search
+    return createRedirectResponse('/sign-in', `?returnTo=${encodeURIComponent(returnTo)}`)
   }
 
   if (user) {

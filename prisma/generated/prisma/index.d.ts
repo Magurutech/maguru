@@ -24,6 +24,11 @@ export type course_completions = $Result.DefaultSelection<Prisma.$course_complet
  */
 export type courses = $Result.DefaultSelection<Prisma.$coursesPayload>
 /**
+ * Model course_releases
+ * 
+ */
+export type course_releases = $Result.DefaultSelection<Prisma.$course_releasesPayload>
+/**
  * Model enrollments
  * 
  */
@@ -216,6 +221,16 @@ export class PrismaClient<
     * ```
     */
   get courses(): Prisma.coursesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.course_releases`: Exposes CRUD operations for the **course_releases** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Course_releases
+    * const course_releases = await prisma.course_releases.findMany()
+    * ```
+    */
+  get course_releases(): Prisma.course_releasesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.enrollments`: Exposes CRUD operations for the **enrollments** model.
@@ -722,6 +737,7 @@ export namespace Prisma {
   export const ModelName: {
     course_completions: 'course_completions',
     courses: 'courses',
+    course_releases: 'course_releases',
     enrollments: 'enrollments',
     lesson_progress: 'lesson_progress',
     lessons: 'lessons',
@@ -744,7 +760,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "course_completions" | "courses" | "enrollments" | "lesson_progress" | "lessons" | "sections" | "creator_profiles" | "assessment_questions" | "user_assessments"
+      modelProps: "course_completions" | "courses" | "course_releases" | "enrollments" | "lesson_progress" | "lessons" | "sections" | "creator_profiles" | "assessment_questions" | "user_assessments"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -893,6 +909,80 @@ export namespace Prisma {
           count: {
             args: Prisma.coursesCountArgs<ExtArgs>
             result: $Utils.Optional<CoursesCountAggregateOutputType> | number
+          }
+        }
+      }
+      course_releases: {
+        payload: Prisma.$course_releasesPayload<ExtArgs>
+        fields: Prisma.course_releasesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.course_releasesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.course_releasesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          findFirst: {
+            args: Prisma.course_releasesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.course_releasesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          findMany: {
+            args: Prisma.course_releasesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>[]
+          }
+          create: {
+            args: Prisma.course_releasesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          createMany: {
+            args: Prisma.course_releasesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.course_releasesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>[]
+          }
+          delete: {
+            args: Prisma.course_releasesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          update: {
+            args: Prisma.course_releasesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          deleteMany: {
+            args: Prisma.course_releasesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.course_releasesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.course_releasesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>[]
+          }
+          upsert: {
+            args: Prisma.course_releasesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$course_releasesPayload>
+          }
+          aggregate: {
+            args: Prisma.Course_releasesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCourse_releases>
+          }
+          groupBy: {
+            args: Prisma.course_releasesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Course_releasesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.course_releasesCountArgs<ExtArgs>
+            result: $Utils.Optional<Course_releasesCountAggregateOutputType> | number
           }
         }
       }
@@ -1524,6 +1614,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     course_completions?: course_completionsOmit
     courses?: coursesOmit
+    course_releases?: course_releasesOmit
     enrollments?: enrollmentsOmit
     lesson_progress?: lesson_progressOmit
     lessons?: lessonsOmit
@@ -1615,6 +1706,7 @@ export namespace Prisma {
     sections: number
     assessment_questions: number
     user_assessments: number
+    releases: number
   }
 
   export type CoursesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1622,6 +1714,7 @@ export namespace Prisma {
     sections?: boolean | CoursesCountOutputTypeCountSectionsArgs
     assessment_questions?: boolean | CoursesCountOutputTypeCountAssessment_questionsArgs
     user_assessments?: boolean | CoursesCountOutputTypeCountUser_assessmentsArgs
+    releases?: boolean | CoursesCountOutputTypeCountReleasesArgs
   }
 
   // Custom InputTypes
@@ -1661,6 +1754,13 @@ export namespace Prisma {
    */
   export type CoursesCountOutputTypeCountUser_assessmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: user_assessmentsWhereInput
+  }
+
+  /**
+   * CoursesCountOutputType without action
+   */
+  export type CoursesCountOutputTypeCountReleasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: course_releasesWhereInput
   }
 
 
@@ -2841,12 +2941,14 @@ export namespace Prisma {
     students: number | null
     lessons: number | null
     rating: number | null
+    publishedVersion: number | null
   }
 
   export type CoursesSumAggregateOutputType = {
     students: number | null
     lessons: number | null
     rating: number | null
+    publishedVersion: number | null
   }
 
   export type CoursesMinAggregateOutputType = {
@@ -2863,6 +2965,7 @@ export namespace Prisma {
     category: string | null
     difficulty: string | null
     creatorId: string | null
+    publishedVersion: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2881,6 +2984,7 @@ export namespace Prisma {
     category: string | null
     difficulty: string | null
     creatorId: string | null
+    publishedVersion: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2900,6 +3004,7 @@ export namespace Prisma {
     difficulty: number
     creatorId: number
     outcomes: number
+    publishedVersion: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2910,12 +3015,14 @@ export namespace Prisma {
     students?: true
     lessons?: true
     rating?: true
+    publishedVersion?: true
   }
 
   export type CoursesSumAggregateInputType = {
     students?: true
     lessons?: true
     rating?: true
+    publishedVersion?: true
   }
 
   export type CoursesMinAggregateInputType = {
@@ -2932,6 +3039,7 @@ export namespace Prisma {
     category?: true
     difficulty?: true
     creatorId?: true
+    publishedVersion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2950,6 +3058,7 @@ export namespace Prisma {
     category?: true
     difficulty?: true
     creatorId?: true
+    publishedVersion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2969,6 +3078,7 @@ export namespace Prisma {
     difficulty?: true
     creatorId?: true
     outcomes?: true
+    publishedVersion?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3075,6 +3185,7 @@ export namespace Prisma {
     difficulty: string | null
     creatorId: string
     outcomes: string[]
+    publishedVersion: number | null
     createdAt: Date
     updatedAt: Date
     _count: CoursesCountAggregateOutputType | null
@@ -3113,12 +3224,14 @@ export namespace Prisma {
     difficulty?: boolean
     creatorId?: boolean
     outcomes?: boolean
+    publishedVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     enrollments?: boolean | courses$enrollmentsArgs<ExtArgs>
     sections?: boolean | courses$sectionsArgs<ExtArgs>
     assessment_questions?: boolean | courses$assessment_questionsArgs<ExtArgs>
     user_assessments?: boolean | courses$user_assessmentsArgs<ExtArgs>
+    releases?: boolean | courses$releasesArgs<ExtArgs>
     _count?: boolean | CoursesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["courses"]>
 
@@ -3137,6 +3250,7 @@ export namespace Prisma {
     difficulty?: boolean
     creatorId?: boolean
     outcomes?: boolean
+    publishedVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["courses"]>
@@ -3156,6 +3270,7 @@ export namespace Prisma {
     difficulty?: boolean
     creatorId?: boolean
     outcomes?: boolean
+    publishedVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["courses"]>
@@ -3175,16 +3290,18 @@ export namespace Prisma {
     difficulty?: boolean
     creatorId?: boolean
     outcomes?: boolean
+    publishedVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "outcomes" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
+  export type coursesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "slug" | "title" | "description" | "thumbnail" | "status" | "students" | "lessons" | "duration" | "rating" | "category" | "difficulty" | "creatorId" | "outcomes" | "publishedVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["courses"]>
   export type coursesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     enrollments?: boolean | courses$enrollmentsArgs<ExtArgs>
     sections?: boolean | courses$sectionsArgs<ExtArgs>
     assessment_questions?: boolean | courses$assessment_questionsArgs<ExtArgs>
     user_assessments?: boolean | courses$user_assessmentsArgs<ExtArgs>
+    releases?: boolean | courses$releasesArgs<ExtArgs>
     _count?: boolean | CoursesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type coursesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3197,6 +3314,7 @@ export namespace Prisma {
       sections: Prisma.$sectionsPayload<ExtArgs>[]
       assessment_questions: Prisma.$assessment_questionsPayload<ExtArgs>[]
       user_assessments: Prisma.$user_assessmentsPayload<ExtArgs>[]
+      releases: Prisma.$course_releasesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3213,6 +3331,7 @@ export namespace Prisma {
       difficulty: string | null
       creatorId: string
       outcomes: string[]
+      publishedVersion: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["courses"]>
@@ -3613,6 +3732,7 @@ export namespace Prisma {
     sections<T extends courses$sectionsArgs<ExtArgs> = {}>(args?: Subset<T, courses$sectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$sectionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     assessment_questions<T extends courses$assessment_questionsArgs<ExtArgs> = {}>(args?: Subset<T, courses$assessment_questionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$assessment_questionsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     user_assessments<T extends courses$user_assessmentsArgs<ExtArgs> = {}>(args?: Subset<T, courses$user_assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$user_assessmentsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    releases<T extends courses$releasesArgs<ExtArgs> = {}>(args?: Subset<T, courses$releasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3656,6 +3776,7 @@ export namespace Prisma {
     readonly difficulty: FieldRef<"courses", 'String'>
     readonly creatorId: FieldRef<"courses", 'String'>
     readonly outcomes: FieldRef<"courses", 'String[]'>
+    readonly publishedVersion: FieldRef<"courses", 'Int'>
     readonly createdAt: FieldRef<"courses", 'DateTime'>
     readonly updatedAt: FieldRef<"courses", 'DateTime'>
   }
@@ -4151,6 +4272,30 @@ export namespace Prisma {
   }
 
   /**
+   * courses.releases
+   */
+  export type courses$releasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    where?: course_releasesWhereInput
+    orderBy?: course_releasesOrderByWithRelationInput | course_releasesOrderByWithRelationInput[]
+    cursor?: course_releasesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Course_releasesScalarFieldEnum | Course_releasesScalarFieldEnum[]
+  }
+
+  /**
    * courses without action
    */
   export type coursesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4166,6 +4311,1159 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: coursesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model course_releases
+   */
+
+  export type AggregateCourse_releases = {
+    _count: Course_releasesCountAggregateOutputType | null
+    _avg: Course_releasesAvgAggregateOutputType | null
+    _sum: Course_releasesSumAggregateOutputType | null
+    _min: Course_releasesMinAggregateOutputType | null
+    _max: Course_releasesMaxAggregateOutputType | null
+  }
+
+  export type Course_releasesAvgAggregateOutputType = {
+    version: number | null
+    totalLessons: number | null
+  }
+
+  export type Course_releasesSumAggregateOutputType = {
+    version: number | null
+    totalLessons: number | null
+  }
+
+  export type Course_releasesMinAggregateOutputType = {
+    id: string | null
+    courseId: string | null
+    version: number | null
+    title: string | null
+    description: string | null
+    totalLessons: number | null
+    publishedAt: Date | null
+    creatorId: string | null
+  }
+
+  export type Course_releasesMaxAggregateOutputType = {
+    id: string | null
+    courseId: string | null
+    version: number | null
+    title: string | null
+    description: string | null
+    totalLessons: number | null
+    publishedAt: Date | null
+    creatorId: string | null
+  }
+
+  export type Course_releasesCountAggregateOutputType = {
+    id: number
+    courseId: number
+    version: number
+    title: number
+    description: number
+    totalLessons: number
+    snapshot: number
+    publishedAt: number
+    creatorId: number
+    _all: number
+  }
+
+
+  export type Course_releasesAvgAggregateInputType = {
+    version?: true
+    totalLessons?: true
+  }
+
+  export type Course_releasesSumAggregateInputType = {
+    version?: true
+    totalLessons?: true
+  }
+
+  export type Course_releasesMinAggregateInputType = {
+    id?: true
+    courseId?: true
+    version?: true
+    title?: true
+    description?: true
+    totalLessons?: true
+    publishedAt?: true
+    creatorId?: true
+  }
+
+  export type Course_releasesMaxAggregateInputType = {
+    id?: true
+    courseId?: true
+    version?: true
+    title?: true
+    description?: true
+    totalLessons?: true
+    publishedAt?: true
+    creatorId?: true
+  }
+
+  export type Course_releasesCountAggregateInputType = {
+    id?: true
+    courseId?: true
+    version?: true
+    title?: true
+    description?: true
+    totalLessons?: true
+    snapshot?: true
+    publishedAt?: true
+    creatorId?: true
+    _all?: true
+  }
+
+  export type Course_releasesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which course_releases to aggregate.
+     */
+    where?: course_releasesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_releases to fetch.
+     */
+    orderBy?: course_releasesOrderByWithRelationInput | course_releasesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: course_releasesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_releases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_releases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned course_releases
+    **/
+    _count?: true | Course_releasesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Course_releasesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Course_releasesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Course_releasesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Course_releasesMaxAggregateInputType
+  }
+
+  export type GetCourse_releasesAggregateType<T extends Course_releasesAggregateArgs> = {
+        [P in keyof T & keyof AggregateCourse_releases]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCourse_releases[P]>
+      : GetScalarType<T[P], AggregateCourse_releases[P]>
+  }
+
+
+
+
+  export type course_releasesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: course_releasesWhereInput
+    orderBy?: course_releasesOrderByWithAggregationInput | course_releasesOrderByWithAggregationInput[]
+    by: Course_releasesScalarFieldEnum[] | Course_releasesScalarFieldEnum
+    having?: course_releasesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Course_releasesCountAggregateInputType | true
+    _avg?: Course_releasesAvgAggregateInputType
+    _sum?: Course_releasesSumAggregateInputType
+    _min?: Course_releasesMinAggregateInputType
+    _max?: Course_releasesMaxAggregateInputType
+  }
+
+  export type Course_releasesGroupByOutputType = {
+    id: string
+    courseId: string
+    version: number
+    title: string
+    description: string
+    totalLessons: number
+    snapshot: JsonValue
+    publishedAt: Date
+    creatorId: string
+    _count: Course_releasesCountAggregateOutputType | null
+    _avg: Course_releasesAvgAggregateOutputType | null
+    _sum: Course_releasesSumAggregateOutputType | null
+    _min: Course_releasesMinAggregateOutputType | null
+    _max: Course_releasesMaxAggregateOutputType | null
+  }
+
+  type GetCourse_releasesGroupByPayload<T extends course_releasesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Course_releasesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Course_releasesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Course_releasesGroupByOutputType[P]>
+            : GetScalarType<T[P], Course_releasesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type course_releasesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    version?: boolean
+    title?: boolean
+    description?: boolean
+    totalLessons?: boolean
+    snapshot?: boolean
+    publishedAt?: boolean
+    creatorId?: boolean
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_releases"]>
+
+  export type course_releasesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    version?: boolean
+    title?: boolean
+    description?: boolean
+    totalLessons?: boolean
+    snapshot?: boolean
+    publishedAt?: boolean
+    creatorId?: boolean
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_releases"]>
+
+  export type course_releasesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    courseId?: boolean
+    version?: boolean
+    title?: boolean
+    description?: boolean
+    totalLessons?: boolean
+    snapshot?: boolean
+    publishedAt?: boolean
+    creatorId?: boolean
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["course_releases"]>
+
+  export type course_releasesSelectScalar = {
+    id?: boolean
+    courseId?: boolean
+    version?: boolean
+    title?: boolean
+    description?: boolean
+    totalLessons?: boolean
+    snapshot?: boolean
+    publishedAt?: boolean
+    creatorId?: boolean
+  }
+
+  export type course_releasesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "courseId" | "version" | "title" | "description" | "totalLessons" | "snapshot" | "publishedAt" | "creatorId", ExtArgs["result"]["course_releases"]>
+  export type course_releasesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }
+  export type course_releasesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }
+  export type course_releasesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    courses?: boolean | coursesDefaultArgs<ExtArgs>
+  }
+
+  export type $course_releasesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "course_releases"
+    objects: {
+      courses: Prisma.$coursesPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      courseId: string
+      version: number
+      title: string
+      description: string
+      totalLessons: number
+      snapshot: Prisma.JsonValue
+      publishedAt: Date
+      creatorId: string
+    }, ExtArgs["result"]["course_releases"]>
+    composites: {}
+  }
+
+  type course_releasesGetPayload<S extends boolean | null | undefined | course_releasesDefaultArgs> = $Result.GetResult<Prisma.$course_releasesPayload, S>
+
+  type course_releasesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<course_releasesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: Course_releasesCountAggregateInputType | true
+    }
+
+  export interface course_releasesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['course_releases'], meta: { name: 'course_releases' } }
+    /**
+     * Find zero or one Course_releases that matches the filter.
+     * @param {course_releasesFindUniqueArgs} args - Arguments to find a Course_releases
+     * @example
+     * // Get one Course_releases
+     * const course_releases = await prisma.course_releases.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends course_releasesFindUniqueArgs>(args: SelectSubset<T, course_releasesFindUniqueArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Course_releases that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {course_releasesFindUniqueOrThrowArgs} args - Arguments to find a Course_releases
+     * @example
+     * // Get one Course_releases
+     * const course_releases = await prisma.course_releases.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends course_releasesFindUniqueOrThrowArgs>(args: SelectSubset<T, course_releasesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Course_releases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesFindFirstArgs} args - Arguments to find a Course_releases
+     * @example
+     * // Get one Course_releases
+     * const course_releases = await prisma.course_releases.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends course_releasesFindFirstArgs>(args?: SelectSubset<T, course_releasesFindFirstArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Course_releases that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesFindFirstOrThrowArgs} args - Arguments to find a Course_releases
+     * @example
+     * // Get one Course_releases
+     * const course_releases = await prisma.course_releases.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends course_releasesFindFirstOrThrowArgs>(args?: SelectSubset<T, course_releasesFindFirstOrThrowArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Course_releases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Course_releases
+     * const course_releases = await prisma.course_releases.findMany()
+     * 
+     * // Get first 10 Course_releases
+     * const course_releases = await prisma.course_releases.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const course_releasesWithIdOnly = await prisma.course_releases.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends course_releasesFindManyArgs>(args?: SelectSubset<T, course_releasesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Course_releases.
+     * @param {course_releasesCreateArgs} args - Arguments to create a Course_releases.
+     * @example
+     * // Create one Course_releases
+     * const Course_releases = await prisma.course_releases.create({
+     *   data: {
+     *     // ... data to create a Course_releases
+     *   }
+     * })
+     * 
+     */
+    create<T extends course_releasesCreateArgs>(args: SelectSubset<T, course_releasesCreateArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Course_releases.
+     * @param {course_releasesCreateManyArgs} args - Arguments to create many Course_releases.
+     * @example
+     * // Create many Course_releases
+     * const course_releases = await prisma.course_releases.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends course_releasesCreateManyArgs>(args?: SelectSubset<T, course_releasesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Course_releases and returns the data saved in the database.
+     * @param {course_releasesCreateManyAndReturnArgs} args - Arguments to create many Course_releases.
+     * @example
+     * // Create many Course_releases
+     * const course_releases = await prisma.course_releases.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Course_releases and only return the `id`
+     * const course_releasesWithIdOnly = await prisma.course_releases.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends course_releasesCreateManyAndReturnArgs>(args?: SelectSubset<T, course_releasesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Course_releases.
+     * @param {course_releasesDeleteArgs} args - Arguments to delete one Course_releases.
+     * @example
+     * // Delete one Course_releases
+     * const Course_releases = await prisma.course_releases.delete({
+     *   where: {
+     *     // ... filter to delete one Course_releases
+     *   }
+     * })
+     * 
+     */
+    delete<T extends course_releasesDeleteArgs>(args: SelectSubset<T, course_releasesDeleteArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Course_releases.
+     * @param {course_releasesUpdateArgs} args - Arguments to update one Course_releases.
+     * @example
+     * // Update one Course_releases
+     * const course_releases = await prisma.course_releases.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends course_releasesUpdateArgs>(args: SelectSubset<T, course_releasesUpdateArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Course_releases.
+     * @param {course_releasesDeleteManyArgs} args - Arguments to filter Course_releases to delete.
+     * @example
+     * // Delete a few Course_releases
+     * const { count } = await prisma.course_releases.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends course_releasesDeleteManyArgs>(args?: SelectSubset<T, course_releasesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Course_releases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Course_releases
+     * const course_releases = await prisma.course_releases.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends course_releasesUpdateManyArgs>(args: SelectSubset<T, course_releasesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Course_releases and returns the data updated in the database.
+     * @param {course_releasesUpdateManyAndReturnArgs} args - Arguments to update many Course_releases.
+     * @example
+     * // Update many Course_releases
+     * const course_releases = await prisma.course_releases.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Course_releases and only return the `id`
+     * const course_releasesWithIdOnly = await prisma.course_releases.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends course_releasesUpdateManyAndReturnArgs>(args: SelectSubset<T, course_releasesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Course_releases.
+     * @param {course_releasesUpsertArgs} args - Arguments to update or create a Course_releases.
+     * @example
+     * // Update or create a Course_releases
+     * const course_releases = await prisma.course_releases.upsert({
+     *   create: {
+     *     // ... data to create a Course_releases
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Course_releases we want to update
+     *   }
+     * })
+     */
+    upsert<T extends course_releasesUpsertArgs>(args: SelectSubset<T, course_releasesUpsertArgs<ExtArgs>>): Prisma__course_releasesClient<$Result.GetResult<Prisma.$course_releasesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Course_releases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesCountArgs} args - Arguments to filter Course_releases to count.
+     * @example
+     * // Count the number of Course_releases
+     * const count = await prisma.course_releases.count({
+     *   where: {
+     *     // ... the filter for the Course_releases we want to count
+     *   }
+     * })
+    **/
+    count<T extends course_releasesCountArgs>(
+      args?: Subset<T, course_releasesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Course_releasesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Course_releases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Course_releasesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Course_releasesAggregateArgs>(args: Subset<T, Course_releasesAggregateArgs>): Prisma.PrismaPromise<GetCourse_releasesAggregateType<T>>
+
+    /**
+     * Group by Course_releases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {course_releasesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends course_releasesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: course_releasesGroupByArgs['orderBy'] }
+        : { orderBy?: course_releasesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, course_releasesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCourse_releasesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the course_releases model
+   */
+  readonly fields: course_releasesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for course_releases.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__course_releasesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    courses<T extends coursesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, coursesDefaultArgs<ExtArgs>>): Prisma__coursesClient<$Result.GetResult<Prisma.$coursesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the course_releases model
+   */
+  interface course_releasesFieldRefs {
+    readonly id: FieldRef<"course_releases", 'String'>
+    readonly courseId: FieldRef<"course_releases", 'String'>
+    readonly version: FieldRef<"course_releases", 'Int'>
+    readonly title: FieldRef<"course_releases", 'String'>
+    readonly description: FieldRef<"course_releases", 'String'>
+    readonly totalLessons: FieldRef<"course_releases", 'Int'>
+    readonly snapshot: FieldRef<"course_releases", 'Json'>
+    readonly publishedAt: FieldRef<"course_releases", 'DateTime'>
+    readonly creatorId: FieldRef<"course_releases", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * course_releases findUnique
+   */
+  export type course_releasesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter, which course_releases to fetch.
+     */
+    where: course_releasesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases findUniqueOrThrow
+   */
+  export type course_releasesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter, which course_releases to fetch.
+     */
+    where: course_releasesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases findFirst
+   */
+  export type course_releasesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter, which course_releases to fetch.
+     */
+    where?: course_releasesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_releases to fetch.
+     */
+    orderBy?: course_releasesOrderByWithRelationInput | course_releasesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for course_releases.
+     */
+    cursor?: course_releasesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_releases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_releases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of course_releases.
+     */
+    distinct?: Course_releasesScalarFieldEnum | Course_releasesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases findFirstOrThrow
+   */
+  export type course_releasesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter, which course_releases to fetch.
+     */
+    where?: course_releasesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_releases to fetch.
+     */
+    orderBy?: course_releasesOrderByWithRelationInput | course_releasesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for course_releases.
+     */
+    cursor?: course_releasesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_releases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_releases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of course_releases.
+     */
+    distinct?: Course_releasesScalarFieldEnum | Course_releasesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases findMany
+   */
+  export type course_releasesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter, which course_releases to fetch.
+     */
+    where?: course_releasesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of course_releases to fetch.
+     */
+    orderBy?: course_releasesOrderByWithRelationInput | course_releasesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing course_releases.
+     */
+    cursor?: course_releasesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` course_releases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` course_releases.
+     */
+    skip?: number
+    distinct?: Course_releasesScalarFieldEnum | Course_releasesScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases create
+   */
+  export type course_releasesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a course_releases.
+     */
+    data: XOR<course_releasesCreateInput, course_releasesUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases createMany
+   */
+  export type course_releasesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many course_releases.
+     */
+    data: course_releasesCreateManyInput | course_releasesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * course_releases createManyAndReturn
+   */
+  export type course_releasesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * The data used to create many course_releases.
+     */
+    data: course_releasesCreateManyInput | course_releasesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * course_releases update
+   */
+  export type course_releasesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a course_releases.
+     */
+    data: XOR<course_releasesUpdateInput, course_releasesUncheckedUpdateInput>
+    /**
+     * Choose, which course_releases to update.
+     */
+    where: course_releasesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases updateMany
+   */
+  export type course_releasesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update course_releases.
+     */
+    data: XOR<course_releasesUpdateManyMutationInput, course_releasesUncheckedUpdateManyInput>
+    /**
+     * Filter which course_releases to update
+     */
+    where?: course_releasesWhereInput
+    /**
+     * Limit how many course_releases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * course_releases updateManyAndReturn
+   */
+  export type course_releasesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * The data used to update course_releases.
+     */
+    data: XOR<course_releasesUpdateManyMutationInput, course_releasesUncheckedUpdateManyInput>
+    /**
+     * Filter which course_releases to update
+     */
+    where?: course_releasesWhereInput
+    /**
+     * Limit how many course_releases to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * course_releases upsert
+   */
+  export type course_releasesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the course_releases to update in case it exists.
+     */
+    where: course_releasesWhereUniqueInput
+    /**
+     * In case the course_releases found by the `where` argument doesn't exist, create a new course_releases with this data.
+     */
+    create: XOR<course_releasesCreateInput, course_releasesUncheckedCreateInput>
+    /**
+     * In case the course_releases was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<course_releasesUpdateInput, course_releasesUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases delete
+   */
+  export type course_releasesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
+    /**
+     * Filter which course_releases to delete.
+     */
+    where: course_releasesWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * course_releases deleteMany
+   */
+  export type course_releasesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which course_releases to delete
+     */
+    where?: course_releasesWhereInput
+    /**
+     * Limit how many course_releases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * course_releases without action
+   */
+  export type course_releasesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the course_releases
+     */
+    select?: course_releasesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the course_releases
+     */
+    omit?: course_releasesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: course_releasesInclude<ExtArgs> | null
   }
 
 
@@ -12133,11 +13431,27 @@ export namespace Prisma {
     difficulty: 'difficulty',
     creatorId: 'creatorId',
     outcomes: 'outcomes',
+    publishedVersion: 'publishedVersion',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type CoursesScalarFieldEnum = (typeof CoursesScalarFieldEnum)[keyof typeof CoursesScalarFieldEnum]
+
+
+  export const Course_releasesScalarFieldEnum: {
+    id: 'id',
+    courseId: 'courseId',
+    version: 'version',
+    title: 'title',
+    description: 'description',
+    totalLessons: 'totalLessons',
+    snapshot: 'snapshot',
+    publishedAt: 'publishedAt',
+    creatorId: 'creatorId'
+  };
+
+  export type Course_releasesScalarFieldEnum = (typeof Course_releasesScalarFieldEnum)[keyof typeof Course_releasesScalarFieldEnum]
 
 
   export const EnrollmentsScalarFieldEnum: {
@@ -12471,12 +13785,14 @@ export namespace Prisma {
     difficulty?: StringNullableFilter<"courses"> | string | null
     creatorId?: StringFilter<"courses"> | string
     outcomes?: StringNullableListFilter<"courses">
+    publishedVersion?: IntNullableFilter<"courses"> | number | null
     createdAt?: DateTimeFilter<"courses"> | Date | string
     updatedAt?: DateTimeFilter<"courses"> | Date | string
     enrollments?: EnrollmentsListRelationFilter
     sections?: SectionsListRelationFilter
     assessment_questions?: Assessment_questionsListRelationFilter
     user_assessments?: User_assessmentsListRelationFilter
+    releases?: Course_releasesListRelationFilter
   }
 
   export type coursesOrderByWithRelationInput = {
@@ -12494,12 +13810,14 @@ export namespace Prisma {
     difficulty?: SortOrderInput | SortOrder
     creatorId?: SortOrder
     outcomes?: SortOrder
+    publishedVersion?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     enrollments?: enrollmentsOrderByRelationAggregateInput
     sections?: sectionsOrderByRelationAggregateInput
     assessment_questions?: assessment_questionsOrderByRelationAggregateInput
     user_assessments?: user_assessmentsOrderByRelationAggregateInput
+    releases?: course_releasesOrderByRelationAggregateInput
   }
 
   export type coursesWhereUniqueInput = Prisma.AtLeast<{
@@ -12520,12 +13838,14 @@ export namespace Prisma {
     difficulty?: StringNullableFilter<"courses"> | string | null
     creatorId?: StringFilter<"courses"> | string
     outcomes?: StringNullableListFilter<"courses">
+    publishedVersion?: IntNullableFilter<"courses"> | number | null
     createdAt?: DateTimeFilter<"courses"> | Date | string
     updatedAt?: DateTimeFilter<"courses"> | Date | string
     enrollments?: EnrollmentsListRelationFilter
     sections?: SectionsListRelationFilter
     assessment_questions?: Assessment_questionsListRelationFilter
     user_assessments?: User_assessmentsListRelationFilter
+    releases?: Course_releasesListRelationFilter
   }, "id" | "slug">
 
   export type coursesOrderByWithAggregationInput = {
@@ -12543,6 +13863,7 @@ export namespace Prisma {
     difficulty?: SortOrderInput | SortOrder
     creatorId?: SortOrder
     outcomes?: SortOrder
+    publishedVersion?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: coursesCountOrderByAggregateInput
@@ -12570,8 +13891,87 @@ export namespace Prisma {
     difficulty?: StringNullableWithAggregatesFilter<"courses"> | string | null
     creatorId?: StringWithAggregatesFilter<"courses"> | string
     outcomes?: StringNullableListFilter<"courses">
+    publishedVersion?: IntNullableWithAggregatesFilter<"courses"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"courses"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"courses"> | Date | string
+  }
+
+  export type course_releasesWhereInput = {
+    AND?: course_releasesWhereInput | course_releasesWhereInput[]
+    OR?: course_releasesWhereInput[]
+    NOT?: course_releasesWhereInput | course_releasesWhereInput[]
+    id?: StringFilter<"course_releases"> | string
+    courseId?: StringFilter<"course_releases"> | string
+    version?: IntFilter<"course_releases"> | number
+    title?: StringFilter<"course_releases"> | string
+    description?: StringFilter<"course_releases"> | string
+    totalLessons?: IntFilter<"course_releases"> | number
+    snapshot?: JsonFilter<"course_releases">
+    publishedAt?: DateTimeFilter<"course_releases"> | Date | string
+    creatorId?: StringFilter<"course_releases"> | string
+    courses?: XOR<CoursesScalarRelationFilter, coursesWhereInput>
+  }
+
+  export type course_releasesOrderByWithRelationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    version?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    totalLessons?: SortOrder
+    snapshot?: SortOrder
+    publishedAt?: SortOrder
+    creatorId?: SortOrder
+    courses?: coursesOrderByWithRelationInput
+  }
+
+  export type course_releasesWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    courseId_version?: course_releasesCourseIdVersionCompoundUniqueInput
+    AND?: course_releasesWhereInput | course_releasesWhereInput[]
+    OR?: course_releasesWhereInput[]
+    NOT?: course_releasesWhereInput | course_releasesWhereInput[]
+    courseId?: StringFilter<"course_releases"> | string
+    version?: IntFilter<"course_releases"> | number
+    title?: StringFilter<"course_releases"> | string
+    description?: StringFilter<"course_releases"> | string
+    totalLessons?: IntFilter<"course_releases"> | number
+    snapshot?: JsonFilter<"course_releases">
+    publishedAt?: DateTimeFilter<"course_releases"> | Date | string
+    creatorId?: StringFilter<"course_releases"> | string
+    courses?: XOR<CoursesScalarRelationFilter, coursesWhereInput>
+  }, "id" | "courseId_version">
+
+  export type course_releasesOrderByWithAggregationInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    version?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    totalLessons?: SortOrder
+    snapshot?: SortOrder
+    publishedAt?: SortOrder
+    creatorId?: SortOrder
+    _count?: course_releasesCountOrderByAggregateInput
+    _avg?: course_releasesAvgOrderByAggregateInput
+    _max?: course_releasesMaxOrderByAggregateInput
+    _min?: course_releasesMinOrderByAggregateInput
+    _sum?: course_releasesSumOrderByAggregateInput
+  }
+
+  export type course_releasesScalarWhereWithAggregatesInput = {
+    AND?: course_releasesScalarWhereWithAggregatesInput | course_releasesScalarWhereWithAggregatesInput[]
+    OR?: course_releasesScalarWhereWithAggregatesInput[]
+    NOT?: course_releasesScalarWhereWithAggregatesInput | course_releasesScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"course_releases"> | string
+    courseId?: StringWithAggregatesFilter<"course_releases"> | string
+    version?: IntWithAggregatesFilter<"course_releases"> | number
+    title?: StringWithAggregatesFilter<"course_releases"> | string
+    description?: StringWithAggregatesFilter<"course_releases"> | string
+    totalLessons?: IntWithAggregatesFilter<"course_releases"> | number
+    snapshot?: JsonWithAggregatesFilter<"course_releases">
+    publishedAt?: DateTimeWithAggregatesFilter<"course_releases"> | Date | string
+    creatorId?: StringWithAggregatesFilter<"course_releases"> | string
   }
 
   export type enrollmentsWhereInput = {
@@ -13172,12 +14572,14 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
     sections?: sectionsCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUncheckedCreateInput = {
@@ -13195,12 +14597,14 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
     sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsUncheckedCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsUncheckedCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesUncheckedCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUpdateInput = {
@@ -13218,12 +14622,14 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesUncheckedUpdateInput = {
@@ -13241,12 +14647,14 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUncheckedUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUncheckedUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUncheckedUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesCreateManyInput = {
@@ -13264,6 +14672,7 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
   }
@@ -13283,6 +14692,7 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -13302,8 +14712,92 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type course_releasesCreateInput = {
+    id?: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
+    courses: coursesCreateNestedOneWithoutReleasesInput
+  }
+
+  export type course_releasesUncheckedCreateInput = {
+    id?: string
+    courseId: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
+  }
+
+  export type course_releasesUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    courses?: coursesUpdateOneRequiredWithoutReleasesNestedInput
+  }
+
+  export type course_releasesUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type course_releasesCreateManyInput = {
+    id?: string
+    courseId: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
+  }
+
+  export type course_releasesUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type course_releasesUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    courseId?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
   }
 
   export type enrollmentsCreateInput = {
@@ -14054,6 +15548,17 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type EnrollmentsListRelationFilter = {
     every?: enrollmentsWhereInput
     some?: enrollmentsWhereInput
@@ -14078,6 +15583,12 @@ export namespace Prisma {
     none?: user_assessmentsWhereInput
   }
 
+  export type Course_releasesListRelationFilter = {
+    every?: course_releasesWhereInput
+    some?: course_releasesWhereInput
+    none?: course_releasesWhereInput
+  }
+
   export type enrollmentsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -14091,6 +15602,10 @@ export namespace Prisma {
   }
 
   export type user_assessmentsOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type course_releasesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14109,6 +15624,7 @@ export namespace Prisma {
     difficulty?: SortOrder
     creatorId?: SortOrder
     outcomes?: SortOrder
+    publishedVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14117,6 +15633,7 @@ export namespace Prisma {
     students?: SortOrder
     lessons?: SortOrder
     rating?: SortOrder
+    publishedVersion?: SortOrder
   }
 
   export type coursesMaxOrderByAggregateInput = {
@@ -14133,6 +15650,7 @@ export namespace Prisma {
     category?: SortOrder
     difficulty?: SortOrder
     creatorId?: SortOrder
+    publishedVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14151,6 +15669,7 @@ export namespace Prisma {
     category?: SortOrder
     difficulty?: SortOrder
     creatorId?: SortOrder
+    publishedVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -14159,6 +15678,7 @@ export namespace Prisma {
     students?: SortOrder
     lessons?: SortOrder
     rating?: SortOrder
+    publishedVersion?: SortOrder
   }
 
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -14205,9 +15725,123 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type CoursesScalarRelationFilter = {
     is?: coursesWhereInput
     isNot?: coursesWhereInput
+  }
+
+  export type course_releasesCourseIdVersionCompoundUniqueInput = {
+    courseId: string
+    version: number
+  }
+
+  export type course_releasesCountOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    version?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    totalLessons?: SortOrder
+    snapshot?: SortOrder
+    publishedAt?: SortOrder
+    creatorId?: SortOrder
+  }
+
+  export type course_releasesAvgOrderByAggregateInput = {
+    version?: SortOrder
+    totalLessons?: SortOrder
+  }
+
+  export type course_releasesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    version?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    totalLessons?: SortOrder
+    publishedAt?: SortOrder
+    creatorId?: SortOrder
+  }
+
+  export type course_releasesMinOrderByAggregateInput = {
+    id?: SortOrder
+    courseId?: SortOrder
+    version?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    totalLessons?: SortOrder
+    publishedAt?: SortOrder
+    creatorId?: SortOrder
+  }
+
+  export type course_releasesSumOrderByAggregateInput = {
+    version?: SortOrder
+    totalLessons?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type enrollmentsUserIdCourseIdCompoundUniqueInput = {
@@ -14278,29 +15912,6 @@ export namespace Prisma {
     completedAt?: SortOrder
     createdAt?: SortOrder
   }
-  export type JsonFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type Lesson_progressListRelationFilter = {
     every?: lesson_progressWhereInput
@@ -14356,32 +15967,6 @@ export namespace Prisma {
 
   export type lessonsSumOrderByAggregateInput = {
     order?: SortOrder
-  }
-  export type JsonWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedJsonFilter<$PrismaModel>
-    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type LessonsListRelationFilter = {
@@ -14562,17 +16147,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type user_assessmentsUserIdCourseIdSectionIdTypeCompoundUniqueInput = {
     userId: string
     courseId: string
@@ -14622,22 +16196,6 @@ export namespace Prisma {
   export type user_assessmentsSumOrderByAggregateInput = {
     score?: SortOrder
     durationSeconds?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -14696,6 +16254,13 @@ export namespace Prisma {
     connect?: user_assessmentsWhereUniqueInput | user_assessmentsWhereUniqueInput[]
   }
 
+  export type course_releasesCreateNestedManyWithoutCoursesInput = {
+    create?: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput> | course_releasesCreateWithoutCoursesInput[] | course_releasesUncheckedCreateWithoutCoursesInput[]
+    connectOrCreate?: course_releasesCreateOrConnectWithoutCoursesInput | course_releasesCreateOrConnectWithoutCoursesInput[]
+    createMany?: course_releasesCreateManyCoursesInputEnvelope
+    connect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+  }
+
   export type enrollmentsUncheckedCreateNestedManyWithoutCoursesInput = {
     create?: XOR<enrollmentsCreateWithoutCoursesInput, enrollmentsUncheckedCreateWithoutCoursesInput> | enrollmentsCreateWithoutCoursesInput[] | enrollmentsUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: enrollmentsCreateOrConnectWithoutCoursesInput | enrollmentsCreateOrConnectWithoutCoursesInput[]
@@ -14724,6 +16289,13 @@ export namespace Prisma {
     connect?: user_assessmentsWhereUniqueInput | user_assessmentsWhereUniqueInput[]
   }
 
+  export type course_releasesUncheckedCreateNestedManyWithoutCoursesInput = {
+    create?: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput> | course_releasesCreateWithoutCoursesInput[] | course_releasesUncheckedCreateWithoutCoursesInput[]
+    connectOrCreate?: course_releasesCreateOrConnectWithoutCoursesInput | course_releasesCreateOrConnectWithoutCoursesInput[]
+    createMany?: course_releasesCreateManyCoursesInputEnvelope
+    connect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+  }
+
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
   }
@@ -14743,6 +16315,14 @@ export namespace Prisma {
   export type coursesUpdateoutcomesInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type enrollmentsUpdateManyWithoutCoursesNestedInput = {
@@ -14801,6 +16381,20 @@ export namespace Prisma {
     deleteMany?: user_assessmentsScalarWhereInput | user_assessmentsScalarWhereInput[]
   }
 
+  export type course_releasesUpdateManyWithoutCoursesNestedInput = {
+    create?: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput> | course_releasesCreateWithoutCoursesInput[] | course_releasesUncheckedCreateWithoutCoursesInput[]
+    connectOrCreate?: course_releasesCreateOrConnectWithoutCoursesInput | course_releasesCreateOrConnectWithoutCoursesInput[]
+    upsert?: course_releasesUpsertWithWhereUniqueWithoutCoursesInput | course_releasesUpsertWithWhereUniqueWithoutCoursesInput[]
+    createMany?: course_releasesCreateManyCoursesInputEnvelope
+    set?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    disconnect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    delete?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    connect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    update?: course_releasesUpdateWithWhereUniqueWithoutCoursesInput | course_releasesUpdateWithWhereUniqueWithoutCoursesInput[]
+    updateMany?: course_releasesUpdateManyWithWhereWithoutCoursesInput | course_releasesUpdateManyWithWhereWithoutCoursesInput[]
+    deleteMany?: course_releasesScalarWhereInput | course_releasesScalarWhereInput[]
+  }
+
   export type enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput = {
     create?: XOR<enrollmentsCreateWithoutCoursesInput, enrollmentsUncheckedCreateWithoutCoursesInput> | enrollmentsCreateWithoutCoursesInput[] | enrollmentsUncheckedCreateWithoutCoursesInput[]
     connectOrCreate?: enrollmentsCreateOrConnectWithoutCoursesInput | enrollmentsCreateOrConnectWithoutCoursesInput[]
@@ -14855,6 +16449,34 @@ export namespace Prisma {
     update?: user_assessmentsUpdateWithWhereUniqueWithoutCoursesInput | user_assessmentsUpdateWithWhereUniqueWithoutCoursesInput[]
     updateMany?: user_assessmentsUpdateManyWithWhereWithoutCoursesInput | user_assessmentsUpdateManyWithWhereWithoutCoursesInput[]
     deleteMany?: user_assessmentsScalarWhereInput | user_assessmentsScalarWhereInput[]
+  }
+
+  export type course_releasesUncheckedUpdateManyWithoutCoursesNestedInput = {
+    create?: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput> | course_releasesCreateWithoutCoursesInput[] | course_releasesUncheckedCreateWithoutCoursesInput[]
+    connectOrCreate?: course_releasesCreateOrConnectWithoutCoursesInput | course_releasesCreateOrConnectWithoutCoursesInput[]
+    upsert?: course_releasesUpsertWithWhereUniqueWithoutCoursesInput | course_releasesUpsertWithWhereUniqueWithoutCoursesInput[]
+    createMany?: course_releasesCreateManyCoursesInputEnvelope
+    set?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    disconnect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    delete?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    connect?: course_releasesWhereUniqueInput | course_releasesWhereUniqueInput[]
+    update?: course_releasesUpdateWithWhereUniqueWithoutCoursesInput | course_releasesUpdateWithWhereUniqueWithoutCoursesInput[]
+    updateMany?: course_releasesUpdateManyWithWhereWithoutCoursesInput | course_releasesUpdateManyWithWhereWithoutCoursesInput[]
+    deleteMany?: course_releasesScalarWhereInput | course_releasesScalarWhereInput[]
+  }
+
+  export type coursesCreateNestedOneWithoutReleasesInput = {
+    create?: XOR<coursesCreateWithoutReleasesInput, coursesUncheckedCreateWithoutReleasesInput>
+    connectOrCreate?: coursesCreateOrConnectWithoutReleasesInput
+    connect?: coursesWhereUniqueInput
+  }
+
+  export type coursesUpdateOneRequiredWithoutReleasesNestedInput = {
+    create?: XOR<coursesCreateWithoutReleasesInput, coursesUncheckedCreateWithoutReleasesInput>
+    connectOrCreate?: coursesCreateOrConnectWithoutReleasesInput
+    upsert?: coursesUpsertWithoutReleasesInput
+    connect?: coursesWhereUniqueInput
+    update?: XOR<XOR<coursesUpdateToOneWithWhereWithoutReleasesInput, coursesUpdateWithoutReleasesInput>, coursesUncheckedUpdateWithoutReleasesInput>
   }
 
   export type coursesCreateNestedOneWithoutEnrollmentsInput = {
@@ -15123,14 +16745,6 @@ export namespace Prisma {
     connect?: sectionsWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type coursesUpdateOneRequiredWithoutUser_assessmentsNestedInput = {
     create?: XOR<coursesCreateWithoutUser_assessmentsInput, coursesUncheckedCreateWithoutUser_assessmentsInput>
     connectOrCreate?: coursesCreateOrConnectWithoutUser_assessmentsInput
@@ -15355,6 +16969,33 @@ export namespace Prisma {
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
   }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
@@ -15400,33 +17041,6 @@ export namespace Prisma {
     gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type enrollmentsCreateWithoutCoursesInput = {
@@ -15555,6 +17169,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type course_releasesCreateWithoutCoursesInput = {
+    id?: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
+  }
+
+  export type course_releasesUncheckedCreateWithoutCoursesInput = {
+    id?: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
+  }
+
+  export type course_releasesCreateOrConnectWithoutCoursesInput = {
+    where: course_releasesWhereUniqueInput
+    create: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput>
+  }
+
+  export type course_releasesCreateManyCoursesInputEnvelope = {
+    data: course_releasesCreateManyCoursesInput | course_releasesCreateManyCoursesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type enrollmentsUpsertWithWhereUniqueWithoutCoursesInput = {
     where: enrollmentsWhereUniqueInput
     update: XOR<enrollmentsUpdateWithoutCoursesInput, enrollmentsUncheckedUpdateWithoutCoursesInput>
@@ -15675,6 +17321,149 @@ export namespace Prisma {
     completedAt?: DateTimeFilter<"user_assessments"> | Date | string
   }
 
+  export type course_releasesUpsertWithWhereUniqueWithoutCoursesInput = {
+    where: course_releasesWhereUniqueInput
+    update: XOR<course_releasesUpdateWithoutCoursesInput, course_releasesUncheckedUpdateWithoutCoursesInput>
+    create: XOR<course_releasesCreateWithoutCoursesInput, course_releasesUncheckedCreateWithoutCoursesInput>
+  }
+
+  export type course_releasesUpdateWithWhereUniqueWithoutCoursesInput = {
+    where: course_releasesWhereUniqueInput
+    data: XOR<course_releasesUpdateWithoutCoursesInput, course_releasesUncheckedUpdateWithoutCoursesInput>
+  }
+
+  export type course_releasesUpdateManyWithWhereWithoutCoursesInput = {
+    where: course_releasesScalarWhereInput
+    data: XOR<course_releasesUpdateManyMutationInput, course_releasesUncheckedUpdateManyWithoutCoursesInput>
+  }
+
+  export type course_releasesScalarWhereInput = {
+    AND?: course_releasesScalarWhereInput | course_releasesScalarWhereInput[]
+    OR?: course_releasesScalarWhereInput[]
+    NOT?: course_releasesScalarWhereInput | course_releasesScalarWhereInput[]
+    id?: StringFilter<"course_releases"> | string
+    courseId?: StringFilter<"course_releases"> | string
+    version?: IntFilter<"course_releases"> | number
+    title?: StringFilter<"course_releases"> | string
+    description?: StringFilter<"course_releases"> | string
+    totalLessons?: IntFilter<"course_releases"> | number
+    snapshot?: JsonFilter<"course_releases">
+    publishedAt?: DateTimeFilter<"course_releases"> | Date | string
+    creatorId?: StringFilter<"course_releases"> | string
+  }
+
+  export type coursesCreateWithoutReleasesInput = {
+    id: string
+    slug: string
+    title: string
+    description: string
+    thumbnail?: string | null
+    status?: $Enums.CourseStatus
+    students?: number
+    lessons?: number
+    duration?: string
+    rating?: number
+    category: string
+    difficulty?: string | null
+    creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
+    sections?: sectionsCreateNestedManyWithoutCoursesInput
+    assessment_questions?: assessment_questionsCreateNestedManyWithoutCoursesInput
+    user_assessments?: user_assessmentsCreateNestedManyWithoutCoursesInput
+  }
+
+  export type coursesUncheckedCreateWithoutReleasesInput = {
+    id: string
+    slug: string
+    title: string
+    description: string
+    thumbnail?: string | null
+    status?: $Enums.CourseStatus
+    students?: number
+    lessons?: number
+    duration?: string
+    rating?: number
+    category: string
+    difficulty?: string | null
+    creatorId: string
+    outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
+    createdAt?: Date | string
+    updatedAt: Date | string
+    enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
+    sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
+    assessment_questions?: assessment_questionsUncheckedCreateNestedManyWithoutCoursesInput
+    user_assessments?: user_assessmentsUncheckedCreateNestedManyWithoutCoursesInput
+  }
+
+  export type coursesCreateOrConnectWithoutReleasesInput = {
+    where: coursesWhereUniqueInput
+    create: XOR<coursesCreateWithoutReleasesInput, coursesUncheckedCreateWithoutReleasesInput>
+  }
+
+  export type coursesUpsertWithoutReleasesInput = {
+    update: XOR<coursesUpdateWithoutReleasesInput, coursesUncheckedUpdateWithoutReleasesInput>
+    create: XOR<coursesCreateWithoutReleasesInput, coursesUncheckedCreateWithoutReleasesInput>
+    where?: coursesWhereInput
+  }
+
+  export type coursesUpdateToOneWithWhereWithoutReleasesInput = {
+    where?: coursesWhereInput
+    data: XOR<coursesUpdateWithoutReleasesInput, coursesUncheckedUpdateWithoutReleasesInput>
+  }
+
+  export type coursesUpdateWithoutReleasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    students?: IntFieldUpdateOperationsInput | number
+    lessons?: IntFieldUpdateOperationsInput | number
+    duration?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    category?: StringFieldUpdateOperationsInput | string
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
+    sections?: sectionsUpdateManyWithoutCoursesNestedInput
+    assessment_questions?: assessment_questionsUpdateManyWithoutCoursesNestedInput
+    user_assessments?: user_assessmentsUpdateManyWithoutCoursesNestedInput
+  }
+
+  export type coursesUncheckedUpdateWithoutReleasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    thumbnail?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCourseStatusFieldUpdateOperationsInput | $Enums.CourseStatus
+    students?: IntFieldUpdateOperationsInput | number
+    lessons?: IntFieldUpdateOperationsInput | number
+    duration?: StringFieldUpdateOperationsInput | string
+    rating?: FloatFieldUpdateOperationsInput | number
+    category?: StringFieldUpdateOperationsInput | string
+    difficulty?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
+    sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
+    assessment_questions?: assessment_questionsUncheckedUpdateManyWithoutCoursesNestedInput
+    user_assessments?: user_assessmentsUncheckedUpdateManyWithoutCoursesNestedInput
+  }
+
   export type coursesCreateWithoutEnrollmentsInput = {
     id: string
     slug: string
@@ -15690,11 +17479,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     sections?: sectionsCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUncheckedCreateWithoutEnrollmentsInput = {
@@ -15712,11 +17503,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsUncheckedCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsUncheckedCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesUncheckedCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesCreateOrConnectWithoutEnrollmentsInput = {
@@ -15750,11 +17543,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: sectionsUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesUncheckedUpdateWithoutEnrollmentsInput = {
@@ -15772,11 +17567,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUncheckedUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUncheckedUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUncheckedUpdateManyWithoutCoursesNestedInput
   }
 
   export type lessonsCreateWithoutLesson_progressInput = {
@@ -15998,11 +17795,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUncheckedCreateWithoutSectionsInput = {
@@ -16020,11 +17819,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsUncheckedCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsUncheckedCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesUncheckedCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesCreateOrConnectWithoutSectionsInput = {
@@ -16153,11 +17954,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesUncheckedUpdateWithoutSectionsInput = {
@@ -16175,11 +17978,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUncheckedUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUncheckedUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUncheckedUpdateManyWithoutCoursesNestedInput
   }
 
   export type assessment_questionsUpsertWithWhereUniqueWithoutSectionsInput = {
@@ -16229,11 +18034,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
     sections?: sectionsCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUncheckedCreateWithoutAssessment_questionsInput = {
@@ -16251,11 +18058,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
     sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
     user_assessments?: user_assessmentsUncheckedCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesUncheckedCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesCreateOrConnectWithoutAssessment_questionsInput = {
@@ -16318,11 +18127,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesUncheckedUpdateWithoutAssessment_questionsInput = {
@@ -16340,11 +18151,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
     user_assessments?: user_assessmentsUncheckedUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUncheckedUpdateManyWithoutCoursesNestedInput
   }
 
   export type sectionsUpsertWithoutAssessment_questionsInput = {
@@ -16397,11 +18210,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsCreateNestedManyWithoutCoursesInput
     sections?: sectionsCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesUncheckedCreateWithoutUser_assessmentsInput = {
@@ -16419,11 +18234,13 @@ export namespace Prisma {
     difficulty?: string | null
     creatorId: string
     outcomes?: coursesCreateoutcomesInput | string[]
+    publishedVersion?: number | null
     createdAt?: Date | string
     updatedAt: Date | string
     enrollments?: enrollmentsUncheckedCreateNestedManyWithoutCoursesInput
     sections?: sectionsUncheckedCreateNestedManyWithoutCoursesInput
     assessment_questions?: assessment_questionsUncheckedCreateNestedManyWithoutCoursesInput
+    releases?: course_releasesUncheckedCreateNestedManyWithoutCoursesInput
   }
 
   export type coursesCreateOrConnectWithoutUser_assessmentsInput = {
@@ -16486,11 +18303,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUpdateManyWithoutCoursesNestedInput
   }
 
   export type coursesUncheckedUpdateWithoutUser_assessmentsInput = {
@@ -16508,11 +18327,13 @@ export namespace Prisma {
     difficulty?: NullableStringFieldUpdateOperationsInput | string | null
     creatorId?: StringFieldUpdateOperationsInput | string
     outcomes?: coursesUpdateoutcomesInput | string[]
+    publishedVersion?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: enrollmentsUncheckedUpdateManyWithoutCoursesNestedInput
     sections?: sectionsUncheckedUpdateManyWithoutCoursesNestedInput
     assessment_questions?: assessment_questionsUncheckedUpdateManyWithoutCoursesNestedInput
+    releases?: course_releasesUncheckedUpdateManyWithoutCoursesNestedInput
   }
 
   export type sectionsUpsertWithoutUser_assessmentsInput = {
@@ -16588,6 +18409,17 @@ export namespace Prisma {
     answers: JsonNullValueInput | InputJsonValue
     durationSeconds?: number | null
     completedAt?: Date | string
+  }
+
+  export type course_releasesCreateManyCoursesInput = {
+    id?: string
+    version: number
+    title: string
+    description: string
+    totalLessons?: number
+    snapshot: JsonNullValueInput | InputJsonValue
+    publishedAt?: Date | string
+    creatorId: string
   }
 
   export type enrollmentsUpdateWithoutCoursesInput = {
@@ -16714,6 +18546,39 @@ export namespace Prisma {
     answers?: JsonNullValueInput | InputJsonValue
     durationSeconds?: NullableIntFieldUpdateOperationsInput | number | null
     completedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type course_releasesUpdateWithoutCoursesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type course_releasesUncheckedUpdateWithoutCoursesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type course_releasesUncheckedUpdateManyWithoutCoursesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    version?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    totalLessons?: IntFieldUpdateOperationsInput | number
+    snapshot?: JsonNullValueInput | InputJsonValue
+    publishedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creatorId?: StringFieldUpdateOperationsInput | string
   }
 
   export type lesson_progressCreateManyLessonsInput = {

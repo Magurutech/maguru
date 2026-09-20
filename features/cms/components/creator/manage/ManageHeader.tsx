@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Globe, EyeOff, Sparkles, Brain, RefreshCw, ShieldAlert, ShieldCheck, LogIn } from 'lucide-react'
+import { ArrowLeft, Globe, EyeOff, Sparkles, Brain, RefreshCw, ShieldAlert, ShieldCheck, LogIn, Rocket } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { useManageContext } from '../../../Context/creator/ManageContext'
@@ -42,6 +42,14 @@ function AuthSessionChip() {
     return () => subscription.unsubscribe()
   }, [])
 
+  const getLoginUrlWithReturn = () => {
+    if (typeof window !== 'undefined') {
+      const returnTo = window.location.pathname + window.location.search
+      return `/sign-in?returnTo=${encodeURIComponent(returnTo)}`
+    }
+    return '/sign-in'
+  }
+
   const handleRefreshSession = async () => {
     if (refreshing) return
     setRefreshing(true)
@@ -52,7 +60,7 @@ function AuthSessionChip() {
         toast.error('Sesi gagal diperbarui. Silakan login ulang.', {
           action: {
             label: 'Login',
-            onClick: () => router.push('/sign-in'),
+            onClick: () => router.push(getLoginUrlWithReturn()),
           },
         })
       } else {
@@ -90,7 +98,7 @@ function AuthSessionChip() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => router.push('/sign-in')}
+          onClick={() => router.push(getLoginUrlWithReturn())}
           className="border-destructive/20 text-destructive hover:bg-destructive/5 rounded-full px-3 text-[10px] font-bold flex items-center gap-1.5 cursor-pointer"
         >
           <LogIn className="w-3 h-3" />
@@ -200,6 +208,16 @@ export function ManageHeader({ onToggleInspector, isInspectorOpen }: ManageHeade
             {course.status}
           </Badge>
 
+          {course.publishedVersion && (
+            <Badge
+              variant="outline"
+              className="bg-accent-coral/10 text-accent-coral border-accent-coral/20 text-[10px] font-bold uppercase tracking-wider"
+              title={`Versi rilis aktif untuk siswa: v${course.publishedVersion}`}
+            >
+              v{course.publishedVersion}
+            </Badge>
+          )}
+
           {/* AI Knowledge Base Sync Indicator Badge */}
           {knowledgeStatus && (
             <Badge
@@ -251,10 +269,30 @@ export function ManageHeader({ onToggleInspector, isInspectorOpen }: ManageHeade
         </Button>
       )}
 
+      {/* Jika course sudah PUBLISHED, sediakan tombol untuk rilis update versi baru (v2, v3, dst.) */}
+      {isPublished && (
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={publishing}
+          onClick={() => handleTogglePublish(true)}
+          data-testid="publish-new-version-btn"
+          className="border-accent-coral/40 text-accent-coral bg-accent-coral/5 hover:bg-accent-coral/15 cursor-pointer rounded-full px-3.5 text-xs font-bold flex items-center gap-1.5 shadow-sm"
+          title="Rilis draft materi baru ke siswa sebagai versi berikutnya"
+        >
+          {publishing ? (
+            <span className="h-3.5 w-3.5 animate-spin rounded-full border border-current border-t-transparent mr-1" />
+          ) : (
+            <Rocket className="h-3.5 w-3.5 text-accent-coral" />
+          )}
+          <span>{publishing ? 'Menyimpan...' : `Publish Update (v${(course.publishedVersion || 1) + 1})`}</span>
+        </Button>
+      )}
+
       <Button
         size="sm"
         disabled={publishing}
-        onClick={handleTogglePublish}
+        onClick={() => handleTogglePublish(false)}
         data-testid="publish-toggle-btn"
         className={
           isPublished

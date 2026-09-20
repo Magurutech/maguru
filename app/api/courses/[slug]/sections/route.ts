@@ -141,11 +141,13 @@ export async function GET(
     const { slug } = await params
     const { searchParams } = new URL(request.url)
     const includeLessons = searchParams.get('include') === 'lessons'
+    const roleParam = searchParams.get('role')
+    const forStudent = roleParam === 'student' || searchParams.get('for') === 'student' || (includeLessons && roleParam !== 'creator')
 
-    // Fetch sections with or without lessons based on query param
+    // Fetch sections with or without lessons based on query param and role
     const result = includeLessons
-      ? await sectionService.getSectionsWithLessons(slug)
-      : await sectionService.getSectionsByCourseSlug(slug)
+      ? await sectionService.getSectionsWithLessons(slug, { forStudent })
+      : await sectionService.getSectionsByCourseSlug(slug, { forStudent })
 
     if (!result) {
       return NextResponse.json(
@@ -176,7 +178,7 @@ export async function GET(
     let preTestScore: number | null = null
     const passedSectionIds = new Set<string>()
 
-    if (userId) {
+    if (userId && forStudent) {
       // 1. Check if PRE_TEST is completed
       const preTest = await prisma.user_assessments.findFirst({
         where: {
@@ -206,10 +208,10 @@ export async function GET(
       }
     }
 
-    // Compute lock status per section
+    // Compute lock status per section (only locked for students)
     const sectionsWithGating = result.sections.map((section, index) => {
       let isLocked = false
-      if (index > 0) {
+      if (forStudent && index > 0) {
         const prevSection = result.sections[index - 1]
         isLocked = !passedSectionIds.has(prevSection.id)
       }

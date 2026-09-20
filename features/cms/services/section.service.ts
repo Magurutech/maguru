@@ -144,7 +144,10 @@ export class SectionService {
    * in one round-trip using relationLoadStrategy: "join".
    * Requirements: 1.2, 8.3
    */
-  async getSectionsByCourseSlug(slug: string): Promise<{
+  async getSectionsByCourseSlug(
+    slug: string,
+    options?: { forStudent?: boolean }
+  ): Promise<{
     courseId: string
     courseStatus: string
     sections: SectionWithLessons[]
@@ -155,6 +158,7 @@ export class SectionService {
       select: {
         id: true,
         status: true,
+        publishedVersion: true,
         sections: {
           orderBy: { order: 'asc' },
           select: {
@@ -183,6 +187,41 @@ export class SectionService {
 
     if (!course) return null
 
+    // Only serve from frozen release snapshot if explicitly requested for student view
+    if (options?.forStudent && course.status === 'PUBLISHED' && course.publishedVersion) {
+      const activeRelease = await prisma.course_releases.findUnique({
+        where: {
+          courseId_version: {
+            courseId: course.id,
+            version: course.publishedVersion,
+          },
+        },
+      })
+
+      if (activeRelease && activeRelease.snapshot) {
+        const snapshot = activeRelease.snapshot as any
+        return {
+          courseId: course.id,
+          courseStatus: course.status,
+          sections: (snapshot.sections || []).map((s: any) => ({
+            id: s.id,
+            courseId: s.courseId || course.id,
+            title: s.title,
+            description: s.description || null,
+            order: s.order,
+            createdAt: new Date(s.createdAt || activeRelease.publishedAt),
+            updatedAt: new Date(s.updatedAt || activeRelease.publishedAt),
+            lessonCount: s.lessons?.length || 0,
+            lessons: (s.lessons || []).map((l: any) => ({
+              id: l.id,
+              title: l.title,
+              order: l.order,
+            })),
+          })),
+        }
+      }
+    }
+
     return {
       courseId: course.id,
       courseStatus: course.status,
@@ -208,7 +247,10 @@ export class SectionService {
    * Optimized: single SQL JOIN with nested relations
    * Requirements: 1.2, 8.3, Student Learn Page optimization
    */
-  async getSectionsWithLessons(slug: string): Promise<{
+  async getSectionsWithLessons(
+    slug: string,
+    options?: { forStudent?: boolean }
+  ): Promise<{
     courseId: string
     courseStatus: string
     sections: Array<{
@@ -234,6 +276,7 @@ export class SectionService {
       select: {
         id: true,
         status: true,
+        publishedVersion: true,
         sections: {
           orderBy: { order: 'asc' },
           select: {
@@ -262,6 +305,45 @@ export class SectionService {
 
     // Import lessonService to extract content preview
     const { lessonService } = await import('./lesson.service')
+
+    // Only serve from frozen release snapshot if explicitly requested for student view
+    if (options?.forStudent && course.status === 'PUBLISHED' && course.publishedVersion) {
+      const activeRelease = await prisma.course_releases.findUnique({
+        where: {
+          courseId_version: {
+            courseId: course.id,
+            version: course.publishedVersion,
+          },
+        },
+      })
+
+      if (activeRelease && activeRelease.snapshot) {
+        const snapshot = activeRelease.snapshot as any
+
+        return {
+          courseId: course.id,
+          courseStatus: course.status,
+          sections: (snapshot.sections || []).map((s: any) => ({
+            id: s.id,
+            courseId: s.courseId || course.id,
+            title: s.title,
+            description: s.description || null,
+            order: s.order,
+            createdAt: new Date(s.createdAt || activeRelease.publishedAt),
+            updatedAt: new Date(s.updatedAt || activeRelease.publishedAt),
+            lessonCount: s.lessons?.length || 0,
+            lessons: (s.lessons || []).map((l: any) => ({
+              id: l.id,
+              title: l.title,
+              order: l.order,
+              contentPreview: lessonService.extractContentPreview(
+                l.content as unknown as import('../types/lesson.types').LessonContent
+              ),
+            })),
+          })),
+        }
+      }
+    }
 
     return {
       courseId: course.id,

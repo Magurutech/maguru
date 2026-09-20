@@ -206,7 +206,10 @@ export class LessonService {
    * Get a single lesson by ID with full content
    * Requirements: 2.3, 3.4
    */
-  async getLessonById(lessonId: string): Promise<LessonWithContent | null> {
+  async getLessonById(
+    lessonId: string,
+    options?: { forStudent?: boolean }
+  ): Promise<LessonWithContent | null> {
     const lesson = await prisma.lessons.findUnique({
       where: { id: lessonId },
       include: {
@@ -215,6 +218,12 @@ export class LessonService {
             id: true,
             title: true,
             courseId: true,
+            courses: {
+              select: {
+                status: true,
+                publishedVersion: true,
+              },
+            },
           },
         },
       },
@@ -222,6 +231,46 @@ export class LessonService {
 
     if (!lesson) {
       return null
+    }
+
+    // Only serve from frozen release snapshot if explicitly requested for student view
+    if (
+      options?.forStudent &&
+      lesson.sections.courses.status === 'PUBLISHED' &&
+      lesson.sections.courses.publishedVersion
+    ) {
+      const activeRelease = await prisma.course_releases.findUnique({
+        where: {
+          courseId_version: {
+            courseId: lesson.sections.courseId,
+            version: lesson.sections.courses.publishedVersion,
+          },
+        },
+      })
+
+      if (activeRelease && activeRelease.snapshot) {
+        const snapshot = activeRelease.snapshot as any
+        for (const s of snapshot.sections || []) {
+          for (const l of s.lessons || []) {
+            if (l.id === lessonId) {
+              return {
+                id: l.id,
+                sectionId: l.sectionId || s.id,
+                order: l.order,
+                title: l.title,
+                content: l.content as unknown as LessonContent,
+                createdAt: lesson.createdAt,
+                updatedAt: lesson.updatedAt,
+                section: {
+                  id: s.id,
+                  title: s.title,
+                  courseId: lesson.sections.courseId,
+                },
+              }
+            }
+          }
+        }
+      }
     }
 
     const { sections, ...lessonData } = lesson

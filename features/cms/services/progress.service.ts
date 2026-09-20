@@ -120,6 +120,67 @@ export class ProgressService {
   }
 
   /**
+   * Helper: calculate total and completed lessons scoped to active release snapshot if available
+   */
+  private async getCourseLessonStats(
+    courseId: string,
+    publishedVersion: number | null | undefined,
+    userId: string
+  ): Promise<{ totalLessons: number; completedLessons: number }> {
+    if (publishedVersion) {
+      const activeRelease = await prisma.course_releases.findUnique({
+        where: {
+          courseId_version: {
+            courseId,
+            version: publishedVersion,
+          },
+        },
+      })
+
+      if (activeRelease && activeRelease.snapshot) {
+        const snapshot = activeRelease.snapshot as any
+        const activeSections = snapshot.sections || []
+        const totalLessons =
+          activeRelease.totalLessons ||
+          activeSections.reduce((acc: number, s: any) => acc + (s.lessons?.length || 0), 0)
+
+        const activeLessonIds: string[] = []
+        for (const s of activeSections) {
+          for (const l of s.lessons || []) {
+            if (l.id) activeLessonIds.push(l.id)
+          }
+        }
+
+        const completedLessons = await prisma.lesson_progress.count({
+          where: {
+            userId,
+            completed: true,
+            lessonId: { in: activeLessonIds },
+          },
+        })
+
+        return { totalLessons, completedLessons }
+      }
+    }
+
+    // Fallback if no published release
+    const [totalLessons, completedLessons] = await Promise.all([
+      prisma.lessons.count({
+        where: { sections: { courseId } },
+      }),
+      prisma.lesson_progress.count({
+        where: {
+          userId,
+          completed: true,
+          lessons: { sections: { courseId } },
+        },
+      }),
+    ])
+
+    return { totalLessons, completedLessons }
+  }
+
+  /**
    * Get course completion status for a user
    * Requirements: 7.1, 7.2, 7.5, 7.6, 7.7
    * 
@@ -136,25 +197,21 @@ export class ProgressService {
       where: {
         slug: courseSlug,
       },
+      select: {
+        id: true,
+        publishedVersion: true,
+      },
     })
 
     if (!course) {
       throw new Error('Course not found')
     }
 
-    // Parallelise both count queries — reduces sequential DB round-trips
-    const [totalLessons, completedLessons] = await Promise.all([
-      prisma.lessons.count({
-        where: { sections: { courseId: course.id } },
-      }),
-      prisma.lesson_progress.count({
-        where: {
-          userId,
-          completed: true,
-          lessons: { sections: { courseId: course.id } },
-        },
-      }),
-    ])
+    const { totalLessons, completedLessons } = await this.getCourseLessonStats(
+      course.id,
+      course.publishedVersion,
+      userId
+    )
 
     const { percentage, completed } = calculateCourseCompletion({
       totalLessons,
@@ -204,25 +261,19 @@ export class ProgressService {
    * 
    * @param userId - User ID (Clerk ID)
    * @param courseId - Course ID
+   * @param publishedVersion - Optional publishedVersion pointer
    * @private
    */
   private async updateCourseCompletion(
     userId: string,
-    courseId: string
+    courseId: string,
+    publishedVersion?: number | null
   ): Promise<void> {
-    // Parallelise both count queries — reduces sequential DB round-trips
-    const [totalLessons, completedLessons] = await Promise.all([
-      prisma.lessons.count({
-        where: { sections: { courseId } },
-      }),
-      prisma.lesson_progress.count({
-        where: {
-          userId,
-          completed: true,
-          lessons: { sections: { courseId } },
-        },
-      }),
-    ])
+    const { totalLessons, completedLessons } = await this.getCourseLessonStats(
+      courseId,
+      publishedVersion,
+      userId
+    )
 
     const { percentage, completed } = calculateCourseCompletion({
       totalLessons,

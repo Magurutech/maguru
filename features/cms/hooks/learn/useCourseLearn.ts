@@ -42,7 +42,7 @@ export function useCourseLearn(courseSlug: string) {
 
       // Fetch sections with lessons in single request for student learn page
       const [sectionsRes, progressRes, completedRes] = await Promise.all([
-        fetch(`/api/courses/${courseSlug}/sections?include=lessons`),
+        fetch(`/api/courses/${courseSlug}/sections?include=lessons&role=student`),
         fetch(`/api/progress/course/${courseSlug}`),
         fetch(`/api/progress/course/${courseSlug}/lessons`),
       ])

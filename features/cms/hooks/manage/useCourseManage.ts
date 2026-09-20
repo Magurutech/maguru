@@ -13,6 +13,7 @@ export interface ManagedCourse {
   category: string | null
   difficulty: string | null
   outcomes?: string[]
+  publishedVersion?: number | null
 }
 
 export interface ManagedSection {
@@ -45,7 +46,7 @@ export function useCourseManage(courseSlug: string) {
   }, [courseSlug])
 
   const fetchSections = useCallback(async () => {
-    const res = await fetch(`/api/courses/${courseSlug}/sections`)
+    const res = await fetch(`/api/courses/${courseSlug}/sections?role=creator`)
     if (!res.ok) throw new Error('Failed to load sections')
     const data = await res.json()
     return data.sections || []
@@ -67,13 +68,15 @@ export function useCourseManage(courseSlug: string) {
     init()
   }, [fetchCourse, fetchSections])
 
-  const handleTogglePublish = async () => {
+  const handleTogglePublish = async (forceNewVersion = false) => {
     if (!course) return
     setPublishing(true)
     try {
       const supabase = createClient()
       const { data: { session } } = await supabase.auth.getSession()
-      const headers: Record<string, string> = {}
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
       if (session?.access_token) {
         headers['Authorization'] = `Bearer ${session.access_token}`
       }
@@ -81,11 +84,13 @@ export function useCourseManage(courseSlug: string) {
       console.log('[useCourseManage] Toggling publish status:', {
         slug: courseSlug,
         hasSessionToken: !!session?.access_token,
+        forceNewVersion,
       })
 
       const res = await fetch(`/api/creator/courses/${courseSlug}/publish`, {
         method: 'PUT',
         headers,
+        body: JSON.stringify({ forceNewVersion }),
       })
 
       if (!res.ok) {
@@ -94,10 +99,20 @@ export function useCourseManage(courseSlug: string) {
       }
 
       const data = await res.json()
-      setCourse((prev) => (prev ? { ...prev, status: data.course.status } : prev))
+      setCourse((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: data.course.status,
+              publishedVersion: data.course.publishedVersion ?? prev.publishedVersion,
+            }
+          : prev
+      )
       toast.success(
         data.course.status === 'PUBLISHED'
-          ? 'Kursus berhasil dipublish'
+          ? forceNewVersion
+            ? `Versi v${data.course.publishedVersion} berhasil dipublish!`
+            : 'Kursus berhasil dipublish'
           : 'Kursus berhasil di-unpublish'
       )
     } catch (err: any) {
