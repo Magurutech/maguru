@@ -3,13 +3,16 @@
 /**
  * LibraryOverview Component
  *
- * Kartu ringkasan Bento Grid di halaman Library yang menampilkan
- * total kursus diterbitkan, draf, jumlah total siswa, dan rating rata-rata.
+ * Implements the 4-Capsule Metric Row matching Gambar 2:
+ * - 1. Diterbitkan (Emerald Green Badge)
+ * - 2. Draf Aktif (Parchment Amber Badge)
+ * - 3. Total Siswa (Azure Blue Badge)
+ * - 4. Rata-Rata Rating (Golden Star Badge)
+ * Clean, flat parchment background (#FFFDF9) without diagonal noise.
  */
 
 import React from 'react'
-import { Layers, Users, Star } from 'lucide-react'
-import { TiltCard } from '@/features/user-dashboard'
+import { BookOpen, FileText, Users, Star, ChevronRight } from 'lucide-react'
 
 interface LibraryOverviewProps {
   stats: {
@@ -22,31 +25,67 @@ interface LibraryOverviewProps {
 
 export function LibraryOverview({ stats }: LibraryOverviewProps) {
   const items = [
-    { label: 'Diterbitkan', value: stats.published, icon: Layers, color: 'text-success' },
-    { label: 'Draf Aktif', value: stats.draft, icon: Layers, color: 'text-accent-mustard' },
-    { label: 'Total Siswa', value: stats.totalStudents, icon: Users, color: 'text-accent-coral' },
-    { label: 'Rata-rata Rating', value: `${stats.avgRating} / 5.0`, icon: Star, color: 'text-accent-olive' }
+    {
+      label: 'Diterbitkan',
+      value: stats.published,
+      icon: BookOpen,
+      iconBg: 'bg-[#5AC88A]/15 border-[#5AC88A]/35 text-[#1B804B]',
+    },
+    {
+      label: 'Draf Aktif',
+      value: stats.draft,
+      icon: FileText,
+      iconBg: 'bg-[#FFB148]/15 border-[#FFB148]/35 text-[#B96500]',
+    },
+    {
+      label: 'Total Siswa',
+      value: stats.totalStudents,
+      icon: Users,
+      iconBg: 'bg-[#3B82F6]/15 border-[#3B82F6]/35 text-[#1D4ED8]',
+    },
+    {
+      label: 'Rata-Rata Rating',
+      value: `${stats.avgRating}`,
+      isRating: true,
+      icon: Star,
+      iconBg: 'bg-[#FFB148]/20 border-[#FFB148]/40 text-[#D97706]',
+    },
   ]
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-3.5">
       {items.map((item) => {
         const Icon = item.icon
         return (
-          <TiltCard
+          <div
             key={item.label}
-            className="bg-card border border-border/15 p-5 rounded-2xl flex flex-col justify-between min-h-30 paper-texture cursor-default"
+            className="group bg-[#FFFDF9] border border-[#D8C4A7]/60 rounded-2xl p-3 sm:p-3.5 shadow-[0_2px_10px_rgba(45,35,25,0.03)] hover:border-[#D8C4A7] hover:shadow-[0_4px_16px_rgba(45,35,25,0.06)] transition-all flex items-center justify-between gap-2.5 cursor-default select-none"
           >
-            <div className="flex justify-between items-start">
-              <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">
+            {/* Left: Colored Icon Badge */}
+            <div
+              className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 shadow-2xs ${item.iconBg}`}
+            >
+              <Icon className="w-5 h-5 fill-current/15" />
+            </div>
+
+            {/* Middle: Metric Info */}
+            <div className="flex-1 min-w-0">
+              <span className="text-[11px] font-sans font-semibold text-[#8C7D6E] block leading-none truncate">
                 {item.label}
               </span>
-              <Icon className={`w-4 h-4 ${item.color}`} />
+              <div className="flex items-baseline gap-1 mt-1">
+                <span className="font-sans text-xl sm:text-2xl font-extrabold text-[#2D2319] leading-none">
+                  {item.value}
+                </span>
+                {item.isRating && (
+                  <span className="text-xs text-[#FFB148] select-none">★</span>
+                )}
+              </div>
             </div>
-            <p className="font-manrope text-2xl font-black text-text-primary mt-2">
-              {item.value}
-            </p>
-          </TiltCard>
+
+            {/* Right: Subtle Chevron */}
+            <ChevronRight className="w-4 h-4 text-[#C5B7A6] group-hover:text-[#2D2319] group-hover:translate-x-0.5 transition-all shrink-0" />
+          </div>
         )
       })}
     </div>

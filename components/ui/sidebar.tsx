@@ -73,17 +73,17 @@ function SidebarProvider({
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === 'function' ? value(open) : value
-      if (setOpenProp) {
-        setOpenProp(openState)
-      } else {
-        _setOpen(openState)
-      }
-
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      _setOpen((prev) => {
+        const openState = typeof value === 'function' ? value(prev) : value
+        if (setOpenProp) {
+          setOpenProp(openState)
+        }
+        // This sets the cookie to keep the sidebar state.
+        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+        return openState
+      })
     },
-    [setOpenProp, open],
+    [setOpenProp],
   )
 
   // Helper to toggle the sidebar.
@@ -157,7 +157,7 @@ function Sidebar({
   variant?: 'sidebar' | 'floating' | 'inset'
   collapsible?: 'offcanvas' | 'icon' | 'none'
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile, setOpen } = useSidebar()
 
   if (collapsible === 'none') {
     return (
@@ -201,53 +201,83 @@ function Sidebar({
   }
 
   return (
-    <div
-      className="group peer hidden text-sidebar-foreground md:block"
-      data-state={state}
-      data-collapsible={state === 'collapsed' ? collapsible : ''}
-      data-variant={variant}
-      data-side={side}
-      data-slot="sidebar"
-    >
-      {/* This is what handles the sidebar gap on desktop */}
+    <>
+      {/* Tablet & Small Desktop Overlay Backdrop with Blur (< xl) */}
       <div
-        data-slot="sidebar-gap"
+        data-slot="sidebar-backdrop"
+        onClick={() => setOpen(false)}
         className={cn(
-          'relative w-[calc(var(--sidebar-width)+5px)] bg-transparent transition-[width] duration-200 ease-linear',
-          'group-data-[collapsible=offcanvas]:w-0',
-          'group-data-[side=right]:rotate-180',
-          variant === 'floating' || variant === 'inset'
-            ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+5px)]'
-            : 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+5px)]',
+          'fixed inset-0 z-40 bg-black/45 backdrop-blur-sm transition-opacity duration-300 xl:hidden cursor-pointer',
+          state === 'expanded'
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
         )}
+        aria-hidden="true"
       />
+
       <div
-        data-slot="sidebar-container"
+        className="group peer hidden text-sidebar-foreground md:block"
+        data-state={state}
+        data-collapsible={state === 'collapsed' ? collapsible : ''}
+        data-variant={variant}
         data-side={side}
-        className={cn(
-          'fixed z-10 hidden transition-[left,right,width] duration-200 ease-linear md:flex bg-transparent border-none',
-          // 5px margin on top, bottom, and left/right
-          'top-1.25 bottom-1.25 h-[calc(100svh-10px)] w-(--sidebar-width)',
-          'data-[side=left]:left-1.25',
-          'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)+5px)*-1)]',
-          'data-[side=right]:right-1.25 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc((var(--sidebar-width)+5px)*-1)]',
-          // Adjust the width for icon collapsible variant.
-          'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
-        )}
-        {...props}
+        data-slot="sidebar"
       >
+        {/* On tablet (< xl), sidebar-gap is 0 width and hidden so it NEVER pushes main content */}
         <div
-          data-sidebar="sidebar"
-          data-slot="sidebar-inner"
+          data-slot="sidebar-gap"
           className={cn(
-            'flex size-full flex-col bg-sidebar border border-border/10 rounded-[32px] overflow-hidden shadow-md',
-            className
+            'relative bg-transparent transition-[width] duration-200 ease-linear',
+            'group-data-[collapsible=offcanvas]:w-0',
+            'group-data-[side=right]:rotate-180',
+            'max-xl:w-0! max-xl:hidden',
+            state === 'collapsed'
+              ? 'w-0'
+              : variant === 'floating' || variant === 'inset'
+                ? 'w-[calc(var(--sidebar-width-icon)+(--spacing(4))+5px)]'
+                : 'w-[calc(var(--sidebar-width)+5px)]',
           )}
+        />
+        <div
+          data-slot="sidebar-container"
+          data-side={side}
+          className={cn(
+            'fixed z-50 hidden md:flex bg-transparent border-none',
+            // 5px margin on top, bottom, and left/right
+            'top-1.25 bottom-1.25 h-[calc(100svh-10px)] w-(--sidebar-width)',
+            // Adjust the width for icon collapsible variant.
+            'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+          )}
+          style={{
+            left:
+              side === 'left'
+                ? state === 'collapsed'
+                  ? 'calc((var(--sidebar-width) + 20px) * -1)'
+                  : '5px'
+                : undefined,
+            right:
+              side === 'right'
+                ? state === 'collapsed'
+                  ? 'calc((var(--sidebar-width) + 20px) * -1)'
+                  : '5px'
+                : undefined,
+            transition: 'left 0.25s cubic-bezier(0.16, 1, 0.3, 1), right 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.2s ease',
+          }}
+          {...props}
         >
-          {children}
+          <div
+            data-sidebar="sidebar"
+            data-slot="sidebar-inner"
+            className={cn(
+              'flex size-full flex-col bg-sidebar border border-border/10 rounded-[32px] overflow-hidden shadow-2xl',
+              className
+            )}
+          >
+            {children}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

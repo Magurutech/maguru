@@ -12,7 +12,7 @@
  * - Top search bar with ⌘K shortcut, notification bell, and XP capsule
  */
 
-import React, { useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
@@ -26,6 +26,7 @@ import {
   Search,
   ChevronRight,
   LogOut,
+  X,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import {
@@ -49,87 +50,151 @@ interface CreatorLayoutProps {
 
 function CreatorSidebar() {
   const pathname = usePathname()
-  const { state } = useSidebar()
+  const { state, setOpen } = useSidebar()
   const isCollapsed = state === 'collapsed'
+  const hasInitRef = React.useRef(false)
 
-  // 5 Focused Core Menus as shown in Gambar 2
+  // On tablet (< 1280px), start collapsed ONLY on initial mount
+  useEffect(() => {
+    if (!hasInitRef.current) {
+      hasInitRef.current = true
+      if (typeof window !== 'undefined' && window.innerWidth < 1280) {
+        setOpen(false)
+      }
+    }
+  }, [setOpen])
+
+  // 3 Jalur Utama Aktif & 2 Jalur Disabled (Segera Hadir)
   const navItems = [
     {
       label: 'Creator Studio',
       href: '/creator',
       icon: Home,
+      disabled: false,
     },
     {
       label: 'Kursus Saya',
       href: '/creator/courses',
       icon: BookOpen,
+      disabled: false,
     },
     {
       label: 'Pustaka Konten',
       href: '/creator/content',
       icon: FileText,
+      disabled: true,
+      badge: 'Segera Hadir',
     },
     {
       label: 'Analisis & Siswa',
       href: '/creator/students',
       icon: BarChart3,
+      disabled: true,
+      badge: 'Segera Hadir',
     },
     {
       label: 'Pengaturan',
-      href: '/creator/profile',
+      href: '/creator/settings',
       icon: Settings,
+      disabled: true,
+      badge: 'Segera Hadir',
     },
   ]
 
   return (
-    <Sidebar className="border border-[#3A2E24]/60 bg-[#18130F] text-[#FAF5ED] rounded-[32px] shadow-lg">
-      {/* ── 1. Studio Header with Maguru Seal Logo ── */}
+    <Sidebar className="border border-[#3A2E24]/60 bg-[#18130F] text-[#FAF5ED] rounded-[32px] shadow-2xl">
+      {/* ── 1. Studio Header with Maguru Seal Logo & Tablet Close Button ── */}
       <SidebarHeader className="p-4 sm:p-5 border-b border-[#2D2319]/80 bg-[#18130F]">
-        <Link
-          href="/creator"
-          className="flex items-center space-x-3 overflow-hidden transition-all duration-300 group"
-        >
-          {/* Flaming Lotus Crest Seal */}
-          <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-[#FF4D4D] via-[#D32F2F] to-[#9A1B1B] p-0.5 shadow-[0_2px_10px_rgba(255,77,77,0.35)] shrink-0 flex items-center justify-center">
-            <div className="w-full h-full rounded-[14px] bg-[#1E1711] flex items-center justify-center">
-              <span className="text-xl select-none">🔥</span>
+        <div className="flex items-center justify-between gap-2">
+          <Link
+            href="/creator"
+            className="flex items-center space-x-3 overflow-hidden transition-all duration-300 group min-w-0"
+          >
+            {/* Flaming Lotus Crest Seal */}
+            <div className="w-10 h-10 rounded-2xl bg-linear-to-br from-[#FF4D4D] via-[#D32F2F] to-[#9A1B1B] p-0.5 shadow-[0_2px_10px_rgba(255,77,77,0.35)] shrink-0 flex items-center justify-center">
+              <div className="w-full h-full rounded-[14px] bg-[#1E1711] flex items-center justify-center">
+                <span className="text-xl select-none">🔥</span>
+              </div>
             </div>
-          </div>
 
-          {!isCollapsed && (
-            <div className="flex flex-col min-w-0 animate-fade-in">
-              <div className="flex items-center gap-1.5">
-                <span className="font-sans font-extrabold text-base tracking-tight text-[#FAF5ED] group-hover:text-[#FFB148] transition-colors">
-                  Maguru
+            {!isCollapsed && (
+              <div className="flex flex-col min-w-0 animate-fade-in">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-sans font-extrabold text-base tracking-tight text-[#FAF5ED] group-hover:text-[#FFB148] transition-colors">
+                    Maguru
+                  </span>
+                </div>
+                <span className="text-[9.5px] tracking-[0.18em] uppercase text-[#D8C4A7]/70 font-sans font-semibold leading-none">
+                  CREATOR STUDIO
                 </span>
               </div>
-              <span className="text-[9.5px] tracking-[0.18em] uppercase text-[#D8C4A7]/70 font-sans font-semibold leading-none">
-                CREATOR STUDIO
-              </span>
-            </div>
-          )}
-        </Link>
+            )}
+          </Link>
+
+          {/* Close button for tablet overlay */}
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="w-7 h-7 rounded-xl flex items-center justify-center text-[#8C7D6E] hover:text-[#FAF5ED] hover:bg-[#2A2016] transition-colors xl:hidden cursor-pointer shrink-0"
+            aria-label="Tutup sidebar"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </SidebarHeader>
 
       {/* ── 2. Sidebar Navigation Menus ── */}
       <SidebarContent className="px-3 py-5 space-y-4 overflow-y-auto bg-[#18130F]">
         <SidebarMenu className="space-y-1.5">
           {navItems.map((item) => {
-            const isActive = pathname === item.href
+            const isActive =
+              !item.disabled &&
+              (item.href === '/creator'
+                ? pathname === '/creator'
+                : pathname.startsWith(item.href))
             const Icon = item.icon
+
+            if (item.disabled) {
+              return (
+                <SidebarMenuItem key={item.label}>
+                  <div
+                    title={isCollapsed ? `${item.label} (${item.badge})` : undefined}
+                    className="w-full flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-[13px] font-sans font-medium text-[#8C7D6E]/50 select-none cursor-not-allowed opacity-60 hover:opacity-75 transition-opacity"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Icon className="w-4 h-4 shrink-0 text-[#8C7D6E]/40" />
+                      {!isCollapsed && <span className="truncate">{item.label}</span>}
+                    </div>
+                    {!isCollapsed && item.badge && (
+                      <span className="text-[9px] font-sans font-medium px-1.5 py-0.5 rounded-md bg-[#221A14] border border-[#3A2E24]/60 text-[#8C7D6E]/70 tracking-tight shrink-0">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                </SidebarMenuItem>
+              )
+            }
 
             return (
               <SidebarMenuItem key={item.label}>
                 <SidebarMenuButton
-                  isActive={isActive}
+                  isActive={false}
                   tooltip={isCollapsed ? item.label : undefined}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-[13px] font-sans font-medium transition-all duration-150 select-none cursor-pointer ${
                     isActive
-                      ? 'bg-[#2A2016] border border-[#FFB148]/60 text-[#FFB148] font-bold shadow-xs [&_svg]:text-[#FFB148]'
-                      : 'text-[#C5B7A6] hover:bg-[#2A2016]/50 hover:text-[#FAF5ED] [&_svg]:text-[#8C7D6E] hover:[&_svg]:text-[#FAF5ED]'
+                      ? 'bg-[#2A2016]! border border-[#FFB148]/60 text-[#FFB148]! font-bold shadow-xs [&_svg]:text-[#FFB148]!'
+                      : 'text-[#C5B7A6] hover:bg-[#2A2016]/50! hover:text-[#FAF5ED]! [&_svg]:text-[#8C7D6E] hover:[&_svg]:text-[#FAF5ED]!'
                   }`}
                 >
-                  <Link href={item.href} className="flex items-center gap-3 w-full">
+                  <Link
+                    href={item.href}
+                    onClick={() => {
+                      if (typeof window !== 'undefined' && window.innerWidth < 1280) {
+                        setOpen(false)
+                      }
+                    }}
+                    className="flex items-center gap-3 w-full"
+                  >
                     <Icon className="w-4 h-4 shrink-0 transition-colors" />
                     {!isCollapsed && <span className="truncate">{item.label}</span>}
                   </Link>
@@ -158,7 +223,20 @@ function CreatorSidebar() {
         {/* Profile Card */}
         <Link
           href="/creator/profile"
-          className={`flex items-center ${isCollapsed ? 'justify-center p-1' : 'justify-between p-2 rounded-2xl bg-[#1E1711] border border-[#3A2E24] hover:border-[#FFB148]/40 transition-colors group cursor-pointer'}`}
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.innerWidth < 1280) {
+              setOpen(false)
+            }
+          }}
+          className={`flex items-center ${
+            isCollapsed
+              ? 'justify-center p-1'
+              : `justify-between p-2 rounded-2xl bg-[#1E1711] border ${
+                  pathname === '/creator/profile'
+                    ? 'border-[#FFB148]/70 bg-[#251D16] shadow-xs'
+                    : 'border-[#3A2E24] hover:border-[#FFB148]/40'
+                } transition-colors group cursor-pointer`
+          }`}
         >
           <div className="flex items-center gap-2.5 min-w-0">
             {/* Avatar with Gold Trim */}

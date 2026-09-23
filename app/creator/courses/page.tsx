@@ -160,24 +160,21 @@ export default function CreatorCoursesPage() {
   // Loading State / Skeletons
   if (roleLoading || loading) {
     return (
-      <div className="space-y-8 animate-pulse">
+      <div className="space-y-4 animate-pulse">
         {/* Header Skeleton */}
-        <div className="h-28 bg-bg-bone rounded-2xl border border-border/10 p-6 flex flex-col justify-between">
-          <div className="h-6 w-1/4 bg-bg-surface-accent rounded"></div>
-          <div className="h-4 w-1/3 bg-bg-surface-accent rounded"></div>
-        </div>
+        <div className="h-24 bg-[#FFFDF9]/60 rounded-3xl border border-[#D8C4A7]/30 p-5 flex flex-col justify-between" />
 
         {/* Overview cards skeleton */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-3.5">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className="h-24 bg-bg-bone rounded-2xl border border-border/10"></div>
+            <div key={i} className="h-18 bg-[#FFFDF9]/60 rounded-2xl border border-[#D8C4A7]/30" />
           ))}
         </div>
 
         {/* Grid Skeletons */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-80 bg-bg-bone rounded-3xl border border-border/10" />
+            <div key={i} className="h-72 bg-[#FFFDF9]/60 rounded-2xl border border-[#D8C4A7]/30" />
           ))}
         </div>
       </div>
@@ -188,13 +185,13 @@ export default function CreatorCoursesPage() {
   if (!canAccessCreator()) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center p-6">
-        <div className="bg-card border border-border/15 rounded-2xl p-8 max-w-md text-center paper-texture">
-          <div className="text-5xl mb-4">🚫</div>
-          <h1 className="text-xl font-manrope font-bold text-text-primary mb-2">Akses Ditolak</h1>
-          <p className="text-text-secondary text-sm mb-6">Anda tidak memiliki otorisasi untuk mengakses studio pembuat ini.</p>
+        <div className="bg-[#FFFDF9] border border-[#D8C4A7]/60 rounded-3xl p-8 max-w-md text-center shadow-xs">
+          <div className="text-5xl mb-4 select-none">🚫</div>
+          <h1 className="text-xl font-sans font-bold text-[#2D2319] mb-2">Akses Ditolak</h1>
+          <p className="text-[#6E5D4B] text-sm mb-6">Anda tidak memiliki otorisasi untuk mengakses studio pembuat ini.</p>
           <button 
             onClick={() => router.push('/')}
-            className="btn-primary"
+            className="inline-flex items-center justify-center py-2.5 px-6 rounded-xl bg-[#2D2319] text-white font-sans text-xs font-semibold hover:bg-[#FF4D4D] transition-colors"
           >
             Kembali ke Beranda
           </button>
@@ -204,7 +201,7 @@ export default function CreatorCoursesPage() {
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-1 sm:space-y-2 animate-fade-in pb-10">
       {/* 1. Page Header */}
       <LibraryHeader 
         courseCount={stats.totalCourses}
@@ -243,7 +240,7 @@ export default function CreatorCoursesPage() {
       {filteredCourses.length === 0 ? (
         <LibraryEmptyState />
       ) : viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="course-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4" data-testid="course-grid">
           {paginatedCourses.map((course) => (
             <LibraryCourseCard 
               key={course.id}
@@ -255,28 +252,28 @@ export default function CreatorCoursesPage() {
         </div>
       ) : (
         /* Compact List View */
-        <div className="space-y-3 bg-card border border-border/10 rounded-3xl p-5 paper-texture divide-y divide-border/5">
+        <div className="space-y-2 bg-[#FFFDF9] border border-[#D8C4A7]/60 rounded-2xl p-4 shadow-xs divide-y divide-[#D8C4A7]/20">
           {paginatedCourses.map((course) => (
-            <div key={course.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-3.5 first:pt-0 last:pb-0">
+            <div key={course.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-text-primary">{course.title}</span>
-                  <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full border ${
+                  <span className="text-xs font-bold text-[#2D2319]">{course.title}</span>
+                  <span className={`text-[8.5px] font-sans font-bold px-2 py-0.5 rounded-full border ${
                     course.status === 'PUBLISHED' 
-                      ? 'bg-success/5 text-success border-success/15'
-                      : 'bg-accent-mustard/10 text-accent-mustard border-accent-mustard/15'
+                      ? 'bg-[#5AC88A]/15 text-[#1B804B] border-[#5AC88A]/30'
+                      : 'bg-[#FFB148]/15 text-[#B96500] border-[#FFB148]/30'
                   }`}>
                     {course.status}
                   </span>
                 </div>
-                <p className="text-[10px] text-text-muted">
+                <p className="text-[10px] text-[#8C7D6E]">
                   Kategori: {course.category} &middot; Siswa: {course.enrollmentCount} &middot; Rating: {course.rating}
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => router.push(`/creator/courses/${course.slug}/manage`)}
-                  className="px-3.5 py-1.5 bg-bg-bone hover:bg-bg-surface-accent border border-border/10 rounded-full text-[10px] font-bold text-text-secondary cursor-pointer"
+                  className="px-3.5 py-1.5 bg-[#FAF5ED] hover:bg-[#FFFDF9] border border-[#D8C4A7]/60 rounded-xl text-[10px] font-bold text-[#2D2319] cursor-pointer transition-colors shadow-2xs"
                 >
                   Kelola
                 </button>

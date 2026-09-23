@@ -3,37 +3,38 @@
 /**
  * LibraryEmptyState Component
  *
- * Tampilan kosong (Empty State) ketika pembuat belum memiliki kursus terdaftar.
- * Menampilkan pesan motivasi dan tombol CTA untuk membuat kursus pertama.
+ * Implements the Empty State for course catalog
+ * using the clean parchment style without diagonal noise.
  */
 
 import React from 'react'
 import Link from 'next/link'
-import { BookOpen, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 export function LibraryEmptyState() {
   return (
-    <div className="bg-card border border-border/15 rounded-3xl p-16 text-center paper-texture max-w-2xl mx-auto space-y-6">
-      <div className="w-16 h-16 rounded-full bg-accent-coral/5 border border-accent-coral/10 flex items-center justify-center mx-auto animate-float">
-        <BookOpen className="w-8 h-8 text-accent-coral" />
+    <div className="bg-[#FFFDF9] border border-[#D8C4A7]/60 rounded-3xl p-10 sm:p-14 text-center max-w-xl mx-auto space-y-4 shadow-[0_4px_16px_rgba(45,35,25,0.04)]">
+      {/* Icon Seal */}
+      <div className="w-16 h-16 rounded-2xl bg-[#FAF5ED] border border-[#D8C4A7]/50 flex items-center justify-center mx-auto text-3xl shadow-2xs select-none">
+        📜
       </div>
-      
-      <div className="space-y-2">
-        <h2 className="font-manrope text-xl font-bold text-text-primary">
-          Belum ada materi kursus terdaftar
+
+      <div className="space-y-1.5">
+        <h2 className="font-sans text-xl font-bold text-[#2D2319]">
+          Belum Ada Gulungan Kursus
         </h2>
-        <p className="text-text-secondary text-sm leading-relaxed max-w-md mx-auto">
-          Mulai salurkan keahlian Anda ke siswa aktif MAGURU. Buat modul belajar interaktif pertama Anda sekarang.
+        <p className="font-sans text-xs text-[#6E5D4B] leading-relaxed max-w-sm mx-auto">
+          Bagikan keahlian dan pengetahuan terbaikmu kepada para petualang di Maguru. Buat modul belajar interaktif pertamamu sekarang.
         </p>
       </div>
 
       <div className="pt-2">
         <Link href="/creator/courses/create">
-          <button 
+          <button
             type="button"
-            className="btn-primary flex items-center gap-1.5 px-6 py-3 rounded-full text-xs font-bold shadow-glow hover:scale-102 transition-all mx-auto cursor-pointer"
+            className="inline-flex items-center gap-2 py-2.5 px-6 rounded-2xl bg-linear-to-r from-[#E53935] via-[#D32F2F] to-[#C62828] hover:from-[#F44336] hover:to-[#D32F2F] text-white font-sans text-xs sm:text-sm font-bold shadow-[0_4px_14px_rgba(229,57,53,0.35),inset_0_1px_0_rgba(255,255,255,0.25)] hover:shadow-[0_6px_20px_rgba(229,57,53,0.45)] active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Buat Kursus Pertama Anda</span>
           </button>
         </Link>
