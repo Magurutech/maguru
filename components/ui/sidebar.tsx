@@ -225,22 +225,24 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-          'fixed z-10 hidden transition-[left,right,width] duration-200 ease-linear md:flex',
+          'fixed z-10 hidden transition-[left,right,width] duration-200 ease-linear md:flex bg-transparent border-none',
           // 5px margin on top, bottom, and left/right
-          'top-[5px] bottom-[5px] h-[calc(100svh-10px)] w-(--sidebar-width)',
-          'data-[side=left]:left-[5px]',
+          'top-1.25 bottom-1.25 h-[calc(100svh-10px)] w-(--sidebar-width)',
+          'data-[side=left]:left-1.25',
           'data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc((var(--sidebar-width)+5px)*-1)]',
-          'data-[side=right]:right-[5px] data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc((var(--sidebar-width)+5px)*-1)]',
+          'data-[side=right]:right-1.25 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc((var(--sidebar-width)+5px)*-1)]',
           // Adjust the width for icon collapsible variant.
           'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
-          className,
         )}
         {...props}
       >
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="flex size-full flex-col bg-sidebar border border-border/10 rounded-[40px] overflow-hidden shadow-sm shadow-glass paper-texture"
+          className={cn(
+            'flex size-full flex-col bg-sidebar border border-border/10 rounded-[32px] overflow-hidden shadow-md',
+            className
+          )}
         >
           {children}
         </div>
@@ -283,7 +285,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
       onClick={toggleSidebar}
       title="Toggle Sidebar"
       className={cn(
-        'absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:start-1/2 after:w-[2px] hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2',
+        'absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:inset-s-1/2 after:w-0.5 hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar',

@@ -13,7 +13,7 @@ interface PremiumCourseTabsProps {
   creator: CreatorProfile | null
 }
 
-type TabType = 'description' | 'path' | 'testimonials'
+type TabType = 'path' | 'description' | 'testimonials'
 
 const DUMMY_REVIEWS: Review[] = [
   {
@@ -40,18 +40,19 @@ const DUMMY_REVIEWS: Review[] = [
 ]
 
 export function PremiumCourseTabs({ course, sections, creator }: PremiumCourseTabsProps) {
-  const [activeTab, setActiveTab] = useState<TabType>('description')
+  // Default to 'path' (Kurikulum) so curriculum is displayed prominently as in the designer reference
+  const [activeTab, setActiveTab] = useState<TabType>('path')
 
   const tabs = [
-    { id: 'description', label: 'Deskripsi Kelas' },
     { id: 'path', label: 'Kurikulum (Learning Path)' },
+    { id: 'description', label: 'Deskripsi Lengkap' },
     { id: 'testimonials', label: 'Ulasan Pelajar' },
   ] as const
 
   return (
-    <div className="w-full space-y-8">
-      {/* ── TABS NAVIGATION BAR ── */}
-      <div className="border-b border-text-primary/10 dark:border-white/10 flex gap-6 overflow-x-auto no-scrollbar scroll-smooth">
+    <div className="w-full space-y-4">
+      {/* ── TABS NAVIGATION BAR (Whimsical Pill / Tab Switcher) ── */}
+      <div className="flex items-center gap-2 border-b border-[#D8C4A7]/40 pb-2.5 overflow-x-auto no-scrollbar">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id
           return (
@@ -59,10 +60,10 @@ export function PremiumCourseTabs({ course, sections, creator }: PremiumCourseTa
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`pb-3.5 text-sm sm:text-base font-sans font-bold tracking-tight border-b-2 transition-all duration-200 cursor-pointer whitespace-nowrap focus-visible:outline-2 focus-visible:outline-accent-coral focus-visible:outline-offset-2 ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-sans font-semibold transition-all duration-150 cursor-pointer whitespace-nowrap ${
                 isActive
-                  ? 'border-accent-coral text-accent-coral'
-                  : 'border-transparent text-text-muted hover:text-text-primary'
+                  ? 'bg-[#2D2319] text-white shadow-xs'
+                  : 'bg-[#FFFDF9] border border-[#D8C4A7]/50 text-[#6E5D4B] hover:text-[#2D2319] hover:bg-[#FAF5ED]'
               }`}
             >
               {tab.label}
@@ -72,23 +73,25 @@ export function PremiumCourseTabs({ course, sections, creator }: PremiumCourseTa
       </div>
 
       {/* ── TABS PANEL CONTENT ── */}
-      <div className="animate-fade-in duration-300">
-        {activeTab === 'description' && (
-          <UnifiedDescriptionSection
-            description={course.description}
-            outcomes={course.outcomes ?? []}
-            instructor={creator}
-          />
-        )}
-
+      <div className="pt-1">
         {activeTab === 'path' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <PremiumCurriculum sections={sections} />
           </div>
         )}
 
+        {activeTab === 'description' && (
+          <div className="bg-[#FFFDF9] border border-[#D8C4A7]/50 rounded-2xl p-5 sm:p-6 shadow-xs">
+            <UnifiedDescriptionSection
+              description={course.description}
+              outcomes={course.outcomes ?? []}
+              instructor={creator}
+            />
+          </div>
+        )}
+
         {activeTab === 'testimonials' && (
-          <div className="space-y-6">
+          <div className="bg-[#FFFDF9] border border-[#D8C4A7]/50 rounded-2xl p-5 sm:p-6 shadow-xs">
             <ReviewsSection reviews={DUMMY_REVIEWS} />
           </div>
         )}

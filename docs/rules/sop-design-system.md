@@ -22,10 +22,10 @@ Setiap halaman modul, komponen interaktif, dan dialog di Maguru wajib mematuhi 5
 * **20% Antarmuka adalah Aksen Taktil (Subtle 3D Embossed & Gamified)**: Sentuhan kedalaman taktil hanya diperbolehkan pada elemen aksi utama (*Primary CTA Button* "Selesaikan Modul / Submit Tugas"), floating trigger asisten AI Agent, progres bar kelulusan materi, dan kartu lencana XP/pencapaian.
 * **Haram Hukumnya**: Menggunakan *heavy neumorphism* atau bayangan ganda tebal yang membuat teks materi terasa kabur dan melelahkan mata siswa.
 
-### 2. Mobile Thumb-Zone First (Ergonomi Belajar Satu Tangan)
-* Seluruh navigasi kritis belajar (tombol "Modul Berikutnya", "Tanya AI Guru", "Daftar Silabus Bab") wajib berada di zona jangkauan jempol (bagian bawah layar HP).
-* Indeks silabus bab dan panel chat konsultasi AI Agent pada perangkat mobile **wajib** menggunakan **Bottom Sheet Drawer** (muncul dari bawah layar), bukan pop-up mengambang yang menutupi teks materi.
-* Ukuran area sentuh (*touch target*) minimal adalah **44×44px** (ideal 48×48px), agar mudah ditekan saat membaca di smartphone.
+### 2. Tablet & Desktop First Ergonomics (Min 768px Viewport)
+* Maguru adalah platform pembelajaran teks mendalam dengan code playground dan AI tools yang **dikhususkan untuk perangkat Tablet dan Desktop (lebar layar minimal 768px, optimal 1024px–1440px+)**.
+* Layar ponsel (< 768px) tidak didukung dan dilindungi secara global oleh komponen `<MobileDeviceNotice />` yang memberitahu pengguna secara elegan untuk beralih ke Tablet atau Laptop/Desktop.
+* Pada tablet dan desktop, navigasi silabus dan konsultasi AI Agent disajikan melalui Side Drawer atau Dock samping yang tidak menutupi materi ajar. Target sentuh tombol dan menu tetap nyaman minimal **44×44px**.
 
 ### 3. Reading Ergonomics & Negative Space (Kenyamanan Membaca Panjang)
 * Area pembaca teks materi dibatasi maksimal `max-w-3xl` (sekitar 65–75 karakter per baris) dengan `leading-relaxed` (1.65 – 1.75).
@@ -165,7 +165,7 @@ Setiap PR atau penambahan fitur materi/komponen baru **wajib lolos 8 poin inspek
 - [ ] **2. Kepatuhan Token Warna**: Seluruh warna mengacu pada palet resmi (Beige `#FAF5ED`, Merah Aksi `#FF4D4D`, Kuning-Orange `#FFB148`, Hijau Alam `#5AC88A`, Magic Indigo `#8C4FFF`). Tidak ada hex acak.
 - [ ] **3. Kepatuhan Tipografi & Keterbacaan**: Materi teks menggunakan Poppins `leading-relaxed` dengan batas lebar baris `max-w-3xl`. Blok kodingan menggunakan Fira Code.
 - [ ] **4. Tabular Numbers**: Waktu baca, persentase progress belajar (`75%`), dan skor XP telah menggunakan `tabular-nums`.
-- [ ] **5. Ergonomi Mobile**: Navigasi bab dan tombol "Tanya AI" mudah diakses di zona jempol bawah. Drawer silabus responsive di mobile. Target sentuh minimal 44px.
+- [ ] **5. Kepatuhan Tablet & Desktop (Min 768px)**: Tampilan optimal di resolusi $\ge 768\text{px}$ (tablet) dan $\ge 1024\text{px}$ (desktop). Layar mobile (< 768px) otomatis memunculkan barrier `<MobileDeviceNotice />` secara elegan. Target sentuh tombol minimal 44px.
 - [ ] **6. Kelengkapan 5-State**: Elemen interaktif memiliki status `default`, `hover`, `active`, `focus-visible`, dan `disabled`.
 - [ ] **7. Feedback AI Agent yang Jelas**: Setiap interaksi dengan AI Agent memiliki indikator loading/streaming yang transparan dan informatif.
 - [ ] **8. Validasi Build & Linting**: Lulus pemeriksaan linting dan type-checking TypeScript tanpa error.

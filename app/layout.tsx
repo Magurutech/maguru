@@ -6,6 +6,7 @@ import '../styles/globals.css'
 import { Toaster } from 'sonner'
 import { NavbarGlass } from '../features/homepage/components/NavbarGlass'
 import { EditorialSideRails } from '../features/homepage/components/EditorialSideRails'
+import { MobileDeviceNotice } from '../components/shared/MobileDeviceNotice'
 
 // Load Google Fonts via next/font/google
 import { Poppins, Fraunces, Fira_Code, Cinzel } from 'next/font/google'
@@ -66,6 +67,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             
             {/* Editorial Side Rails (Conditional client component) */}
             <EditorialSideRails />
+
+            {/* Mobile Viewport Restriction Barrier (< 768px) */}
+            <MobileDeviceNotice />
 
             {children}
             <Toaster position="bottom-right" richColors closeButton />

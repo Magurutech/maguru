@@ -3,159 +3,113 @@
 /**
  * AICreatorAssistantCard Component
  *
- * Kartu Asisten Kreator AI (Mago) yang membantu mentor menganalisis kesulitan belajar,
- * memberikan rekomendasi perbaikan konten, dan menjawab pertanyaan optimasi kursus.
+ * Implements the "Sensei AI Co-Creator" interactive banner with tightened -2 spacing.
  */
 
-import { useState } from 'react'
-import {  X, RotateCcw, Brain } from 'lucide-react'
-import { TiltCard } from '@/features/user-dashboard'
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { Sparkles, MessageSquare, Lightbulb, FileText, Compass, X } from 'lucide-react'
 
 export function AICreatorAssistantCard() {
-  const [aiState, setAiState] = useState<'idle' | 'typing' | 'answered'>('idle')
-  const [aiQuestion, setAiQuestion] = useState('')
-  const [aiAnswer, setAiAnswer] = useState('')
+  const [activePrompt, setActivePrompt] = useState<string | null>(null)
 
-  const askAI = (question: string, answer: string) => {
-    if (aiState === 'typing') return
-    setAiQuestion(question)
-    setAiState('typing')
-    
-    // Simulate thinking/typing status
-    setTimeout(() => {
-      setAiAnswer(answer)
-      setAiState('answered')
-    }, 1200)
-  }
-
-  const resetAI = () => {
-    setAiState('idle')
-    setAiQuestion('')
-    setAiAnswer('')
-  }
+  const quickPrompts = [
+    { label: 'Rekomendasi Materi', icon: Lightbulb, query: 'Berikan rekomendasi sub-bab dan materi menarik untuk memperkaya kursus ini.' },
+    { label: 'Review Konten', icon: FileText, query: 'Review materi pelajaran terakhir dan identifikasi potensi kebingungan siswa.' },
+    { label: 'Ide & Struktur Kursus', icon: Compass, query: 'Bantu saya menstrukturkan alur pembelajaran dari dasar ke proyek nyata.' },
+  ]
 
   return (
-    <TiltCard 
-      className="md:col-span-12 card-ancient p-6 flex flex-col justify-between min-h-75 relative overflow-hidden cursor-default"
-    >
-      <div className="space-y-4 relative z-10">
-        {/* Header */}
-        <div className="flex justify-between items-center pb-2 border-b border-border/10">
-          <div className="flex items-center gap-2">
-            <Brain className="w-4 h-4 text-accent-coral" />
-            <h3 className="font-manrope text-sm font-bold text-text-primary tracking-wide uppercase">
-              AI Creator Assistant
-            </h3>
+    <div className="md:col-span-12 relative overflow-hidden bg-linear-to-r from-[#F3EBFF] via-[#EBE0FF] to-[#FAF5ED] border border-[#8C4FFF]/25 rounded-3xl p-4 sm:p-5 shadow-[0_4px_16px_rgba(140,79,255,0.06)] space-y-3">
+      {/* Subtle Mist Overlay */}
+      <div className="absolute right-0 top-0 w-80 h-full bg-linear-to-l from-white/20 to-transparent pointer-events-none" />
+
+      {/* Main Row */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+        <div className="flex items-center gap-3.5">
+          {/* Whimsical Wizard Avatar */}
+          <div className="relative w-12 h-12 sm:w-13 sm:h-13 rounded-2xl bg-[#FFFDF9] border border-[#8C4FFF]/30 shadow-xs flex items-center justify-center shrink-0">
+            <span className="text-2xl select-none">🧙‍♂️</span>
+            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8C4FFF] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#8C4FFF]" />
+            </span>
           </div>
-          <span className="text-[9px] font-mono text-text-muted uppercase">Mitra Desain Kurikulum</span>
+
+          <div className="space-y-0.5">
+            <h3 className="font-sans text-base sm:text-lg font-extrabold text-[#2D2319] leading-tight">
+              Butuh Bantuan?
+            </h3>
+            <p className="font-sans text-xs sm:text-[13px] text-[#6E5D4B] leading-relaxed max-w-xl">
+              Sensei AI siap membantu kamu dalam membuat kursus yang lebih interaktif, terstruktur, dan sesuai dengan kebutuhan siswa.
+            </p>
+          </div>
         </div>
 
-        {/* AI Companion Output Box */}
-        <div className="bg-bg-bone/85 border border-border/10 rounded-xl p-5 min-h-35 flex flex-col justify-between gap-3">
-          {aiState === 'idle' && (
-            <div className="flex items-start gap-4">
-              {/* Mascot "Mago" Orb */}
-              <div className="w-11 h-11 rounded-full border-1.5 border-accent-coral bg-accent-coral/5 flex items-center justify-center shrink-0 relative animate-float">
-                <span className="font-serif italic font-semibold text-accent-coral text-base">M</span>
-                <span className="absolute -inset-1 rounded-full border border-dashed border-accent-coral/30 animate-spin" style={{ animationDuration: '8s' }}></span>
-              </div>
-              <div className="space-y-1 flex-1">
-                <span className="text-[10px] font-semibold text-accent-coral uppercase tracking-wider">Mago Asisten Kreator</span>
-                <p className="text-xs text-text-secondary leading-relaxed">
-                  Halo Lutfi! Analisis data terbaru menunjukkan **28% siswa mengalami hambatan di Bab 3.2 (Optimasi Server Actions)**. Tingkat kelulusan kuis di bab ini turun sekitar 12%. Ingin saya bantu membuat latihan sandbox interaktif tambahan untuk bab tersebut?
-                </p>
-              </div>
-            </div>
-          )}
-
-          {aiState === 'typing' && (
-            <div className="flex items-center gap-3 py-6">
-              <div className="w-10 h-10 rounded-full border-1.5 border-accent-coral bg-accent-coral/5 flex items-center justify-center shrink-0 relative animate-float">
-                <span className="font-serif italic font-semibold text-accent-coral text-sm">M</span>
-              </div>
-              <div className="chat-typing">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-coral animate-bounce" style={{ animationDelay: '0s' }}></span>
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-coral animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-coral animate-bounce" style={{ animationDelay: '0.4s' }}></span>
-              </div>
-            </div>
-          )}
-
-          {aiState === 'answered' && (
-            <div className="space-y-3">
-              <div className="flex justify-between items-start border-b border-border/5 pb-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full border border-accent-coral/30 bg-accent-coral/5 flex items-center justify-center shrink-0 font-serif italic text-[11px] text-accent-coral">
-                    M
-                  </div>
-                  <span className="text-[10px] font-semibold text-accent-coral uppercase tracking-wider">Mago</span>
-                </div>
-                <button 
-                  onClick={resetAI}
-                  className="text-text-muted hover:text-text-primary p-0.5 transition-colors cursor-pointer"
-                  aria-label="Tutup rekomendasi"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-              <div className="space-y-2">
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Analisis AI: &quot{aiQuestion} &quot</p>
-                <div className="text-xs text-text-secondary leading-relaxed bg-card p-3 rounded-lg border border-border/5 font-mono overflow-x-auto">
-                  <p dangerouslySetInnerHTML={{ __html: aiAnswer }}></p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* CTA Button */}
+        <Link
+          href="/chat"
+          className="inline-flex items-center gap-1.5 py-2.5 px-5 rounded-xl bg-[#8C4FFF] hover:bg-[#7A3CE8] active:scale-95 text-white font-sans text-xs sm:text-sm font-bold shadow-[0_4px_14px_rgba(140,79,255,0.35),inset_0_1px_0_rgba(255,255,255,0.25)] transition-all shrink-0 cursor-pointer"
+        >
+          <MessageSquare className="w-3.5 h-3.5 text-white" />
+          <span>Tanya Sensei AI</span>
+          <span>➔</span>
+        </Link>
       </div>
 
-      {/* Action triggers */}
-      {aiState === 'idle' && (
-        <div className="pt-4 border-t border-border/10">
-          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider block mb-2">Tanya Asisten AI:</span>
-          <div className="flex flex-wrap gap-2">
-            <button 
-              onClick={() => askAI(
-                'Identifikasi Bab Tersulit',
-                `<strong>Bab 3.2: Optimasi Server Actions</strong><br/>• Tingkat kegagalan Kuis: 34% (sangat tinggi).<br/>• Hambatan utama: Penanganan error boundaries dan optimasi pending states.<br/>• Solusi: Tambahkan latihan coding instan berukuran kecil (micro-exercise) tentang <code>useActionState</code>.`
-              )}
-              className="px-3.5 py-1.5 rounded-full border border-border/15 bg-card hover:border-accent-coral hover:bg-bg-surface-accent text-xs font-semibold text-text-secondary cursor-pointer transition-all duration-180"
+      {/* Quick Prompt Pills Bar */}
+      <div className="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-[#8C4FFF]/15 relative z-10">
+        {/* Core Tag */}
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-sans font-semibold bg-[#FFFDF9] border border-[#8C4FFF]/30 text-[#6B21A8] shadow-2xs">
+          <Sparkles className="w-3 h-3 text-[#8C4FFF]" />
+          <span>Sensei AI Co-Creator</span>
+        </div>
+
+        {quickPrompts.map((p) => {
+          const Icon = p.icon
+          return (
+            <button
+              key={p.label}
+              type="button"
+              onClick={() => setActivePrompt(activePrompt === p.label ? null : p.query)}
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-sans font-medium bg-[#FFFDF9]/80 hover:bg-[#FFFDF9] border border-[#D8C4A7]/50 hover:border-[#8C4FFF]/40 text-[#6E5D4B] hover:text-[#2D2319] transition-all cursor-pointer shadow-2xs"
             >
-              📊 Bab Tersulit
+              <Icon className="w-3 h-3 text-[#8C4FFF]" />
+              <span>{p.label}</span>
             </button>
-            <button 
-              onClick={() => askAI(
-                'Mengapa Penyelesaian Turun?',
-                `Penurunan 12% penyelesaian disebabkan karena durasi video pada Bab 3.3 terlalu panjang (28 menit). Statistik retensi menunjukkan rata-rata siswa berhenti menonton di menit ke-12. Saya sarankan untuk <strong>memecah video tersebut menjadi 3 video kecil masing-masing 8-10 menit</strong>.`
-              )}
-              className="px-3.5 py-1.5 rounded-full border border-border/15 bg-card hover:border-accent-coral hover:bg-bg-surface-accent text-xs font-semibold text-text-secondary cursor-pointer transition-all duration-180"
+          )
+        })}
+      </div>
+
+      {/* Interactive Quick Answer Dialog if Prompt Clicked */}
+      {activePrompt && (
+        <div className="mt-2.5 p-3.5 bg-[#FFFDF9] border border-[#8C4FFF]/30 rounded-2xl shadow-xs relative animate-fade-in text-xs font-sans text-[#2D2319] space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-[#6B21A8] flex items-center gap-1.5 text-xs">
+              <Sparkles className="w-3 h-3 text-[#8C4FFF]" />
+              Saran Cepat Sensei AI
+            </span>
+            <button
+              type="button"
+              onClick={() => setActivePrompt(null)}
+              className="p-1 hover:bg-[#FAF5ED] rounded-lg text-[#6E5D4B] transition-colors"
             >
-              📉 Turunnya Penyelesaian
+              <X className="w-3 h-3 text-[#6E5D4B]" />
             </button>
-            <button 
-              onClick={() => askAI(
-                'Pertanyaan Populer Siswa',
-                `Tiga utas diskusi terpopuler membahas:<br/>1. <em>"Bagaimana cara membatalkan fetch request di Server Actions?"</em> (8 siswa)<br/>2. <em>"Perbedaan static routing vs dynamic routing di Next.js 15."</em> (5 siswa).<br/>Saya sarankan untuk mengadakan sesi <strong>Live Q&A berdurasi 30 menit</strong> minggu ini untuk menjawab isu ini secara massal.`
-              )}
-              className="px-3.5 py-1.5 rounded-full border border-border/15 bg-card hover:border-accent-coral hover:bg-bg-surface-accent text-xs font-semibold text-text-secondary cursor-pointer transition-all duration-180"
+          </div>
+          <p className="text-[#6E5D4B] leading-relaxed text-xs">
+            {activePrompt}
+          </p>
+          <div className="pt-0.5">
+            <Link
+              href="/chat"
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#8C4FFF] hover:text-[#7A3CE8]"
             >
-              💬 Pertanyaan Populer
-            </button>
+              <span>Diskusikan selengkapnya di AI Chat Studio ➔</span>
+            </Link>
           </div>
         </div>
       )}
-
-      {aiState === 'answered' && (
-        <div className="pt-4 border-t border-border/10 flex justify-end">
-          <button 
-            onClick={resetAI}
-            className="text-xs text-accent-coral font-bold flex items-center gap-1 hover:underline cursor-pointer"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>Tanya Hal Lain</span>
-          </button>
-        </div>
-      )}
-    </TiltCard>
+    </div>
   )
 }

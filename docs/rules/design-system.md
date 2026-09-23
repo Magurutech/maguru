@@ -1,8 +1,9 @@
 # Maguru UI/UX Design System Direction: Whimsical Ancient Fantasy Learning
 
-**Versi:** 2.0 (Text-Based Course & AI Agent Platform)  
+**Versi:** 2.1 (Text-Based Course & AI Agent Platform)  
 **Status:** Dokumen Pedoman Desain Resmi  
-**Target Platform:** Web App (Mobile-First Responsive)
+**Target Platform:** Tablet & Desktop Only (Minimal Lebar Layar 768px, Optimal 1024px–1440px+)  
+**Kebijakan Mobile:** Mobile (< 768px) Dibatasi dengan Layar Barrier Informatif (`MobileDeviceNotice`)
 
 ---
 
@@ -19,7 +20,7 @@ Dokumen ini berfungsi sebagai panduan strategis dan filosofis bagi tim desain da
 * **Karakter Visual:**
   * **High Readability (80% Flat-Clean):** Materi teks bacaan panjang, blok kode, dan tabel penjelasan harus sangat bersih, memiliki kontras tinggi, dan nyaman di mata untuk belajar berjam-jam tanpa distraksi visual.
   * **Whimsical & Gameful (20% Tactile & Gamified):** Elemen progres belajar, achievement badge, token XP, dan tombol asisten AI memiliki sentuhan taktil (subtle 3D embossed/skeuomorphic halus) bernuansa gulungan perkamen fantasi Asia.
-  * **Modern, Cepat, & Responsif:** Komponen ringan berbasis Tailwind CSS dan Shadcn UI yang teroptimasi untuk perangkat mobile dan desktop.
+  * **Fokus Layar Luas (Tablet & Desktop):** Dioptimalkan untuk membaca kode dan teks di layar tablet dan desktop tanpa kompromi tata letak sempit.
 
 ### 1.3. Kata Kunci Identitas Visual (Visual Keywords)
 * `Focused Readability` (Fokus belajar teks tanpa silau)
@@ -59,11 +60,11 @@ Platform kursus berbasis teks menuntut tipografi yang tajam dan tidak membuat ma
 ### 3.1. Pemilihan Font Family
 1. **Font UI & Paragraf Utama: Poppins (Sans-Serif)**
    * Digunakan untuk 90% antarmuka: judul modul, paragraf narasi materi pelajaran, formulir kuis, tombol, dan navigasi.
-   * Bersih, modern, dan memiliki keterbacaan tinggi di layar kecil smartphone.
+   * Bersih, modern, dan memiliki keterbacaan tinggi di layar tablet dan desktop.
 2. **Font Kode & Angka Data: Fira Code (Monospace)**
    * Digunakan untuk seluruh blok kodingan (*code snippet*), inline code (`const agent = ...`), data terminal, skor kuis, dan waktu hitung mundur ujian.
    * Dilengkapi fitur ligatur pemrograman dan angka tabular (`tabular-nums`).
-3. **Font Aksen Display: Playfair Display (Serif Opsional)**
+3. **Font Aksen Display: Playfair Display / Fraunces (Serif Opsional)**
    * Hanya digunakan secara selektif pada sertifikat kelulusan kursus, judul besar onboarding, dan kutipan motivasi belajar dari instruktur.
 
 ### 3.2. Skala Heading & Kenyamanan Baca (Line-Height & Width)
@@ -89,11 +90,11 @@ Mengacu pada arsitektur modern Maguru, platform meninggalkan *heavy skeuomorphis
 ```
 
 ### 4.1. Reading Canvas & Code Snippet
-* Kartu materi menggunakan warna dasar `bg-[#FFFDF9]` dengan border tunggal `border-[#E8D9C6]`.
+* Kartu materi menggunakan warna dasar `bg-[#FFFDF9]` dengan border tunggal `border-[#D8C4A7]/35`.
 * Blok kode memiliki header yang memuat nama bahasa pemrograman (misal: `python`, `typescript`), tombol "Salin Kode", dan tombol "Tanya AI Agent tentang Kode Ini".
 
 ### 4.2. Elemen Interaksi AI Agent Tools
-* Asisten AI diwujudkan sebagai panel mengambang yang mudah dipanggil (Dock / Bottom Sheet).
+* Asisten AI diwujudkan sebagai panel mengambang yang mudah dipanggil (Dock / Drawer samping).
 * Tampilan visual asisten menggunakan aksen warna *Magic Indigo* (`#8C4FFF`) berpadu dengan *Merah Aksi* (`#FF4D4D`).
 * Streaming teks AI dilengkapi animasi blinking cursor halus dan opsi "Jelaskan Bagian Ini".
 
@@ -111,8 +112,12 @@ Mengacu pada aturan teknis arsitektur Maguru:
 
 ---
 
-## 6. Ergonomi Mobile-First untuk Pembaca Teks
+## 6. Kebijakan Platform: Tablet & Desktop Only (Non-Mobile Platform)
 
-* **Sistem Navigasi Silabus:** Di layar mobile (< 768px), daftar modul dan silabus bab disajikan melalui *Bottom Sheet Drawer* atau tombol floating indeks bab, sehingga layar penuh fokus pada teks materi.
-* **Target Sentuh Jempol:** Seluruh tombol navigasi bab ("Kembali", "Bab Selanjutnya", "Tanya AI") berada di zona bawah layar (*Thumb Zone*) dengan tinggi minimal 44px (`h-11`).
-* **Sticky Learning Action Bar:** Bar di bawah layar yang menampilkan persentase progres bab saat ini dan tombol aksi berikutnya.
+* **Alasan Teknis & Pedagogis:** Belajar koding, membaca ribuan kata materi teknis, mengetik sintaks kode di editor, dan berkonsultasi dengan AI Agent memerlukan ruang pandang layar yang memadai. Layar ponsel (< 768px) tidak ergonomis untuk ekosistem pembelajaran ini.
+* **Target Viewport Resmi:**
+  - **Tablet**: Layar $\ge 768\text{px}$ (iPad/Tablet Android dalam orientasi portrait atau landscape).
+  - **Desktop / Laptop**: Layar $\ge 1024\text{px}$ hingga 1440px+ (Fokus utama pengalaman belajar).
+* **Penanganan Perangkat Mobile (< 768px):**
+  - Seluruh halaman aplikasi dilindungi secara global oleh komponen `<MobileDeviceNotice />` pada viewport `< 768px`.
+  - Memberikan penjelasan empatik dan terstruktur bahwa pengguna disarankan membuka platform melalui Laptop, Komputer, atau Tablet.

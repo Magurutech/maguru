@@ -1,6 +1,9 @@
 'use client'
 
-import { ShieldCheck, Sparkles, BookOpen, Clock, FileText, Code, Layers, BarChart3 } from 'lucide-react'
+import { useState } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Play, X, CheckCircle2, MessageSquare, Sparkles } from 'lucide-react'
 import type { CourseDetail, CreatorProfile } from './types'
 
 interface PremiumSidebarProps {
@@ -10,154 +13,283 @@ interface PremiumSidebarProps {
   creator?: CreatorProfile | null
 }
 
-export function PremiumSidebar({ course, enrolled, children, creator }: PremiumSidebarProps) {
-  const normCategory = (course.category || '').toLowerCase()
+/**
+ * Sensei AI Mentor Callout Card (Whimsical Maguru Mascot Widget)
+ */
+export function SenseiMentorCard() {
+  return (
+    <div className="relative overflow-hidden bg-linear-to-br from-[#F5EEFF] via-[#EDE0FF] to-[#FAF5ED] border border-[#8C4FFF]/25 rounded-3xl p-4 sm:p-5 shadow-[0_4px_16px_rgba(140,79,255,0.06)] space-y-3">
+      {/* Subtle Ambient Orb */}
+      <div className="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-[#8C4FFF]/10 blur-xl pointer-events-none" />
 
-  // 3D Tilt handlers for sidebar card
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget
-    const r = card.getBoundingClientRect()
-    const x = e.clientX - r.left - r.width / 2
-    const y = e.clientY - r.top - r.height / 2
-    card.style.transform = `perspective(1000px) rotateX(${-(y / (r.height / 2)) * 4}deg) rotateY(${(x / (r.width / 2)) * 4}deg) translateY(-2px)`
-  }
+      {/* Top Pill Tag */}
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-sans font-semibold bg-[#FFFDF9]/90 border border-[#8C4FFF]/30 text-[#6B21A8]">
+        <Sparkles className="w-3 h-3 text-[#8C4FFF]" />
+        <span>Sensei AI Mentor</span>
+      </div>
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)'
-  }
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h4 className="font-sans text-sm sm:text-base font-bold text-[#2D2319] leading-snug">
+            Ada pertanyaan?<br />Tanya AI Guru!
+          </h4>
+          <p className="font-sans text-[11.5px] text-[#6E5D4B] leading-relaxed">
+            Dapatkan bantuan, penjelasan, atau review kode dari AI Mentor kapan saja.
+          </p>
+        </div>
 
-  // Get Thumbnail Gradient & Icon based on Category
-  const getCategoryTheme = () => {
-    if (normCategory.includes('pemrograman') || normCategory.includes('ai') || normCategory.includes('tech') || normCategory.includes('sains')) {
-      return {
-        gradient: 'from-[#e8e0c8] to-[#d4c8a8] dark:from-[#37353e] dark:to-[#2d2a33]',
-        icon: <Code className="w-14 h-14 text-text-primary/18 dark:text-white/10" />,
-        accent: 'bg-accent-olive',
-      }
-    }
-    if (normCategory.includes('desain') || normCategory.includes('design') || normCategory.includes('seni') || normCategory.includes('art')) {
-      return {
-        gradient: 'from-[#f0e8d0] to-[#e8d8b8] dark:from-[#3d3a44] dark:to-[#232127]',
-        icon: <Layers className="w-14 h-14 text-text-primary/18 dark:text-white/10" />,
-        accent: 'bg-accent-coral',
-      }
-    }
-    if (normCategory.includes('bisnis') || normCategory.includes('business') || normCategory.includes('marketing')) {
-      return {
-        gradient: 'from-[#ece4cc] to-[#e0d8b8] dark:from-[#2d2a33] dark:to-[#19181d]',
-        icon: <BarChart3 className="w-14 h-14 text-text-primary/18 dark:text-white/10" />,
-        accent: 'bg-accent-mustard',
-      }
-    }
-    return {
-      gradient: 'from-[#ece4cc] to-[#e0d8b8] dark:from-[#2d2a33] dark:to-[#19181d]',
-      icon: <BookOpen className="w-14 h-14 text-text-primary/18 dark:text-white/10" />,
-      accent: 'bg-text-faint/30',
-    }
-  }
+        {/* Whimsical Mascot Icon / Avatar */}
+        <div className="relative w-12 h-12 rounded-2xl bg-[#FFFDF9] border border-[#8C4FFF]/30 shadow-xs flex items-center justify-center shrink-0">
+          <span className="text-2xl select-none">🧙‍♂️</span>
+          <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8C4FFF] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#8C4FFF]" />
+          </span>
+        </div>
+      </div>
 
-  const theme = getCategoryTheme()
+      {/* Action Button: Mulai Chat */}
+      <Link
+        href="/chat"
+        className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#8C4FFF] hover:bg-[#7A3CE8] active:scale-95 text-white font-sans text-xs sm:text-sm font-semibold shadow-[0_2px_8px_rgba(140,79,255,0.3),inset_0_1px_0_rgba(255,255,255,0.25)] transition-all"
+      >
+        <MessageSquare className="w-3.5 h-3.5 text-white" />
+        <span>Mulai Chat</span>
+      </Link>
+    </div>
+  )
+}
+
+/**
+ * TabletCoursePreview
+ *
+ * Dedicated horizontal preview card positioned ABOVE tabs on Tablet screens (768px - 1023px)
+ */
+export function TabletCoursePreview({
+  children,
+}: {
+  course: CourseDetail
+  enrolled: boolean
+  children: React.ReactNode
+}) {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
 
   return (
     <>
-      {/* ── DESKTOP STICKY SIDEBAR ── */}
-      <div className="hidden lg:block sticky top-28 w-full max-w-[360px] ml-auto space-y-6">
-        <div
-          onMouseMove={handleMouseMove}
-          onMouseLeave={handleMouseLeave}
-          className="glass-panel border border-text-primary/8 dark:border-white/8 rounded-2xl overflow-hidden bg-bg-surface-accent/20 dark:bg-bg-surface-accent/10 backdrop-blur-md shadow-sm transition-all duration-300"
-          style={{ transformStyle: 'preserve-3d', transition: 'transform 0.1s ease-out' }}
-        >
-          {/* Visual Cover / Thumbnail Placeholder */}
-          <div className={`w-full aspect-[16/9] bg-gradient-to-br ${theme.gradient} flex items-center justify-center relative overflow-hidden`}>
-            {/* Bottom Accent Bar */}
-            <div className={`absolute bottom-0 left-0 right-0 h-1.5 ${theme.accent}`} />
-            
-            {theme.icon}
-            <span className="absolute bottom-4 left-4 text-[9px] font-mono font-bold tracking-wider uppercase bg-bg-canvas/80 text-text-primary px-2 py-0.5 rounded-full dark:bg-black/60 dark:text-white">
-              {course.category}
+      <div className="border border-[#D8C4A7]/60 rounded-3xl overflow-hidden bg-[#FFFDF9] shadow-[0_4px_16px_rgba(45,35,25,0.06)] p-4 sm:p-5 flex flex-col md:flex-row gap-5 items-center">
+        {/* Left: Video Preview Thumbnail */}
+        <div className="relative w-full md:w-[44%] aspect-16/10 rounded-2xl overflow-hidden bg-[#2D2319] group shrink-0 shadow-xs">
+          <Image
+            src="/banner/banner-coruse-detail.webp"
+            alt="Video Preview Thumbnail"
+            fill
+            className="object-cover object-center group-hover:scale-105 transition-transform duration-300 opacity-80"
+            sizes="400px"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
+
+          {/* Top-Left Badge: Video Preview */}
+          <div className="absolute top-2.5 left-2.5 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-sans font-semibold bg-black/60 backdrop-blur-md text-white border border-white/20">
+            <Play className="w-2.5 h-2.5 fill-white text-white" />
+            <span>Video Preview</span>
+          </div>
+
+          {/* Center Play Button */}
+          <button
+            type="button"
+            onClick={() => setIsVideoModalOpen(true)}
+            className="absolute inset-0 m-auto w-11 h-11 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center cursor-pointer shadow-xl hover:scale-110 active:scale-95 transition-all group-hover:bg-[#FF4D4D]"
+            aria-label="Putar Video Preview"
+          >
+            <Play className="w-4 h-4 fill-white text-white translate-x-0.5" />
+          </button>
+
+          {/* Bottom-Right Duration Badge */}
+          <div className="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded-md text-[10.5px] font-sans font-medium bg-black/70 text-white tabular-nums">
+            ⏱️ 3:42
+          </div>
+        </div>
+
+        {/* Right: Pricing, CTA & Benefits */}
+        <div className="flex-1 w-full space-y-3">
+          {/* Price & Access Row */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-base select-none">🪙</span>
+              <span className="font-sans text-base sm:text-lg font-extrabold text-[#2D2319]">
+                Gratis / 1.250 XP
+              </span>
+            </div>
+
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-sans font-semibold bg-[#FFE8C4]/70 border border-[#FFB148]/50 text-[#B96500]">
+              Akses Selamanya
             </span>
           </div>
 
-          <div className="p-6 space-y-5">
-            {/* Enrollment Status Info */}
-            <div className="space-y-1">
-              <span className="text-[10px] font-sans font-bold tracking-wider text-text-faint uppercase">
-                Akses Pembelajaran
+          {/* CTA Button Slot */}
+          <div className="w-full">{children}</div>
+
+          {/* Value Proposition List (2 Columns on Tablet) */}
+          <ul className="grid grid-cols-2 gap-2 pt-2.5 border-t border-[#D8C4A7]/30 text-xs font-sans text-[#6E5D4B]">
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#5AC88A] shrink-0" />
+              <span className="truncate">Materi teks &amp; latihan</span>
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#5AC88A] shrink-0" />
+              <span className="truncate">Sertifikat kelulusan</span>
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#5AC88A] shrink-0" />
+              <span className="truncate">Akses selamanya</span>
+            </li>
+            <li className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#5AC88A] shrink-0" />
+              <span className="truncate">Dukungan AI 24/7</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Video Modal Player */}
+      {isVideoModalOpen && (
+        <VideoPreviewModal onClose={() => setIsVideoModalOpen(false)} />
+      )}
+    </>
+  )
+}
+
+/**
+ * PremiumSidebar
+ *
+ * Dedicated Desktop sticky sidebar component (Visible on lg: 1024px+)
+ */
+export function PremiumSidebar({ children }: PremiumSidebarProps) {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+
+  return (
+    <>
+      {/* ── DESKTOP STICKY SIDEBAR (Hidden on Tablet, visible on lg: 1024px+) ── */}
+      <div className="sticky top-20 w-full space-y-4">
+        {/* ── CARD 1: VIDEO PREVIEW & ENROLLMENT HUB ── */}
+        <div className="border border-[#D8C4A7]/60 rounded-3xl overflow-hidden bg-[#FFFDF9] shadow-[0_4px_16px_rgba(45,35,25,0.06)]">
+          {/* Video Preview Thumbnail Cover */}
+          <div className="relative w-full aspect-video overflow-hidden bg-[#2D2319] group">
+            <Image
+              src="/banner/banner-coruse-detail.webp"
+              alt="Video Preview Thumbnail"
+              fill
+              className="object-cover object-center group-hover:scale-105 transition-transform duration-300 opacity-80"
+              sizes="380px"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/30" />
+
+            {/* Top-Left Badge: Video Preview */}
+            <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-sans font-semibold bg-black/60 backdrop-blur-md text-white border border-white/20">
+              <Play className="w-3 h-3 fill-white text-white" />
+              <span>Video Preview</span>
+            </div>
+
+            {/* Center Play Button with Glowing Pulse */}
+            <button
+              type="button"
+              onClick={() => setIsVideoModalOpen(true)}
+              className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/60 hover:bg-black/80 backdrop-blur-sm border border-white/30 text-white flex items-center justify-center cursor-pointer shadow-xl hover:scale-110 active:scale-95 transition-all group-hover:bg-[#FF4D4D]"
+              aria-label="Putar Video Preview"
+            >
+              <Play className="w-5 h-5 fill-white text-white translate-x-0.5" />
+            </button>
+
+            {/* Bottom-Right Duration Badge */}
+            <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-md text-[11px] font-sans font-medium bg-black/70 text-white tabular-nums">
+              ⏱️ 3:42
+            </div>
+          </div>
+
+          {/* Card Body */}
+          <div className="p-4 sm:p-5 space-y-4">
+            {/* Pricing & Access Row */}
+            <div className="flex items-center justify-between gap-2 pb-1">
+              <div className="flex items-center gap-1.5">
+                <span className="text-base select-none">🪙</span>
+                <span className="font-sans text-base sm:text-lg font-extrabold text-[#2D2319]">
+                  Gratis / 1.250 XP
+                </span>
+              </div>
+
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-sans font-semibold bg-[#FFE8C4]/70 border border-[#FFB148]/50 text-[#B96500]">
+                Akses Selamanya
               </span>
-              <h4 className="font-sans text-2xl font-extrabold text-text-primary tracking-tight">
-                {enrolled ? 'Sudah Terdaftar' : 'Gratis / Beasiswa'}
-              </h4>
             </div>
 
-            {/* Enroll / Go to learn Button slot */}
-            <div className="w-full relative z-10 flex flex-col pt-1">
-              {children}
-            </div>
+            {/* Primary CTA Button (CourseEnrollButton slot) */}
+            <div className="w-full">{children}</div>
 
-            {/* Premium benefits list */}
-            <ul className="space-y-3 pt-4 border-t border-text-primary/8 dark:border-white/8 text-xs text-text-secondary font-sans">
+            {/* Value Proposition List (Round Green Badges) */}
+            <ul className="space-y-2.5 pt-3 border-t border-[#D8C4A7]/30 text-xs sm:text-[13px] font-sans text-[#6E5D4B]">
               <li className="flex items-center gap-2.5">
-                <Sparkles className="w-4 h-4 text-accent-coral flex-shrink-0" />
-                <span>AI Co-Teacher Terintegrasi</span>
+                <CheckCircle2 className="w-4 h-4 text-[#5AC88A] shrink-0" />
+                <span>Akses semua materi teks &amp; latihan</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <FileText className="w-4 h-4 text-text-faint flex-shrink-0" />
-                <span>Proyek Portofolio Riil</span>
+                <CheckCircle2 className="w-4 h-4 text-[#5AC88A] shrink-0" />
+                <span>Sertifikat kelulusan kompetensi</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-accent-olive flex-shrink-0" />
-                <span>Sertifikat Kelulusan Kompetensi</span>
+                <CheckCircle2 className="w-4 h-4 text-[#5AC88A] shrink-0" />
+                <span>Akses selamanya &amp; update materi</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-text-faint flex-shrink-0" />
-                <span>Akses Selamanya & Update Materi</span>
+                <CheckCircle2 className="w-4 h-4 text-[#5AC88A] shrink-0" />
+                <span>Dukungan AI Mentor 24/7</span>
               </li>
             </ul>
-
-            {/* Instructor Widget in Sidebar */}
-            {creator && creator.name && (
-              <div className="pt-4 border-t border-text-primary/8 dark:border-white/8 space-y-3 font-sans">
-                <span className="text-[9px] font-sans font-bold tracking-wider text-text-faint uppercase block">
-                  Instruktur Kelas
-                </span>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#e8e0c8] to-[#d4c8a8] dark:from-[#37353e] dark:to-[#2d2a33] border border-text-primary/8 dark:border-white/8 flex items-center justify-center font-sans text-sm font-bold text-text-primary overflow-hidden select-none">
-                    {creator.avatarUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={creator.avatarUrl} alt={creator.name} className="w-full h-full object-cover" />
-                    ) : (
-                      creator.name.charAt(0).toUpperCase()
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <h5 className="text-xs font-bold text-text-primary leading-tight truncate">{creator.name}</h5>
-                    <span className="text-[10px] text-accent-coral font-medium block mt-0.5 truncate">{creator.title || 'Pendidik'}</span>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
+
+        {/* ── CARD 2: SENSEI AI MENTOR CALLOUT WIDGET ── */}
+        <SenseiMentorCard />
       </div>
 
-      {/* ── MOBILE FIXED BOTTOM CTA BAR ── */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-bg-canvas/95 dark:bg-bg-canvas/98 border-t border-text-primary/8 dark:border-white/8 p-4 backdrop-blur-md">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-4">
-          <div className="space-y-0.5">
-            <span className="text-[9px] font-sans font-bold tracking-wider text-text-faint uppercase block">
-              STATUS AKSES
-            </span>
-            <span className="font-sans text-base font-bold text-text-primary tracking-tight block">
-              {enrolled ? 'Telah Terdaftar' : 'Akses Penuh'}
-            </span>
-          </div>
-
-          <div className="flex-shrink-0 relative z-10">
-            {children}
-          </div>
-        </div>
-      </div>
+      {/* Video Modal Player */}
+      {isVideoModalOpen && (
+        <VideoPreviewModal onClose={() => setIsVideoModalOpen(false)} />
+      )}
     </>
+  )
+}
+
+/**
+ * Shared Video Preview Modal
+ */
+function VideoPreviewModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in"
+    >
+      <div className="relative w-full max-w-2xl bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+        {/* Close Button */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center transition-colors cursor-pointer"
+          aria-label="Tutup Video"
+        >
+          <X className="w-5 h-5 text-white" />
+        </button>
+
+        {/* Video Player */}
+        <video
+          src="/page/motion.mp4"
+          controls
+          autoPlay
+          className="w-full aspect-video object-contain bg-black"
+        >
+          Browser Anda tidak mendukung tag video.
+        </video>
+      </div>
+    </div>
   )
 }
