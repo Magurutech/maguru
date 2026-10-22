@@ -36,6 +36,7 @@ interface ProfileInput {
     github?: string
     portfolio?: string
     twitter?: string
+    youtube?: string
   }
 }
 
@@ -135,7 +136,7 @@ export function validateProfileInput(data: ProfileInput): ValidationResult {
 
   // Social links validation
   if (data.socialLinks !== undefined) {
-    const { linkedin, github, portfolio, twitter } = data.socialLinks
+    const { linkedin, github, portfolio, twitter, youtube } = data.socialLinks
 
     // Helper function for URL validation
     const isValidUrl = (url: string): boolean => {
@@ -173,6 +174,13 @@ export function validateProfileInput(data: ProfileInput): ValidationResult {
       return {
         valid: false,
         error: 'Twitter URL must be a valid HTTP(S) URL',
+        code: 'VALIDATION_ERROR',
+      }
+    }
+    if (youtube && !isValidUrl(youtube)) {
+      return {
+        valid: false,
+        error: 'YouTube URL must be a valid HTTP(S) URL',
         code: 'VALIDATION_ERROR',
       }
     }

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button"
 import { Info, Bot, Star, Award, CheckCircle2, AlertTriangle } from "lucide-react"
 
 export interface SkeuButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'ai-blue' | 'secondary' | 'peach'
+  variant?: 'primary' | 'ai-blue' | 'secondary' | 'peach' | 'ghost'
   isDeckle?: boolean
 }
 
@@ -25,7 +25,14 @@ export const SkeuButton = React.forwardRef<HTMLButtonElement, SkeuButtonProps>(
     if (variant === 'primary' || variant === 'secondary') {
       const isSecondary = variant === 'secondary';
       return (
-        <div className={cn("btn-wrapper", isSecondary ? "btn-wrapper-secondary" : "btn-wrapper-primary", className)}>
+        <div
+          className={cn(
+            "btn-wrapper",
+            isSecondary ? "btn-wrapper-secondary" : "btn-wrapper-primary",
+            props.disabled && "opacity-60 pointer-events-none cursor-not-allowed",
+            className
+          )}
+        >
           <div className="line horizontal top"></div>
           <div className="line vertical right"></div>
           <div className="line horizontal bottom"></div>
@@ -41,9 +48,25 @@ export const SkeuButton = React.forwardRef<HTMLButtonElement, SkeuButtonProps>(
             className={cn("btn", isSecondary ? "btn-secondary" : "btn-primary")}
             {...props}
           >
-            <span className="btn-text">{children}</span>
+            <span className="btn-text inline-flex items-center justify-center gap-1.5">{children}</span>
           </button>
         </div>
+      );
+    }
+
+    if (variant === 'ghost') {
+      return (
+        <button
+          ref={ref}
+          className={cn(
+            "btn-artisan-ghost px-5 py-2.5 font-bold transition-all text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:pointer-events-none",
+            isDeckle && "btn-deckle",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </button>
       );
     }
 
@@ -51,7 +74,7 @@ export const SkeuButton = React.forwardRef<HTMLButtonElement, SkeuButtonProps>(
       <button
         ref={ref}
         className={cn(
-          "px-6 py-3 font-semibold btn-interactive transition-all duration-200 text-center flex items-center justify-center gap-2",
+          "px-6 py-3 font-semibold btn-interactive transition-all duration-200 text-center flex items-center justify-center gap-2 disabled:opacity-60 disabled:pointer-events-none",
           variant === 'ai-blue' && "ai-blue-skeuo text-white",
           variant === 'peach' && "peach-skeuo",
           isDeckle && "btn-deckle",
@@ -80,7 +103,7 @@ export const ButtonSpecDrawer = () => {
           Detail Spek Gaya Tombol
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="w-full max-w-none bg-bg-bone border-t border-text-faint/15 rounded-t-[16px] border-x-0">
+      <DrawerContent className="w-full max-w-none bg-bg-bone border-t border-text-faint/15 rounded-t-lg border-x-0">
         <div className="w-full px-8 pb-8 pt-4">
           
           {/* Header */}
@@ -174,17 +197,17 @@ export const ButtonSpecDrawer = () => {
                       <tr>
                         <td className="p-3 font-mono font-semibold">DEFAULT</td>
                         <td className="p-3 text-center">
-                          <Button variant="default" className="w-full max-w-[150px] mx-auto pointer-events-none">
+                          <Button variant="default" className="w-full max-w-38 mx-auto pointer-events-none">
                             Default
                           </Button>
                         </td>
                         <td className="p-3 text-center">
-                          <Button variant="secondary" className="w-full max-w-[150px] mx-auto pointer-events-none">
+                          <Button variant="secondary" className="w-full max-w-38 mx-auto pointer-events-none">
                             Default
                           </Button>
                         </td>
                         <td className="p-3 text-center">
-                          <Button variant="ghost" className="w-full max-w-[150px] mx-auto pointer-events-none">
+                          <Button variant="ghost" className="w-full max-w-38 mx-auto pointer-events-none">
                             Default
                           </Button>
                         </td>
@@ -196,7 +219,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="default" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[-2px] shadow-[0_3px_6px_rgba(21,20,15,0.15)] brightness-[1.05]"
+                            className="w-full max-w-38 mx-auto pointer-events-none transition-none -translate-y-0.5 shadow-[0_3px_6px_rgba(21,20,15,0.15)] brightness-[1.05]"
                           >
                             Hovered
                           </Button>
@@ -204,7 +227,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="secondary" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[-2px] shadow-[0_3px_6px_rgba(21,20,15,0.15)] bg-black/[0.02]"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none -translate-y-0.5 shadow-[0_3px_6px_rgba(21,20,15,0.15)] bg-black/2"
                           >
                             Hovered
                           </Button>
@@ -212,7 +235,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="ghost" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[-2px] shadow-[0_3px_6px_rgba(21,20,15,0.15)] brightness-[1.12]"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none -translate-y-0.5 shadow-[0_3px_6px_rgba(21,20,15,0.15)] brightness-[1.12]"
                           >
                             Hovered
                           </Button>
@@ -225,7 +248,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="default" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[1px] shadow-[0_1px_1px_rgba(21,20,15,0.1)] brightness-[0.98]"
+                            className="w-full max-w-38 mx-auto pointer-events-none transition-none translate-y-px shadow-[0_1px_1px_rgba(21,20,15,0.1)] brightness-[0.98]"
                           >
                             Pressed
                           </Button>
@@ -233,7 +256,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="secondary" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[1px] shadow-[0_1px_1px_rgba(21,20,15,0.1)] bg-black/[0.04]"
+                            className="w-full max-w-38 mx-auto pointer-events-none transition-none translate-y-px shadow-[0_1px_1px_rgba(21,20,15,0.1)] bg-black/4"
                           >
                             Pressed
                           </Button>
@@ -241,7 +264,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="ghost" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none translate-y-[1px] shadow-[0_1px_1px_rgba(21,20,15,0.1)] brightness-[0.95]"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none translate-y-px shadow-[0_1px_1px_rgba(21,20,15,0.1)] brightness-[0.95]"
                           >
                             Pressed
                           </Button>
@@ -254,7 +277,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="default" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none outline outline-2 outline-accent-coral outline-offset-2"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none outline-2 outline-accent-coral outline-offset-2"
                           >
                             Focused
                           </Button>
@@ -262,7 +285,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="secondary" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none outline outline-2 outline-text-primary outline-offset-2"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none outline-2 outline-text-primary outline-offset-2"
                           >
                             Focused
                           </Button>
@@ -270,7 +293,7 @@ export const ButtonSpecDrawer = () => {
                         <td className="p-3 text-center">
                           <Button 
                             variant="ghost" 
-                            className="w-full max-w-[150px] mx-auto pointer-events-none transition-none outline outline-2 outline-text-primary outline-offset-2"
+                            className="w-full max-w-37.5 mx-auto pointer-events-none transition-none outline-2 outline-text-primary outline-offset-2"
                           >
                             Focused
                           </Button>
@@ -281,17 +304,17 @@ export const ButtonSpecDrawer = () => {
                       <tr>
                         <td className="p-3 font-mono font-semibold">DISABLED</td>
                         <td className="p-3 text-center">
-                          <Button variant="default" disabled className="w-full max-w-[150px] mx-auto">
+                          <Button variant="default" disabled className="w-full max-w-37.5 mx-auto">
                             Disabled
                           </Button>
                         </td>
                         <td className="p-3 text-center">
-                          <Button variant="secondary" disabled className="w-full max-w-[150px] mx-auto">
+                          <Button variant="secondary" disabled className="w-full max-w-37.5 mx-auto">
                             Disabled
                           </Button>
                         </td>
                         <td className="p-3 text-center">
-                          <Button variant="ghost" disabled className="w-full max-w-[150px] mx-auto">
+                          <Button variant="ghost" disabled className="w-full max-w-37.5 mx-auto">
                             Disabled
                           </Button>
                         </td>

@@ -9,7 +9,8 @@ function decodeJwtUser(token: string) {
     const jsonStr = Buffer.from(base64, 'base64').toString('utf-8')
     const payload = JSON.parse(jsonStr)
     if (!payload || !payload.sub) return null
-    if (payload.exp && payload.exp * 1000 < Date.now()) return null
+    // Allow 60 seconds clock skew tolerance
+    if (payload.exp && payload.exp * 1000 < Date.now() - 60000) return null
     return {
       id: payload.sub,
       email: payload.email || '',
@@ -118,11 +119,14 @@ export async function createClient() {
       return { data: { user: user as any }, error: null }
     }
 
-    // 3. Check cookies if no bearer token
     const allCookies: Array<{ name: string; value: string }> = cookieStore ? cookieStore.getAll() : []
     const tokenCookies = allCookies
-      .filter((c: { name: string; value: string }) => c.name.includes('-auth-token'))
-      .sort((a: { name: string; value: string }, b: { name: string; value: string }) => a.name.localeCompare(b.name))
+      .filter((c: { name: string; value: string }) => c.name.includes('-auth-token') && !c.name.includes('-code-verifier'))
+      .sort((a: { name: string; value: string }, b: { name: string; value: string }) => {
+        const aIdx = parseInt(a.name.split('.').pop() || '0', 10)
+        const bIdx = parseInt(b.name.split('.').pop() || '0', 10)
+        return isNaN(aIdx) || isNaN(bIdx) ? a.name.localeCompare(b.name) : aIdx - bIdx
+      })
 
     if (tokenCookies.length > 0) {
       const combinedVal = tokenCookies
@@ -168,7 +172,13 @@ export async function createClient() {
       }
     }
 
-    console.warn('[Supabase Server Auth] User verification failed: No valid token found in cookies, headers, or bearer')
+    console.warn(
+      `[Supabase Server Auth] User verification failed: ` +
+      `cookies=[${allCookies.map((c: { name: string }) => c.name).join(', ') || 'none'}], ` +
+      `tokenCookies=[${tokenCookies.map((c: { name: string }) => c.name).join(', ') || 'none'}], ` +
+      `hasForwardedUser=${!!forwardedUserId}, ` +
+      `hasBearer=${!!bearerToken}`
+    )
     return { data: { user: null }, error: new Error('User not found') as any }
   }
 

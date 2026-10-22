@@ -303,3 +303,16 @@
     transform: rotate(0deg) scaleY(1);
   }
 }
+
+/* Disabled State */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(0.2);
+}
+.btn-wrapper:has(.btn:disabled) {
+  opacity: 0.6;
+  pointer-events: none;
+}

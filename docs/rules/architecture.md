@@ -1,12 +1,13 @@
-# 📐 Arsitektur Baru Proyek Rental Baju (Sederhana & Efisien)
+# 📐 Arsitektur Proyek Maguru (Full-Stack EdTech)
 
 ---
 
 ## 1. Prinsip Utama
 
-- **Modular Monolith** tetap digunakan, namun dengan struktur dan layer yang lebih ringkas.
-- **Layer N-tier**: Hanya 3 layer utama (Presentation, Logic, Data), tanpa subdivisi hooks/adapter/service yang berlebihan.
-- **Sederhana, maintainable, scalable** untuk tim kecil dan kebutuhan bisnis rental baju.
+- **Modular Monolith** dengan struktur layer yang ringkas dan efisien.
+- **Layer N-tier**: 3 layer utama (Presentation, Logic, Data), tanpa subdivisi berlebihan.
+- **Sederhana, maintainable, scalable** — cocok untuk tim kecil dan iterasi cepat.
+- **AI Backend** terpisah sebagai service mandiri (`maguru-model`), terhubung ke frontend via HTTP/SSE.
 
 ---
 
@@ -14,215 +15,186 @@
 
 ```mermaid
 graph TD
-    User --> UI[Next.js UI (React)]
-    UI --> Logic[Custom Hook/Logic]
-    Logic --> API[API Route (Next.js)]
-    API --> DB[(Database)]
+    User --> UI[Next.js Frontend]
+    UI --> Logic[Custom Hook / Logic]
+    Logic --> NEXTAPI[Next.js API Routes]
+    Logic --> AIAPI[maguru-model AI API]
+    NEXTAPI --> DB[(Supabase PostgreSQL)]
+    AIAPI --> LLM[OpenRouter LLM Pool]
+    AIAPI --> VECTOR[(pgvector RAG)]
     UI -->|Static| Public[Public Assets]
 ```
 
-- **Frontend & Backend** dalam satu codebase (monorepo Next.js)
-- **API Routes** untuk backend CRUD sederhana
-- **Database**: PostgreSQL/SQLite via Prisma ORM
-- **Static Assets**: Gambar produk, dsb di `/public`
+- **Frontend**: Next.js App Router (React) — SSR, routing, komponen UI
+- **Backend FE**: Next.js API Routes — CRUD, auth, validasi (Prisma ORM)
+- **AI Backend**: Python FastAPI + LangGraph (`maguru-model`) — agent AI, streaming SSE
+- **Database**: Supabase PostgreSQL (data + pgvector untuk RAG)
 
 ---
 
-## 3. Struktur Folder
+## 3. Struktur Folder — Next.js Frontend (`maguru/`)
 
 ```
 /
-├── app/                # Routing, layout, halaman utama (Next.js App Router)
-│   ├── api/            # API Routes (backend logic)
-│   └── ...             # Halaman (page.tsx), layout, dsb
-├── features/           # Modular Feature (per fitur utama)
-│   └── [feature]/      # Contoh: manage-product, auth, kasir
-│       ├── components/ # Komponen UI
-│       ├── hooks/      # Custom hooks (state, logic)
-│       ├── services/   # prisma logic CRUD, validasi, dsb
-│       ├── api.ts      # API client/fetcher untuk fitur ini
-│       ├── types.ts    # TypeScript types untuk fitur ini
-│       └── lib    # Export semua komponen, hooks, dsb
-├── prisma/             # Skema database & seed
-├── public/             # Static files (gambar, dsb)
-├── lib/                # Utilitas global
-├── styles/             # CSS/SCSS/Tailwind config
-└── ...                 # Config, test, dsb
+├── app/                    # Next.js App Router
+│   ├── api/                # API Routes (CRUD, auth)
+│   ├── design-system/      # Halaman katalog komponen (/design-system)
+│   └── ...                 # Page, layout, dsb
+├── components/
+│   ├── ui/                 # Atomic Shadcn UI components
+│   └── shadcn-studio/      # Reusable studio UI elements
+├── features/               # Modular feature slices
+│   ├── design-system/
+│   │   ├── components/demos/   # Demo showcase wrappers
+│   │   └── lib/                # Component registry
+│   └── [feature]/
+│       ├── components/     # React UI components
+│       ├── hooks/          # Custom hooks (state, fetching)
+│       ├── services/       # Prisma CRUD logic
+│       ├── api.ts          # API client/fetcher
+│       └── types.ts        # TypeScript types
+├── prisma/                 # Schema & migration
+├── public/                 # Static assets
+├── lib/                    # Global utilities
+└── styles/                 # CSS/Tailwind config
 ```
 
 ---
 
-## 4. Layer N-Tier (3-Tier Saja)
+## 4. Struktur Folder — AI Backend (`maguru-model/`)
+
+```
+app/
+├── agents/                     # ← 4 Modular Agent Domains
+│   ├── __init__.py             # Unified export semua agen
+│   ├── co_teacher/             # Agent 1: Co-Teacher (Stateful LangGraph)
+│   │   ├── __init__.py
+│   │   ├── graph.py            # LangGraph StateGraph + nodes
+│   │   ├── entrypoint.py       # LangServe chain factory + answer_question()
+│   │   └── greeting.py         # Sub-fitur: AI greeting untuk siswa
+│   ├── code_explainer/         # Agent 2: Code Explainer (Stateless LCEL)
+│   │   ├── __init__.py
+│   │   └── entrypoint.py       # LCEL chain factory
+│   ├── hint_generator/         # Agent 3: Hint Generator (Stateless LCEL)
+│   │   ├── __init__.py
+│   │   └── entrypoint.py       # LCEL chain factory (3-level hints)
+│   └── quiz_engine/            # Agent 4: Quiz Engine (Stateful LangGraph)
+│       ├── __init__.py
+│       ├── graph.py            # LangGraph StateGraph untuk generate quiz
+│       └── entrypoint.py       # Quiz feedback + quiz generator chain
+│
+├── shared/                     # Shared utilities (single source of truth)
+│   ├── __init__.py             # Re-export semua shared utils
+│   ├── config.py               # → proxy ke app.core.config
+│   ├── llm.py                  # → proxy ke app.core.llm
+│   ├── checkpointer.py         # → proxy ke app.db.checkpointer
+│   ├── vector_store.py         # → proxy ke app.db.vector_store
+│   └── rag_service.py          # → proxy ke app.services.rag_service
+│
+├── core/                       # LLM config & settings
+├── db/                         # Checkpointer & vector store
+├── services/                   # RAG service
+├── schemas/                    # Pydantic I/O schemas
+├── prompts/                    # YAML prompt templates
+├── api/                        # REST API routes (v1)
+├── chains/                     # Legacy — backward-compat shims ke agents/
+├── graphs/                     # Legacy — backward-compat shims ke agents/
+└── main.py                     # FastAPI app factory
+```
+
+### Aturan Agen
+
+| Domain | Jenis | Pattern | Endpoint |
+|---|---|---|---|
+| `co_teacher` | Stateful | LangGraph + RAG + Memory | `/chatbot`, `/greeting` |
+| `code_explainer` | Stateless | LCEL chain | `/explain-code` |
+| `hint_generator` | Stateless | LCEL chain | `/hint` |
+| `quiz_engine` | Stateful | LangGraph + LCEL | `/generate-quiz`, `/quiz-feedback` |
+
+---
+
+## 5. Standardisasi Komponen UI (Frontend)
+
+1. **`components/ui/`** — Komponen atomic dasar Shadcn UI (`button`, `input`, `badge`, dll).
+2. **`components/shadcn-studio/`** — Reusable visual components (`card-art-skeuo`, `switch-skeuo`, dll).
+3. **`features/design-system/components/demos/`** — Demo showcase wrappers.
+4. **`features/design-system/lib/design-system-registry.tsx`** — Setiap komponen baru **WAJIB** didaftarkan di sini.
+5. **`features/[fitur]/components/`** — WAJIB import dari `@/components/shadcn-studio/` atau `@/components/ui/`, jangan duplikasi markup.
+
+---
+
+## 6. Layer N-Tier (Frontend)
 
 ### 1. **Presentation Layer**
-
-- Komponen React (UI), form, tabel, dsb.
-- State lokal pakai `useState`/`useReducer`.
-- Context hanya jika benar-benar perlu global state (misal: user login).
+- Komponen React (UI), form, tabel.
+- State lokal: `useState` / `useReducer`.
+- Context hanya untuk global state (misal: user login).
 
 ### 2. **Logic Layer**
-
-- Custom hook per fitur (`useProduct`, `useRental`, dsb).
+- Custom hook per fitur (`useProduct`, `useChat`, dll).
 - Logic fetching, validasi, transformasi data.
-- Panggil API via fetcher sederhana (misal: `productApi.ts`).
+- Panggil API via fetcher (`api.ts`).
 
 ### 3. **Data Layer**
-
-- API Route Next.js (`app/api/fitur/route.ts`): CRUD, validasi, otentikasi.
-- Prisma ORM untuk query ke database.
-
----
-
-## 5. Alur Data Sederhana
-
-1. **User** berinteraksi di UI (misal: klik "Sewa Baju").
-2. **Komponen** memanggil custom hook (misal: `useRental`).
-3. **Hook** memanggil API fetcher (`rentalApi.ts`).
-4. **API Route** proses request, query ke database via Prisma.
-5. **Response** dikirim ke frontend, update state/UI.
+- Next.js API Routes (`app/api/[fitur]/route.ts`).
+- Prisma ORM → Supabase PostgreSQL.
 
 ---
 
-## 6. Contoh Modularisasi Fitur
+## 7. Alur Data
 
-```
-features/
-  manage-product/
-    components/
-      ProductList.tsx
-      ProductForm.tsx
-    hooks/
-      useProduct.ts
-    services/
-      ProductService.ts
-    api.ts
-    types.ts
-  kasir/
-    components/
-      RentalForm.tsx
-      RentalTable.tsx
-    hooks/
-      useRental.ts
-    services/
-      RentalService.ts
-    api.ts
-    types.ts
-```
+### Frontend CRUD
+1. User → Komponen → Custom Hook → API fetcher → Next.js API Route → Prisma → DB
 
-- Satu custom hook per fitur, satu file API per fitur, satu file types per fitur.
-- Komponen UI langsung konsumsi hook.
+### AI Chat (SSE Streaming)
+1. User → `useAIChat` hook → `fetch /chatbot/stream` → FastAPI LangServe → Co-Teacher Agent → LLM Pool → token stream → UI
 
 ---
 
-## 7a. Pembagian Area Kerja FE & BE pada Struktur Folder
+## 8. Pembagian Area Kerja
 
 ### **Frontend Developer (FE)**
-
-- Fokus di:
-  - `features/[fitur]/components/` → Membangun komponen UI (React)
-  - `features/[fitur]/hooks/` → Membuat custom hook untuk logic fitur (state, data fetching, dsb)
-  - `app/` (App Router) → Mengatur routing, layout, dan halaman Next.js
+- `features/[fitur]/components/` — UI components
+- `features/[fitur]/hooks/` — Custom hooks
+- `app/` — Routing & layout Next.js
 
 ### **Backend Developer (BE)**
+- `app/api/[fitur]/route.ts` — API Routes
+- `features/[fitur]/services/` — Prisma CRUD
+- `prisma/` — Schema & migration
 
-- Fokus di:
-  - `features/[fitur]/api.ts` → Membuat API client/fetcher (opsional, biasanya dibuat FE, tapi BE bisa bantu jika logic fetch kompleks)
-  - `app/api/[fitur]/route.ts` → Membangun API Route Next.js (validasi, otentikasi)
-  - `services/` → handler CRUD prisma yang digunakan di API route
-  - `prisma/` → Mendesain dan memelihara schema database, migration, dan query
-
-### **Alur Kolaborasi**
-
-- **FE** membangun UI dan logic fitur, konsumsi API dari backend.
-- **BE** menyediakan endpoint API dan logic backend, serta database.
-
-**Kesimpulan:**
-
-- **FE**: `components/`, `hooks/`, `app/`
-- **BE**: `api.ts` (opsional), `app/api/`, `prisma/`
+### **AI Engineer**
+- `maguru-model/app/agents/[agent]/` — Logic agen modular
+- `maguru-model/app/shared/` — Shared utilities
+- `maguru-model/app/prompts/` — Prompt templates YAML
 
 ---
 
-> /docs-result baiklah buatlah docs result terkait apa yang telah kita kerjakan pada │
-> │ features\manage-product\docs\task\story-3-1\be-rpk-3-1.md , silahkan docs result nya di │
-> │ features\manage-product\docs\result-docs\story-3-1\result-be-rpk-3-1.md
+## 9. Best Practice
 
-## 7. Best Practice
-
-- **Keep it simple!**
-- Modularisasi per fitur, tapi jangan over-engineer layer.
-- Gunakan TypeScript untuk type safety.
-- Error handling: tampilkan pesan error/fallback UI.
-- Testing: minimal unit test untuk logic utama.
+- **Keep it simple!** — Modularisasi per fitur, jangan over-engineer.
+- Gunakan TypeScript (FE) dan type hints Python (AI backend).
+- Error handling: tampilkan pesan error/fallback UI yang ramah.
+- Testing: unit test untuk logic utama di setiap layer.
 - Context hanya jika benar-benar perlu global state.
+- Setiap agen AI baru → buat folder baru di `app/agents/[nama]/` dengan `entrypoint.py`.
 
 ---
 
-## 8. FAQ Developer
+## 10. FAQ Developer
 
-**Q: Apakah boleh menambah layer jika fitur makin kompleks?**
-A: Boleh, tapi mulai dari yang sederhana dulu. Tambah layer hanya jika benar-benar dibutuhkan.
+**Q: Cara tambah fitur UI baru?**
+A: Buat folder di `features/[fitur]/`, isi dengan `components/`, `hooks/`, `api.ts`, `types.ts`.
 
-**Q: Bagaimana jika ada logic yang dipakai banyak fitur?**
-A: Taruh di `/lib` sebagai utilitas global.
+**Q: Cara tambah agen AI baru?**
+A: Buat folder `app/agents/[nama]/` dengan `entrypoint.py` (LCEL) atau `graph.py` + `entrypoint.py` (LangGraph). Daftarkan di `app/agents/__init__.py` dan `app/main.py`.
 
-**Q: Apakah tetap bisa scaling ke project menengah?**
-A: Ya, karena modularisasi per fitur tetap dipertahankan. Tinggal tambah layer jika aplikasi berkembang.
+**Q: Bagaimana logic yang dipakai banyak fitur?**
+A: Frontend → `/lib`. AI Backend → `/app/shared/`.
 
----
-
-## 9. Penutup
-
-Dengan arsitektur ini, tim dapat:
-
-- Mudah menambah fitur baru (tinggal tambah folder di `features/`)
-- Menjaga codebase tetap rapi & scalable
-- Memanfaatkan kekuatan Next.js untuk SSR/SSG/API dalam satu tempat
+**Q: Deployment AI backend?**
+A: Lokal via `uvicorn server:app`. AgentCore-ready (entrypoint pattern) untuk future cloud deploy.
 
 ---
 
 **Jika ada pertanyaan atau butuh contoh implementasi, silakan diskusi di tim!**
-
----
-
-## 10. Pembagian Tugas Developer
-
-### 1. **UI/UX Designer**
-
-- Bertanggung jawab pada desain tampilan, wireframe, dan user flow.
-- Hasil utama: file desain (Figma/Sketch), guideline komponen, dan dokumentasi style.
-- Kolaborasi:
-  - Memberikan aset, wireframe, dan prototype ke FE Developer.
-  - Review implementasi UI agar sesuai desain.
-
-### 2. **Frontend Developer (FE)**
-
-- Fokus pada folder `features/[fitur]/components/`, `hooks/`, dan integrasi API.
-- Tugas utama:
-  - Membangun komponen React sesuai desain UI/UX.
-  - Membuat custom hook untuk logic fitur.
-  - Menghubungkan UI dengan API (fetcher di `api.ts`).
-  - Menulis unit test untuk komponen/hook.
-- Kolaborasi:
-  - Diskusi dengan UI/UX untuk validasi tampilan.
-  - Diskusi dengan BE untuk kontrak API dan data.
-
-### 3. **Backend Developer (BE)**
-
-- Fokus pada folder `app/api/`, `prisma/`, dan query database.
-- Tugas utama:
-  - Membuat API Route Next.js untuk CRUD, validasi, otentikasi.
-  - Menulis logic query di API Route (atau utilitas di `/lib` jika reusable).
-  - Mendesain dan memelihara schema database (Prisma).
-  - Menulis unit test untuk API dan logic backend.
-- Kolaborasi:
-  - Diskusi dengan FE untuk kontrak API (request/response).
-  - Diskusi dengan UI/UX jika ada kebutuhan data khusus untuk tampilan.
-
-### 4. **Kolaborasi & Alur Kerja**
-
-- UI/UX → FE: Handover desain, review implementasi.
-- FE ↔ BE: Sepakati kontrak API (endpoint, request, response, error).
-- Semua developer: Review code, testing, dan dokumentasi.
-
----

@@ -37,6 +37,7 @@ describe('CreatorProfileEditor', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    window.localStorage.clear()
   })
 
   it('renders loading state initially', () => {
@@ -139,5 +140,46 @@ describe('CreatorProfileEditor', () => {
         }),
       })
     })
+  })
+
+  it('restores draft from localStorage when page is refreshed and allows discarding it', async () => {
+    const draft = {
+      name: 'Ryu Takahashi (Draft)',
+      title: 'Grandmaster of Code',
+      bio: 'Bio tersimpan di draft',
+      experience: 'Pengalaman dari draf peramban',
+      avatarUrl: 'https://example.com/draft-avatar.webp',
+      linkedin: 'https://linkedin.com/in/ryu',
+      youtube: 'https://youtube.com/@ryu',
+      github: 'https://github.com/ryu',
+      savedAt: Date.now(),
+    }
+    window.localStorage.setItem('maguru_creator_profile_draft', JSON.stringify(draft))
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(mockProfile),
+    } as Response)
+
+    render(<CreatorProfileEditor />)
+
+    // Should restore the draft values
+    await waitFor(() => {
+      expect(screen.getByDisplayValue(draft.name)).toBeInTheDocument()
+      expect(screen.getByDisplayValue(draft.title)).toBeInTheDocument()
+      expect(screen.getByText(/Draf Lokal Berhasil Dipulihkan/i)).toBeInTheDocument()
+    })
+
+    // Discard draft button
+    const discardButton = screen.getByRole('button', { name: /Buang Draf & Gunakan Data Server/i })
+    fireEvent.click(discardButton)
+
+    // Should revert back to server mockProfile
+    await waitFor(() => {
+      expect(screen.getByDisplayValue(mockProfile.name)).toBeInTheDocument()
+      expect(screen.getByDisplayValue(mockProfile.title)).toBeInTheDocument()
+    })
+
+    expect(window.localStorage.getItem('maguru_creator_profile_draft')).toBeNull()
   })
 })

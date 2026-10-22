@@ -13,7 +13,8 @@ function decodeJwtUser(token: string) {
     const jsonStr = Buffer.from(base64, 'base64').toString('utf-8')
     const payload = JSON.parse(jsonStr)
     if (!payload || !payload.sub) return null
-    if (payload.exp && payload.exp * 1000 < Date.now()) return null
+    // Allow 60 seconds clock skew tolerance
+    if (payload.exp && payload.exp * 1000 < Date.now() - 60000) return null
     return {
       id: payload.sub,
       email: payload.email || '',
@@ -35,8 +36,12 @@ function decodeJwtUser(token: string) {
 function extractUserFromCookies(request: NextRequest) {
   const allCookies = request.cookies.getAll()
   const tokenCookies = allCookies
-    .filter((c) => c.name.includes('-auth-token'))
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .filter((c) => c.name.includes('-auth-token') && !c.name.includes('-code-verifier'))
+    .sort((a, b) => {
+      const aIdx = parseInt(a.name.split('.').pop() || '0', 10)
+      const bIdx = parseInt(b.name.split('.').pop() || '0', 10)
+      return isNaN(aIdx) || isNaN(bIdx) ? a.name.localeCompare(b.name) : aIdx - bIdx
+    })
 
   if (tokenCookies.length === 0) return null
 
@@ -81,7 +86,7 @@ function extractUserFromCookies(request: NextRequest) {
  *
  * Menggunakan strategi Hybrid Verification:
  * 1. Fast-path: Skip remote WAN check jika tidak ada token/cookie sama sekali.
- * 2. Remote check: supabase.auth.getUser() dengan 1500ms timeout guard.
+ * 2. Remote check: supabase.auth.getUser() dengan 2500ms timeout guard.
  * 3. Offline fallback: Local JWT verification dari cookies/bearer jika WAN Supabase lambat / timeout.
  * 4. Cookie sync: Memastikan request & response cookies sinkron untuk Server Components & redirects.
  */
@@ -122,33 +127,41 @@ export async function proxy(request: NextRequest) {
     bearerToken = authHeader.slice(7).trim()
   }
 
-  const hasAuthCookies = request.cookies.getAll().some((c) => c.name.includes('-auth-token'))
+  const hasAuthCookies = request.cookies.getAll().some((c) => c.name.includes('-auth-token') && !c.name.includes('-code-verifier'))
 
   let user: any = null
 
   // Hanya jalankan remote getUser jika ada token/cookie
   if (bearerToken || hasAuthCookies) {
     try {
-      // 1500ms timeout guard to prevent hanging on slow networks (Indonesia -> Mumbai)
+      // 2500ms timeout guard to prevent hanging on slow networks (Indonesia -> Mumbai)
       const authPromise = supabase.auth.getUser(bearerToken)
       const timeoutPromise = new Promise<{ data: { user: null }; error: Error }>((_, reject) =>
-        setTimeout(() => reject(new Error('Supabase Auth Timeout (1500ms)')), 1500)
+        setTimeout(() => reject(new Error('Supabase Auth Timeout (2500ms)')), 2500)
       )
       const { data, error } = await Promise.race([authPromise, timeoutPromise])
       if (!error && data?.user) {
         user = data.user
       }
-    } catch {
-      // Timeout or network error — lanjutkan ke offline fallback
+    } catch (err: any) {
+      console.warn(`[Proxy Auth] Remote check timed out or failed for ${request.nextUrl.pathname}: ${err?.message || 'unknown error'}`)
     }
 
     // Fallback: Offline JWT recovery for Bearer token or cookies
     if (!user) {
       if (bearerToken) {
         user = decodeJwtUser(bearerToken)
+        if (user) {
+          console.log(`[Proxy Auth] Recovered user ${user.id} from bearerToken fallback on ${request.nextUrl.pathname}`)
+        }
       }
       if (!user && hasAuthCookies) {
         user = extractUserFromCookies(request)
+        if (user) {
+          console.log(`[Proxy Auth] Recovered user ${user.id} from cookies fallback on ${request.nextUrl.pathname}`)
+        } else {
+          console.warn(`[Proxy Auth] Failed to recover user from cookies on ${request.nextUrl.pathname}`)
+        }
       }
     }
   }
