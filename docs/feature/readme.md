@@ -8,7 +8,7 @@ Dokumentasi resmi mengenai 6 sistem fitur utama yang diimplementasikan di worksp
 
 | No | Sistem Fitur | Direktori Dokumentasi | Fokus & Tanggung Jawab Utama | Rute Terkait (`/app`) |
 | :---: | :--- | :--- | :--- | :--- |
-| **1** | **Pembelajaran Siswa** | [`student-learning/readme.md`](./student-learning/readme.md) | Antarmuka membaca teks teknis, navigasi silabus bab terstruktur, dan eksekusi kode in-browser. | `/course/[slug]/learn`, `/course` |
+| **1** | **Pembelajaran Siswa** | [`student-learning/`](./student-learning/readme.md) <br> • [Alur Sistem](./student-learning/system-flow.md) <br> • [Kontrak API](./student-learning/api-contracts.md) | Antarmuka membaca teks teknis, navigasi silabus bab terstruktur, in-memory cache, dan eksekusi kode in-browser. | `/course/[slug]/learn`, `/course` |
 | **2** | **CMS & Editor Kreator** | [`creator-cms/readme.md`](./creator-cms/readme.md) | Studio kurasi kurikulum, penyusunan bab via drag-and-drop, dan Tiptap block editor berfitur slash command (`/`). | `/creator/courses`, `/creator/courses/[slug]/manage` |
 | **3** | **AI Co-Teacher Mentor** | [`ai-co-teacher/readme.md`](./ai-co-teacher/readme.md) | Asisten belajar real-time berbasis SSE streaming dengan 5 rantai AI spesialis dan multi-turn thread memory. | Terpasang di `/course/[slug]/learn` & homepage |
 | **4** | **Asesmen & Kuis** | [`assessment-engine/readme.md`](./assessment-engine/readme.md) | Mesin pengujian teknis, kuis dengan timer, tokenizer soal koding, dan evaluasi diagnostik pre-test. | Terpasang di `/course/[slug]/learn` & `/api/assessment` |

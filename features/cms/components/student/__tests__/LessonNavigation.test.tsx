@@ -19,7 +19,11 @@ jest.mock('lucide-react', () => ({
   ChevronRight: ({ className }: { className?: string }) => (
     <span data-testid="chevron-right-icon" className={className} aria-hidden="true">→</span>
   ),
+  Check: ({ className }: { className?: string }) => (
+    <span data-testid="check-icon" className={className} aria-hidden="true">✓</span>
+  ),
 }))
+
 
 // Mock shadcn/ui Button component
 jest.mock('@/components/ui/button', () => ({

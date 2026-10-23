@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAssessment } from '../hooks/useAssessment'
-import { Check, ChevronLeft, ChevronRight, Bookmark, Lock, Lightbulb, Target } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, Bookmark, Lock, Lightbulb, Target, Clock, RotateCcw, Trophy } from 'lucide-react'
 import { toast } from 'sonner'
 import { RichQuestionContent } from './RichQuestionContent'
 
@@ -32,10 +32,8 @@ export function AssessmentPage({
   onCompleteAction,
   onExitAction,
 }: AssessmentPageProps) {
-  const { questions, loading, error, submitting, submitError, submit } = useAssessment(
-    courseId,
-    sectionId,
-  )
+  const { questions, loading, error, attemptInfo, submitting, submitError, submit, retake } =
+    useAssessment(courseId, sectionId)
 
   const [currentIdx, setCurrentIdx] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -88,6 +86,92 @@ export function AssessmentPage({
       <div className="flex flex-col items-center justify-center min-h-[500px] p-6 text-center">
         <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-accent-coral mx-auto mb-4" />
         <p className="text-text-muted text-sm font-semibold">Memuat soal kuis...</p>
+      </div>
+    )
+  }
+
+  // Handle Cooldown Screen when student hit 2 attempts limit
+  if (error === 'COOLDOWN_ACTIVE') {
+    const remainingMins = Math.max(1, Math.ceil((attemptInfo.cooldownRemainingSeconds || 3600) / 60))
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] p-6 text-center max-w-lg mx-auto space-y-6 select-none">
+        <div className="p-5 bg-accent-coral/10 border border-accent-coral/25 rounded-3xl text-accent-coral shadow-inner">
+          <Clock className="h-10 w-10 animate-pulse" />
+        </div>
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-accent-coral/15 border border-accent-coral/30 rounded-full text-accent-coral text-[10px] font-extrabold uppercase tracking-widest">
+            Batas Percobaan Tercapai ({attemptInfo.attempt}/{attemptInfo.maxAttempts})
+          </div>
+          <h2 className="text-2xl font-serif font-bold text-text-primary">
+            Masa Jeda Belajar Aktif (Cooldown)
+          </h2>
+          <p className="text-xs text-text-muted leading-relaxed max-w-sm mx-auto">
+            Kamu telah menggunakan {attemptInfo.maxAttempts}x kesempatan kuis untuk bab ini. Nilai tertinggi kamu saat ini adalah{' '}
+            <strong className="text-accent-coral font-bold">{attemptInfo.previousScore ?? 0}%</strong> (Syarat kelulusan: 70%).
+          </p>
+        </div>
+
+        <div className="p-5 bg-card border border-border/15 rounded-2xl paper-texture w-full max-w-sm text-center shadow-sm">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-text-faint block">
+            Waktu Tunggu Tersisa
+          </span>
+          <span className="text-2xl font-mono font-extrabold text-accent-mustard mt-1 block">
+            ⏱️ ~{remainingMins} Menit
+          </span>
+          <p className="text-[11px] text-text-muted mt-2 leading-relaxed">
+            Gunakan jeda 1 jam ini untuk membaca kembali materi bab agar percobaan berikutnya berhasil!
+          </p>
+        </div>
+
+        {onExitAction && (
+          <button
+            onClick={onExitAction}
+            className="flex items-center gap-2 px-8 py-3 bg-accent-coral hover:bg-accent-coral/95 text-white rounded-full font-bold text-xs shadow-glow transition-all active:scale-95 cursor-pointer"
+          >
+            Kembali Baca Materi
+          </button>
+        )}
+      </div>
+    )
+  }
+
+  // Handle Already Completed / Retake Prompt Screen
+  if (error === 'ALREADY_COMPLETED') {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[500px] p-6 text-center max-w-lg mx-auto space-y-6 select-none">
+        <div className="p-5 bg-emerald-500/10 border border-emerald-500/25 rounded-3xl text-emerald-600 dark:text-emerald-400 shadow-inner">
+          <Trophy className="h-10 w-10" />
+        </div>
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/15 border border-emerald-500/30 rounded-full text-emerald-600 dark:text-emerald-400 text-[10px] font-extrabold uppercase tracking-widest">
+            {attemptInfo.passed ? '✓ Bab Ini Telah Lulus' : 'Kuis Telah Selesai'}
+          </div>
+          <h2 className="text-2xl font-serif font-bold text-text-primary">
+            {attemptInfo.passed ? 'Kuis Berhasil Dikuasai!' : 'Kuis Telah Dikerjakan'}
+          </h2>
+          <p className="text-xs text-text-muted leading-relaxed max-w-sm mx-auto">
+            Nilai terbaikmu saat ini adalah{' '}
+            <strong className="text-emerald-600 dark:text-emerald-400 font-bold">{attemptInfo.previousScore ?? 0}%</strong>.
+            Kamu dapat mengulang kuis untuk meningkatkan pemahaman dan nilai terbaikmu.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={retake}
+            className="flex items-center justify-center gap-2 px-6 py-2.5 border border-[#b89a57]/30 hover:border-[#b89a57]/50 bg-bg-bone/45 text-text-primary rounded-full font-bold text-xs transition-all active:scale-95 cursor-pointer shadow-sm"
+          >
+            <RotateCcw className="h-4 w-4" /> Ulangi Kuis
+          </button>
+          {onExitAction && (
+            <button
+              onClick={onExitAction}
+              className="flex items-center justify-center gap-2 px-6 py-2.5 bg-accent-coral hover:bg-accent-coral/95 text-white rounded-full font-bold text-xs shadow-glow transition-all active:scale-95 cursor-pointer"
+            >
+              Lanjut Belajar
+            </button>
+          )}
+        </div>
       </div>
     )
   }
@@ -192,9 +276,23 @@ export function AssessmentPage({
           {/* Card Header Section (Debossed / Sunken) */}
           <div className="flex justify-between items-center header-skeuo-debossed rounded-t-[2.5rem] p-6 md:p-8">
             <div>
-              <span className="text-[10px] font-manrope font-extrabold uppercase tracking-widest text-accent-coral">
-                {sectionId ? 'SECTION QUIZ' : 'INITIAL ASSESSMENT'}
-              </span>
+              <div className="flex items-center gap-2.5">
+                <span className="text-[10px] font-manrope font-extrabold uppercase tracking-widest text-accent-coral">
+                  {sectionId ? 'SECTION QUIZ' : 'INITIAL ASSESSMENT'}
+                </span>
+                {sectionId && (
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border ${
+                      attemptInfo.attempt >= 2
+                        ? 'bg-amber-500/15 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                        : 'bg-accent-coral/10 border-accent-coral/20 text-accent-coral'
+                    }`}
+                  >
+                    Percobaan {attemptInfo.attempt}/{attemptInfo.maxAttempts}
+                    {attemptInfo.attempt >= 2 ? ' (Terakhir)' : ''}
+                  </span>
+                )}
+              </div>
               <h1 className="text-2xl font-serif font-bold text-text-primary mt-1">
                 {sectionId ? sectionTitle || 'Kuis Akhir Bab' : 'Initial Assessment'}
               </h1>

@@ -9,6 +9,7 @@ import { Superscript } from '@tiptap/extension-superscript'
 import { Subscript } from '@tiptap/extension-subscript'
 import { Selection } from '@tiptap/extensions'
 import { useState } from 'react'
+import { Clock, BookOpen } from 'lucide-react'
 
 import { CustomCodeBlock } from '../creator/manage/editor/extensions/CustomCodeBlock'
 import { Callout } from '../creator/manage/editor/extensions/Callout'
@@ -132,11 +133,29 @@ export function LessonViewer({ lesson }: LessonViewerProps) {
     )
   }
 
+  const text = editor ? editor.getText() : ''
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
+  const readingTimeMinutes = Math.max(1, Math.ceil(wordCount / 200))
+
   return (
     <div className="lesson-viewer w-full max-w-none text-text-secondary p-6 rounded-lg
       [&_.simple-editor-content]:h-auto [&_.simple-editor-content]:flex-none [&_.simple-editor-content]:max-w-none
       [&_.tiptap.ProseMirror.simple-editor]:pb-4 [&_.tiptap.ProseMirror.simple-editor]:pt-0">
-      <h1 data-testid="lesson-title" className="text-3xl font-manrope font-extrabold text-text-primary mb-6">{lesson.title}</h1>
+      <div className="mb-6 space-y-2.5">
+        <h1 data-testid="lesson-title" className="text-3xl font-manrope font-extrabold text-text-primary tracking-tight">
+          {lesson.title}
+        </h1>
+        <div className="flex items-center gap-2 text-xs text-text-muted select-none">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-surface-accent border border-border/15 font-mono text-[11px] text-text-secondary">
+            <Clock className="w-3.5 h-3.5 text-accent-coral" />
+            <span>{readingTimeMinutes} min baca</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bg-surface-accent border border-border/15 font-mono text-[11px] text-text-secondary">
+            <BookOpen className="w-3.5 h-3.5 text-accent-mustard" />
+            <span>{wordCount} kata</span>
+          </span>
+        </div>
+      </div>
       <EditorContent 
         editor={editor} 
         className="simple-editor-content max-w-none! w-full [&_.tiptap]:px-0 [&_.tiptap]:max-w-none! [&_.tiptap]:w-full"

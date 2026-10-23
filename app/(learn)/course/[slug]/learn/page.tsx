@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { CourseNavigation } from '@/features/cms/components/student/CourseNavigation'
 import { LessonViewer } from '@/features/cms/components/student/LessonViewer'
@@ -13,6 +13,8 @@ import { AssessmentResultPage } from '@/features/assessment-engine/components/As
 import { AssessmentErrorBoundary } from '@/features/assessment-engine/components/AssessmentErrorBoundary'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { ChatbotAssistant } from '@/features/langserve'
+import { CourseCompletionModal } from '@/features/cms/components/student/CourseCompletionModal'
+import { toast } from 'sonner'
 
 interface CompletedResult {
   overallScore: number
@@ -76,6 +78,85 @@ function LearnPageInner() {
   const [isPreTestReviewActive, setIsPreTestReviewActive] = useState(false)
   const [preTestResult, setPreTestResult] = useState<CompletedResult | null>(null)
 
+  // Course completion milestone modal — derived state to avoid cascading renders
+  const [hasDismissedCompletion, setHasDismissedCompletion] = useState(false)
+  const isCompletionModalOpen =
+    progress.percentage >= 100 &&
+    progress.totalLessons > 0 &&
+    !hasDismissedCompletion &&
+    !loading
+
+
+  const allLessons = getAllLessons(sections)
+  const currentIndex = currentLesson ? allLessons.findIndex((l) => l.id === currentLesson.id) : -1
+  const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined
+  const nextLesson =
+    currentIndex >= 0 && currentIndex < allLessons.length - 1
+      ? allLessons[currentIndex + 1]
+      : undefined
+
+  // Find next lesson's section to determine if it is locked
+  const nextLessonSection = nextLesson
+    ? sections.find((s) => (lessonsMap[s.id] || []).some((l) => l.id === nextLesson.id))
+    : undefined
+  const isNextSectionLocked = !!nextLessonSection?.isLocked
+
+  // Find current lesson's section ID to trigger the correct Section Quiz
+  const currentLessonSectionId = currentLesson
+    ? Object.entries(lessonsMap).find(([_, lessons]) =>
+        lessons.some((l) => l.id === currentLesson.id),
+      )?.[0]
+    : undefined
+  const currentLessonSection = sections.find((s) => s.id === currentLessonSectionId)
+
+  const handleLessonClick = useCallback(
+    (lessonId: string) => {
+      setIsPreTestReviewActive(false)
+      for (const [sectionId, lessons] of Object.entries(lessonsMap)) {
+        if (lessons.some((l) => l.id === lessonId)) {
+          selectLesson(lessonId, sectionId)
+          // Sync URL so browser back/forward & deep link work correctly
+          router.replace(`/course/${slug}/learn?lesson=${lessonId}`, { scroll: false })
+          return
+        }
+      }
+      // Section not yet loaded — expand all sections then retry
+      for (const section of sections) {
+        if (!lessonsMap[section.id]) toggleSection(section.id)
+      }
+    },
+    [lessonsMap, router, sections, selectLesson, slug, toggleSection],
+  )
+
+  // Keyboard navigation shortcuts: Alt + ArrowRight for next, Alt + ArrowLeft for prev
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable ||
+        target.closest('.tiptap')
+      ) {
+        return
+      }
+
+      if (e.altKey && e.key === 'ArrowRight') {
+        e.preventDefault()
+        if (nextLesson && !isNextSectionLocked) {
+          handleLessonClick(nextLesson.id)
+        }
+      } else if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault()
+        if (prevLesson) {
+          handleLessonClick(prevLesson.id)
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [nextLesson, prevLesson, isNextSectionLocked, handleLessonClick])
 
   if (loading) {
     return (
@@ -104,44 +185,6 @@ function LearnPageInner() {
     )
   }
 
-  const allLessons = getAllLessons(sections)
-  const currentIndex = currentLesson ? allLessons.findIndex((l) => l.id === currentLesson.id) : -1
-  const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : undefined
-  const nextLesson =
-    currentIndex >= 0 && currentIndex < allLessons.length - 1
-      ? allLessons[currentIndex + 1]
-      : undefined
-
-  // Find next lesson's section to determine if it is locked
-  const nextLessonSection = nextLesson
-    ? sections.find((s) => (lessonsMap[s.id] || []).some((l) => l.id === nextLesson.id))
-    : undefined
-  const isNextSectionLocked = !!nextLessonSection?.isLocked
-
-  // Find current lesson's section ID to trigger the correct Section Quiz
-  const currentLessonSectionId = currentLesson
-    ? Object.entries(lessonsMap).find(([_, lessons]) =>
-        lessons.some((l) => l.id === currentLesson.id),
-      )?.[0]
-    : undefined
-  const currentLessonSection = sections.find((s) => s.id === currentLessonSectionId)
-
-  const handleLessonClick = (lessonId: string) => {
-    setIsPreTestReviewActive(false)
-    for (const [sectionId, lessons] of Object.entries(lessonsMap)) {
-      if (lessons.some((l) => l.id === lessonId)) {
-        selectLesson(lessonId, sectionId)
-        // Sync URL so browser back/forward & deep link work correctly
-        router.replace(`/course/${slug}/learn?lesson=${lessonId}`, { scroll: false })
-        return
-      }
-    }
-    // Section not yet loaded — expand all sections then retry
-    for (const section of sections) {
-      if (!lessonsMap[section.id]) toggleSection(section.id)
-    }
-  }
-
   const handleQuizComplete = (outcome: CompletedResult) => {
     setActiveResult(outcome)
   }
@@ -154,9 +197,21 @@ function LearnPageInner() {
 
   const handleRetryQuiz = async () => {
     try {
-      await fetch(`/api/assessment/reset?courseId=${slug}${activeQuizSectionId ? `&sectionId=${activeQuizSectionId}` : ''}`, {
-        method: 'POST',
-      })
+      const res = await fetch(
+        `/api/assessment/reset?courseId=${slug}${activeQuizSectionId ? `&sectionId=${activeQuizSectionId}` : ''}`,
+        {
+          method: 'POST',
+        },
+      )
+      if (res.status === 429) {
+        const data = await res.json()
+        const mins = Math.max(1, Math.ceil((data.cooldownRemainingSeconds || 3600) / 60))
+        toast.warning(
+          `Batas 2x percobaan tercapai. Silakan pelajari materi bab kembali (~${mins} menit sisa waktu jeda).`,
+        )
+        return
+      }
+      toast.info('Kuis bab diatur ulang. Selamat mencoba kembali!')
     } catch (e) {
       console.warn('Failed to reset assessment on retry:', e)
     }
@@ -177,7 +232,19 @@ function LearnPageInner() {
         const res = await fetch(`/api/assessment/results?courseId=${slug}`)
         if (res.ok) {
           const data = await res.json()
-          const preTest = data.results.find((r: any) => r.type === 'PRE_TEST')
+          const preTest = data.results.find(
+            (r: {
+              type: string
+              overallScore: number
+              topicScores: Record<string, number>
+              totalQuestions?: number
+              correctCount?: number
+              wrongCount?: number
+              topicDetails?: Record<string, { correct: number; total: number; percentage: number }>
+              skippedLessonIds: string[]
+              unlockedNextSection?: boolean
+            }) => r.type === 'PRE_TEST',
+          )
           if (preTest) {
             setPreTestResult({
               overallScore: preTest.overallScore,
@@ -396,6 +463,17 @@ function LearnPageInner() {
               ? currentLesson.content
               : JSON.stringify(currentLesson?.content || ''),
         }}
+      />
+
+      {/* Course Completion Milestone Celebration Modal */}
+      <CourseCompletionModal
+        isOpen={isCompletionModalOpen}
+        onClose={() => {
+          setHasDismissedCompletion(true)
+        }}
+        courseTitle={slug}
+        totalLessons={progress.totalLessons}
+        onBackToCatalog={() => router.push('/course')}
       />
     </div>
   )

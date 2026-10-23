@@ -33,6 +33,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 })
     }
 
+    // Check existing assessment record for cooldown protection
+    const existing = await prisma.user_assessments.findFirst({
+      where: {
+        userId: user.id,
+        courseId: course.id,
+        ...(sectionId ? { sectionId } : { type: 'PRE_TEST' }),
+      },
+    })
+
+    if (existing && sectionId) {
+      const existingAnswers = existing.answers as Record<string, unknown> | null
+      const metadata = (existingAnswers?._metadata || {}) as {
+        attempts?: number
+        lastAttemptAt?: string
+      }
+      const recordedAttempts = metadata.attempts ?? 1
+      const lastAttemptTime = metadata.lastAttemptAt
+        ? new Date(metadata.lastAttemptAt).getTime()
+        : existing.completedAt.getTime()
+      const timeSinceLastAttempt = Date.now() - lastAttemptTime
+      const COOLDOWN_DURATION_MS = 3600 * 1000
+
+      if (existing.score < 70 && recordedAttempts >= 2 && timeSinceLastAttempt < COOLDOWN_DURATION_MS) {
+        const remainingSeconds = Math.ceil((COOLDOWN_DURATION_MS - timeSinceLastAttempt) / 1000)
+        return NextResponse.json(
+          {
+            error: 'COOLDOWN_ACTIVE',
+            message: 'Batas 2x percobaan tercapai. Silakan pelajari materi kembali sebelum mencoba lagi.',
+            cooldownRemainingSeconds: remainingSeconds,
+          },
+          { status: 429 },
+        )
+      }
+    }
+
     // Delete assessment record to allow retaking the test
     const deleted = await prisma.user_assessments.deleteMany({
       where: {

@@ -81,13 +81,29 @@ export function LearnProvider({ courseSlug, initialLessonId, children }: LearnPr
     setProgress,
   })
 
-  // Auto-load initial lesson once sections are ready
+  // Save last visited lesson to localStorage for auto-resume
+  useEffect(() => {
+    if (!currentLesson?.id || typeof window === 'undefined') return
+    try {
+      localStorage.setItem(`maguru_last_lesson_${courseSlug}`, currentLesson.id)
+    } catch {
+      // Ignore storage access exceptions in private mode
+    }
+  }, [currentLesson?.id, courseSlug])
+
+  // Auto-load lesson on mount: handles URL param -> localStorage resume -> first uncompleted -> first lesson
   useEffect(() => {
     if (loading || sections.length === 0) return
 
-    if (initialLessonId) {
-      // Try each section until we find the one containing the lesson
-      const tryFindLesson = async () => {
+    const resumeLesson = async () => {
+      // 1. If explicit ?lesson= in URL, find and load it
+      const targetId =
+        initialLessonId ||
+        (typeof window !== 'undefined'
+          ? localStorage.getItem(`maguru_last_lesson_${courseSlug}`)
+          : null)
+
+      if (targetId) {
         for (const section of sections) {
           try {
             const res = await fetch(
@@ -96,23 +112,44 @@ export function LearnProvider({ courseSlug, initialLessonId, children }: LearnPr
             if (!res.ok) continue
             const data = await res.json()
             const lessons = data.lessons || []
-            const found = lessons.find((l: { id: string }) => l.id === initialLessonId)
+            const found = lessons.find((l: { id: string }) => l.id === targetId)
             if (found) {
-              await expandAndSelect(section.id, initialLessonId)
+              await expandAndSelect(section.id, targetId)
               return
             }
           } catch {
-            // continue to next section
+            // continue searching next section
           }
         }
-        // Lesson not found in any section — fall back to first lesson
-        await expandAndSelect(sections[0].id)
       }
-      tryFindLesson()
-    } else {
-      // No lesson in URL — auto-select first lesson of first section
-      expandAndSelect(sections[0].id)
+
+      // 2. Otherwise: find the first uncompleted lesson in an unlocked section
+      for (const section of sections) {
+        if (section.isLocked) continue
+        try {
+          const res = await fetch(
+            `/api/courses/${courseSlug}/sections/${section.id}/lessons`
+          )
+          if (!res.ok) continue
+          const data = await res.json()
+          const lessons = data.lessons || []
+          const firstUncompleted = lessons.find(
+            (l: { id: string }) => !completedLessonIds.has(l.id)
+          )
+          if (firstUncompleted) {
+            await expandAndSelect(section.id, firstUncompleted.id)
+            return
+          }
+        } catch {
+          // continue
+        }
+      }
+
+      // 3. Fallback: first lesson of first section
+      await expandAndSelect(sections[0].id)
     }
+
+    resumeLesson()
     // Only run once when sections first load
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, sections.length === 0 ? 0 : 1])

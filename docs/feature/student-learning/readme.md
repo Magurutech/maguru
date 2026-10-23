@@ -9,7 +9,18 @@ Sistem antarmuka utama tempat siswa mempelajari materi kursus teks teknis, menav
 * **Fokus Pengalaman**: Membaca materi panjang (*reading-first ergonomics*) tanpa kelelahan visual di perangkat Tablet dan Desktop (≥ 768px).
 * **Nilai Pengguna**: Siswa belajar konsep langkah demi langkah, melihat progres belajar yang tersimpan otomatis, dan langsung menguji contoh kode tanpa konfigurasi lokal (*zero-setup*).
 
+> 📚 **Dokumentasi Teknis Lengkap:**
+> - [🧭 Alur Orkestrasi Sistem & Diagram UML (`system-flow.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/system-flow.md)
+> - [📋 Spesifikasi Kontrak Endpoint API & Skema Data (`api-contracts.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/api-contracts.md)
+> - **Subsistem Internal (`subsystems/`):**
+>   - [⚙️ In-Browser Code Runner Sandbox (`subsystems/code-runner.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/subsystems/code-runner.md)
+>   - [📖 WYSIWYG Lesson Reader Engine (`subsystems/lesson-reader.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/subsystems/lesson-reader.md)
+>   - [📊 Progress Tracking & Adaptive Gating (`subsystems/progress-gating.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/subsystems/progress-gating.md)
+> - [🚀 Rencana Peningkatan Fase Lanjutan (Could-Have Backlog) (`improvement.md`)](file:///d:/.maguru/maguru/docs/feature/student-learning/improvement.md)
+
 ---
+
+
 
 ## 🗺️ Pemetaan Rute (`/app`)
 

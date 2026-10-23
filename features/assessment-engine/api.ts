@@ -13,22 +13,78 @@ export interface PastResult {
   completedAt: string
 }
 
+export class AssessmentCooldownError extends Error {
+  cooldownRemainingSeconds: number
+  attempts: number
+  maxAttempts: number
+  score: number
+
+  constructor(cooldownRemainingSeconds: number, attempts: number, maxAttempts: number, score: number) {
+    super('COOLDOWN_ACTIVE')
+    this.name = 'AssessmentCooldownError'
+    this.cooldownRemainingSeconds = cooldownRemainingSeconds
+    this.attempts = attempts
+    this.maxAttempts = maxAttempts
+    this.score = score
+  }
+}
+
+export class AssessmentAlreadyCompletedError extends Error {
+  score: number
+  passed: boolean
+
+  constructor(score: number, passed: boolean) {
+    super('ALREADY_COMPLETED')
+    this.name = 'AssessmentAlreadyCompletedError'
+    this.score = score
+    this.passed = passed
+  }
+}
+
+export interface FetchQuestionsResponse {
+  questions: AssessmentQuestion[]
+  attempt?: number
+  maxAttempts?: number
+  previousScore?: number
+}
+
 /**
  * Fetch questions for an assessment.
- * Throws on non-ok statuses (e.g. 401 UNAUTHORIZED, 409 already completed).
+ * Throws on non-ok statuses (e.g. 401 UNAUTHORIZED, 429 COOLDOWN_ACTIVE, 409 ALREADY_COMPLETED).
  */
 export async function fetchQuestions(
   courseId: string,
   sectionId?: string | null,
-): Promise<{ questions: AssessmentQuestion[] }> {
+  allowRetake?: boolean,
+): Promise<FetchQuestionsResponse> {
   const query = new URLSearchParams({ courseId })
   if (sectionId) {
     query.set('sectionId', sectionId)
   }
+  if (allowRetake) {
+    query.set('allowRetake', 'true')
+  }
 
   const res = await fetch(`/api/assessment/questions?${query.toString()}`)
   if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (res.status === 409) throw new Error('ALREADY_COMPLETED')
+  
+  if (res.status === 429) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new AssessmentCooldownError(
+      errorData.cooldownRemainingSeconds ?? 3600,
+      errorData.attempts ?? 2,
+      errorData.maxAttempts ?? 2,
+      errorData.score ?? 0,
+    )
+  }
+
+  if (res.status === 409) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new AssessmentAlreadyCompletedError(
+      errorData.score ?? 0,
+      errorData.passed ?? true,
+    )
+  }
   
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
@@ -57,7 +113,24 @@ export async function submitAssessment(payload: {
   })
 
   if (res.status === 401) throw new Error('UNAUTHORIZED')
-  if (res.status === 409) throw new Error('ALREADY_COMPLETED')
+  
+  if (res.status === 429) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new AssessmentCooldownError(
+      errorData.cooldownRemainingSeconds ?? 3600,
+      errorData.attempts ?? 2,
+      errorData.maxAttempts ?? 2,
+      errorData.score ?? 0,
+    )
+  }
+
+  if (res.status === 409) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new AssessmentAlreadyCompletedError(
+      errorData.score ?? 0,
+      errorData.passed ?? true,
+    )
+  }
 
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({}))
